@@ -5,6 +5,7 @@ import logging
 import re
 from ai_summarizer import AISummarizer
 import shutil
+from summary_indexer import SummaryIndexer
 
 logging.basicConfig(
     level=logging.ERROR,
@@ -186,6 +187,14 @@ class ZephyrusLoggerCore:
             import traceback
             print(traceback.format_exc())
             return False
+        
+        # Trigger FAISS update
+        indexer = SummaryIndexer(
+                                summaries_path=self.correction_summaries_file,
+                                index_path=self.script_dir / "vector_store/summary_index.faiss",
+                                metadata_path=self.script_dir / "vector_store/summary_metadata.pkl"
+                                                                            )
+        indexer.build_index()
 
     def log_to_markdown(self, date_str, main_category, subcategory, entry):
         """Write the idea to the relevant MD file."""

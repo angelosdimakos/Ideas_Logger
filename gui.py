@@ -2,6 +2,10 @@ import tkinter as tk
 from tkinter import messagebox, scrolledtext
 from datetime import datetime
 import json
+import os
+
+# Import your existing indexer
+from summary_indexer import SummaryIndexer
 
 class ZephyrusLoggerGUI:
     CATEGORIES = {
@@ -14,8 +18,8 @@ class ZephyrusLoggerGUI:
     def __init__(self, logger_core):
         self.logger_core = logger_core
         self.root = tk.Tk()
-        self.root.title("Zephyrus Idea Logger")
-        self.root.geometry("600x500")
+        self.root.title("Zephyrus Idea Logger (with FAISS Search)")
+        self.root.geometry("700x600")
         self.root.attributes("-topmost", True)
 
         # Status line
@@ -27,19 +31,28 @@ class ZephyrusLoggerGUI:
         # Scrollable log area
         self.log_frame = tk.Frame(self.root)
         self.log_frame.pack(padx=10, pady=5, fill=tk.X)
-        self.log_text = scrolledtext.ScrolledText(self.log_frame, height=4, width=60, wrap=tk.WORD)
+        self.log_text = scrolledtext.ScrolledText(self.log_frame, height=4, width=70, wrap=tk.WORD)
         self.log_text.pack(fill=tk.X, expand=True)
         self.log_text.config(state=tk.DISABLED)
 
         # Main text entry
-        self.text_entry = tk.Text(self.root, height=8, width=60)
+        self.text_entry = tk.Text(self.root, height=8, width=70)
         self.text_entry.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
         # Category selection
         self.selected_category_main = tk.StringVar()
         self.selected_subcategory = tk.StringVar()
         self._create_category_selector()
-        self._create_buttons()
+        self._create_main_buttons()
+
+        # FAISS indexer config
+        self.indexer = SummaryIndexer(
+            summaries_path="logs/correction_summaries.json",
+            index_path="vector_store/summary_index.faiss",
+            metadata_path="vector_store/summary_metadata.pkl"
+        )
+
+        self._create_faiss_panel()
 
         self.text_entry.bind("<Control-Return>", lambda event: self._save_entry())
 
@@ -88,7 +101,7 @@ class ZephyrusLoggerGUI:
                 command=lambda sc=subcat: self.selected_subcategory.set(sc)
             )
 
-    def _create_buttons(self):
+    def _create_main_buttons(self):
         button_frame = tk.Frame(self.root)
         button_frame.pack(pady=5)
 
@@ -101,6 +114,29 @@ class ZephyrusLoggerGUI:
                                   command=self._manual_summarize,
                                   width=15, height=2, bg="#2196F3", fg="white")
         summarize_btn.pack(side=tk.LEFT, padx=10)
+
+    def _create_faiss_panel(self):
+        """Create a panel for building the FAISS index + searching it."""
+        faiss_frame = tk.LabelFrame(self.root, text="FAISS Summaries Index & Search", padx=10, pady=10)
+        faiss_frame.pack(fill=tk.X, padx=10, pady=(0, 10))
+
+        # Build index button
+        build_button = tk.Button(faiss_frame, text="Build FAISS Index", bg="#8BC34A", fg="black",
+                                 command=self._build_faiss_index, width=16)
+        build_button.pack(pady=5, anchor=tk.W)
+
+        # Search area
+        search_label = tk.Label(faiss_frame, text="Search Summaries:")
+        search_label.pack(anchor=tk.W)
+
+        search_box_frame = tk.Frame(faiss_frame)
+        search_box_frame.pack(fill=tk.X, pady=5)
+
+        self.search_entry = tk.Entry(search_box_frame, width=40)
+        self.search_entry.pack(side=tk.LEFT, padx=(0, 10))
+
+        search_button = tk.Button(search_box_frame, text="Search", command=self._search_faiss_index)
+        search_button.pack(side=tk.LEFT)
 
     def _save_entry(self):
         entry = self.text_entry.get("1.0", tk.END).strip()
@@ -170,6 +206,56 @@ class ZephyrusLoggerGUI:
             self.status_var.set("Summary generation failed!")
             messagebox.showwarning("⚠️ Summarization Failed", f"Could not summarize {main_category} → {subcategory} on {latest_date}. Check logs for details.")
 
+    def _build_faiss_index(self):
+        """Rebuild the FAISS index from correction_summaries.json."""
+        # Make sure vector_store/ dir exists
+        if not os.path.isdir("vector_store"):
+            os.makedirs("vector_store")
+
+        self.log_message("🔨 Building FAISS index from correction_summaries.json...")
+        success = self.indexer.build_index()
+        if success:
+            self.log_message("✅ FAISS index built successfully.")
+            self.status_var.set("FAISS index built.")
+            messagebox.showinfo("Index Built", "FAISS index has been built and saved.")
+        else:
+            self.log_message("❌ Failed to build FAISS index.")
+            self.status_var.set("Failed to build index.")
+            messagebox.showwarning("Index Error", "Unable to build FAISS index.")
+
+    def _search_faiss_index(self):
+        """Search the FAISS index for a user query."""
+        query = self.search_entry.get().strip()
+        if not query:
+            messagebox.showwarning("Empty Query", "Please enter a search term.")
+            return
+
+        try:
+            # Ensure index is loaded
+            self.indexer.load_index()
+        except Exception as e:
+            self.log_message(f"[Error] Could not load FAISS index: {e}")
+            messagebox.showerror("Load Error", "Could not load FAISS index. Try rebuilding it.")
+            return
+
+        results = self.indexer.search(query, top_k=5)
+        if results:
+            msg_parts = []
+            for r in results:
+                # Score might not exist if we didn't store distances
+                scr = r.get("score", 0.0)
+                msg_parts.append(
+                    f"Score: {scr:.2f}\n"
+                    f"Date: {r['date']}\n"
+                    f"{r['main_category']} → {r['subcategory']} (Batch {r['batch']})\n"
+                    f"Time: {r['timestamp']}"
+                )
+            formatted = "\n\n".join(msg_parts)
+            messagebox.showinfo("Search Results", formatted)
+            self.log_message(f"🔎 Searched: '{query}' → Found {len(results)} results")
+        else:
+            messagebox.showinfo("No Matches", "No summaries matched your query.")
+            self.log_message(f"No matches for '{query}' in FAISS index.")
 
     def run(self):
         self.root.mainloop()
