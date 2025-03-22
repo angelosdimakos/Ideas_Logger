@@ -24,6 +24,20 @@
 - **AI System Design**: Chat GPT prefers destructive logic
 
 ## 2025-03-22
+- **AI System Design**: Included configurations in a global config.json file to enable better configuration with different templates depending on use.
+- **Meta Reflection**: Using a script folder enables easier organisation of programmatic logic, but proper pathing is crucial to write to correct folders.
+- **Tooling & Automation**: Automating category and subcategory selection based on entry would enable smoother usage, instead of dropdown categories.
+- **Tooling & Automation**: Integration with Obsidian would enable easier construction of mindmaps.
+- **Tooling & Automation**: Idea logger can be used for weaker machines, if summarisation is disabled. An exe file can be created for portability.
+- **AI System Design**: Different LLMs can be used depending on user's available computational power (OpenAI for internet access with weaker rigs, and local LLMs for power users).
+- **AI System Design**: Tighter command line integration is crucial, as GUI development is excellent for debugging, but not overall automation.
+- **Tooling & Automation**: Structured hierarchy is essential for json files to enable faster lookup, with different subcategories.
+- **Tooling & Automation**: Different config.json can be developed based on context use for idea logger (writing, lab use, development, etc.)
+- **Tooling & Automation**: A prompt database will be created for easier lookup and future injection into local LLMs.
+- **Tooling & Automation**: A python script will be used to automatically select settings, positive and negative prompts and output directory
+- **Tooling & Automation**: I will shift from Automatic1111 to a programmatic apporach to invoke image generation from command line interface.
+- **Tooling & Automation**: An important limitation I need to test is that if 5 entries are not created in a single session, this might lead to unsummarised entries.
+- **Tooling & Automation**: Images can be programmatically generated, instead of relying on the webpage, which is currently under development.
 - **Meta Reflection**: Will try to inject 10 entries to validate summaries, but probably need Claude subscriptions for programming, and ChatGPT for strategising.
 
 - **Meta Reflection**: Troubleshooting 4o after 4.5 performance is extremely demoralising.

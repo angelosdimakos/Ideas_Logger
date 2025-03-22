@@ -3,18 +3,10 @@ from tkinter import messagebox, scrolledtext
 from datetime import datetime
 import json
 import os
-
-# Import your existing indexer
 from summary_indexer import SummaryIndexer
+from config_loader import load_config, get_config_value
 
 class ZephyrusLoggerGUI:
-    CATEGORIES = {
-        "Narrative": ["Narrative Concept", "Emotional Impact", "Romantic Development"],
-        "World": ["Worldbuilding Detail", "Faction Dynamics", "Loop Mechanics"],
-        "AI / Meta": ["AI System Design", "Tooling & Automation", "Execution Strategy", "Meta Reflection"],
-        "Creative": ["Visual or Audio Prompt", "Gameplay Design Insight", "Creative Ops / Org Flow"]
-    }
-
     def __init__(self, logger_core):
         self.logger_core = logger_core
         self.root = tk.Tk()
@@ -22,30 +14,28 @@ class ZephyrusLoggerGUI:
         self.root.geometry("700x600")
         self.root.attributes("-topmost", True)
 
-        # Status line
         self.status_var = tk.StringVar()
         self.status_var.set("Ready")
         self.status_label = tk.Label(self.root, textvariable=self.status_var, fg="green")
         self.status_label.pack(pady=2)
 
-        # Scrollable log area
         self.log_frame = tk.Frame(self.root)
         self.log_frame.pack(padx=10, pady=5, fill=tk.X)
         self.log_text = scrolledtext.ScrolledText(self.log_frame, height=4, width=70, wrap=tk.WORD)
         self.log_text.pack(fill=tk.X, expand=True)
         self.log_text.config(state=tk.DISABLED)
 
-        # Main text entry
         self.text_entry = tk.Text(self.root, height=8, width=70)
         self.text_entry.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
-        # Category selection
+        config = load_config()
+        self.category_structure = get_config_value(config, "category_structure", {})
+
         self.selected_category_main = tk.StringVar()
         self.selected_subcategory = tk.StringVar()
         self._create_category_selector()
         self._create_main_buttons()
 
-        # FAISS indexer config
         self.indexer = SummaryIndexer(
             summaries_path="logs/correction_summaries.json",
             index_path="vector_store/summary_index.faiss",
@@ -53,13 +43,10 @@ class ZephyrusLoggerGUI:
         )
 
         self._create_faiss_panel()
-
         self.text_entry.bind("<Control-Return>", lambda event: self._save_entry())
-
         self.log_message("Zephyrus Idea Logger initialized. Ready for entries.")
 
     def log_message(self, message):
-        """Add a message to the log text area with timestamp."""
         timestamp = datetime.now().strftime("%H:%M:%S")
         self.log_text.config(state=tk.NORMAL)
         self.log_text.insert(tk.END, f"[{timestamp}] {message}\n")
@@ -73,14 +60,14 @@ class ZephyrusLoggerGUI:
         main_label = tk.Label(frame, text="Category:")
         main_label.pack(side=tk.LEFT, padx=(0, 5))
 
-        main_menu = tk.OptionMenu(
-            frame, self.selected_category_main,
-            *self.CATEGORIES.keys(),
-            command=self._update_subcategories
-        )
+        default_main = next(iter(self.category_structure), "")
+        self.selected_category_main.set(default_main)
+
+        main_menu = tk.OptionMenu(frame, self.selected_category_main, *self.category_structure.keys())
         main_menu.pack(side=tk.LEFT, padx=(0, 15))
 
-        self.selected_category_main.set(next(iter(self.CATEGORIES)))
+        # 👇 Dynamically update subcategories when main category changes
+        self.selected_category_main.trace_add("write", lambda *args: self._update_subcategories(self.selected_category_main.get()))
 
         sub_label = tk.Label(frame, text="Subcategory:")
         sub_label.pack(side=tk.LEFT, padx=(0, 5))
@@ -88,11 +75,15 @@ class ZephyrusLoggerGUI:
         self.sub_menu = tk.OptionMenu(frame, self.selected_subcategory, "")
         self.sub_menu.pack(side=tk.LEFT)
 
-        self._update_subcategories(self.selected_category_main.get())
+        # 👇 Initialize subcategory menu
+        default_main = self.selected_category_main.get()
+        self._update_subcategories(default_main)
+
 
     def _update_subcategories(self, main_category):
-        subcats = self.CATEGORIES[main_category]
-        self.selected_subcategory.set(subcats[0])
+        subcats = self.category_structure.get(main_category, [])
+        if subcats:
+            self.selected_subcategory.set(subcats[0])
         menu = self.sub_menu["menu"]
         menu.delete(0, "end")
         for subcat in subcats:
@@ -102,41 +93,26 @@ class ZephyrusLoggerGUI:
             )
 
     def _create_main_buttons(self):
-        button_frame = tk.Frame(self.root)
-        button_frame.pack(pady=5)
+        frame = tk.Frame(self.root)
+        frame.pack(pady=5)
 
-        save_btn = tk.Button(button_frame, text="Log Idea",
-                             command=self._save_entry,
-                             width=15, height=2, bg="#4CAF50", fg="white")
-        save_btn.pack(side=tk.LEFT, padx=10)
-
-        summarize_btn = tk.Button(button_frame, text="Force Summarize",
-                                  command=self._manual_summarize,
-                                  width=15, height=2, bg="#2196F3", fg="white")
-        summarize_btn.pack(side=tk.LEFT, padx=10)
+        tk.Button(frame, text="Log Idea", command=self._save_entry, width=15, height=2, bg="#4CAF50", fg="white").pack(side=tk.LEFT, padx=10)
+        tk.Button(frame, text="Force Summarize", command=self._manual_summarize, width=15, height=2, bg="#2196F3", fg="white").pack(side=tk.LEFT, padx=10)
 
     def _create_faiss_panel(self):
-        """Create a panel for building the FAISS index + searching it."""
-        faiss_frame = tk.LabelFrame(self.root, text="FAISS Summaries Index & Search", padx=10, pady=10)
-        faiss_frame.pack(fill=tk.X, padx=10, pady=(0, 10))
+        frame = tk.LabelFrame(self.root, text="FAISS Summaries Index & Search", padx=10, pady=10)
+        frame.pack(fill=tk.X, padx=10, pady=(0, 10))
 
-        # Build index button
-        build_button = tk.Button(faiss_frame, text="Build FAISS Index", bg="#8BC34A", fg="black",
-                                 command=self._build_faiss_index, width=16)
-        build_button.pack(pady=5, anchor=tk.W)
+        tk.Button(frame, text="Build FAISS Index", bg="#8BC34A", fg="black", command=self._build_faiss_index, width=16).pack(pady=5, anchor=tk.W)
 
-        # Search area
-        search_label = tk.Label(faiss_frame, text="Search Summaries:")
-        search_label.pack(anchor=tk.W)
+        tk.Label(frame, text="Search Summaries:").pack(anchor=tk.W)
+        search_frame = tk.Frame(frame)
+        search_frame.pack(fill=tk.X, pady=5)
 
-        search_box_frame = tk.Frame(faiss_frame)
-        search_box_frame.pack(fill=tk.X, pady=5)
-
-        self.search_entry = tk.Entry(search_box_frame, width=40)
+        self.search_entry = tk.Entry(search_frame, width=40)
         self.search_entry.pack(side=tk.LEFT, padx=(0, 10))
 
-        search_button = tk.Button(search_box_frame, text="Search", command=self._search_faiss_index)
-        search_button.pack(side=tk.LEFT)
+        tk.Button(search_frame, text="Search", command=self._search_faiss_index).pack(side=tk.LEFT)
 
     def _save_entry(self):
         entry = self.text_entry.get("1.0", tk.END).strip()
@@ -169,7 +145,6 @@ class ZephyrusLoggerGUI:
         self.log_message(f"🔄 Force summarizing {main_category} → {subcategory}...")
         self.root.update()
 
-        # 1) Load logs
         try:
             logs = json.loads(self.logger_core.json_log_file.read_text(encoding="utf-8"))
         except Exception as e:
@@ -177,7 +152,6 @@ class ZephyrusLoggerGUI:
             messagebox.showwarning("Missing Log File", "zephyrus_log.json is missing or corrupted.")
             return
 
-        # 2) Find all dates that have (main_category → subcategory)
         matching_dates = []
         for date_str, cat_data in logs.items():
             if main_category in cat_data and subcategory in cat_data[main_category]:
@@ -187,16 +161,13 @@ class ZephyrusLoggerGUI:
             self.log_message(f"No entries found for {main_category} → {subcategory}.")
             messagebox.showwarning("No Data Found", f"No logged entries for {main_category} → {subcategory}.")
             return
-    
-        # 3) Pick the LATEST date that contains entries for this cat/subcat
+
         matching_dates.sort()
         latest_date = matching_dates[-1]
-
         self.log_message(f"Found {len(matching_dates)} date(s). Using latest date: {latest_date}")
-    
-        # 4) Generate summary for that date
+
         success = self.logger_core.generate_summary(latest_date, main_category, subcategory)
-    
+
         if success:
             self.log_message(f"✅ Summary generated for {main_category} → {subcategory} (date: {latest_date})")
             self.status_var.set("Summary generated successfully!")
@@ -207,8 +178,6 @@ class ZephyrusLoggerGUI:
             messagebox.showwarning("⚠️ Summarization Failed", f"Could not summarize {main_category} → {subcategory} on {latest_date}. Check logs for details.")
 
     def _build_faiss_index(self):
-        """Rebuild the FAISS index from correction_summaries.json."""
-        # Make sure vector_store/ dir exists
         if not os.path.isdir("vector_store"):
             os.makedirs("vector_store")
 
@@ -224,14 +193,12 @@ class ZephyrusLoggerGUI:
             messagebox.showwarning("Index Error", "Unable to build FAISS index.")
 
     def _search_faiss_index(self):
-        """Search the FAISS index for a user query."""
         query = self.search_entry.get().strip()
         if not query:
             messagebox.showwarning("Empty Query", "Please enter a search term.")
             return
 
         try:
-            # Ensure index is loaded
             self.indexer.load_index()
         except Exception as e:
             self.log_message(f"[Error] Could not load FAISS index: {e}")

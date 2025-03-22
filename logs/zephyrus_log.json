@@ -183,6 +183,90 @@
                 {
                     "timestamp": "2025-03-22 00:12:41",
                     "content": "Will try to inject 10 entries to validate summaries, but probably need Claude subscriptions for programming, and ChatGPT for strategising."
+                },
+                {
+                    "timestamp": "2025-03-22 13:34:31",
+                    "content": "Using a script folder enables easier organisation of programmatic logic, but proper pathing is crucial to write to correct folders."
+                }
+            ],
+            "Tooling & Automation": [
+                {
+                    "timestamp": "2025-03-22 13:04:09",
+                    "content": "Images can be programmatically generated, instead of relying on the webpage, which is currently under development."
+                },
+                {
+                    "timestamp": "2025-03-22 13:09:19",
+                    "content": "An important limitation I need to test is that if 5 entries are not created in a single session, this might lead to unsummarised entries."
+                },
+                {
+                    "timestamp": "2025-03-22 13:11:25",
+                    "content": "I will shift from Automatic1111 to a programmatic apporach to invoke image generation from command line interface."
+                },
+                {
+                    "timestamp": "2025-03-22 13:12:27",
+                    "content": "A python script will be used to automatically select settings, positive and negative prompts and output directory"
+                },
+                {
+                    "timestamp": "2025-03-22 13:13:08",
+                    "content": "A prompt database will be created for easier lookup and future injection into local LLMs."
+                },
+                {
+                    "timestamp": "2025-03-22 13:20:11",
+                    "content": "Different config.json can be developed based on context use for idea logger (writing, lab use, development, etc.)"
+                },
+                {
+                    "timestamp": "2025-03-22 13:21:20",
+                    "content": "Structured hierarchy is essential for json files to enable faster lookup, with different subcategories."
+                },
+                {
+                    "timestamp": "2025-03-22 13:24:55",
+                    "content": "Idea logger can be used for weaker machines, if summarisation is disabled. An exe file can be created for portability."
+                },
+                {
+                    "timestamp": "2025-03-22 13:26:13",
+                    "content": "Integration with Obsidian would enable easier construction of mindmaps."
+                },
+                {
+                    "timestamp": "2025-03-22 13:27:47",
+                    "content": "Automating category and subcategory selection based on entry would enable smoother usage, instead of dropdown categories."
+                }
+            ],
+            "AI System Design": [
+                {
+                    "timestamp": "2025-03-22 13:22:37",
+                    "content": "Tighter command line integration is crucial, as GUI development is excellent for debugging, but not overall automation."
+                },
+                {
+                    "timestamp": "2025-03-22 13:23:49",
+                    "content": "Different LLMs can be used depending on user's available computational power (OpenAI for internet access with weaker rigs, and local LLMs for power users)."
+                },
+                {
+                    "timestamp": "2025-03-22 14:54:12",
+                    "content": "Included configurations in a global config.json file to enable better configuration with different templates depending on use."
+                }
+            ]
+        },
+        "Creative": {
+            "Visual or Audio Prompt": [
+                {
+                    "timestamp": "2025-03-22 13:00:33",
+                    "content": "In order to reduce artifacts during image generation, lower resolution images (700x700) must be used to reduce artifacts"
+                },
+                {
+                    "timestamp": "2025-03-22 13:01:33",
+                    "content": "Different styles can enable automated image generation with positive and negative prompts, that are model dependant."
+                },
+                {
+                    "timestamp": "2025-03-22 13:02:56",
+                    "content": "LoRA (Low-Rank Adaptation) can enable finer control depending on model, and can be trained much easier due to smaller size."
+                },
+                {
+                    "timestamp": "2025-03-22 13:05:10",
+                    "content": "Static poses are easier than dynamic ones for image generation, as multiple people can begin overlapping."
+                },
+                {
+                    "timestamp": "2025-03-22 13:06:32",
+                    "content": "Smart resolution tuning can enable dynamic resolution based on requested style."
                 }
             ]
         }

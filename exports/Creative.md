@@ -15,3 +15,11 @@
 - **Visual or Audio Prompt**: Configured local Stable Diffusion WebUI integration for AI-driven visual storytelling.
 
 - **Visual or Audio Prompt**: Identified SDXL and MeinaMix models for optimized romance and world-building visuals.
+
+## 2025-03-22
+- **Visual or Audio Prompt**: Smart resolution tuning can enable dynamic resolution based on requested style.
+- **Visual or Audio Prompt**: Static poses are easier than dynamic ones for image generation, as multiple people can begin overlapping.
+- **Visual or Audio Prompt**: LoRA (Low-Rank Adaptation) can enable finer control depending on model, and can be trained much easier due to smaller size.
+- **Visual or Audio Prompt**: Different styles can enable automated image generation with positive and negative prompts, that are model dependant.
+
+- **Visual or Audio Prompt**: In order to reduce artifacts during image generation, lower resolution images (700x700) must be used to reduce artifacts
