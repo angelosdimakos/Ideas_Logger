@@ -1,0 +1,5 @@
+=== Zephyrus Idea Logger ===
+[2025-03-21 20:18:58] [Tooling & Automation] Created logger to categorise ideas.
+[2025-03-21 20:22:15] [Narrative Concept] Testing whether logger can export to both txt and md
+[2025-03-21 20:23:21] [Tooling & Automation] Testing output for txt
+[2025-03-21 20:24:58] [Tooling & Automation] Tested whether txt logging is silent
