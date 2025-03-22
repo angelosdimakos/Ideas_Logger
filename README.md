@@ -1,119 +1,142 @@
-Zephyrus Idea Logger 🧠📝
+# Zephyrus Idea Logger 🧠📝
 
-Zephyrus Idea Logger is a personal idea-capturing tool designed for worldbuilding, AI design, and narrative development. It combines an intuitive GUI for logging ideas, automated AI-driven summarization, and fast semantic search using FAISS. With Obsidian-ready markdown exports and a structured JSON log, it’s built for creative workflows and rapid retrieval.
-🔧 Features
+A powerful, AI-integrated idea capture and summarization tool designed for:
+- Narrative design
+- Worldbuilding
+- AI system architecture
+- Research logging
 
-    GUI Logger: Easy-to-use interface with category dropdowns for logging ideas.
+Zephyrus combines a streamlined GUI, automated local LLM summarization, and lightning-fast semantic search via FAISS.
 
-    Automated Summarization: Uses local AI (via Ollama) to generate summaries from logged ideas.
+---
 
-    FAISS Integration: Builds a vector index from summaries (using cosine similarity) for fast semantic search.
+## ✨ Features
 
-    Obsidian-Ready Exports: Generates markdown logs in /exports/ for seamless integration with Obsidian.
+- ⬜ **Clean GUI:** Log structured entries using dropdowns for category/subcategory.
+- 🤖 **AI Summarization:** Automatically summarizes every 5 entries per subcategory (via local Ollama).
+- ⚖️ **Correction System:** Lets you manually revise summaries, with both `original_summary` and `corrected_summary` saved.
+- 🔎 **FAISS Vector Search:** Search your summaries semantically using cosine similarity.
+- 📅 **Time-Aware Batching:** Entries are grouped per date and subcategory, each with metadata.
+- 📃 **Obsidian-Ready:** Markdown export enabled for seamless PKM workflows.
 
-    Structured JSON Logging: Timestamps and organizes ideas for easy tracking and future processing.
+---
 
-    Extensible Architecture: Designed to incorporate additional features like bidirectional linking, custom tagging, and more.
+## ⚡ Quickstart
 
-📁 Project Structure
+```bash
+# 1. Clone the repo
+$ git clone https://github.com/YOUR_USERNAME/zephyrus-idea-logger.git
+$ cd zephyrus-idea-logger
 
-Zephyrus_Idea_Logger/
-├── main.py                     # Entry point for launching the application
-├── core.py                     # Core logging and summarization logic
-├── gui.py                      # Tkinter-based GUI for logging and FAISS search
-├── ai_summarizer.py            # AI summarization using local Ollama inference
-├── summary_indexer.py          # FAISS indexer for semantic search (with cosine similarity)
-├── vector_indexer.py           # Alternate indexer implementation (if needed)
-├── logs/                       # JSON logs, correction summaries, and error logs
-├── exports/                    # Obsidian-compatible markdown logs
-├── config.json                 # Configuration file (e.g., batch size, etc.)
-└── README.md                   # This file
+# 2. Create virtual env & install dependencies
+$ python -m venv venv && source venv/bin/activate
+$ pip install -r requirements.txt
 
-🚀 Roadmap & Future Upgrades
+# 3. Launch the GUI
+$ python scripts/main.py
+```
 
-While the project is feature complete for core idea logging, summarization, and vector search, the roadmap below outlines several enhancements to further boost productivity and extend functionality:
-Phase 1: Documentation & Core Polish (Weeks 1–2)
+---
 
-    Improve README and developer guides.
+## 🎓 How It Works
 
-    Refactor code and add tests for core features.
+### Logging
+- Choose a main category and subcategory
+- Type your idea and save
+- Every 5 entries: AI generates a summary, saved to `correction_summaries.json`
 
-Phase 2: Productivity Enhancements (Weeks 3–5)
+### Summarization
+- Uses `llama3` or your configured Ollama model
+- Summaries stored alongside original entries
+- Manual corrections are versioned and stored as `corrected_summary`
 
-    Obsidian-Style Features:
+### Search
+- FAISS indexes all summaries
+- You can rebuild the index and search via GUI
+- Supports batch + metadata display for fast context
 
-        Introduce [[double-bracket]] linking and automatic network graph generation.
+### Double Linking
+- Each summary knows which log entries it came from
+- Entries can be traced back via their `log_YYYYMMDD_###` ID
 
-        Create daily notes and predefined templates for various idea types.
+---
 
-Phase 3: Structured Data & UI Enhancements (Weeks 6–8)
+## 📂 Folder Structure
 
-    Notion-Inspired Organization:
+```
+.
+├── scripts/
+│   ├── main.py                # Entry point
+│   ├── gui.py                 # Full Tkinter GUI
+│   ├── core.py                # Handles saving logs + summaries
+│   ├── ai_summarizer.py      # Local LLM-based summarizer
+│   ├── summary_indexer.py    # FAISS summary search logic
+│   ├── raw_log_indexer.py    # FAISS indexing for raw log content
+│   ├── base_indexer.py       # Shared FAISS logic
+│   ├── config_loader.py      # Handles config.json loading
+├── logs/
+│   ├── zephyrus_log.json     # Main idea log
+│   └── correction_summaries.json  # Summary metadata
+├── exports/                      # Obsidian-compatible .md output
+├── vector_store/                # FAISS index and metadata
+├── config.json                  # All app configuration
+```
 
-        Add structured metadata (e.g., Priority, Status) to entries.
+---
 
-        Implement filtering, sorting, and a Kanban view in the GUI.
+## 🚀 Configuration
 
-Phase 4: Workflow & Task Management (Weeks 9–11)
+All behavior is controlled via `config.json`:
 
-    Trello-Like Features:
+```json
+"summarization": true,
+"llm_model": "llama3",
+"batch_size": 5,
+"correction_summaries_path": "logs/correction_summaries.json",
+"json_log_file": "logs/zephyrus_log.json"
+```
 
-        Introduce simple status tracking (To-Do, In Review, Completed).
+> ⚠️ You must have **Ollama** installed and the selected model available locally.
 
-        Set deadlines and reminders for revisiting critical ideas.
+---
 
-Phase 5: Advanced AI Integration (Weeks 12–14)
+## 📝 Testing
 
-    Enhanced AI Capabilities:
+```bash
+# Coming soon - tests for:
+# - Summarization logic
+# - FAISS index build/search
+# - Data structure validation
+```
 
-        Improve real-time summarization and schedule periodic reports.
+---
 
-        Implement AI-driven tagging to suggest and auto-assign relevant keywords.
+## ✨ Roadmap
 
-Phase 6: Extensibility & Analytics (Weeks 15–18)
+- [x] GUI Logger w/ Dropdowns
+- [x] AI Summarization via Ollama
+- [x] FAISS Vector Search (Summaries)
+- [x] Correction + Double Link Tracking
+- [ ] Raw Log Vector Search
+- [ ] Plugin Support (Obsidian + Exports)
+- [ ] Automated Testing & CLI
 
-    Extensible Architecture:
+---
 
-        Develop a plugin system and customizable keyboard shortcuts.
+## 🙌 Contributing
 
-        Integrate version history for entries and remote syncing.
+Pull requests, ideas, and feature suggestions welcome!
+- Fork + PR
+- Raise an issue
+- Or DM me if you want to collaborate deeper!
 
-        Add visual analytics (e.g., word clouds, heatmaps) for trend analysis.
+---
 
-🛠️ Installation & Setup
+## 📄 License
 
-    Clone the repository:
+MIT License. Use it freely, but don't resell without giving credit.
 
-git clone https://your-repo-url.git
-cd Zephyrus_Idea_Logger
+---
 
-Install dependencies:
+Built with ❤️ by Angelos Dimakos and his sentient AI archivist.
 
-pip install -r requirements.txt
-
-Ensure you have installed packages such as ollama, faiss, sentence_transformers, and tkinter.
-
-Run the application:
-
-    python main.py
-
-🔍 Usage
-
-    Logging Ideas:
-    Input your ideas using the GUI. Entries are automatically logged, summarized in batches, and exported as markdown files.
-
-    FAISS Search:
-    Build or refresh the FAISS index and use the search panel to quickly find summaries using semantic search.
-
-    Markdown Exports:
-    Check the /exports/ directory for organized, Obsidian-ready markdown files.
-
-🤝 Contributing
-
-Contributions are welcome! Fork the repository, create a feature branch, and open a pull request with your improvements. Please update documentation and tests as appropriate.
-📄 License
-
-MIT License
-📚 Acknowledgments
-
-This project draws inspiration from leading productivity tools such as Obsidian, Notion, Trello, and VSCode, combined with modern AI summarization and vector search techniques.

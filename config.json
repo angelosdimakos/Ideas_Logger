@@ -28,6 +28,9 @@
     "logs_dir": "logs",                       
     "export_dir": "exports",                  
     "correction_summaries_path": "logs/correction_summaries.json",
+    "raw_log_path": "logs/zephyrus_log.json",
+    "raw_log_index_path": "vector_store/raw_index.faiss",
+    "raw_log_metadata_path": "vector_store/raw_metadata.pkl",  
     "log_format": "json",                     
     "markdown_export": true,                
   
