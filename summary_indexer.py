@@ -3,6 +3,7 @@ import faiss
 import json
 from pathlib import Path
 import pickle
+import numpy as np
 
 class SummaryIndexer:
     def __init__(self, summaries_path, index_path, metadata_path):
@@ -45,9 +46,12 @@ class SummaryIndexer:
 
         print(f"🔍 Indexing {len(texts)} summaries...")
         embeddings = self.model.encode(texts, show_progress_bar=True)
-        dimension = embeddings[0].shape[0]
+        # Normalize embeddings to unit length for cosine similarity
+        embeddings = embeddings / np.linalg.norm(embeddings, axis=1, keepdims=True)
+        dimension = embeddings.shape[1]
 
-        self.index = faiss.IndexFlatL2(dimension)
+        # Use inner product index for cosine similarity (for normalized vectors)
+        self.index = faiss.IndexFlatIP(dimension)
         self.index.add(embeddings)
         self.metadata = metadata
 
@@ -72,13 +76,15 @@ class SummaryIndexer:
             return []
 
         query_vec = self.model.encode([query])
-        distances, indices = self.index.search(query_vec, top_k)
+        query_vec = query_vec / np.linalg.norm(query_vec, axis=1, keepdims=True)
+        # For IndexFlatIP, the search returns inner products (cosine similarity)
+        similarities, indices = self.index.search(query_vec, top_k)
 
         results = []
         for i, neighbor_idx in enumerate(indices[0]):
             if neighbor_idx < len(self.metadata):
-                raw_distance = distances[0][i]
-                similarity = 1 / (1 + raw_distance)
+                # Directly use the similarity score
+                similarity = similarities[0][i]
                 record = self.metadata[neighbor_idx].copy()
                 record["similarity"] = round(similarity, 4)
                 results.append(record)

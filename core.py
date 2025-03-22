@@ -190,10 +190,10 @@ class ZephyrusLoggerCore:
         
         # Trigger FAISS update
         indexer = SummaryIndexer(
-                                summaries_path=self.correction_summaries_file,
-                                index_path=self.script_dir / "vector_store/summary_index.faiss",
-                                metadata_path=self.script_dir / "vector_store/summary_metadata.pkl"
-                                                                            )
+            summaries_path=self.correction_summaries_file,
+            index_path=self.script_dir / "vector_store/summary_index.faiss",
+            metadata_path=self.script_dir / "vector_store/summary_metadata.pkl"
+        )
         indexer.build_index()
 
     def log_to_markdown(self, date_str, main_category, subcategory, entry):

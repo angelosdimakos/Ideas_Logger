@@ -242,10 +242,9 @@ class ZephyrusLoggerGUI:
         if results:
             msg_parts = []
             for r in results:
-                # Score might not exist if we didn't store distances
-                scr = r.get("score", 0.0)
+                scr = r.get("similarity", 0.0)
                 msg_parts.append(
-                    f"Score: {scr:.2f}\n"
+                    f"Similarity: {scr:.4f}\n"
                     f"Date: {r['date']}\n"
                     f"{r['main_category']} → {r['subcategory']} (Batch {r['batch']})\n"
                     f"Time: {r['timestamp']}"

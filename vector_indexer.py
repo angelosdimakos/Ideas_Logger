@@ -3,6 +3,7 @@ import faiss
 import json
 from pathlib import Path
 import pickle
+import numpy as np
 
 class SummaryIndexer:
     def __init__(self, summaries_path, index_path, metadata_path):
@@ -43,11 +44,11 @@ class SummaryIndexer:
             return False
 
         print(f"🔍 Indexing {len(texts)} summaries...")
-
         embeddings = self.model.encode(texts, show_progress_bar=True)
-        dimension = embeddings[0].shape[0]
+        embeddings = embeddings / np.linalg.norm(embeddings, axis=1, keepdims=True)
+        dimension = embeddings.shape[1]
 
-        self.index = faiss.IndexFlatL2(dimension)
+        self.index = faiss.IndexFlatIP(dimension)
         self.index.add(embeddings)
         self.metadata = metadata
 
@@ -70,10 +71,22 @@ class SummaryIndexer:
             return []
 
         query_vec = self.model.encode([query])
-        distances, indices = self.index.search(query_vec, top_k)
+        query_vec = query_vec / np.linalg.norm(query_vec, axis=1, keepdims=True)
+        similarities, indices = self.index.search(query_vec, top_k)
 
         results = []
-        for idx in indices[0]:
+        for i, idx in enumerate(indices[0]):
             if idx < len(self.metadata):
-                results.append(self.metadata[idx])
+                result = self.metadata[idx]
+                result["similarity"] = round(similarities[0][i], 4)
+                results.append(result)
         return results
+
+# === Optional Standalone Execution ===
+if __name__ == "__main__":
+    indexer = SummaryIndexer(
+        summaries_path="logs/correction_summaries.json",
+        index_path="vector_store/summary_index.faiss",
+        metadata_path="vector_store/summary_metadata.pkl"
+    )
+    indexer.build_index()
