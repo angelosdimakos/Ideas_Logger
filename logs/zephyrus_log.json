@@ -187,6 +187,10 @@
                 {
                     "timestamp": "2025-03-22 13:34:31",
                     "content": "Using a script folder enables easier organisation of programmatic logic, but proper pathing is crucial to write to correct folders."
+                },
+                {
+                    "timestamp": "2025-03-22 17:53:21",
+                    "content": "Need to find a way to do massive changes in codebase without constantly breaking stuff."
                 }
             ],
             "Tooling & Automation": [

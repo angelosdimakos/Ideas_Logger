@@ -64,6 +64,12 @@
       "Creative Ops / Org Flow": "Summarize the creative workflow or team process insight described.",
       "_default": "Summarize the following idea into concise, meaningful bullet points:"
     },
+
+    "_comment_testing": "==== TESTING SETTINGS ====",
+    "test_mode": false,  
+    "test_logs_dir": "tests/mock_logs",
+    "test_vector_store_dir": "tests/mock_vector_store",
+    "test_export_dir": "tests/mock_exports",
   
     "_comment_future": "==== ADVANCED / FUTURE ====",
     "remote_sync": false,                    

@@ -5,10 +5,33 @@ import json
 import os
 from summary_indexer import SummaryIndexer
 from raw_log_indexer import RawLogIndexer
-from config_loader import load_config, get_config_value
+from config_loader import load_config, get_config_value, get_absolute_path
 
 class ZephyrusLoggerGUI:
+    """
+    GUI for the Zephyrus Idea Logger, designed to log and summarize ideas with support for FAISS search.
+
+    Attributes:
+        logger_core (ZephyrusLoggerCore): The core logger responsible for managing logs and summaries.
+        root (tk.Tk): The main Tkinter root window.
+        status_var (tk.StringVar): Variable to track the current status in the UI.
+        log_frame (tk.Frame): Frame containing the log text area.
+        log_text (scrolledtext.ScrolledText): Widget for displaying log messages.
+        text_entry (tk.Text): Text entry widget for new idea inputs.
+        category_structure (dict): The structure of categories and subcategories from the config.
+        selected_category_main (tk.StringVar): The selected main category.
+        selected_subcategory (tk.StringVar): The selected subcategory.
+        indexer (SummaryIndexer): Instance for FAISS-based summary indexing.
+        raw_indexer (RawLogIndexer): Instance for FAISS-based raw log indexing.
+    """
+    
     def __init__(self, logger_core):
+        """
+        Initializes the ZephyrusLoggerGUI with the provided logger core.
+
+        Args:
+            logger_core (ZephyrusLoggerCore): The core logger for saving entries and generating summaries.
+        """
         self.logger_core = logger_core
         self.root = tk.Tk()
         self.root.title("Zephyrus Idea Logger (with FAISS Search)")
@@ -47,6 +70,12 @@ class ZephyrusLoggerGUI:
         self.log_message("Zephyrus Idea Logger initialized. Ready for entries.")
 
     def log_message(self, message):
+        """
+        Logs a message to the UI's log display area with a timestamp.
+
+        Args:
+            message (str): The message to log.
+        """
         timestamp = datetime.now().strftime("%H:%M:%S")
         self.log_text.config(state=tk.NORMAL)
         self.log_text.insert(tk.END, f"[{timestamp}] {message}\n")
@@ -54,6 +83,12 @@ class ZephyrusLoggerGUI:
         self.log_text.config(state=tk.DISABLED)
 
     def _create_category_selector(self):
+        """
+        Creates the category and subcategory dropdown menus for selecting log categories.
+
+        This function builds the UI components that allow users to select a main category
+        and a subcategory for the logged idea.
+        """
         frame = tk.Frame(self.root)
         frame.pack(padx=10, pady=5)
 
@@ -78,6 +113,12 @@ class ZephyrusLoggerGUI:
         self._update_subcategories(default_main)
 
     def _update_subcategories(self, main_category):
+        """
+        Updates the subcategory dropdown based on the selected main category.
+
+        Args:
+            main_category (str): The selected main category.
+        """
         subcats = self.category_structure.get(main_category, [])
         if subcats:
             self.selected_subcategory.set(subcats[0])
@@ -87,6 +128,11 @@ class ZephyrusLoggerGUI:
             menu.add_command(label=subcat, command=lambda sc=subcat: self.selected_subcategory.set(sc))
 
     def _create_main_buttons(self):
+        """
+        Creates the main buttons for logging entries and forcing summaries.
+
+        The function creates buttons for the user to log new ideas and force a summary generation.
+        """
         frame = tk.Frame(self.root)
         frame.pack(pady=5)
 
@@ -94,6 +140,12 @@ class ZephyrusLoggerGUI:
         tk.Button(frame, text="Force Summarize", command=self._manual_summarize, width=15, height=2, bg="#2196F3", fg="white").pack(side=tk.LEFT, padx=10)
 
     def _create_faiss_panel(self):
+        """
+        Creates the FAISS panel for building and searching the summaries index.
+
+        This function sets up the UI elements for interacting with the FAISS index: building
+        the index and performing search operations.
+        """
         frame = tk.LabelFrame(self.root, text="FAISS Summaries Index & Search", padx=10, pady=10)
         frame.pack(fill=tk.X, padx=10, pady=(0, 5))
 
@@ -108,6 +160,12 @@ class ZephyrusLoggerGUI:
         tk.Button(search_frame, text="Search", command=self._search_faiss_index).pack(side=tk.LEFT)
 
     def _create_rawlog_panel(self):
+        """
+        Creates the panel for building and searching the raw log index.
+
+        This function sets up the UI components to allow building and searching the raw log 
+        FAISS index.
+        """
         frame = tk.LabelFrame(self.root, text="FAISS Raw Log Search", padx=10, pady=10)
         frame.pack(fill=tk.X, padx=10, pady=(0, 10))
 
@@ -122,11 +180,17 @@ class ZephyrusLoggerGUI:
         tk.Button(search_frame, text="Search Logs", command=self._search_raw_index).pack(side=tk.LEFT)
 
     def _build_faiss_index(self):
+        """
+        Builds the FAISS index from the correction summaries file.
+
+        This function creates the FAISS index for the summaries, which is used for semantic search.
+        """
         if not os.path.isdir("vector_store"):
             os.makedirs("vector_store")
-
+    
         self.log_message("🔨 Building FAISS index from correction_summaries.json...")
-        success = self.indexer.build_index()
+        texts, meta = self.indexer.load_entries()  # Load the summary entries from the file
+        success = self.indexer.build_index(texts, meta)  # Pass the loaded texts and metadata
         if success:
             self.log_message("✅ FAISS index built successfully.")
             self.status_var.set("FAISS index built.")
@@ -137,6 +201,12 @@ class ZephyrusLoggerGUI:
             messagebox.showwarning("Index Error", "Unable to build FAISS index.")
 
     def _search_faiss_index(self):
+        """
+        Searches the FAISS index for summaries based on the user's query.
+
+        This function retrieves the most similar summaries from the FAISS index and displays 
+        them in a message box.
+        """
         query = self.search_entry.get().strip()
         if not query:
             messagebox.showwarning("Empty Query", "Please enter a search term.")
@@ -168,18 +238,31 @@ class ZephyrusLoggerGUI:
             self.log_message(f"No matches for '{query}' in FAISS index.")
 
     def _build_raw_index(self):
+        """
+        Builds the FAISS index from raw logs in `zephyrus_log.json`.
+
+        This function generates a FAISS index for raw logs, enabling full-text search across
+        all ideas logged in Zephyrus.
+        """
         self.log_message("🛠 Building FAISS index from raw logs...")
-        success = self.raw_indexer.build_index()
+        texts, meta = self.raw_indexer.load_entries()  # Load raw entries first
+        success = self.raw_indexer.build_index(texts, meta)  # Pass them to build_index
         if success:
             self.log_message("✅ Raw log FAISS index built successfully.")
             self.status_var.set("Raw log index built.")
             messagebox.showinfo("Raw Log Index Built", "FAISS index from raw logs has been built.")
         else:
-            self.log_message("❌ Failed to build raw log FAISS index.")
+            self.log_message("❌ Failed to build FAISS index.")
             self.status_var.set("Raw log index failed.")
             messagebox.showwarning("Index Error", "Unable to build FAISS index from raw logs.")
 
     def _search_raw_index(self):
+        """
+        Searches the raw log FAISS index based on the user's query.
+
+        This function retrieves the most relevant raw log entries from the FAISS index and displays
+        them in a message box.
+        """
         query = self.raw_search_entry.get().strip()
         if not query:
             messagebox.showwarning("Empty Query", "Please enter a search term.")
@@ -212,6 +295,12 @@ class ZephyrusLoggerGUI:
             self.log_message(f"No matches for '{query}' in raw log index.")
 
     def _save_entry(self):
+        """
+        Saves the current entry typed by the user into the Zephyrus log and the markdown export.
+
+        The entry is categorized under the selected category and subcategory. After saving, 
+        the text area is cleared, and the status is updated.
+        """
         entry = self.text_entry.get("1.0", tk.END).strip()
         if not entry:
             messagebox.showwarning("Empty", "Please type something before saving.")
@@ -235,6 +324,12 @@ class ZephyrusLoggerGUI:
             messagebox.showerror("Error", "Logging failed. Check logs for details.")
 
     def _manual_summarize(self):
+        """
+        Manually triggers the summarization of the most recent logged entries.
+
+        This function generates a summary for the selected category and subcategory, and provides
+        feedback to the user.
+        """
         main_category = self.selected_category_main.get()
         subcategory = self.selected_subcategory.get()
 
@@ -275,4 +370,14 @@ class ZephyrusLoggerGUI:
             messagebox.showwarning("⚠️ Summarization Failed", f"Could not summarize {main_category} → {subcategory} on {latest_date}. Check logs for details.")
 
     def run(self):
+        """
+        Starts the Tkinter main loop, rendering the GUI and making the application interactive.
+        """
+        config_file = get_absolute_path("config/config.json")  # Use the config folder path
+        config = load_config(config_file)
+        if config:
+            self.config_json_file = open(config_file, "r", encoding="utf-8")
+        else:
+            self.config_json_file = None
+
         self.root.mainloop()

@@ -24,6 +24,7 @@
 - **AI System Design**: Chat GPT prefers destructive logic
 
 ## 2025-03-22
+- **Meta Reflection**: Need to find a way to do massive changes in codebase without constantly breaking stuff.
 - **AI System Design**: Included configurations in a global config.json file to enable better configuration with different templates depending on use.
 - **Meta Reflection**: Using a script folder enables easier organisation of programmatic logic, but proper pathing is crucial to write to correct folders.
 - **Tooling & Automation**: Automating category and subcategory selection based on entry would enable smoother usage, instead of dropdown categories.

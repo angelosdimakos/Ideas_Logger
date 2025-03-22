@@ -1,2 +1,831 @@
 2025-03-22 00:44:33,582 - ERROR - [\U0001f4a5 CORRECTION FILE ERROR] [Errno 2] No such file or directory: 'C:\\Users\\Angelos Dimakos\\Documents\\Ideas_Logger\\logs\\correction_summaries.json'
 2025-03-22 00:46:09,137 - ERROR - [\U0001f4a5 CORRECTION FILE ERROR] [Errno 2] No such file or directory: 'C:\\Users\\Angelos Dimakos\\Documents\\Ideas_Logger\\logs\\correction_summaries.json'
+2025-03-22 18:16:13,268 - ERROR - [\u274c AI Error] summarize_entries_bulk failed: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-03-22 18:55:43,613 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:55:43,614 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:55:43,614 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:55:43,653 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:55:43,656 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:55:43,657 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:55:46,201 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:55:46,201 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:55:47,204 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config/config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:59:30,218 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:59:30,218 - DEBUG - Full config dump:
+{
+  "//": "==== GENERAL SETTINGS ====",
+  "mode": "full",
+  "use_gui": true,
+  "interface_theme": "dark",
+  "batch_size": 5,
+  "autosave_interval": 5,
+  "log_level": "ERROR",
+  "_comment_ai": "==== AI & LLM SETTINGS ====",
+  "summarization": true,
+  "llm_provider": "ollama",
+  "llm_model": "llama3",
+  "openai_model": "gpt-4",
+  "api_keys": {
+    "openai": "sk-xxxxxxxxxxxxxxxx"
+  },
+  "_comment_faiss": "==== EMBEDDING & FAISS ====",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "faiss_top_k": 5,
+  "vector_store_dir": "vector_store",
+  "faiss_index_path": "vector_store/summary_index.faiss",
+  "faiss_metadata_path": "vector_store/summary_metadata.pkl",
+  "/_comment_exporting_json": "==== LOGGING & EXPORT ====",
+  "logs_dir": "logs",
+  "export_dir": "exports",
+  "correction_summaries_path": "logs/correction_summaries.json",
+  "raw_log_path": "logs/zephyrus_log.json",
+  "raw_log_index_path": "vector_store/raw_index.faiss",
+  "raw_log_metadata_path": "vector_store/raw_metadata.pkl",
+  "log_format": "json",
+  "markdown_export": true,
+  "_comment_settings": "==== STRUCTURE SETTINGS ====",
+  "default_tags": [
+    "zephyrus"
+  ],
+  "use_templates": true,
+  "persona": "default",
+  "_comment_category_structure": "==== CATEGORY STRUCTURE ====",
+  "category_structure": {
+    "Narrative": [
+      "Narrative Concept",
+      "Romantic Development",
+      "Emotional Impact"
+    ],
+    "World": [
+      "Worldbuilding Detail",
+      "Faction Dynamics",
+      "Loop Mechanics"
+    ],
+    "AI / Meta": [
+      "AI System Design",
+      "Tooling & Automation",
+      "Execution Strategy",
+      "Meta Reflection"
+    ],
+    "Creative": [
+      "Visual or Audio Prompt",
+      "Gameplay Design Insight",
+      "Creative Ops / Org Flow"
+    ]
+  },
+  "_comment_prompt_subcategory": "==== PROMPTS BY SUBCATEGORY ====",
+  "prompts_by_subcategory": {
+    "Narrative Concept": "Summarize the core narrative idea with a focus on its thematic significance or plot role.",
+    "Romantic Development": "Summarize this relationship insight while preserving emotional nuance and character dynamics.",
+    "Emotional Impact": "Summarize the emotional tone or psychological effect this idea is meant to deliver.",
+    "Worldbuilding Detail": "Summarize this worldbuilding element to highlight its uniqueness or relevance to lore.",
+    "Faction Dynamics": "Summarize the factional strategy, alliance, or betrayal logic described.",
+    "Loop Mechanics": "Summarize this idea about time loops or memory mechanics in a structured way.",
+    "AI System Design": "Summarize the AI system concept clearly, focusing on architecture or interaction design.",
+    "Tooling & Automation": "Summarize the workflow, tool, or automation concept in a concise technical format.",
+    "Execution Strategy": "Summarize the execution plan, decision, or optimization insight.",
+    "Meta Reflection": "Summarize the philosophical or reflective insight being conveyed.",
+    "Visual or Audio Prompt": "Summarize this creative prompt into a single vivid visual/audio description.",
+    "Gameplay Design Insight": "Summarize this as a gameplay mechanic or player-interaction concept.",
+    "Creative Ops / Org Flow": "Summarize the creative workflow or team process insight described.",
+    "_default": "Summarize the following idea into concise, meaningful bullet points:"
+  },
+  "_comment_testing": "==== TESTING SETTINGS ====",
+  "test_mode": false,
+  "test_logs_dir": "tests/mock_logs",
+  "test_vector_store_dir": "tests/mock_vector_store",
+  "test_export_dir": "tests/mock_exports",
+  "_comment_future": "==== ADVANCED / FUTURE ====",
+  "remote_sync": false,
+  "plugin_dir": "plugins",
+  "enable_debug_logging": true,
+  "strict_offline_mode": false
+}
+2025-03-22 18:59:30,220 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:59:30,220 - DEBUG - Full config dump:
+{
+  "//": "==== GENERAL SETTINGS ====",
+  "mode": "full",
+  "use_gui": true,
+  "interface_theme": "dark",
+  "batch_size": 5,
+  "autosave_interval": 5,
+  "log_level": "ERROR",
+  "_comment_ai": "==== AI & LLM SETTINGS ====",
+  "summarization": true,
+  "llm_provider": "ollama",
+  "llm_model": "llama3",
+  "openai_model": "gpt-4",
+  "api_keys": {
+    "openai": "sk-xxxxxxxxxxxxxxxx"
+  },
+  "_comment_faiss": "==== EMBEDDING & FAISS ====",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "faiss_top_k": 5,
+  "vector_store_dir": "vector_store",
+  "faiss_index_path": "vector_store/summary_index.faiss",
+  "faiss_metadata_path": "vector_store/summary_metadata.pkl",
+  "/_comment_exporting_json": "==== LOGGING & EXPORT ====",
+  "logs_dir": "logs",
+  "export_dir": "exports",
+  "correction_summaries_path": "logs/correction_summaries.json",
+  "raw_log_path": "logs/zephyrus_log.json",
+  "raw_log_index_path": "vector_store/raw_index.faiss",
+  "raw_log_metadata_path": "vector_store/raw_metadata.pkl",
+  "log_format": "json",
+  "markdown_export": true,
+  "_comment_settings": "==== STRUCTURE SETTINGS ====",
+  "default_tags": [
+    "zephyrus"
+  ],
+  "use_templates": true,
+  "persona": "default",
+  "_comment_category_structure": "==== CATEGORY STRUCTURE ====",
+  "category_structure": {
+    "Narrative": [
+      "Narrative Concept",
+      "Romantic Development",
+      "Emotional Impact"
+    ],
+    "World": [
+      "Worldbuilding Detail",
+      "Faction Dynamics",
+      "Loop Mechanics"
+    ],
+    "AI / Meta": [
+      "AI System Design",
+      "Tooling & Automation",
+      "Execution Strategy",
+      "Meta Reflection"
+    ],
+    "Creative": [
+      "Visual or Audio Prompt",
+      "Gameplay Design Insight",
+      "Creative Ops / Org Flow"
+    ]
+  },
+  "_comment_prompt_subcategory": "==== PROMPTS BY SUBCATEGORY ====",
+  "prompts_by_subcategory": {
+    "Narrative Concept": "Summarize the core narrative idea with a focus on its thematic significance or plot role.",
+    "Romantic Development": "Summarize this relationship insight while preserving emotional nuance and character dynamics.",
+    "Emotional Impact": "Summarize the emotional tone or psychological effect this idea is meant to deliver.",
+    "Worldbuilding Detail": "Summarize this worldbuilding element to highlight its uniqueness or relevance to lore.",
+    "Faction Dynamics": "Summarize the factional strategy, alliance, or betrayal logic described.",
+    "Loop Mechanics": "Summarize this idea about time loops or memory mechanics in a structured way.",
+    "AI System Design": "Summarize the AI system concept clearly, focusing on architecture or interaction design.",
+    "Tooling & Automation": "Summarize the workflow, tool, or automation concept in a concise technical format.",
+    "Execution Strategy": "Summarize the execution plan, decision, or optimization insight.",
+    "Meta Reflection": "Summarize the philosophical or reflective insight being conveyed.",
+    "Visual or Audio Prompt": "Summarize this creative prompt into a single vivid visual/audio description.",
+    "Gameplay Design Insight": "Summarize this as a gameplay mechanic or player-interaction concept.",
+    "Creative Ops / Org Flow": "Summarize the creative workflow or team process insight described.",
+    "_default": "Summarize the following idea into concise, meaningful bullet points:"
+  },
+  "_comment_testing": "==== TESTING SETTINGS ====",
+  "test_mode": false,
+  "test_logs_dir": "tests/mock_logs",
+  "test_vector_store_dir": "tests/mock_vector_store",
+  "test_export_dir": "tests/mock_exports",
+  "_comment_future": "==== ADVANCED / FUTURE ====",
+  "remote_sync": false,
+  "plugin_dir": "plugins",
+  "enable_debug_logging": true,
+  "strict_offline_mode": false
+}
+2025-03-22 18:59:30,221 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:59:30,221 - DEBUG - Full config dump:
+{
+  "//": "==== GENERAL SETTINGS ====",
+  "mode": "full",
+  "use_gui": true,
+  "interface_theme": "dark",
+  "batch_size": 5,
+  "autosave_interval": 5,
+  "log_level": "ERROR",
+  "_comment_ai": "==== AI & LLM SETTINGS ====",
+  "summarization": true,
+  "llm_provider": "ollama",
+  "llm_model": "llama3",
+  "openai_model": "gpt-4",
+  "api_keys": {
+    "openai": "sk-xxxxxxxxxxxxxxxx"
+  },
+  "_comment_faiss": "==== EMBEDDING & FAISS ====",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "faiss_top_k": 5,
+  "vector_store_dir": "vector_store",
+  "faiss_index_path": "vector_store/summary_index.faiss",
+  "faiss_metadata_path": "vector_store/summary_metadata.pkl",
+  "/_comment_exporting_json": "==== LOGGING & EXPORT ====",
+  "logs_dir": "logs",
+  "export_dir": "exports",
+  "correction_summaries_path": "logs/correction_summaries.json",
+  "raw_log_path": "logs/zephyrus_log.json",
+  "raw_log_index_path": "vector_store/raw_index.faiss",
+  "raw_log_metadata_path": "vector_store/raw_metadata.pkl",
+  "log_format": "json",
+  "markdown_export": true,
+  "_comment_settings": "==== STRUCTURE SETTINGS ====",
+  "default_tags": [
+    "zephyrus"
+  ],
+  "use_templates": true,
+  "persona": "default",
+  "_comment_category_structure": "==== CATEGORY STRUCTURE ====",
+  "category_structure": {
+    "Narrative": [
+      "Narrative Concept",
+      "Romantic Development",
+      "Emotional Impact"
+    ],
+    "World": [
+      "Worldbuilding Detail",
+      "Faction Dynamics",
+      "Loop Mechanics"
+    ],
+    "AI / Meta": [
+      "AI System Design",
+      "Tooling & Automation",
+      "Execution Strategy",
+      "Meta Reflection"
+    ],
+    "Creative": [
+      "Visual or Audio Prompt",
+      "Gameplay Design Insight",
+      "Creative Ops / Org Flow"
+    ]
+  },
+  "_comment_prompt_subcategory": "==== PROMPTS BY SUBCATEGORY ====",
+  "prompts_by_subcategory": {
+    "Narrative Concept": "Summarize the core narrative idea with a focus on its thematic significance or plot role.",
+    "Romantic Development": "Summarize this relationship insight while preserving emotional nuance and character dynamics.",
+    "Emotional Impact": "Summarize the emotional tone or psychological effect this idea is meant to deliver.",
+    "Worldbuilding Detail": "Summarize this worldbuilding element to highlight its uniqueness or relevance to lore.",
+    "Faction Dynamics": "Summarize the factional strategy, alliance, or betrayal logic described.",
+    "Loop Mechanics": "Summarize this idea about time loops or memory mechanics in a structured way.",
+    "AI System Design": "Summarize the AI system concept clearly, focusing on architecture or interaction design.",
+    "Tooling & Automation": "Summarize the workflow, tool, or automation concept in a concise technical format.",
+    "Execution Strategy": "Summarize the execution plan, decision, or optimization insight.",
+    "Meta Reflection": "Summarize the philosophical or reflective insight being conveyed.",
+    "Visual or Audio Prompt": "Summarize this creative prompt into a single vivid visual/audio description.",
+    "Gameplay Design Insight": "Summarize this as a gameplay mechanic or player-interaction concept.",
+    "Creative Ops / Org Flow": "Summarize the creative workflow or team process insight described.",
+    "_default": "Summarize the following idea into concise, meaningful bullet points:"
+  },
+  "_comment_testing": "==== TESTING SETTINGS ====",
+  "test_mode": false,
+  "test_logs_dir": "tests/mock_logs",
+  "test_vector_store_dir": "tests/mock_vector_store",
+  "test_export_dir": "tests/mock_exports",
+  "_comment_future": "==== ADVANCED / FUTURE ====",
+  "remote_sync": false,
+  "plugin_dir": "plugins",
+  "enable_debug_logging": true,
+  "strict_offline_mode": false
+}
+2025-03-22 18:59:30,261 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:59:30,261 - DEBUG - Full config dump:
+{
+  "//": "==== GENERAL SETTINGS ====",
+  "mode": "full",
+  "use_gui": true,
+  "interface_theme": "dark",
+  "batch_size": 5,
+  "autosave_interval": 5,
+  "log_level": "ERROR",
+  "_comment_ai": "==== AI & LLM SETTINGS ====",
+  "summarization": true,
+  "llm_provider": "ollama",
+  "llm_model": "llama3",
+  "openai_model": "gpt-4",
+  "api_keys": {
+    "openai": "sk-xxxxxxxxxxxxxxxx"
+  },
+  "_comment_faiss": "==== EMBEDDING & FAISS ====",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "faiss_top_k": 5,
+  "vector_store_dir": "vector_store",
+  "faiss_index_path": "vector_store/summary_index.faiss",
+  "faiss_metadata_path": "vector_store/summary_metadata.pkl",
+  "/_comment_exporting_json": "==== LOGGING & EXPORT ====",
+  "logs_dir": "logs",
+  "export_dir": "exports",
+  "correction_summaries_path": "logs/correction_summaries.json",
+  "raw_log_path": "logs/zephyrus_log.json",
+  "raw_log_index_path": "vector_store/raw_index.faiss",
+  "raw_log_metadata_path": "vector_store/raw_metadata.pkl",
+  "log_format": "json",
+  "markdown_export": true,
+  "_comment_settings": "==== STRUCTURE SETTINGS ====",
+  "default_tags": [
+    "zephyrus"
+  ],
+  "use_templates": true,
+  "persona": "default",
+  "_comment_category_structure": "==== CATEGORY STRUCTURE ====",
+  "category_structure": {
+    "Narrative": [
+      "Narrative Concept",
+      "Romantic Development",
+      "Emotional Impact"
+    ],
+    "World": [
+      "Worldbuilding Detail",
+      "Faction Dynamics",
+      "Loop Mechanics"
+    ],
+    "AI / Meta": [
+      "AI System Design",
+      "Tooling & Automation",
+      "Execution Strategy",
+      "Meta Reflection"
+    ],
+    "Creative": [
+      "Visual or Audio Prompt",
+      "Gameplay Design Insight",
+      "Creative Ops / Org Flow"
+    ]
+  },
+  "_comment_prompt_subcategory": "==== PROMPTS BY SUBCATEGORY ====",
+  "prompts_by_subcategory": {
+    "Narrative Concept": "Summarize the core narrative idea with a focus on its thematic significance or plot role.",
+    "Romantic Development": "Summarize this relationship insight while preserving emotional nuance and character dynamics.",
+    "Emotional Impact": "Summarize the emotional tone or psychological effect this idea is meant to deliver.",
+    "Worldbuilding Detail": "Summarize this worldbuilding element to highlight its uniqueness or relevance to lore.",
+    "Faction Dynamics": "Summarize the factional strategy, alliance, or betrayal logic described.",
+    "Loop Mechanics": "Summarize this idea about time loops or memory mechanics in a structured way.",
+    "AI System Design": "Summarize the AI system concept clearly, focusing on architecture or interaction design.",
+    "Tooling & Automation": "Summarize the workflow, tool, or automation concept in a concise technical format.",
+    "Execution Strategy": "Summarize the execution plan, decision, or optimization insight.",
+    "Meta Reflection": "Summarize the philosophical or reflective insight being conveyed.",
+    "Visual or Audio Prompt": "Summarize this creative prompt into a single vivid visual/audio description.",
+    "Gameplay Design Insight": "Summarize this as a gameplay mechanic or player-interaction concept.",
+    "Creative Ops / Org Flow": "Summarize the creative workflow or team process insight described.",
+    "_default": "Summarize the following idea into concise, meaningful bullet points:"
+  },
+  "_comment_testing": "==== TESTING SETTINGS ====",
+  "test_mode": false,
+  "test_logs_dir": "tests/mock_logs",
+  "test_vector_store_dir": "tests/mock_vector_store",
+  "test_export_dir": "tests/mock_exports",
+  "_comment_future": "==== ADVANCED / FUTURE ====",
+  "remote_sync": false,
+  "plugin_dir": "plugins",
+  "enable_debug_logging": true,
+  "strict_offline_mode": false
+}
+2025-03-22 18:59:30,265 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:59:30,265 - DEBUG - Full config dump:
+{
+  "//": "==== GENERAL SETTINGS ====",
+  "mode": "full",
+  "use_gui": true,
+  "interface_theme": "dark",
+  "batch_size": 5,
+  "autosave_interval": 5,
+  "log_level": "ERROR",
+  "_comment_ai": "==== AI & LLM SETTINGS ====",
+  "summarization": true,
+  "llm_provider": "ollama",
+  "llm_model": "llama3",
+  "openai_model": "gpt-4",
+  "api_keys": {
+    "openai": "sk-xxxxxxxxxxxxxxxx"
+  },
+  "_comment_faiss": "==== EMBEDDING & FAISS ====",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "faiss_top_k": 5,
+  "vector_store_dir": "vector_store",
+  "faiss_index_path": "vector_store/summary_index.faiss",
+  "faiss_metadata_path": "vector_store/summary_metadata.pkl",
+  "/_comment_exporting_json": "==== LOGGING & EXPORT ====",
+  "logs_dir": "logs",
+  "export_dir": "exports",
+  "correction_summaries_path": "logs/correction_summaries.json",
+  "raw_log_path": "logs/zephyrus_log.json",
+  "raw_log_index_path": "vector_store/raw_index.faiss",
+  "raw_log_metadata_path": "vector_store/raw_metadata.pkl",
+  "log_format": "json",
+  "markdown_export": true,
+  "_comment_settings": "==== STRUCTURE SETTINGS ====",
+  "default_tags": [
+    "zephyrus"
+  ],
+  "use_templates": true,
+  "persona": "default",
+  "_comment_category_structure": "==== CATEGORY STRUCTURE ====",
+  "category_structure": {
+    "Narrative": [
+      "Narrative Concept",
+      "Romantic Development",
+      "Emotional Impact"
+    ],
+    "World": [
+      "Worldbuilding Detail",
+      "Faction Dynamics",
+      "Loop Mechanics"
+    ],
+    "AI / Meta": [
+      "AI System Design",
+      "Tooling & Automation",
+      "Execution Strategy",
+      "Meta Reflection"
+    ],
+    "Creative": [
+      "Visual or Audio Prompt",
+      "Gameplay Design Insight",
+      "Creative Ops / Org Flow"
+    ]
+  },
+  "_comment_prompt_subcategory": "==== PROMPTS BY SUBCATEGORY ====",
+  "prompts_by_subcategory": {
+    "Narrative Concept": "Summarize the core narrative idea with a focus on its thematic significance or plot role.",
+    "Romantic Development": "Summarize this relationship insight while preserving emotional nuance and character dynamics.",
+    "Emotional Impact": "Summarize the emotional tone or psychological effect this idea is meant to deliver.",
+    "Worldbuilding Detail": "Summarize this worldbuilding element to highlight its uniqueness or relevance to lore.",
+    "Faction Dynamics": "Summarize the factional strategy, alliance, or betrayal logic described.",
+    "Loop Mechanics": "Summarize this idea about time loops or memory mechanics in a structured way.",
+    "AI System Design": "Summarize the AI system concept clearly, focusing on architecture or interaction design.",
+    "Tooling & Automation": "Summarize the workflow, tool, or automation concept in a concise technical format.",
+    "Execution Strategy": "Summarize the execution plan, decision, or optimization insight.",
+    "Meta Reflection": "Summarize the philosophical or reflective insight being conveyed.",
+    "Visual or Audio Prompt": "Summarize this creative prompt into a single vivid visual/audio description.",
+    "Gameplay Design Insight": "Summarize this as a gameplay mechanic or player-interaction concept.",
+    "Creative Ops / Org Flow": "Summarize the creative workflow or team process insight described.",
+    "_default": "Summarize the following idea into concise, meaningful bullet points:"
+  },
+  "_comment_testing": "==== TESTING SETTINGS ====",
+  "test_mode": false,
+  "test_logs_dir": "tests/mock_logs",
+  "test_vector_store_dir": "tests/mock_vector_store",
+  "test_export_dir": "tests/mock_exports",
+  "_comment_future": "==== ADVANCED / FUTURE ====",
+  "remote_sync": false,
+  "plugin_dir": "plugins",
+  "enable_debug_logging": true,
+  "strict_offline_mode": false
+}
+2025-03-22 18:59:30,266 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:59:30,266 - DEBUG - Full config dump:
+{
+  "//": "==== GENERAL SETTINGS ====",
+  "mode": "full",
+  "use_gui": true,
+  "interface_theme": "dark",
+  "batch_size": 5,
+  "autosave_interval": 5,
+  "log_level": "ERROR",
+  "_comment_ai": "==== AI & LLM SETTINGS ====",
+  "summarization": true,
+  "llm_provider": "ollama",
+  "llm_model": "llama3",
+  "openai_model": "gpt-4",
+  "api_keys": {
+    "openai": "sk-xxxxxxxxxxxxxxxx"
+  },
+  "_comment_faiss": "==== EMBEDDING & FAISS ====",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "faiss_top_k": 5,
+  "vector_store_dir": "vector_store",
+  "faiss_index_path": "vector_store/summary_index.faiss",
+  "faiss_metadata_path": "vector_store/summary_metadata.pkl",
+  "/_comment_exporting_json": "==== LOGGING & EXPORT ====",
+  "logs_dir": "logs",
+  "export_dir": "exports",
+  "correction_summaries_path": "logs/correction_summaries.json",
+  "raw_log_path": "logs/zephyrus_log.json",
+  "raw_log_index_path": "vector_store/raw_index.faiss",
+  "raw_log_metadata_path": "vector_store/raw_metadata.pkl",
+  "log_format": "json",
+  "markdown_export": true,
+  "_comment_settings": "==== STRUCTURE SETTINGS ====",
+  "default_tags": [
+    "zephyrus"
+  ],
+  "use_templates": true,
+  "persona": "default",
+  "_comment_category_structure": "==== CATEGORY STRUCTURE ====",
+  "category_structure": {
+    "Narrative": [
+      "Narrative Concept",
+      "Romantic Development",
+      "Emotional Impact"
+    ],
+    "World": [
+      "Worldbuilding Detail",
+      "Faction Dynamics",
+      "Loop Mechanics"
+    ],
+    "AI / Meta": [
+      "AI System Design",
+      "Tooling & Automation",
+      "Execution Strategy",
+      "Meta Reflection"
+    ],
+    "Creative": [
+      "Visual or Audio Prompt",
+      "Gameplay Design Insight",
+      "Creative Ops / Org Flow"
+    ]
+  },
+  "_comment_prompt_subcategory": "==== PROMPTS BY SUBCATEGORY ====",
+  "prompts_by_subcategory": {
+    "Narrative Concept": "Summarize the core narrative idea with a focus on its thematic significance or plot role.",
+    "Romantic Development": "Summarize this relationship insight while preserving emotional nuance and character dynamics.",
+    "Emotional Impact": "Summarize the emotional tone or psychological effect this idea is meant to deliver.",
+    "Worldbuilding Detail": "Summarize this worldbuilding element to highlight its uniqueness or relevance to lore.",
+    "Faction Dynamics": "Summarize the factional strategy, alliance, or betrayal logic described.",
+    "Loop Mechanics": "Summarize this idea about time loops or memory mechanics in a structured way.",
+    "AI System Design": "Summarize the AI system concept clearly, focusing on architecture or interaction design.",
+    "Tooling & Automation": "Summarize the workflow, tool, or automation concept in a concise technical format.",
+    "Execution Strategy": "Summarize the execution plan, decision, or optimization insight.",
+    "Meta Reflection": "Summarize the philosophical or reflective insight being conveyed.",
+    "Visual or Audio Prompt": "Summarize this creative prompt into a single vivid visual/audio description.",
+    "Gameplay Design Insight": "Summarize this as a gameplay mechanic or player-interaction concept.",
+    "Creative Ops / Org Flow": "Summarize the creative workflow or team process insight described.",
+    "_default": "Summarize the following idea into concise, meaningful bullet points:"
+  },
+  "_comment_testing": "==== TESTING SETTINGS ====",
+  "test_mode": false,
+  "test_logs_dir": "tests/mock_logs",
+  "test_vector_store_dir": "tests/mock_vector_store",
+  "test_export_dir": "tests/mock_exports",
+  "_comment_future": "==== ADVANCED / FUTURE ====",
+  "remote_sync": false,
+  "plugin_dir": "plugins",
+  "enable_debug_logging": true,
+  "strict_offline_mode": false
+}
+2025-03-22 18:59:31,443 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:59:31,443 - DEBUG - Full config dump:
+{
+  "//": "==== GENERAL SETTINGS ====",
+  "mode": "full",
+  "use_gui": true,
+  "interface_theme": "dark",
+  "batch_size": 5,
+  "autosave_interval": 5,
+  "log_level": "ERROR",
+  "_comment_ai": "==== AI & LLM SETTINGS ====",
+  "summarization": true,
+  "llm_provider": "ollama",
+  "llm_model": "llama3",
+  "openai_model": "gpt-4",
+  "api_keys": {
+    "openai": "sk-xxxxxxxxxxxxxxxx"
+  },
+  "_comment_faiss": "==== EMBEDDING & FAISS ====",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "faiss_top_k": 5,
+  "vector_store_dir": "vector_store",
+  "faiss_index_path": "vector_store/summary_index.faiss",
+  "faiss_metadata_path": "vector_store/summary_metadata.pkl",
+  "/_comment_exporting_json": "==== LOGGING & EXPORT ====",
+  "logs_dir": "logs",
+  "export_dir": "exports",
+  "correction_summaries_path": "logs/correction_summaries.json",
+  "raw_log_path": "logs/zephyrus_log.json",
+  "raw_log_index_path": "vector_store/raw_index.faiss",
+  "raw_log_metadata_path": "vector_store/raw_metadata.pkl",
+  "log_format": "json",
+  "markdown_export": true,
+  "_comment_settings": "==== STRUCTURE SETTINGS ====",
+  "default_tags": [
+    "zephyrus"
+  ],
+  "use_templates": true,
+  "persona": "default",
+  "_comment_category_structure": "==== CATEGORY STRUCTURE ====",
+  "category_structure": {
+    "Narrative": [
+      "Narrative Concept",
+      "Romantic Development",
+      "Emotional Impact"
+    ],
+    "World": [
+      "Worldbuilding Detail",
+      "Faction Dynamics",
+      "Loop Mechanics"
+    ],
+    "AI / Meta": [
+      "AI System Design",
+      "Tooling & Automation",
+      "Execution Strategy",
+      "Meta Reflection"
+    ],
+    "Creative": [
+      "Visual or Audio Prompt",
+      "Gameplay Design Insight",
+      "Creative Ops / Org Flow"
+    ]
+  },
+  "_comment_prompt_subcategory": "==== PROMPTS BY SUBCATEGORY ====",
+  "prompts_by_subcategory": {
+    "Narrative Concept": "Summarize the core narrative idea with a focus on its thematic significance or plot role.",
+    "Romantic Development": "Summarize this relationship insight while preserving emotional nuance and character dynamics.",
+    "Emotional Impact": "Summarize the emotional tone or psychological effect this idea is meant to deliver.",
+    "Worldbuilding Detail": "Summarize this worldbuilding element to highlight its uniqueness or relevance to lore.",
+    "Faction Dynamics": "Summarize the factional strategy, alliance, or betrayal logic described.",
+    "Loop Mechanics": "Summarize this idea about time loops or memory mechanics in a structured way.",
+    "AI System Design": "Summarize the AI system concept clearly, focusing on architecture or interaction design.",
+    "Tooling & Automation": "Summarize the workflow, tool, or automation concept in a concise technical format.",
+    "Execution Strategy": "Summarize the execution plan, decision, or optimization insight.",
+    "Meta Reflection": "Summarize the philosophical or reflective insight being conveyed.",
+    "Visual or Audio Prompt": "Summarize this creative prompt into a single vivid visual/audio description.",
+    "Gameplay Design Insight": "Summarize this as a gameplay mechanic or player-interaction concept.",
+    "Creative Ops / Org Flow": "Summarize the creative workflow or team process insight described.",
+    "_default": "Summarize the following idea into concise, meaningful bullet points:"
+  },
+  "_comment_testing": "==== TESTING SETTINGS ====",
+  "test_mode": false,
+  "test_logs_dir": "tests/mock_logs",
+  "test_vector_store_dir": "tests/mock_vector_store",
+  "test_export_dir": "tests/mock_exports",
+  "_comment_future": "==== ADVANCED / FUTURE ====",
+  "remote_sync": false,
+  "plugin_dir": "plugins",
+  "enable_debug_logging": true,
+  "strict_offline_mode": false
+}
+2025-03-22 18:59:31,444 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config\config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:59:31,444 - DEBUG - Full config dump:
+{
+  "//": "==== GENERAL SETTINGS ====",
+  "mode": "full",
+  "use_gui": true,
+  "interface_theme": "dark",
+  "batch_size": 5,
+  "autosave_interval": 5,
+  "log_level": "ERROR",
+  "_comment_ai": "==== AI & LLM SETTINGS ====",
+  "summarization": true,
+  "llm_provider": "ollama",
+  "llm_model": "llama3",
+  "openai_model": "gpt-4",
+  "api_keys": {
+    "openai": "sk-xxxxxxxxxxxxxxxx"
+  },
+  "_comment_faiss": "==== EMBEDDING & FAISS ====",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "faiss_top_k": 5,
+  "vector_store_dir": "vector_store",
+  "faiss_index_path": "vector_store/summary_index.faiss",
+  "faiss_metadata_path": "vector_store/summary_metadata.pkl",
+  "/_comment_exporting_json": "==== LOGGING & EXPORT ====",
+  "logs_dir": "logs",
+  "export_dir": "exports",
+  "correction_summaries_path": "logs/correction_summaries.json",
+  "raw_log_path": "logs/zephyrus_log.json",
+  "raw_log_index_path": "vector_store/raw_index.faiss",
+  "raw_log_metadata_path": "vector_store/raw_metadata.pkl",
+  "log_format": "json",
+  "markdown_export": true,
+  "_comment_settings": "==== STRUCTURE SETTINGS ====",
+  "default_tags": [
+    "zephyrus"
+  ],
+  "use_templates": true,
+  "persona": "default",
+  "_comment_category_structure": "==== CATEGORY STRUCTURE ====",
+  "category_structure": {
+    "Narrative": [
+      "Narrative Concept",
+      "Romantic Development",
+      "Emotional Impact"
+    ],
+    "World": [
+      "Worldbuilding Detail",
+      "Faction Dynamics",
+      "Loop Mechanics"
+    ],
+    "AI / Meta": [
+      "AI System Design",
+      "Tooling & Automation",
+      "Execution Strategy",
+      "Meta Reflection"
+    ],
+    "Creative": [
+      "Visual or Audio Prompt",
+      "Gameplay Design Insight",
+      "Creative Ops / Org Flow"
+    ]
+  },
+  "_comment_prompt_subcategory": "==== PROMPTS BY SUBCATEGORY ====",
+  "prompts_by_subcategory": {
+    "Narrative Concept": "Summarize the core narrative idea with a focus on its thematic significance or plot role.",
+    "Romantic Development": "Summarize this relationship insight while preserving emotional nuance and character dynamics.",
+    "Emotional Impact": "Summarize the emotional tone or psychological effect this idea is meant to deliver.",
+    "Worldbuilding Detail": "Summarize this worldbuilding element to highlight its uniqueness or relevance to lore.",
+    "Faction Dynamics": "Summarize the factional strategy, alliance, or betrayal logic described.",
+    "Loop Mechanics": "Summarize this idea about time loops or memory mechanics in a structured way.",
+    "AI System Design": "Summarize the AI system concept clearly, focusing on architecture or interaction design.",
+    "Tooling & Automation": "Summarize the workflow, tool, or automation concept in a concise technical format.",
+    "Execution Strategy": "Summarize the execution plan, decision, or optimization insight.",
+    "Meta Reflection": "Summarize the philosophical or reflective insight being conveyed.",
+    "Visual or Audio Prompt": "Summarize this creative prompt into a single vivid visual/audio description.",
+    "Gameplay Design Insight": "Summarize this as a gameplay mechanic or player-interaction concept.",
+    "Creative Ops / Org Flow": "Summarize the creative workflow or team process insight described.",
+    "_default": "Summarize the following idea into concise, meaningful bullet points:"
+  },
+  "_comment_testing": "==== TESTING SETTINGS ====",
+  "test_mode": false,
+  "test_logs_dir": "tests/mock_logs",
+  "test_vector_store_dir": "tests/mock_vector_store",
+  "test_export_dir": "tests/mock_exports",
+  "_comment_future": "==== ADVANCED / FUTURE ====",
+  "remote_sync": false,
+  "plugin_dir": "plugins",
+  "enable_debug_logging": true,
+  "strict_offline_mode": false
+}
+2025-03-22 18:59:35,117 - DEBUG - Successfully loaded config from 'c:\Users\Angelos Dimakos\Documents\Ideas_Logger\config/config.json'. Keys: ['//', 'mode', 'use_gui', 'interface_theme', 'batch_size', 'autosave_interval', 'log_level', '_comment_ai', 'summarization', 'llm_provider', 'llm_model', 'openai_model', 'api_keys', '_comment_faiss', 'embedding_model', 'faiss_top_k', 'vector_store_dir', 'faiss_index_path', 'faiss_metadata_path', '/_comment_exporting_json', 'logs_dir', 'export_dir', 'correction_summaries_path', 'raw_log_path', 'raw_log_index_path', 'raw_log_metadata_path', 'log_format', 'markdown_export', '_comment_settings', 'default_tags', 'use_templates', 'persona', '_comment_category_structure', 'category_structure', '_comment_prompt_subcategory', 'prompts_by_subcategory', '_comment_testing', 'test_mode', 'test_logs_dir', 'test_vector_store_dir', 'test_export_dir', '_comment_future', 'remote_sync', 'plugin_dir', 'enable_debug_logging', 'strict_offline_mode']
+2025-03-22 18:59:35,117 - DEBUG - Full config dump:
+{
+  "//": "==== GENERAL SETTINGS ====",
+  "mode": "full",
+  "use_gui": true,
+  "interface_theme": "dark",
+  "batch_size": 5,
+  "autosave_interval": 5,
+  "log_level": "ERROR",
+  "_comment_ai": "==== AI & LLM SETTINGS ====",
+  "summarization": true,
+  "llm_provider": "ollama",
+  "llm_model": "llama3",
+  "openai_model": "gpt-4",
+  "api_keys": {
+    "openai": "sk-xxxxxxxxxxxxxxxx"
+  },
+  "_comment_faiss": "==== EMBEDDING & FAISS ====",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "faiss_top_k": 5,
+  "vector_store_dir": "vector_store",
+  "faiss_index_path": "vector_store/summary_index.faiss",
+  "faiss_metadata_path": "vector_store/summary_metadata.pkl",
+  "/_comment_exporting_json": "==== LOGGING & EXPORT ====",
+  "logs_dir": "logs",
+  "export_dir": "exports",
+  "correction_summaries_path": "logs/correction_summaries.json",
+  "raw_log_path": "logs/zephyrus_log.json",
+  "raw_log_index_path": "vector_store/raw_index.faiss",
+  "raw_log_metadata_path": "vector_store/raw_metadata.pkl",
+  "log_format": "json",
+  "markdown_export": true,
+  "_comment_settings": "==== STRUCTURE SETTINGS ====",
+  "default_tags": [
+    "zephyrus"
+  ],
+  "use_templates": true,
+  "persona": "default",
+  "_comment_category_structure": "==== CATEGORY STRUCTURE ====",
+  "category_structure": {
+    "Narrative": [
+      "Narrative Concept",
+      "Romantic Development",
+      "Emotional Impact"
+    ],
+    "World": [
+      "Worldbuilding Detail",
+      "Faction Dynamics",
+      "Loop Mechanics"
+    ],
+    "AI / Meta": [
+      "AI System Design",
+      "Tooling & Automation",
+      "Execution Strategy",
+      "Meta Reflection"
+    ],
+    "Creative": [
+      "Visual or Audio Prompt",
+      "Gameplay Design Insight",
+      "Creative Ops / Org Flow"
+    ]
+  },
+  "_comment_prompt_subcategory": "==== PROMPTS BY SUBCATEGORY ====",
+  "prompts_by_subcategory": {
+    "Narrative Concept": "Summarize the core narrative idea with a focus on its thematic significance or plot role.",
+    "Romantic Development": "Summarize this relationship insight while preserving emotional nuance and character dynamics.",
+    "Emotional Impact": "Summarize the emotional tone or psychological effect this idea is meant to deliver.",
+    "Worldbuilding Detail": "Summarize this worldbuilding element to highlight its uniqueness or relevance to lore.",
+    "Faction Dynamics": "Summarize the factional strategy, alliance, or betrayal logic described.",
+    "Loop Mechanics": "Summarize this idea about time loops or memory mechanics in a structured way.",
+    "AI System Design": "Summarize the AI system concept clearly, focusing on architecture or interaction design.",
+    "Tooling & Automation": "Summarize the workflow, tool, or automation concept in a concise technical format.",
+    "Execution Strategy": "Summarize the execution plan, decision, or optimization insight.",
+    "Meta Reflection": "Summarize the philosophical or reflective insight being conveyed.",
+    "Visual or Audio Prompt": "Summarize this creative prompt into a single vivid visual/audio description.",
+    "Gameplay Design Insight": "Summarize this as a gameplay mechanic or player-interaction concept.",
+    "Creative Ops / Org Flow": "Summarize the creative workflow or team process insight described.",
+    "_default": "Summarize the following idea into concise, meaningful bullet points:"
+  },
+  "_comment_testing": "==== TESTING SETTINGS ====",
+  "test_mode": false,
+  "test_logs_dir": "tests/mock_logs",
+  "test_vector_store_dir": "tests/mock_vector_store",
+  "test_export_dir": "tests/mock_exports",
+  "_comment_future": "==== ADVANCED / FUTURE ====",
+  "remote_sync": false,
+  "plugin_dir": "plugins",
+  "enable_debug_logging": true,
+  "strict_offline_mode": false
+}

@@ -7,6 +7,7 @@ from ai_summarizer import AISummarizer
 import shutil
 from summary_indexer import SummaryIndexer
 from config_loader import load_config, get_config_value, get_absolute_path
+import os
 
 logging.basicConfig(
     level=logging.ERROR,
@@ -15,7 +16,18 @@ logging.basicConfig(
 )
 
 class ZephyrusLoggerCore:
+    """
+    ZephyrusLoggerCore is responsible for managing the logging process, summarization, 
+    and handling the file system operations for storing logs, summaries, and metadata.
+    """
     def __init__(self, script_dir):
+        """
+        Initializes the core components of ZephyrusLoggerCore, including setting up file paths, directories, 
+        and configuring the AI summarizer.
+
+        Parameters:
+            script_dir (str): The directory where the script is located. Used to determine log and export directories.
+        """
         self.config = load_config()
         self.script_dir = Path(script_dir)
         self.log_dir = get_absolute_path(get_config_value(self.config, "logs_dir", self.script_dir / "logs"))
@@ -23,7 +35,7 @@ class ZephyrusLoggerCore:
         self.json_log_file = Path(self.log_dir) / "zephyrus_log.json"
         self.txt_log_file = Path(self.log_dir) / "zephyrus_log.txt"
         self.correction_summaries_file = Path(self.log_dir) / "correction_summaries.json"
-        self.config_file = self.script_dir / "config.json"
+        self.config_file = get_absolute_path("config/config.json")
         self.ai_summarizer = AISummarizer()
 
         if self.correction_summaries_file.exists():
@@ -33,6 +45,13 @@ class ZephyrusLoggerCore:
         self.BATCH_SIZE = get_config_value(self.config, "batch_size", 5)
 
     def _initialize_environment(self):
+        """
+        Initializes the required directories and files for logging and summaries. Creates necessary directories
+        and ensures that required files (logs, summaries) exist, creating them if not.
+
+        This method should be called on initialization to ensure the environment is ready for logging.
+        """
+        
         Path(self.log_dir).mkdir(exist_ok=True, parents=True)
         Path(self.export_dir).mkdir(exist_ok=True, parents=True)
 
@@ -45,15 +64,40 @@ class ZephyrusLoggerCore:
         if not self.correction_summaries_file.exists():
             self.correction_summaries_file.write_text("{}", encoding="utf-8")
 
-        if not self.config_file.exists():
+        if not os.path.exists(self.config_file):
+            os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
             default_config = {"batch_size": 5}
-            self.config_file.write_text(json.dumps(default_config, indent=4), encoding="utf-8")
+            with open(self.config_file, "w", encoding="utf-8") as f:
+                f.write(json.dumps(default_config, indent=4))
 
     @staticmethod
     def safe_filename(text):
+        """
+        Converts a given string to a safe filename by replacing invalid characters with underscores.
+
+        Parameters:
+            text (str): The text to be converted into a safe filename.
+
+        Returns:
+            str: The safe filename with invalid characters replaced by underscores.
+        """
         return re.sub(r'[\\/*?:"<>|]', "_", text.replace(" ", "_"))
 
     def log_to_json(self, timestamp, date_str, main_category, subcategory, entry):
+        """
+        Logs an entry to the JSON file, categorizing it by date, main category, and subcategory.
+        If a batch of entries reaches the configured size, a summary is triggered.
+
+        Parameters:
+            timestamp (str): The timestamp when the entry was created.
+            date_str (str): The date of the entry in string format (YYYY-MM-DD).
+            main_category (str): The main category under which the entry is logged.
+            subcategory (str): The subcategory under which the entry is logged.
+            entry (str): The content of the log entry.
+
+        Returns:
+            bool: True if the entry was logged successfully and summary triggered if necessary, False otherwise.
+        """
         try:
             logs = json.loads(self.json_log_file.read_text(encoding="utf-8"))
 
@@ -82,6 +126,18 @@ class ZephyrusLoggerCore:
             return False
 
     def get_summarized_count(self, date_str, main_category, subcategory):
+        """
+        Retrieves the count of entries that have already been summarized for a specific date, main category, 
+        and subcategory. This helps to keep track of which entries still need summarization.
+
+        Parameters:
+            date_str (str): The date of the entries (YYYY-MM-DD).
+            main_category (str): The main category of the entries.
+            subcategory (str): The subcategory of the entries.
+
+        Returns:
+            int: The number of entries that have already been summarized for the given date, category, and subcategory.
+        """
         try:
             if not self.correction_summaries_file.exists():
                 self.correction_summaries_file.write_text("{}", encoding="utf-8")
@@ -105,6 +161,18 @@ class ZephyrusLoggerCore:
             return 0
 
     def generate_summary(self, date_str, main_category, subcategory):
+        """
+        Generates a summary for a batch of unsummarized entries. The batch is based on the entries that have 
+        been logged but not yet summarized, up to the specified batch size.
+
+        Parameters:
+            date_str (str): The date of the entries to summarize.
+            main_category (str): The main category for the entries.
+            subcategory (str): The subcategory for the entries.
+
+        Returns:
+            bool: True if the summary was generated successfully, False otherwise.
+        """
         try:
             logs = json.loads(self.json_log_file.read_text(encoding="utf-8"))
 
@@ -173,6 +241,19 @@ class ZephyrusLoggerCore:
             return False
 
     def log_to_markdown(self, date_str, main_category, subcategory, entry):
+        """
+        Logs an entry to a Markdown file, appending it to the relevant category and subcategory section. 
+        It creates a new file if necessary or updates an existing file with the new entry.
+
+        Parameters:
+            date_str (str): The date of the entry.
+            main_category (str): The main category of the entry.
+            subcategory (str): The subcategory of the entry.
+            entry (str): The content of the entry.
+
+        Returns:
+            bool: True if the entry was successfully logged to Markdown, False otherwise.
+        """
         try:
             md_filename = self.safe_filename(main_category) + ".md"
             md_path = Path(self.export_dir) / md_filename
@@ -197,6 +278,18 @@ class ZephyrusLoggerCore:
             return False
 
     def save_entry(self, main_category, subcategory, entry):
+        """
+        Saves an entry both to the JSON log file and the Markdown export. It triggers summary generation 
+        if the required number of entries have been reached for that batch.
+
+        Parameters:
+            main_category (str): The main category of the entry.
+            subcategory (str): The subcategory of the entry.
+            entry (str): The content of the entry.
+
+        Returns:
+            bool: True if the entry was successfully saved to both JSON and Markdown, False otherwise.
+        """
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         date_str = datetime.now().strftime("%Y-%m-%d")
 
