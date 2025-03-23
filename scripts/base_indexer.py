@@ -1,10 +1,13 @@
-# === base_indexer.py ===
+# base_indexer.py
 import os
 import json
 import pickle
 import faiss
 from sentence_transformers import SentenceTransformer
-from scripts.config_loader import load_config,get_config_value, get_absolute_path
+from scripts.config_loader import load_config, get_config_value, get_absolute_path
+import logging
+
+logger = logging.getLogger(__name__)
 
 class BaseIndexer:
     def __init__(self, summaries_path, index_path, metadata_path):
@@ -37,24 +40,42 @@ class BaseIndexer:
             bool: True if the index is successfully built, False if no texts are provided.
         """
         if not texts:
-            print("[WARNING] No texts provided to build FAISS index.")
+            logger.warning("No texts provided to build FAISS index.")
             return False
 
-        embeddings = self.embedding_model.encode(texts, convert_to_numpy=True)
-        self.index = faiss.IndexFlatL2(embeddings.shape[1])
-        self.index.add(embeddings)
-        self.metadata = meta
-        self.save_index()
+        try:
+            embeddings = self.embedding_model.encode(texts, convert_to_numpy=True)
+        except Exception as e:
+            logger.error("Error generating embeddings: %s", e, exc_info=True)
+            return False
+
+        try:
+            self.index = faiss.IndexFlatL2(embeddings.shape[1])
+            self.index.add(embeddings)
+            self.metadata = meta
+            self.save_index()
+        except Exception as e:
+            logger.error("Error building FAISS index: %s", e, exc_info=True)
+            return False
+
         return True
 
     def save_index(self):
         """
         Saves the FAISS index and metadata to their respective files.
         """
-        
-        faiss.write_index(self.index, self.index_path)
-        with open(self.metadata_path, "wb") as f:
-            pickle.dump(self.metadata, f)
+        try:
+            faiss.write_index(self.index, self.index_path)
+        except Exception as e:
+            logger.error("Failed to save FAISS index: %s", e, exc_info=True)
+            raise
+
+        try:
+            with open(self.metadata_path, "wb") as f:
+                pickle.dump(self.metadata, f)
+        except Exception as e:
+            logger.error("Failed to save metadata: %s", e, exc_info=True)
+            raise
 
     def load_index(self):
         """
@@ -64,11 +85,22 @@ class BaseIndexer:
             FileNotFoundError: If the index or metadata file doesn't exist.
         """
         if not os.path.exists(self.index_path) or not os.path.exists(self.metadata_path):
-            raise FileNotFoundError("FAISS index or metadata file not found.")
+            error_msg = "FAISS index or metadata file not found."
+            logger.error(error_msg)
+            raise FileNotFoundError(error_msg)
 
-        self.index = faiss.read_index(self.index_path)
-        with open(self.metadata_path, "rb") as f:
-            self.metadata = pickle.load(f)
+        try:
+            self.index = faiss.read_index(self.index_path)
+        except Exception as e:
+            logger.error("Failed to read FAISS index: %s", e, exc_info=True)
+            raise
+
+        try:
+            with open(self.metadata_path, "rb") as f:
+                self.metadata = pickle.load(f)
+        except Exception as e:
+            logger.error("Failed to load metadata: %s", e, exc_info=True)
+            raise
 
     def search(self, query, top_k=5):
         """
@@ -79,14 +111,27 @@ class BaseIndexer:
             top_k (int): The number of top results to return.
         
         Returns:
-            list of dict: The top K results with metadata and similarity score.
+            list of dict: The top K results with metadata and a similarity score.
         """
-        embedding = self.embedding_model.encode([query], convert_to_numpy=True)
-        D, I = self.index.search(embedding, top_k)
+        try:
+            embedding = self.embedding_model.encode([query], convert_to_numpy=True)
+        except Exception as e:
+            logger.error("Failed to encode query: %s", e, exc_info=True)
+            return []
+
+        try:
+            D, I = self.index.search(embedding, top_k)
+        except Exception as e:
+            logger.error("Search failed: %s", e, exc_info=True)
+            return []
+
         results = []
         for i, idx in enumerate(I[0]):
             if idx < len(self.metadata):
                 result = dict(self.metadata[idx])
-                result["similarity"] = float(1.0 / (1.0 + D[0][i]))  # Convert L2 distance to similarity proxy
+                # Convert L2 distance to a similarity proxy.
+                result["similarity"] = float(1.0 / (1.0 + D[0][i]))
                 results.append(result)
+            else:
+                logger.warning("Index %d out of range for metadata of length %d", idx, len(self.metadata))
         return results

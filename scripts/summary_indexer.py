@@ -3,26 +3,42 @@ import json
 from scripts.config_loader import load_config, get_config_value, get_absolute_path
 import faiss
 import numpy as np
+import logging
+import os
 
+logger = logging.getLogger(__name__)
 
 class SummaryIndexer(BaseIndexer):
     def __init__(self, summaries_path=None, index_path=None, metadata_path=None):
-        """
-        Initializes the SummaryIndexer class and sets up paths for summaries, index, and metadata.
-        
-        Args:
-            summaries_path (str): Path to the summaries file (default: "logs/correction_summaries.json").
-            index_path (str): Path to the FAISS index file (default: "vector_store/summary_index.faiss").
-            metadata_path (str): Path to the metadata file (default: "vector_store/summary_metadata.pkl").
-        """
-        config = load_config()
-        summaries_path = summaries_path or get_config_value(config, "correction_summaries_path", "logs/correction_summaries.json")
-        index_path = index_path or get_config_value(config, "faiss_index_path", "vector_store/summary_index.faiss")
-        metadata_path = metadata_path or get_config_value(config, "faiss_metadata_path", "vector_store/summary_metadata.pkl")
+            """
+            Initializes the SummaryIndexer. If paths are not provided, they are read from config
+            and resolved using get_absolute_path.
+            """
+            config = load_config()
+            # Use the provided paths if given; otherwise, use config values.
+            summaries_path = summaries_path or get_config_value(config, "correction_summaries_path", "logs/correction_summaries.json")
+            index_path = index_path or get_config_value(config, "faiss_index_path", "vector_store/summary_index.faiss")
+            metadata_path = metadata_path or get_config_value(config, "faiss_metadata_path", "vector_store/summary_metadata.pkl")
+            
+            # Check: if the supplied path is already absolute (or for testing), use it directly.
+            # Otherwise, resolve it using get_absolute_path.
+            if not os.path.isabs(summaries_path):
+                self.summaries_path = get_absolute_path(summaries_path)
+            else:
+                self.summaries_path = summaries_path
 
-        self.summaries_path = get_absolute_path(summaries_path)  # ✅ Must store for later loading
-        super().__init__(summaries_path=summaries_path, index_path=index_path, metadata_path=metadata_path)
-        self.use_cosine = True
+            if not os.path.isabs(index_path):
+                self.index_path = get_absolute_path(index_path)
+            else:
+                self.index_path = index_path
+
+            if not os.path.isabs(metadata_path):
+                self.metadata_path = get_absolute_path(metadata_path)
+            else:
+                self.metadata_path = metadata_path
+
+            super().__init__(summaries_path=self.summaries_path, index_path=self.index_path, metadata_path=self.metadata_path)
+            self.use_cosine = True
 
     def load_entries(self):
         """
@@ -36,23 +52,34 @@ class SummaryIndexer(BaseIndexer):
                 - list of str: Text entries (summaries).
                 - list of dict: Metadata associated with each text entry.
         """
-        with open(self.summaries_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        try:
+            with open(self.summaries_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except FileNotFoundError:
+            logger.error("Summaries file not found at %s", self.summaries_path)
+            return [], []
+        except json.JSONDecodeError as e:
+            logger.error("Failed to decode JSON from summaries file: %s", e, exc_info=True)
+            return [], []
+        except Exception as e:
+            logger.error("Unexpected error reading summaries file: %s", e, exc_info=True)
+            return [], []
 
         texts, meta = [], []
-
-        for date, categories in data.items():
-            texts, meta = self._process_categories(date, categories, texts, meta)
-
+        try:
+            for date, categories in data.items():
+                texts, meta = self._process_categories(date, categories, texts, meta)
+        except Exception as e:
+            logger.error("Error processing summary entries: %s", e, exc_info=True)
         return texts, meta
 
     def _process_categories(self, date, categories, texts, meta):
         """
-        Helper function to process categories and their subcategories.
+        Processes categories and their subcategories.
         
         Args:
             date (str): The date of the entries.
-            categories (dict): The categories and subcategories with their batches.
+            categories (dict): The categories and their subcategories with batches.
             texts (list): The current list of texts.
             meta (list): The current list of metadata.
         
@@ -62,18 +89,20 @@ class SummaryIndexer(BaseIndexer):
                 - list of dict: Updated metadata.
         """
         for main_cat, subcats in categories.items():
-            texts, meta = self._process_subcategories(date, main_cat, subcats, texts, meta)
-
+            try:
+                texts, meta = self._process_subcategories(date, main_cat, subcats, texts, meta)
+            except Exception as e:
+                logger.warning("Error processing category '%s' on date '%s': %s", main_cat, date, e, exc_info=True)
         return texts, meta
 
     def _process_subcategories(self, date, main_cat, subcats, texts, meta):
         """
-        Helper function to process subcategories and their batches.
+        Processes subcategories and their batches.
         
         Args:
             date (str): The date of the entries.
-            main_cat (str): The main category of the entries.
-            subcats (dict): The subcategories with their batches.
+            main_cat (str): The main category.
+            subcats (dict): The subcategories and batches.
             texts (list): The current list of texts.
             meta (list): The current list of metadata.
         
@@ -83,18 +112,20 @@ class SummaryIndexer(BaseIndexer):
                 - list of dict: Updated metadata.
         """
         for subcat, batches in subcats.items():
-            texts, meta = self._process_batches(date, main_cat, subcat, batches, texts, meta)
-
+            try:
+                texts, meta = self._process_batches(date, main_cat, subcat, batches, texts, meta)
+            except Exception as e:
+                logger.warning("Error processing subcategory '%s' under '%s' on date '%s': %s", subcat, main_cat, date, e, exc_info=True)
         return texts, meta
 
     def _process_batches(self, date, main_cat, subcat, batches, texts, meta):
         """
-        Helper function to process batches within a subcategory.
+        Processes batches within a subcategory.
         
         Args:
             date (str): The date of the entries.
-            main_cat (str): The main category of the entries.
-            subcat (str): The subcategory of the entries.
+            main_cat (str): The main category.
+            subcat (str): The subcategory.
             batches (list): The list of batches.
             texts (list): The current list of texts.
             meta (list): The current list of metadata.
@@ -105,15 +136,19 @@ class SummaryIndexer(BaseIndexer):
                 - list of dict: Updated metadata.
         """
         for batch in batches:
-            text = batch.get("corrected_summary") or batch.get("original_summary")
-            if text:
-                texts.append(text)
-                meta.append({
-                    "date": date,
-                    "main_category": main_cat,
-                    "subcategory": subcat,
-                    "batch": batch.get("batch"),
-                    "timestamp": batch.get("correction_timestamp")
-                })
-
+            try:
+                text = batch.get("corrected_summary") or batch.get("original_summary")
+                if text:
+                    texts.append(text)
+                    meta.append({
+                        "date": date,
+                        "main_category": main_cat,
+                        "subcategory": subcat,
+                        "batch": batch.get("batch"),
+                        "timestamp": batch.get("correction_timestamp")
+                    })
+                else:
+                    logger.warning("Batch in %s → %s → %s has no summary text.", date, main_cat, subcat)
+            except Exception as e:
+                logger.error("Error processing batch in %s → %s → %s: %s", date, main_cat, subcat, e, exc_info=True)
         return texts, meta

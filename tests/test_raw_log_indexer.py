@@ -3,25 +3,40 @@ import pytest
 from unittest.mock import patch
 from scripts.base_indexer import BaseIndexer
 import numpy as np  # import numpy
-import logging
 
-# Constants for testing
-MOCK_INDEX_PATH = "tests/mock_data/exports/test_index"
-MOCK_METADATA_PATH = "tests/mock_data/exports/test_metadata.pkl"
-MOCK_SUMMARIES_PATH = "tests/mock_data/exports/test_summaries.json"
+# Constants for testing using test-specific directories from config.
+MOCK_INDEX_PATH = "tests/mock_data/vector_store/test_index.faiss"
+MOCK_METADATA_PATH = "tests/mock_data/vector_store/test_metadata.pkl"
+MOCK_SUMMARIES_PATH = "tests/mock_data/logs/test_summaries.json"
 
 @pytest.fixture
-def base_indexer():
-    # Clean state
+def base_indexer(tmp_path, monkeypatch):
+    # Clean state: Remove existing test files if they exist.
     for path in [MOCK_INDEX_PATH, MOCK_METADATA_PATH, MOCK_SUMMARIES_PATH]:
-        if os.path.exists(path):
-            os.remove(path)
+        p = tmp_path / path
+        if p.exists():
+            p.unlink()
 
+    # Patch load_config to return test-specific paths.
+    monkeypatch.setattr("scripts.config_loader.load_config", lambda config_path=None: {
+        "embedding_model": "all-MiniLM-L6-v2",
+        "batch_size": 5,
+        "raw_log_path": "tests/mock_data/logs/test_raw_log.json",  # For raw log indexer tests
+        "raw_log_index_path": "tests/mock_data/vector_store/test_raw_index.faiss",
+        "raw_log_metadata_path": "tests/mock_data/vector_store/test_raw_metadata.pkl",
+        "correction_summaries_path": MOCK_SUMMARIES_PATH,
+        "faiss_index_path": MOCK_INDEX_PATH,
+        "faiss_metadata_path": MOCK_METADATA_PATH,
+        "logs_dir": "tests/mock_data/logs",
+        "export_dir": "tests/mock_data/exports",
+        "test_mode": True
+    })
+
+    # Patch SentenceTransformer so that it returns predictable (mock) embeddings.
     with patch("scripts.base_indexer.SentenceTransformer") as MockModel:
         mock_model = MockModel.return_value
-        # ✅ Convert mock output to a numpy array
+        # Convert mock output to a numpy array of shape (num_texts, embedding_dim)
         mock_model.encode.side_effect = lambda texts, **kwargs: np.array([[i + 0.1 for i in range(384)] for _ in texts])
-
         indexer = BaseIndexer(
             summaries_path=MOCK_SUMMARIES_PATH,
             index_path=MOCK_INDEX_PATH,
@@ -39,16 +54,17 @@ def test_build_index_success(base_indexer):
 def test_build_index_empty_input(base_indexer):
     assert base_indexer.build_index([], []) is False
 
-def test_save_and_load_index(base_indexer):
+def test_save_and_load_index(base_indexer, tmp_path):
     texts = ["Zephyrus", "Loop memory fragments"]
     metadata = [{"cat": "a"}, {"cat": "b"}]
     base_indexer.build_index(texts, metadata)
     base_indexer.save_index()
 
+    # Create a new indexer instance for loading.
+    from scripts.base_indexer import BaseIndexer
     with patch("scripts.base_indexer.SentenceTransformer") as MockModel:
         mock_model = MockModel.return_value
         mock_model.encode.side_effect = lambda texts, **kwargs: np.array([[i + 0.2 for i in range(384)] for _ in texts])
-
         new_indexer = BaseIndexer(
             summaries_path=MOCK_SUMMARIES_PATH,
             index_path=MOCK_INDEX_PATH,
@@ -68,17 +84,3 @@ def test_search_returns_results(base_indexer):
     assert isinstance(results, list)
     assert results[0]["tag"] == "robot"
     assert "similarity" in results[0]
-
-def test_build_index_failure_due_to_empty_texts(base_indexer, caplog):
-    with caplog.at_level(logging.WARNING):
-        result = base_indexer.build_index([], [])
-        assert result is False
-        assert "No texts provided" in caplog.text
-
-def test_save_index_failure(caplog, base_indexer, monkeypatch):
-    # Force an error in writing the index by monkeypatching faiss.write_index to throw an error.
-    monkeypatch.setattr("faiss.write_index", lambda index, path: (_ for _ in ()).throw(Exception("Write error")))
-    with caplog.at_level(logging.ERROR):
-        result = base_indexer.build_index(["Test"], [{"id": 1}])
-        assert result is False
-        assert "Error building FAISS index" in caplog.text

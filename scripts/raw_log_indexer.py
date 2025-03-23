@@ -2,7 +2,9 @@ import os
 import json
 from scripts.config_loader import load_config, get_config_value, get_absolute_path
 from scripts.base_indexer import BaseIndexer
+import logging
 
+logger = logging.getLogger(__name__)
 
 class RawLogIndexer(BaseIndexer):
     """
@@ -21,17 +23,19 @@ class RawLogIndexer(BaseIndexer):
             metadata_path (str): Path to the metadata file (default: "vector_store/raw_metadata.pkl").
         """
         config = load_config()
-    
-        self.log_path = get_absolute_path(
-            log_path or get_config_value(config, "raw_log_path", "logs/zephyrus_log.json")
-        )
+        try:
+            self.log_path = get_absolute_path(
+                log_path or get_config_value(config, "raw_log_path", "logs/zephyrus_log.json")
+            )
+        except Exception as e:
+            logger.error("Error obtaining raw log path: %s", e, exc_info=True)
+            raise
+
         index_path = index_path or get_config_value(config, "raw_log_index_path", "vector_store/raw_index.faiss")
         metadata_path = metadata_path or get_config_value(config, "raw_log_metadata_path", "vector_store/raw_metadata.pkl")
 
-
-        # ✅ Use self.log_path as summaries_path (so base indexer can use it to load)
+        # Use self.log_path as summaries_path for BaseIndexer.
         super().__init__(summaries_path=self.log_path, index_path=index_path, metadata_path=metadata_path)
-
 
     def load_entries(self):
         """
@@ -45,14 +49,27 @@ class RawLogIndexer(BaseIndexer):
                 - list of str: Raw entry texts.
                 - list of dict: Metadata for each entry.
         """
-        with open(self.log_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        try:
+            with open(self.log_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except FileNotFoundError:
+            logger.error("Raw log file not found at %s", self.log_path)
+            return [], []
+        except json.JSONDecodeError as e:
+            logger.error("Failed to decode JSON from raw log file: %s", e, exc_info=True)
+            return [], []
+        except Exception as e:
+            logger.error("Unexpected error reading raw log file: %s", e, exc_info=True)
+            return [], []
 
         texts, meta = [], []
 
-        for date, categories in data.items():
-            texts, meta = self._process_categories(date, categories, texts, meta)
-
+        try:
+            for date, categories in data.items():
+                texts, meta = self._process_categories(date, categories, texts, meta)
+        except Exception as e:
+            logger.error("Error processing raw log entries: %s", e, exc_info=True)
+            # Return what we have so far (or decide to return empty lists)
         return texts, meta
 
     def _process_categories(self, date, categories, texts, meta):
@@ -71,8 +88,10 @@ class RawLogIndexer(BaseIndexer):
                 - list of dict: Updated list of metadata.
         """
         for main_cat, subcats in categories.items():
-            texts, meta = self._process_subcategories(date, main_cat, subcats, texts, meta)
-
+            try:
+                texts, meta = self._process_subcategories(date, main_cat, subcats, texts, meta)
+            except Exception as e:
+                logger.warning("Error processing category '%s' on date '%s': %s", main_cat, date, e, exc_info=True)
         return texts, meta
 
     def _process_subcategories(self, date, main_cat, subcats, texts, meta):
@@ -92,8 +111,10 @@ class RawLogIndexer(BaseIndexer):
                 - list of dict: Updated list of metadata.
         """
         for subcat, entries in subcats.items():
-            texts, meta = self._process_entries(date, main_cat, subcat, entries, texts, meta)
-
+            try:
+                texts, meta = self._process_entries(date, main_cat, subcat, entries, texts, meta)
+            except Exception as e:
+                logger.warning("Error processing subcategory '%s' under '%s' on date '%s': %s", subcat, main_cat, date, e, exc_info=True)
         return texts, meta
 
     def _process_entries(self, date, main_cat, subcat, entries, texts, meta):
@@ -114,14 +135,19 @@ class RawLogIndexer(BaseIndexer):
                 - list of dict: Updated list of metadata.
         """
         for entry in entries:
-            content = entry.get("content")
-            timestamp = entry.get("timestamp")
-            if content:
-                texts.append(content)
-                meta.append({
-                    "date": date,
-                    "main_category": main_cat,
-                    "subcategory": subcat,
-                    "timestamp": timestamp
-                })
+            try:
+                content = entry.get("content")
+                timestamp = entry.get("timestamp")
+                if content:
+                    texts.append(content)
+                    meta.append({
+                        "date": date,
+                        "main_category": main_cat,
+                        "subcategory": subcat,
+                        "timestamp": timestamp
+                    })
+                else:
+                    logger.warning("Missing content in an entry on date %s, category %s, subcategory %s.", date, main_cat, subcat)
+            except Exception as e:
+                logger.error("Error processing an entry in %s → %s → %s: %s", date, main_cat, subcat, e, exc_info=True)
         return texts, meta

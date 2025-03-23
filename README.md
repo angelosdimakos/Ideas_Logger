@@ -1,142 +1,150 @@
-# Zephyrus Idea Logger 🧠📝
+# Zephyrus Idea Logger ✨
 
-A powerful, AI-integrated idea capture and summarization tool designed for:
-- Narrative design
-- Worldbuilding
-- AI system architecture
-- Research logging
-
-Zephyrus combines a streamlined GUI, automated local LLM summarization, and lightning-fast semantic search via FAISS.
+The **Zephyrus Idea Logger** is a modular, AI-powered idea capture and summarization system designed for researchers, writers, and creative thinkers. It allows you to log, structure, and summarize bursts of inspiration across categories using a fully local pipeline powered by **Ollama**, **FAISS**, and custom AI models like **Mistral** or **LLaMA3**.
 
 ---
 
-## ✨ Features
+## 🚀 Features
 
-- ⬜ **Clean GUI:** Log structured entries using dropdowns for category/subcategory.
-- 🤖 **AI Summarization:** Automatically summarizes every 5 entries per subcategory (via local Ollama).
-- ⚖️ **Correction System:** Lets you manually revise summaries, with both `original_summary` and `corrected_summary` saved.
-- 🔎 **FAISS Vector Search:** Search your summaries semantically using cosine similarity.
-- 📅 **Time-Aware Batching:** Entries are grouped per date and subcategory, each with metadata.
-- 📃 **Obsidian-Ready:** Markdown export enabled for seamless PKM workflows.
+| Capability                    | Description                                                                 |
+|------------------------------|-----------------------------------------------------------------------------|
+| ✅ **Structured Idea Logging** | Logs ideas into nested JSON and Markdown by date, category, subcategory     |
+| 🧠 **AI Summarization**     | Batch-based summarization using local LLMs via **Ollama** (default: Mistral) |
+| 📉 **Correction Layer**       | Editable summaries with versioning and correction tracking                  |
+| 🔗 **FAISS Indexing**         | Vector search of summaries for semantic recall                             |
+| 🌐 **Markdown Export**         | Clean human-readable logs for future RAG workflows or creative use         |
+| 🔍 **Summary Search**         | GUI-integrated vector-based search with real-time metadata filters         |
+| 🚧 **Fully Local**             | No cloud dependencies, everything runs offline with `ollama`, `pytest`, etc |
 
 ---
 
-## ⚡ Quickstart
+## 🌐 Use Cases
+- Research and PhD note summarization
+- Story/plot outlining for writers
+- Worldbuilding and visual prompt generation
+- Multimodal content planning (Markdown + Images + JSON)
+- AI training data preparation
 
+---
+
+## 💡 Philosophy
+> *Don't just capture ideas. Understand them.*
+
+This tool isn't a dump for raw thoughts. It's a **processing pipeline**. Every log entry flows through:
+1. **Timestamped Logging**
+2. **Batch Summarization**
+3. **Manual Correction** (for AI reliability)
+4. **Semantic Searchability**
+5. **Long-Term Export** (Markdown or structured JSON)
+
+---
+
+## 🛠️ Installation
+### 1. Install [Ollama](https://ollama.com)
 ```bash
-# 1. Clone the repo
-$ git clone https://github.com/YOUR_USERNAME/zephyrus-idea-logger.git
-$ cd zephyrus-idea-logger
+# Windows/Mac/Linux
+curl -fsSL https://ollama.com/install.sh | sh
+```
 
-# 2. Create virtual env & install dependencies
-$ python -m venv venv && source venv/bin/activate
-$ pip install -r requirements.txt
+### 2. Pull Mistral or another model
+```bash
+ollama pull mistral
+```
 
-# 3. Launch the GUI
-$ python scripts/main.py
+### 3. Clone & Setup
+```bash
+git clone https://github.com/The-Mechid-Archivist-69/zephyrus-logger.git
+cd zephyrus-logger
+python -m venv .venv
+source .venv/bin/activate  # Or `.venv\Scripts\activate` on Windows
+pip install -r requirements.txt
 ```
 
 ---
 
-## 🎓 How It Works
+## 💡 How It Works
 
-### Logging
-- Choose a main category and subcategory
-- Type your idea and save
-- Every 5 entries: AI generates a summary, saved to `correction_summaries.json`
-
-### Summarization
-- Uses `llama3` or your configured Ollama model
-- Summaries stored alongside original entries
-- Manual corrections are versioned and stored as `corrected_summary`
-
-### Search
-- FAISS indexes all summaries
-- You can rebuild the index and search via GUI
-- Supports batch + metadata display for fast context
-
-### Double Linking
-- Each summary knows which log entries it came from
-- Entries can be traced back via their `log_YYYYMMDD_###` ID
-
----
-
-## 📂 Folder Structure
-
+### File Structure
 ```
-.
+zephyrus-logger/
 ├── scripts/
-│   ├── main.py                # Entry point
-│   ├── gui.py                 # Full Tkinter GUI
-│   ├── core.py                # Handles saving logs + summaries
-│   ├── ai_summarizer.py      # Local LLM-based summarizer
-│   ├── summary_indexer.py    # FAISS summary search logic
-│   ├── raw_log_indexer.py    # FAISS indexing for raw log content
-│   ├── base_indexer.py       # Shared FAISS logic
-│   ├── config_loader.py      # Handles config.json loading
-├── logs/
-│   ├── zephyrus_log.json     # Main idea log
-│   └── correction_summaries.json  # Summary metadata
-├── exports/                      # Obsidian-compatible .md output
-├── vector_store/                # FAISS index and metadata
-├── config.json                  # All app configuration
+│   ├── ai_summarizer.py        # Handles prompt-based LLM summarization
+│   ├── base_indexer.py         # FAISS + metadata indexing
+│   ├── config_loader.py        # Configuration and environment utilities
+│   ├── summary_indexer.py      # Summary-specific indexing/search
+│   └── core.py                 # Main ZephyrusLoggerCore logic
+│
+├── utils/
+│   ├── file_utils.py           # JSON/Markdown file helpers
+│   └── zip_util.py             # CLI: Zip .py files excluding virtualenvs, etc
+│
+├── logs/                       # Auto-created logs & error reports
+├── exports/                    # Markdown output by category
+├── config/config.json          # Model & prompt configurations
+├── correction_summaries.json  # Human-editable corrections
+├── zephyrus_log.json          # Core log file
+└── README.md                   # This file
 ```
 
 ---
 
-## 🚀 Configuration
+## 🔎 AI Summary Lifecycle
+1. **Entries** are logged per subcategory in `zephyrus_log.json`.
+2. When a batch of 5 is reached (default), `AISummarizer` triggers.
+3. Summary is generated using **`generate()`** or fallback to **`chat()`**.
+4. Result is stored in `correction_summaries.json` with:
+   - `original_summary`
+   - `corrected_summary` (optional)
+   - `batch range` + `timestamp`
+5. All logs are also exported to **Markdown** by category.
 
-All behavior is controlled via `config.json`:
+---
 
+## 📄 Example Entry
 ```json
-"summarization": true,
-"llm_model": "llama3",
-"batch_size": 5,
-"correction_summaries_path": "logs/correction_summaries.json",
-"json_log_file": "logs/zephyrus_log.json"
+{
+  "2025-03-23": {
+    "Creative": {
+      "Visual or Audio Prompt": [
+        { "timestamp": "2025-03-23 10:00:00", "content": "Use AI to generate concept art for Mechids." },
+        { "timestamp": "2025-03-23 10:02:00", "content": "Integrate Reaper audio notes with image metadata." }
+      ]
+    }
+  }
+}
 ```
-
-> ⚠️ You must have **Ollama** installed and the selected model available locally.
-
 ---
 
-## 📝 Testing
+## 💧 Testing
 
 ```bash
-# Coming soon - tests for:
-# - Summarization logic
-# - FAISS index build/search
-# - Data structure validation
+pytest tests/
 ```
 
----
-
-## ✨ Roadmap
-
-- [x] GUI Logger w/ Dropdowns
-- [x] AI Summarization via Ollama
-- [x] FAISS Vector Search (Summaries)
-- [x] Correction + Double Link Tracking
-- [ ] Raw Log Vector Search
-- [ ] Plugin Support (Obsidian + Exports)
-- [ ] Automated Testing & CLI
+All core modules (logger, summarizer, utils, vector indexer, GUI helpers) have **unit tests with mocks**. Even FAISS is covered.
 
 ---
 
-## 🙌 Contributing
-
-Pull requests, ideas, and feature suggestions welcome!
-- Fork + PR
-- Raise an issue
-- Or DM me if you want to collaborate deeper!
-
----
-
-## 📄 License
-
-MIT License. Use it freely, but don't resell without giving credit.
+## 🎓 Future Roadmap
+- [ ] Visual tagging in Markdown for AI-generated image triggers
+- [ ] Full image pipeline CLI (e.g., auto-send prompts to SDXL)
+- [ ] CLI interface for search + correction
+- [ ] Scheduled backups + git snapshots
 
 ---
 
-Built with ❤️ by Angelos Dimakos and his sentient AI archivist.
+## 🌊 Credits
+Built with:
+- [Ollama](https://ollama.com) for blazing-fast LLM inference
+- [FAISS](https://github.com/facebookresearch/faiss) for vector search
+- [Tkinter](https://docs.python.org/3/library/tkinter.html) for GUI support
+- [pytest](https://docs.pytest.org/) for thorough testing
 
+Crafted by a slightly caffeinated architect with a taste for structured chaos.
+
+---
+
+## 🌟 Final Thoughts
+> *You don’t need more ideas. You need better processing.*
+
+Welcome to Zephyrus. Let the ideas flow. 🌬️

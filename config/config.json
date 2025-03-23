@@ -11,7 +11,7 @@
 
     "summarization": true,                    
     "llm_provider": "ollama",                 
-    "llm_model": "llama3",                   
+    "llm_model": "mistral",                   
     "openai_model": "gpt-4",                 
     "api_keys": {
       "openai": "sk-xxxxxxxxxxxxxxxx"        
