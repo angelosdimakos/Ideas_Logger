@@ -3,6 +3,7 @@ import json
 import datetime
 import re
 import logging
+import zipfile
 
 logger = logging.getLogger(__name__)
 
@@ -54,15 +55,55 @@ def read_json(path):
         return {}
 
 
-def make_backup(original_path):
+def make_backup(file_path: str) -> str:
     """
-    Create a timestamped backup of the original file.
+    Creates a timestamped backup of a given JSON file.
+
+    The backup file is saved in the same directory with the format:
+    <original_name>_backup_<timestamp>.json
+
+    Args:
+        file_path (str): Path to the original JSON file to back up.
+
+    Returns:
+        str: Path to the created backup file if successful, or None if the original file doesn't exist or an error occurs.
     """
+    if not os.path.exists(file_path):
+        return None
+
+    base, ext = os.path.splitext(file_path)
+    timestamp = get_timestamp()
+    backup_path = f"{base}_backup_{timestamp}{ext}"
+
     try:
-        base, ext = os.path.splitext(original_path)
-        backup_path = f"{base}_backup_{get_timestamp()}{ext}"
-        if os.path.exists(original_path):
-            os.rename(original_path, backup_path)
-            logger.debug(f"Backed up {original_path} → {backup_path}")
+        data = read_json(file_path)
+        with open(backup_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4)
+        return backup_path 
     except Exception as e:
-        logger.warning(f"Failed to create backup for {original_path}: {e}")
+        print(f"Error creating backup: {e}")
+        return None
+        
+
+def zip_python_files(output_path: str, root_dir: str = ".", exclude_dirs=None):
+    """
+    Zips all .py files in the project directory and its subdirectories,
+    excluding specified folders like `.venv` or `.git`.
+
+    Args:
+        output_path (str): Destination .zip file path.
+        root_dir (str): Root directory to start from.
+        exclude_dirs (list[str], optional): List of directory names to exclude.
+    """
+    exclude_dirs = set(exclude_dirs or [".venv", ".git", "__pycache__", "node_modules"])
+    with zipfile.ZipFile(output_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for foldername, subfolders, filenames in os.walk(root_dir):
+            # Skip excluded directories
+            if any(excl in foldername for excl in exclude_dirs):
+                continue
+            for filename in filenames:
+                if filename.endswith(".py"):
+                    file_path = os.path.join(foldername, filename)
+                    arcname = os.path.relpath(file_path, root_dir)  # keep relative structure
+                    zipf.write(file_path, arcname)
+

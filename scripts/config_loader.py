@@ -2,14 +2,28 @@ import json
 import os
 import logging
 
+def setup_logging():
+    """
+    Configures logging for the entire application.
+    This function sets up a basic logging configuration that can be adjusted later based on config settings.
+    """
+    # Default log level is INFO. This can be overridden later.
+    level_str = "INFO"
+    numeric_level = getattr(logging, level_str.upper(), logging.INFO)
+    logging.basicConfig(
+        level=numeric_level,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        handlers=[logging.StreamHandler()]
+    )
+    # Log a debug message to confirm that logging is configured.
+    logger = logging.getLogger(__name__)
+    logger.debug("Centralized logging configured at level %s", level_str)
+
+# Set up logging as early as possible.
+setup_logging()
+
 # Configure the module logger.
 logger = logging.getLogger(__name__)
-# Default log level is set to INFO for production.
-logger.setLevel(logging.INFO)
-handler = logging.StreamHandler()
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-handler.setFormatter(formatter)
-logger.addHandler(handler)
 
 # Compute project base directory.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -1,25 +1,28 @@
 import os
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from scripts.base_indexer import BaseIndexer
+import numpy as np  # import numpy
 
 # Constants for testing
 MOCK_INDEX_PATH = "tests/mock_data/exports/test_index"
 MOCK_METADATA_PATH = "tests/mock_data/exports/test_metadata.pkl"
+MOCK_SUMMARIES_PATH = "tests/mock_data/exports/test_summaries.json"
 
 @pytest.fixture
 def base_indexer():
     # Clean state
-    if os.path.exists(MOCK_INDEX_PATH):
-        os.remove(MOCK_INDEX_PATH)
-    if os.path.exists(MOCK_METADATA_PATH):
-        os.remove(MOCK_METADATA_PATH)
+    for path in [MOCK_INDEX_PATH, MOCK_METADATA_PATH, MOCK_SUMMARIES_PATH]:
+        if os.path.exists(path):
+            os.remove(path)
 
     with patch("scripts.base_indexer.SentenceTransformer") as MockModel:
         mock_model = MockModel.return_value
-        mock_model.encode.side_effect = lambda texts: [[i + 0.1 for i in range(384)] for _ in texts]
+        # ✅ Convert mock output to a numpy array
+        mock_model.encode.side_effect = lambda texts, **kwargs: np.array([[i + 0.1 for i in range(384)] for _ in texts])
 
         indexer = BaseIndexer(
+            summaries_path=MOCK_SUMMARIES_PATH,
             index_path=MOCK_INDEX_PATH,
             metadata_path=MOCK_METADATA_PATH
         )
@@ -43,9 +46,10 @@ def test_save_and_load_index(base_indexer):
 
     with patch("scripts.base_indexer.SentenceTransformer") as MockModel:
         mock_model = MockModel.return_value
-        mock_model.encode.side_effect = lambda texts: [[i + 0.2 for i in range(384)] for _ in texts]
+        mock_model.encode.side_effect = lambda texts, **kwargs: np.array([[i + 0.2 for i in range(384)] for _ in texts])
 
         new_indexer = BaseIndexer(
+            summaries_path=MOCK_SUMMARIES_PATH,
             index_path=MOCK_INDEX_PATH,
             metadata_path=MOCK_METADATA_PATH
         )

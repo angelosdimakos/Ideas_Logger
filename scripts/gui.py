@@ -7,6 +7,8 @@ from scripts.summary_indexer import SummaryIndexer
 from scripts.raw_log_indexer import RawLogIndexer
 from scripts.config_loader import load_config, get_config_value, get_absolute_path
 import utils.gui_helpers as gui_helpers
+from scripts.gui_logging import GUILogHandler  # Import your custom GUI logging handler
+import logging
 
 class ZephyrusLoggerGUI:
     def __init__(self, logger_core):
@@ -15,7 +17,9 @@ class ZephyrusLoggerGUI:
         self._init_ui()
         self._init_faiss()
         self._bind_events()
-        self.log_message("Zephyrus Idea Logger initialized. Ready for entries.")
+        # Use centralized logging for startup messages:
+        logging.getLogger(__name__).info("Zephyrus Idea Logger initialized. Ready for entries.")
+        self.setup_gui_logging()  # Attach GUI logging handler to display critical logs in the log widget
 
     def _init_state(self):
         self.root = tk.Tk()
@@ -50,7 +54,22 @@ class ZephyrusLoggerGUI:
     def _bind_events(self):
         self.text_entry.bind("<Control-Return>", lambda event: self._save_entry())
 
+    def setup_gui_logging(self):
+        """
+        Sets up a GUI logging handler so that log messages (at ERROR level or above)
+        are also appended to the log_text widget.
+        """
+        gui_handler = GUILogHandler(self.log_text)
+        gui_handler.setLevel(logging.ERROR)  # Adjust level if you want more verbose logging in the GUI.
+        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        gui_handler.setFormatter(formatter)
+        logging.getLogger().addHandler(gui_handler)
+
     def log_message(self, message):
+        """
+        Fallback method to display messages in the log_text widget.
+        (You may choose to eventually replace direct calls to this with logger calls.)
+        """
         timestamp = datetime.now().strftime("%H:%M:%S")
         self.log_text.config(state=tk.NORMAL)
         self.log_text.insert(tk.END, f"[{timestamp}] {message}\n")

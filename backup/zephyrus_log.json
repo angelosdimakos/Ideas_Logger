@@ -1,0 +1,278 @@
+{
+  "2025-03-21": {
+      "AI / Meta": {
+          "Tooling & Automation": [
+              {
+                  "timestamp": "2025-03-21 21:42:13",
+                  "content": "GPT 4.5 successfully modularized the logger's core logic from the UI, improving readability and maintainability."
+              },
+              {
+                  "timestamp": "2025-03-21 21:57:32",
+                  "content": "Used nested hierarchy in JSON for faster injection"
+              },
+              {
+                  "timestamp": "2025-03-21 21:58:03",
+                  "content": "Created logger for personal ideas across different domains."
+              },
+              {
+                  "timestamp": "2025-03-21 21:59:18",
+                  "content": "Implemented modulirisation to seperate core logic from UI"
+              },
+              {
+                  "timestamp": "2025-03-21 22:00:46",
+                  "content": "Retrieval Augmented Generation through FAISS will enable automated summarisation to train LLM, to automate summarisation and tagging in the future."
+              },
+              {
+                  "timestamp": "2025-03-21 22:14:10",
+                  "content": "Will begin integrating RAG with FAISS in order to enable automated summarisation and tagging."
+              },
+              {
+                  "timestamp": "2025-03-21 23:59:15",
+                  "content": "Embedded LLaMA3 to ensure summarisation every ten entries, on which I will include my corrected summary."
+              }
+          ],
+          "AI System Design": [
+              {
+                  "timestamp": "2025-03-21 22:08:26",
+                  "content": "Logs need to be brief, but elaborate on key concepts to facilitate better RAG training."
+              },
+              {
+                  "timestamp": "2025-03-21 22:09:07",
+                  "content": "Will be using ChatGPT to ensure quality of ingested entries for RAG system is high."
+              },
+              {
+                  "timestamp": "2025-03-21 22:09:49",
+                  "content": "Will need approximately 100-200 entries for RAG to ensure high quality summaries with minimal corrections"
+              },
+              {
+                  "timestamp": "2025-03-21 22:12:54",
+                  "content": "Will need some initial entries for each subcategory, around 3, to ensure the model can use more context, and improve early accuracy."
+              },
+              {
+                  "timestamp": "2025-03-21 22:26:39",
+                  "content": "Planned local Ollama inference pipeline to minimize external API dependency."
+              },
+              {
+                  "timestamp": "2025-03-21 22:26:50",
+                  "content": "Designed prompt templates optimized for efficient RAG summarization."
+              },
+              {
+                  "timestamp": "2025-03-21 22:27:00",
+                  "content": "Evaluated fine-tuning vs. RAG; chose RAG for faster context adaptation."
+              }
+          ],
+          "Execution Strategy": [
+              {
+                  "timestamp": "2025-03-21 22:56:34",
+                  "content": "Instead of migrating existing validated knowledge from the AI Assistant Database to the Ideas Logger, maintain the database as the structured, finalized knowledge base. Keep the Ideas Logger for rapid, spontaneous ideation and early-stage concepts. Only transition ideas from the Logger into the AI Assistant Database after they've been reviewed, refined, and validated. This ensures clear workflow separation, optimizes the ideation-to-execution pipeline, and preserves database integrity."
+              },
+              {
+                  "timestamp": "2025-03-21 23:01:50",
+                  "content": "Will need to carefully update database assistant will use in order to ensure safety and data integrity."
+              }
+          ]
+      },
+      "Narrative": {
+          "Romantic Development": [
+              {
+                  "timestamp": "2025-03-21 22:23:56",
+                  "content": "Structured subtle romantic progression via Caliphora\u2019s hidden influence."
+              },
+              {
+                  "timestamp": "2025-03-21 22:24:21",
+                  "content": "Plan to automatically identify critical romantic scenes for visual AI integration."
+              },
+              {
+                  "timestamp": "2025-03-21 22:24:38",
+                  "content": "Will set guidelines for balanced, realistic romantic relationship growth."
+              }
+          ]
+      },
+      "Creative": {
+          "Visual or Audio Prompt": [
+              {
+                  "timestamp": "2025-03-21 22:24:55",
+                  "content": "Identified SDXL and MeinaMix models for optimized romance and world-building visuals."
+              },
+              {
+                  "timestamp": "2025-03-21 22:25:06",
+                  "content": "Configured local Stable Diffusion WebUI integration for AI-driven visual storytelling."
+              },
+              {
+                  "timestamp": "2025-03-21 22:25:24",
+                  "content": "Will design visual tagging schema for easier retrieval and scene integration."
+              },
+              {
+                  "timestamp": "2025-03-21 22:46:34",
+                  "content": "DreamShaper XL is optimized for balanced narrative visuals combining realism with slight artistic stylization."
+              },
+              {
+                  "timestamp": "2025-03-21 22:46:46",
+                  "content": "Juggernaut XL excels in detailed photorealistic visuals, suitable for cinematic world-building and high-fidelity character art."
+              },
+              {
+                  "timestamp": "2025-03-21 22:46:56",
+                  "content": "MeinaMix V12 Final specializes in nuanced character-driven romantic and intimate scenes, maintaining accuracy and consistency."
+              },
+              {
+                  "timestamp": "2025-03-21 22:47:11",
+                  "content": "Realistic Vision V6 is ideal for lifelike portraits and scenes requiring photographic realism."
+              },
+              {
+                  "timestamp": "2025-03-21 22:47:20",
+                  "content": "RevAnimated V2 Rebirth generates dynamic, anime-inspired stylized visuals, perfect for expressive narrative storytelling."
+              },
+              {
+                  "timestamp": "2025-03-21 22:47:31",
+                  "content": "SDXL 1.0 serves as the baseline model for structured and coherent detailed environment generation."
+              },
+              {
+                  "timestamp": "2025-03-21 22:47:41",
+                  "content": "V1-5-pruned-emaonly is efficient for rapid concept prototyping and quick iterative visual generation."
+              }
+          ],
+          "Gameplay Design Insight": [
+              {
+                  "timestamp": "2025-03-21 22:27:26",
+                  "content": "Proposed faction-driven decision trees to influence player engagement."
+              },
+              {
+                  "timestamp": "2025-03-21 22:27:37",
+                  "content": "Outlined preliminary concepts for turn-based factional scheming mechanics."
+              },
+              {
+                  "timestamp": "2025-03-21 22:27:47",
+                  "content": "Planned narrative-driven gameplay loops that complement faction dynamics."
+              }
+          ]
+      },
+      "World": {
+          "Loop Mechanics": [
+              {
+                  "timestamp": "2025-03-21 22:25:48",
+                  "content": "Defined structured loop mechanics influencing Mechid memory recovery."
+              },
+              {
+                  "timestamp": "2025-03-21 22:26:10",
+                  "content": "Defined exception rules for character loop awareness: Caliphora, Evangelynn, Archivist, Architect."
+              },
+              {
+                  "timestamp": "2025-03-21 22:26:22",
+                  "content": "Refined loop memory rules ensuring logical consistency across Zephyrus story loops."
+              }
+          ],
+          "Faction Dynamics": [
+              {
+                  "timestamp": "2025-03-21 22:28:16",
+                  "content": "Defined political influence system to track evolving faculty loyalties."
+              },
+              {
+                  "timestamp": "2025-03-21 22:28:38",
+                  "content": "Plan to simulate hidden agendas and strategic conflict resolution among factions."
+              }
+          ]
+      }
+  },
+  "2025-03-22": {
+      "AI / Meta": {
+          "Meta Reflection": [
+              {
+                  "timestamp": "2025-03-22 00:05:47",
+                  "content": "Troubleshooting 4o after 4.5 performance is extremely demoralising."
+              },
+              {
+                  "timestamp": "2025-03-22 00:12:41",
+                  "content": "Will try to inject 10 entries to validate summaries, but probably need Claude subscriptions for programming, and ChatGPT for strategising."
+              },
+              {
+                  "timestamp": "2025-03-22 13:34:31",
+                  "content": "Using a script folder enables easier organisation of programmatic logic, but proper pathing is crucial to write to correct folders."
+              },
+              {
+                  "timestamp": "2025-03-22 17:53:21",
+                  "content": "Need to find a way to do massive changes in codebase without constantly breaking stuff."
+              }
+          ],
+          "Tooling & Automation": [
+              {
+                  "timestamp": "2025-03-22 13:04:09",
+                  "content": "Images can be programmatically generated, instead of relying on the webpage, which is currently under development."
+              },
+              {
+                  "timestamp": "2025-03-22 13:09:19",
+                  "content": "An important limitation I need to test is that if 5 entries are not created in a single session, this might lead to unsummarised entries."
+              },
+              {
+                  "timestamp": "2025-03-22 13:11:25",
+                  "content": "I will shift from Automatic1111 to a programmatic apporach to invoke image generation from command line interface."
+              },
+              {
+                  "timestamp": "2025-03-22 13:12:27",
+                  "content": "A python script will be used to automatically select settings, positive and negative prompts and output directory"
+              },
+              {
+                  "timestamp": "2025-03-22 13:13:08",
+                  "content": "A prompt database will be created for easier lookup and future injection into local LLMs."
+              },
+              {
+                  "timestamp": "2025-03-22 13:20:11",
+                  "content": "Different config.json can be developed based on context use for idea logger (writing, lab use, development, etc.)"
+              },
+              {
+                  "timestamp": "2025-03-22 13:21:20",
+                  "content": "Structured hierarchy is essential for json files to enable faster lookup, with different subcategories."
+              },
+              {
+                  "timestamp": "2025-03-22 13:24:55",
+                  "content": "Idea logger can be used for weaker machines, if summarisation is disabled. An exe file can be created for portability."
+              },
+              {
+                  "timestamp": "2025-03-22 13:26:13",
+                  "content": "Integration with Obsidian would enable easier construction of mindmaps."
+              },
+              {
+                  "timestamp": "2025-03-22 13:27:47",
+                  "content": "Automating category and subcategory selection based on entry would enable smoother usage, instead of dropdown categories."
+              }
+          ],
+          "AI System Design": [
+              {
+                  "timestamp": "2025-03-22 13:22:37",
+                  "content": "Tighter command line integration is crucial, as GUI development is excellent for debugging, but not overall automation."
+              },
+              {
+                  "timestamp": "2025-03-22 13:23:49",
+                  "content": "Different LLMs can be used depending on user's available computational power (OpenAI for internet access with weaker rigs, and local LLMs for power users)."
+              },
+              {
+                  "timestamp": "2025-03-22 14:54:12",
+                  "content": "Included configurations in a global config.json file to enable better configuration with different templates depending on use."
+              }
+          ]
+      },
+      "Creative": {
+          "Visual or Audio Prompt": [
+              {
+                  "timestamp": "2025-03-22 13:00:33",
+                  "content": "In order to reduce artifacts during image generation, lower resolution images (700x700) must be used to reduce artifacts"
+              },
+              {
+                  "timestamp": "2025-03-22 13:01:33",
+                  "content": "Different styles can enable automated image generation with positive and negative prompts, that are model dependant."
+              },
+              {
+                  "timestamp": "2025-03-22 13:02:56",
+                  "content": "LoRA (Low-Rank Adaptation) can enable finer control depending on model, and can be trained much easier due to smaller size."
+              },
+              {
+                  "timestamp": "2025-03-22 13:05:10",
+                  "content": "Static poses are easier than dynamic ones for image generation, as multiple people can begin overlapping."
+              },
+              {
+                  "timestamp": "2025-03-22 13:06:32",
+                  "content": "Smart resolution tuning can enable dynamic resolution based on requested style."
+              }
+          ]
+      }
+  }
+}

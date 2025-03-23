@@ -3,9 +3,7 @@
     "mode": "full",                           
     "use_gui": true,                          
     "interface_theme": "dark",                
-    "batch_size": 5,
-    "logs_dir": "tests/mock_data/logs",  
-    "export_dir": "tests/mock_data/exports",                        
+    "batch_size": 5,                     
     "autosave_interval": 5,                   
     "log_level": "ERROR",
   
@@ -69,9 +67,9 @@
 
     "_comment_testing": "==== TESTING SETTINGS ====",
     "test_mode": false,  
-    "test_logs_dir": "tests/mock_logs",
-    "test_vector_store_dir": "tests/mock_vector_store",
-    "test_export_dir": "tests/mock_exports",
+    "test_logs_dir": "tests/mock_data/logs",
+    "test_vector_store_dir": "tests/mock_data/vector_store",
+    "test_export_dir": "tests/mock_data/exports",
   
     "_comment_future": "==== ADVANCED / FUTURE ====",
     "remote_sync": false,                    

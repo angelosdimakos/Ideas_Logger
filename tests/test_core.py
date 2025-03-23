@@ -23,8 +23,13 @@ def patch_load_config(monkeypatch):
     """
     monkeypatch.setattr("scripts.config_loader.load_config", lambda: {
         "batch_size": 5,
-        "logs_dir": "logs",
-        "export_dir": "exports"
+        "logs_dir": "tests/mock_data/logs",
+        "export_dir": "tests/mock_data/exports",
+        "correction_summaries_path": "tests/mock_data/logs/correction_summaries.json",
+        "raw_log_path": "tests/mock_data/logs/zephyrus_log.json",
+        "test_logs_dir": "tests/mock_data/logs",
+        "test_vector_store_dir": "tests/mock_data/vector_store",
+        "test_export_dir": "tests/mock_data/exports"
     })
 
 # 🧪 TEMP DIRECTORY STRUCTURE
@@ -32,10 +37,11 @@ def patch_load_config(monkeypatch):
 @pytest.fixture
 def temp_dir(tmp_path):
     """
-    Creates a temporary directory structure for logs and exports during tests.
+    Creates a temporary directory structure for logs, vector store, and exports during tests.
     """
-    (tmp_path / "logs").mkdir()
-    (tmp_path / "exports").mkdir()
+    (tmp_path / "tests/mock_data/logs").mkdir(parents=True)
+    (tmp_path / "tests/mock_data/vector_store").mkdir(parents=True)
+    (tmp_path / "tests/mock_data/exports").mkdir(parents=True)
     return tmp_path
 
 @pytest.fixture
@@ -128,33 +134,38 @@ def test_generate_summary_triggers_and_writes_summary(logger_core):
     batch_summary = summaries[date_str][main_category][subcategory][0]
     assert batch_summary["original_summary"] == "This is a mocked summary."
 
-    def test_generate_summary_fallback(logger_core, monkeypatch):
-        """
-        Ensures that the fallback mechanism is triggered if the summarization fails.
-        """
-        # Force an exception to trigger fallback
-        monkeypatch.setattr(logger_core.ai_summarizer, 'summarize_entries_bulk', MagicMock(side_effect=Exception("Ollama down")))
-
-        # Fake 5 entries that will trigger summary
-        logs = {
-            "2025-03-22": {
-                "TestCat": {
-                    "SubCat": [{"timestamp": "2025-03-22 12:00:00", "content": f"entry {i}"} for i in range(5)]
-                }
+def test_generate_summary_fallback(logger_core, monkeypatch):
+    """
+    Ensures that the fallback mechanism is triggered if the summarization fails.
+    """
+    # Replace the ai_summarizer with a dummy that always fails but supports fallback.
+    class DummySummarizer:
+        def summarize_entries_bulk(self, entries, subcategory=None):
+            raise Exception("Ollama down")
+        def _fallback_summary(self, full_prompt):
+            return "This is a mocked summary."
+    
+    logger_core.ai_summarizer = DummySummarizer()
+    
+    # Fake 5 entries that will trigger summary
+    logs = {
+        "2025-03-22": {
+            "TestCat": {
+                "SubCat": [{"timestamp": "2025-03-22 12:00:00", "content": f"entry {i}"} for i in range(5)]
             }
         }
-
-        logger_core.json_log_file.write_text(json.dumps(logs, indent=2), encoding="utf-8")
-
-        # Mock the summarized count to force summary generation
-        monkeypatch.setattr(logger_core, "get_summarized_count", lambda *args, **kwargs: 0)
-
-        # Test with the failure and fallback
-        success = logger_core.generate_summary("2025-03-22", "TestCat", "SubCat")
-        assert success  # It should still succeed due to fallback handling
-
-        summaries = json.loads(logger_core.correction_summaries_file.read_text(encoding="utf-8"))
-        batch_summary = summaries["2025-03-22"]["TestCat"]["SubCat"][0]
+    }
     
-        # Ensure fallback summary is written
-        assert batch_summary["original_summary"] == "This is a mocked summary."
+    logger_core.json_log_file.write_text(json.dumps(logs, indent=2), encoding="utf-8")
+    
+    # Force summarized count to return 0 to trigger summary generation
+    monkeypatch.setattr(logger_core, "get_summarized_count", lambda *args, **kwargs: 0)
+    
+    # Call generate_summary, which should now fall back to a default summary
+    success = logger_core.generate_summary("2025-03-22", "TestCat", "SubCat")
+    assert success
+    
+    summaries = json.loads(logger_core.correction_summaries_file.read_text(encoding="utf-8"))
+    batch_summary = summaries["2025-03-22"]["TestCat"]["SubCat"][0]
+    assert batch_summary["original_summary"] == "This is a mocked summary."
+
