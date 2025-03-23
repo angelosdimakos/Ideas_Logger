@@ -1,0 +1,23 @@
+# Ignore Python virtual environments
+.venv/
+venv/
+
+# Ignore VSCode settings
+.vscode/
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignore logs, debug info, etc.
+*.log
+
+# FAISS / vector indexes (optional)
+vector_store/
+*.pkl
+*.faiss
+
+# System files
+.DS_Store
+Thumbs.db

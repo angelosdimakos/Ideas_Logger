@@ -76,9 +76,6 @@
    'C:\\Users\\Angelos '
    'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\copy.py',
    'PYMODULE'),
-  ('core',
-   'C:\\Users\\Angelos Dimakos\\Documents\\Ideas_Logger\\core.py',
-   'PYMODULE'),
   ('csv',
    'C:\\Users\\Angelos '
    'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\csv.py',
@@ -198,9 +195,6 @@
   ('glob',
    'C:\\Users\\Angelos '
    'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\glob.py',
-   'PYMODULE'),
-  ('gui',
-   'C:\\Users\\Angelos Dimakos\\Documents\\Ideas_Logger\\gui.py',
    'PYMODULE'),
   ('gzip',
    'C:\\Users\\Angelos '
@@ -417,22 +411,6 @@
   ('threading',
    'C:\\Users\\Angelos '
    'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\threading.py',
-   'PYMODULE'),
-  ('tkinter',
-   'C:\\Users\\Angelos '
-   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\tkinter\\__init__.py',
-   'PYMODULE'),
-  ('tkinter.commondialog',
-   'C:\\Users\\Angelos '
-   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\tkinter\\commondialog.py',
-   'PYMODULE'),
-  ('tkinter.constants',
-   'C:\\Users\\Angelos '
-   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\tkinter\\constants.py',
-   'PYMODULE'),
-  ('tkinter.messagebox',
-   'C:\\Users\\Angelos '
-   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\tkinter\\messagebox.py',
    'PYMODULE'),
   ('token',
    'C:\\Users\\Angelos '

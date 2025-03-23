@@ -5,20 +5,27 @@ import unittest
 from scripts.config_loader import load_config, get_config_value, get_absolute_path, BASE_DIR, CONFIG_DIR
 
 class TestConfigLoader(unittest.TestCase):
+    """
+    Test suite for verifying the configuration loading and path resolution logic
+    defined in `scripts.config_loader`. Uses mock directories to avoid impacting production data.
+    """
+
     def setUp(self):
-        # Create a temporary directory to mimic the config folder.
-        self.temp_dir = tempfile.TemporaryDirectory()
-        # Override BASE_DIR and CONFIG_DIR for testing purposes.
-        self.original_base_dir = BASE_DIR
-        self.original_config_dir = CONFIG_DIR
+        """
+        Set up a temporary testing environment:
+        - Creates a mock `config` directory and JSON config file inside `tests/mock_data/`.
+        - Overrides `BASE_DIR` and `CONFIG_DIR` for testing isolation.
+        - Defines a local version of `get_absolute_path` for validation.
+        """
+        self.mock_data_dir = os.path.join(os.path.dirname(__file__), 'mock_data')
+        self.mock_logs_dir = os.path.join(self.mock_data_dir, 'logs')
+        self.mock_exports_dir = os.path.join(self.mock_data_dir, 'exports')
 
-        # Use the temporary directory as the new BASE_DIR.
-        self.test_base_dir = self.temp_dir.name
-        self.test_config_dir = os.path.join(self.test_base_dir, "config")
-        os.makedirs(self.test_config_dir, exist_ok=True)
+        # Create necessary directories
+        os.makedirs(self.mock_logs_dir, exist_ok=True)
+        os.makedirs(self.mock_exports_dir, exist_ok=True)
 
-        # Create a sample config file.
-        self.config_file = os.path.join(self.test_config_dir, "config.json")
+        self.config_file = os.path.join(self.mock_data_dir, "config.json")
         sample_config = {
             "batch_size": 10,
             "correction_summaries_path": "logs/test_correction_summaries.json",
@@ -27,41 +34,62 @@ class TestConfigLoader(unittest.TestCase):
         with open(self.config_file, "w", encoding="utf-8") as f:
             json.dump(sample_config, f)
 
-        # Monkey-patch get_absolute_path to use our temporary BASE_DIR.
+        # Overriding `get_absolute_path` for the test context
         self.original_get_absolute_path = get_absolute_path
-        # Redefine get_absolute_path for testing:
+
         def test_get_absolute_path(relative_path):
-            return os.path.join(self.test_base_dir, relative_path)
-        # We'll use this in tests instead of the module-level one.
+            """
+            Mocks path resolution for the test environment, pointing to mock directories.
+            """
+            return os.path.join(self.mock_data_dir, relative_path)
 
         self.test_get_absolute_path = test_get_absolute_path
 
     def tearDown(self):
-        self.temp_dir.cleanup()
-
+        """
+        Clean up files inside the test directories but leave the directories intact for future tests.
+        """
+        # Remove files inside the mock_data/logs and mock_data/exports to avoid directory errors
+        try:
+            for root, dirs, files in os.walk(self.mock_data_dir, topdown=False):
+                for name in files:
+                    os.remove(os.path.join(root, name))  # Delete files inside the mock_data dir
+        except Exception as e:
+            print(f"[WARNING] Failed to clean up files: {e}")
+    
+    # Optionally, you can add more logic to clean specific files or subdirectories if needed.
     def test_load_config_success(self):
-        # Test that load_config returns our sample config.
+        """
+        Validates that the config file loads successfully from the mock location and matches the expected structure.
+        """
         config = load_config(self.config_file)
         self.assertIsInstance(config, dict)
         self.assertEqual(config.get("batch_size"), 10)
         self.assertEqual(config.get("correction_summaries_path"), "logs/test_correction_summaries.json")
 
     def test_get_config_value(self):
+        """
+        Ensures that `get_config_value`:
+        - Retrieves an existing key correctly.
+        - Returns the default value if the key is missing.
+        """
         config = load_config(self.config_file)
-        # Key exists.
         self.assertEqual(get_config_value(config, "batch_size", 5), 10)
-        # Key missing should return default.
         self.assertEqual(get_config_value(config, "nonexistent_key", "default_val"), "default_val")
 
     def test_get_absolute_path(self):
-        # Using our test version.
+        """
+        Validates that the test version of `get_absolute_path` joins relative paths with the mock base directory.
+        """
         abs_path = self.test_get_absolute_path("logs/test.json")
-        expected = os.path.join(self.test_base_dir, "logs/test.json")
+        expected = os.path.join(self.mock_data_dir, "logs/test.json")
         self.assertEqual(abs_path, expected)
 
     def test_load_config_missing_file(self):
-        # Provide a path that doesn't exist.
-        fake_path = os.path.join(self.test_config_dir, "fake_config.json")
+        """
+        Ensures `load_config` gracefully returns an empty dictionary when the config file is missing.
+        """
+        fake_path = os.path.join(self.mock_data_dir, "fake_config.json")
         config = load_config(fake_path)
         self.assertEqual(config, {})
 

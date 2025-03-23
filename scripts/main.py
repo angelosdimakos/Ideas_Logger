@@ -1,8 +1,9 @@
-from core import ZephyrusLoggerCore
-from gui import ZephyrusLoggerGUI
-from config_loader import load_config
-from ai_summarizer import AISummarizer
-from config_loader import load_config
+
+from scripts.core import ZephyrusLoggerCore
+from scripts.gui import ZephyrusLoggerGUI
+from scripts.config_loader import load_config
+from scripts.ai_summarizer import AISummarizer
+from scripts.config_loader import load_config
 
 if __name__ == "__main__":
     config = load_config()

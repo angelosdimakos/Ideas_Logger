@@ -1,0 +1,99 @@
+([('ZephyrusLogger.exe',
+   'C:\\Users\\Angelos '
+   'Dimakos\\Documents\\Ideas_Logger\\build\\ZephyrusLogger\\ZephyrusLogger.exe',
+   'EXECUTABLE'),
+  ('python313.dll',
+   'C:\\Users\\Angelos '
+   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\python313.dll',
+   'BINARY'),
+  ('unicodedata.pyd',
+   'C:\\Users\\Angelos '
+   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\unicodedata.pyd',
+   'EXTENSION'),
+  ('_decimal.pyd',
+   'C:\\Users\\Angelos '
+   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_decimal.pyd',
+   'EXTENSION'),
+  ('_hashlib.pyd',
+   'C:\\Users\\Angelos '
+   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_hashlib.pyd',
+   'EXTENSION'),
+  ('select.pyd',
+   'C:\\Users\\Angelos '
+   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\select.pyd',
+   'EXTENSION'),
+  ('_socket.pyd',
+   'C:\\Users\\Angelos '
+   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_socket.pyd',
+   'EXTENSION'),
+  ('_lzma.pyd',
+   'C:\\Users\\Angelos '
+   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_lzma.pyd',
+   'EXTENSION'),
+  ('_bz2.pyd',
+   'C:\\Users\\Angelos '
+   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_bz2.pyd',
+   'EXTENSION'),
+  ('VCRUNTIME140.dll',
+   'C:\\Users\\Angelos '
+   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\VCRUNTIME140.dll',
+   'BINARY'),
+  ('libcrypto-3.dll',
+   'C:\\Users\\Angelos '
+   'Dimakos\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\libcrypto-3.dll',
+   'BINARY'),
+  ('config\\config.json',
+   'C:\\Users\\Angelos Dimakos\\Documents\\Ideas_Logger\\config\\config.json',
+   'DATA'),
+  ('exports\\AI___Meta.md',
+   'C:\\Users\\Angelos Dimakos\\Documents\\Ideas_Logger\\exports\\AI___Meta.md',
+   'DATA'),
+  ('exports\\Creative.md',
+   'C:\\Users\\Angelos Dimakos\\Documents\\Ideas_Logger\\exports\\Creative.md',
+   'DATA'),
+  ('exports\\Narrative.md',
+   'C:\\Users\\Angelos Dimakos\\Documents\\Ideas_Logger\\exports\\Narrative.md',
+   'DATA'),
+  ('exports\\World.md',
+   'C:\\Users\\Angelos Dimakos\\Documents\\Ideas_Logger\\exports\\World.md',
+   'DATA'),
+  ('logs\\correction_summaries.json',
+   'C:\\Users\\Angelos '
+   'Dimakos\\Documents\\Ideas_Logger\\logs\\correction_summaries.json',
+   'DATA'),
+  ('logs\\correction_summaries_backup.json',
+   'C:\\Users\\Angelos '
+   'Dimakos\\Documents\\Ideas_Logger\\logs\\correction_summaries_backup.json',
+   'DATA'),
+  ('logs\\correction_summaries_backup_2025-03-22_20-16-10.json',
+   'C:\\Users\\Angelos '
+   'Dimakos\\Documents\\Ideas_Logger\\logs\\correction_summaries_backup_2025-03-22_20-16-10.json',
+   'DATA'),
+  ('logs\\zephyrus_log.json',
+   'C:\\Users\\Angelos '
+   'Dimakos\\Documents\\Ideas_Logger\\logs\\zephyrus_log.json',
+   'DATA'),
+  ('logs\\zephyrus_log.txt',
+   'C:\\Users\\Angelos '
+   'Dimakos\\Documents\\Ideas_Logger\\logs\\zephyrus_log.txt',
+   'DATA'),
+  ('vector_store\\raw_index.faiss',
+   'C:\\Users\\Angelos '
+   'Dimakos\\Documents\\Ideas_Logger\\vector_store\\raw_index.faiss',
+   'DATA'),
+  ('vector_store\\raw_metadata.pkl',
+   'C:\\Users\\Angelos '
+   'Dimakos\\Documents\\Ideas_Logger\\vector_store\\raw_metadata.pkl',
+   'DATA'),
+  ('vector_store\\summary_index.faiss',
+   'C:\\Users\\Angelos '
+   'Dimakos\\Documents\\Ideas_Logger\\vector_store\\summary_index.faiss',
+   'DATA'),
+  ('vector_store\\summary_metadata.pkl',
+   'C:\\Users\\Angelos '
+   'Dimakos\\Documents\\Ideas_Logger\\vector_store\\summary_metadata.pkl',
+   'DATA'),
+  ('base_library.zip',
+   'C:\\Users\\Angelos '
+   'Dimakos\\Documents\\Ideas_Logger\\build\\ZephyrusLogger\\base_library.zip',
+   'DATA')],)

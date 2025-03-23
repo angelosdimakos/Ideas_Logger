@@ -1,0 +1,52 @@
+{
+    "2025-03-21": {
+        "AI / Meta": {
+            "Tooling & Automation": [
+                {
+                    "batch": "1-5",
+                    "original_summary": "Here is a concise technical summary of the workflow:\n\n**Workflow:**\n\n* Modularization:\n\t+ Separated logger's core logic from UI for improved readability and maintainability\n* JSON Data Structure:\n\t+ Used nested hierarchy for faster injection\n* Logger Development:\n\t+ Created logger for personal ideas across different domains\n* Modularity:\n\t+ Implemented modularization to separate core logic from UI\n* Future Automation:\n\t+ Utilized Retrieval Augmented Generation through FAISS for automated summarization training of LLM (Large Language Model)\n\t+ Enabled future automation of summarization and tagging",
+                    "corrected_summary": "This workflow cleanly separates the logger\u2019s core logic from the UI to improve maintainability. It employs a nested JSON structure for faster data injection and supports broader domain-based logging. Moving forward, the system leverages Retrieval-Augmented Generation through FAISS to train large language models, enabling automated summarization and tagging for continued expansion.",
+                    "correction_timestamp": "2025-03-22 01:23:31"
+                }
+            ]
+        },
+        "Creative": {
+            "Visual or Audio Prompt": [
+                {
+                    "batch": "1-5",
+                    "original_summary": "Here's a vivid visual/audio description summarizing the creative prompt:\n\n\"Imagine a cinematic tapestry weaving together lush, photorealistic landscapes (Juggernaut XL) with dreamy, stylized illustrations (DreamShaper XL). The air is filled with the soft hum of digital brushstrokes as AI-driven visuals unfold like a living painting. With each stroke, vivid colors and textures blend seamlessly, transporting you to an immersive world where characters come to life in exquisite detail. As the story unfolds, visual tags flutter across the canvas, waiting to be integrated into your narrative like hidden treasures.\"",
+                    "corrected_summary": "A cinematic tapestry seamlessly blends photorealistic environments (Juggernaut XL) with dreamy, stylized illustrations (DreamShaper XL). Each brushstroke unfolds like a living painting, with vibrant colors and textures shaping an immersive world. As the story progresses, delicate visual tags flutter across the scene, ready to be woven into your evolving narrative.",
+                    "correction_timestamp": "2025-03-22 01:27:25"
+                }
+            ]
+        }
+    },
+    "2025-03-22": {
+        "Creative": {
+            "Visual or Audio Prompt": [
+                {
+                    "batch": "1-5",
+                    "original_summary": "Here's a vivid visual/audio description summarizing the creative prompt:\n\n\"Imagine a futuristic laboratory where AI-generated art takes center stage. The air is filled with the soft hum of processing power and the gentle glow of computer screens. A 700x700 pixel canvas, like a miniature movie screen, flickers to life as algorithms weave together pixels in a mesmerizing dance.\n\nThe room is dimly lit, with flashes of color emanating from the screens as different styles unfold: abstract brushstrokes, realistic portraits, or whimsical illustrations. The soundscape shifts and morphs alongside, blending eerie whispers, pulsing beats, and soft chimes.\n\nAs poses come to life, static figures pose confidently, while dynamic ones burst into motion, with multiple figures overlapping in a choreographed ballet of movement and light. In the background, subtle hints of resolution tuning hum along, adjusting the visuals to match the requested style like a symphony conductor leading an orchestra.\n\nThe room pulses with creative energy, where AI-generated art meets human imagination, blending the boundaries between reality and fantasy.\"",
+                    "corrected_summary": "",
+                    "correction_timestamp": "2025-03-22 13:06:38"
+                }
+            ]
+        },
+        "AI / Meta": {
+            "Tooling & Automation": [
+                {
+                    "batch": "1-5",
+                    "original_summary": "Here is a concise technical summary of the workflow, tool, or automation concept:\n\n**Workflow:**\n\n1. Programmatic image generation replaces reliance on webpage.\n2. Image generation invokes command-line interface (CLI) using Python script.\n\n**Script Functionality:**\n\n* Automatically selects settings\n* Selects positive and negative prompts\n* Outputs generated images to designated directory\n\n**Additional Feature:**\n\n* Prompt database creation for:\n\t+ Easy lookup\n\t+ Future injection into local Large Language Models (LLMs)\n\n**Limitation:**\nIf 5 entries are not created in a single session, unsummarized entries may occur.",
+                    "corrected_summary": "",
+                    "correction_timestamp": "2025-03-22 13:13:11"
+                },
+                {
+                    "batch": "6-10",
+                    "original_summary": "**Idea Logger Automation Concept**\n\n**Workflow:**\n\n1. **Config File Generation**: Develop multiple `config.json` files based on context (e.g., writing, lab use, development) for the idea logger.\n2. **Structured Hierarchy**: Implement a hierarchical structure within JSON files to enable faster lookup and categorization using subcategories.\n3. **Idea Logger Execution**:\n\t* For weaker machines, disable summarization to optimize performance.\n\t* Create an executable file (`.exe`) for portability.\n4. **Obsidian Integration**: Integrate the idea logger with Obsidian to facilitate easier mindmap construction.\n\n**Automation Concept:**\n\n* **Automated Category Selection**: Automatically select categories and subcategories based on entry input, eliminating the need for dropdown menus.\n\nThis automation concept aims to streamline the idea logging process by generating multiple config files, implementing a structured hierarchy, and integrating with Obsidian. The automated category selection feature enables smoother usage and reduced user interaction.",
+                    "corrected_summary": "",
+                    "correction_timestamp": "2025-03-22 13:27:51"
+                }
+            ]
+        }
+    }
+}

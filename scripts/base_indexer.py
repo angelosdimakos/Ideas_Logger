@@ -4,7 +4,7 @@ import json
 import pickle
 import faiss
 from sentence_transformers import SentenceTransformer
-from config_loader import load_config,get_config_value, get_absolute_path
+from scripts.config_loader import load_config,get_config_value, get_absolute_path
 
 class BaseIndexer:
     def __init__(self, summaries_path, index_path, metadata_path):

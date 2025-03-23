@@ -3,7 +3,9 @@
     "mode": "full",                           
     "use_gui": true,                          
     "interface_theme": "dark",                
-    "batch_size": 5,                          
+    "batch_size": 5,
+    "logs_dir": "tests/mock_data/logs",  
+    "export_dir": "tests/mock_data/exports",                        
     "autosave_interval": 5,                   
     "log_level": "ERROR",
   

@@ -1,6 +1,6 @@
-from base_indexer import BaseIndexer
+from scripts.base_indexer import BaseIndexer
 import json
-from config_loader import load_config, get_config_value, get_absolute_path
+from scripts.config_loader import load_config, get_config_value, get_absolute_path
 import faiss
 import numpy as np
 

@@ -1,7 +1,7 @@
 import ollama
 import traceback
 import logging
-from config_loader import load_config, get_config_value
+from scripts.config_loader import load_config, get_config_value
 
 class AISummarizer:
     def __init__(self):
@@ -14,7 +14,26 @@ class AISummarizer:
         self.prompts_by_subcategory = get_config_value(config, "prompts_by_subcategory", {})
         print(f"[INFO] Initializing AISummarizer with model: {self.model}")
     
-    
+    def _fallback_summary(self, full_prompt):
+        """
+        Fallback method to summarize using `ollama.chat` in case of failure.
+        """
+        print("[AI] Attempting fallback approach (chat)")
+        try:
+            response = ollama.chat(model=self.model, messages=[
+                {'role': 'user', 'content': full_prompt}
+            ])
+            if response and 'message' in response and 'content' in response['message']:
+                fallback_answer = response['message']['content'].strip()
+                print(f"[AI-Fallback] Fallback summary:\n{fallback_answer}\n")
+                return fallback_answer
+            else:
+                print("[❌ AI Error] Fallback approach returned unexpected format")
+                return "Fallback failed: Unexpected format"
+        except Exception as fallback_error:
+            print(f"[❌ AI Error] Fallback approach also failed: {str(fallback_error)}")
+            return "Fallback failed: Ollama down"
+
     def summarize_entry(self, entry_text, subcategory=None):
         """
         Generate a summary for a single entry based on its associated subcategory.
@@ -39,23 +58,7 @@ class AISummarizer:
             print(error_msg)
             print(traceback.format_exc())
             logging.error(error_msg)
-            
-            # Try fallback approach
-            try:
-                print("[AI] Attempting fallback approach (chat) for single entry")
-                response = ollama.chat(model=self.model, messages=[
-                    {'role': 'user', 'content': full_prompt}
-                ])
-                if response and 'message' in response and 'content' in response['message']:
-                    fallback_answer = response['message']['content'].strip()
-                    print(f"[AI-Fallback] Single-entry:\n{fallback_answer}\n")
-                    return fallback_answer
-                else:
-                    print("[❌ AI Error] Fallback approach returned unexpected format")
-                    return None
-            except Exception as fallback_error:
-                print(f"[❌ AI Error] Fallback approach also failed: {str(fallback_error)}")
-                return None
+            return self._fallback_summary(full_prompt)  # Use fallback on failure
 
     def summarize_entries_bulk(self, entries, subcategory=None):
         """
@@ -70,36 +73,37 @@ class AISummarizer:
         """
         if not entries:
             print("[⚠️ Empty Input] summarize_entries_bulk received empty entry list")
-            return None
+            return "No entries provided"
 
         prompt_intro = self.prompts_by_subcategory.get(subcategory, self.prompts_by_subcategory["_default"])
         combined_text = "\n".join(f"- {entry}" for entry in entries)
         full_prompt = f"{prompt_intro}\n\n{combined_text}"
 
         print(f"[AI] Bulk prompt:\n{full_prompt}\n")
+        
         try:
+            # Try generating summary using the AI model
             response = ollama.generate(model=self.model, prompt=full_prompt)
-            result = response['response'].strip()
-            print(f"[AI] Bulk response:\n{result}\n")
-            return result
+            # Check if the response structure is valid
+            if 'response' in response:
+                result = response['response'].strip()
+                print(f"[AI] Bulk response:\n{result}\n")
+                return result
+            else:
+                # Explicitly raise an exception for invalid response format
+                raise ValueError("Invalid response format from Ollama API")
+        
         except Exception as e:
+            # Log the error and fallback if there was an issue
             error_msg = f"[❌ AI Error] summarize_entries_bulk failed: {str(e)}"
             print(error_msg)
             print(traceback.format_exc())
             logging.error(error_msg)
-            
-            # Attempt fallback
-            try:
-                print("[AI] Attempting fallback approach (chat) for bulk entries")
-                response = ollama.chat(model=self.model, messages=[
-                    {'role': 'user', 'content': full_prompt}
-                ])
-                if response and 'message' in response and 'content' in response['message']:
-                    fallback_answer = response['message']['content'].strip()
-                    print(f"[AI-Fallback] Bulk:\n{fallback_answer}\n")
-                    return fallback_answer
-                else:
-                    return None
-            except Exception as fallback_error:
-                print(f"[❌ AI Error] Fallback approach also failed: {str(fallback_error)}")
-                return None
+
+            # Explicitly ensure fallback is called when an error occurs
+            fallback_result = self._fallback_summary(full_prompt)
+            if not fallback_result:
+                raise RuntimeError("Fallback failed to generate a summary.")
+            return fallback_result  # Ensure fallback is triggered properly
+
+

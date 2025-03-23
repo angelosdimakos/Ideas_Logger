@@ -1,7 +1,7 @@
 import os
 import json
-from config_loader import load_config, get_config_value, get_absolute_path
-from base_indexer import BaseIndexer
+from scripts.config_loader import load_config, get_config_value, get_absolute_path
+from scripts.base_indexer import BaseIndexer
 
 
 class RawLogIndexer(BaseIndexer):
