@@ -16,6 +16,12 @@ def patch_aisummarizer(monkeypatch):
     monkeypatch.setattr("scripts.ai_summarizer.AISummarizer", lambda: mock_ai)
 
 @pytest.fixture(autouse=True)
+def patch_get_absolute_path(monkeypatch, temp_dir):
+    # Force get_absolute_path to resolve paths relative to the temporary directory.
+    monkeypatch.setattr("scripts.config_loader.get_absolute_path", lambda x: str(temp_dir / x))
+
+
+@pytest.fixture(autouse=True)
 def patch_load_config(monkeypatch):
     """
     Fixture that overrides `load_config` to return a static test config.
@@ -106,17 +112,11 @@ def test_get_summarized_count_defaults_to_zero(logger_core):
     count = logger_core.get_summarized_count("2025-03-22", "NonExistentCategory", "SubCat")
     assert count == 0
 
-def test_generate_summary_triggers_and_writes_summary(logger_core):
-    """
-    Verifies that:
-    1. A batch of 5 entries triggers AI summarization.
-    2. The mocked summary is written to correction_summaries_file correctly.
-    """
+def test_generate_summary_triggers_and_writes_summary(logger_core, monkeypatch):
     date_str = "2025-03-22"
     main_category = "TestCat"
     subcategory = "SubCat"
 
-    # Fake 5 entries that will trigger summary
     logs = {
         date_str: {
             main_category: {
@@ -124,8 +124,10 @@ def test_generate_summary_triggers_and_writes_summary(logger_core):
             }
         }
     }
-
     logger_core.json_log_file.write_text(json.dumps(logs, indent=2), encoding="utf-8")
+
+    # ✅ Patch summary count to 0 to trigger summarization
+    monkeypatch.setattr(logger_core, "get_summarized_count", lambda *_: 0)
 
     success = logger_core.generate_summary(date_str, main_category, subcategory)
     assert success
@@ -133,6 +135,7 @@ def test_generate_summary_triggers_and_writes_summary(logger_core):
     summaries = json.loads(logger_core.correction_summaries_file.read_text(encoding="utf-8"))
     batch_summary = summaries[date_str][main_category][subcategory][0]
     assert batch_summary["original_summary"] == "This is a mocked summary."
+
 
 def test_generate_summary_fallback(logger_core, monkeypatch):
     """
@@ -169,3 +172,33 @@ def test_generate_summary_fallback(logger_core, monkeypatch):
     batch_summary = summaries["2025-03-22"]["TestCat"]["SubCat"][0]
     assert batch_summary["original_summary"] == "This is a mocked summary."
 
+
+def test_generate_summary_across_days(logger_core, monkeypatch):
+    day_1 = "2025-03-22"
+    day_2 = "2025-03-23"
+    main_category = "CrossDayCat"
+    subcategory = "SubCross"
+
+    logs_day1 = [{"timestamp": f"{day_1} 10:00:00", "content": f"entry {i}"} for i in range(3)]
+    logs_day2 = [{"timestamp": f"{day_2} 11:00:00", "content": f"entry {i}"} for i in range(5)]
+
+    full_logs = {
+        day_1: {main_category: {subcategory: logs_day1}},
+        day_2: {main_category: {subcategory: logs_day2}},
+    }
+    logger_core.json_log_file.write_text(json.dumps(full_logs, indent=2), encoding="utf-8")
+
+    # ✅ Correct conditional patching
+    def fake_summarized_count(date_str, *_):
+        return 3 if date_str == day_1 else 0
+    monkeypatch.setattr(logger_core, "get_summarized_count", fake_summarized_count)
+
+    summary_day1 = logger_core.generate_summary(day_1, main_category, subcategory)
+    assert summary_day1 is False
+
+    summary_day2 = logger_core.generate_summary(day_2, main_category, subcategory)
+    assert summary_day2 is True
+
+    summaries = json.loads(logger_core.correction_summaries_file.read_text(encoding="utf-8"))
+    assert day_1 not in summaries or not summaries[day_1].get(main_category, {}).get(subcategory)
+    assert summaries[day_2][main_category][subcategory][0]["original_summary"] == "This is a mocked summary."

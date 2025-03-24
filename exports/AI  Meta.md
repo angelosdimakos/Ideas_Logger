@@ -1,6 +1,7 @@
 # AI / Meta
 
 ## 2025-03-23
+- **Execution Strategy**: PyCharm is more bloated than VSCode, but also easier to properly configure.
 - **AI System Design**: Added central logging system to standardise error handling output across application.
 - **AI System Design**: Centralising logging is important to ensure consistent formatting, destination and level settings using the logging python module.
 - **AI System Design**: For tests regarding classes that interface with API, there must be a mix of tests for error handling using mocks, and integration tests in different tests.
