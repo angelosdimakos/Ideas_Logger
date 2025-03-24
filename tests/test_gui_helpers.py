@@ -11,9 +11,16 @@ from utils.gui_helpers import (
     get_category_options,
 )
 from utils.file_utils import read_json, write_json
+import tkinter.messagebox as messagebox
+
+def dummy_showwarning(title, message, **kwargs):
+    return None
 
 
-def test_validate_log_input():
+# In your test for validate_log_input in test_gui_helpers.py:
+def test_validate_log_input(monkeypatch):
+    from utils.gui_helpers import validate_log_input
+    monkeypatch.setattr(messagebox, "showwarning", dummy_showwarning)
     assert validate_log_input("Something here") is True
     assert validate_log_input("     ") is False
 

@@ -19,7 +19,8 @@
   
     "_comment_faiss": "==== EMBEDDING & FAISS ====",
     "embedding_model": "all-MiniLM-L6-v2",    
-    "faiss_top_k": 5,                         
+    "faiss_top_k": 5,
+    "force_summary_tracker_rebuild": true,
     "vector_store_dir": "vector_store",       
     "faiss_index_path": "vector_store/summary_index.faiss",
     "faiss_metadata_path": "vector_store/summary_metadata.pkl",

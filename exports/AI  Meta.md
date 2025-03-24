@@ -12,3 +12,7 @@
 - **AI System Design**: Tests are important to validate classes and helper functions and enable easier development
 
 - **Meta Reflection**: Implemented testing using fixtures and pytesting to check modules and helper function that help with refactoring.
+
+## 2025-03-24
+
+- **Tooling & Automation**: Trying to make logic in order to track entries across days in order to properly summarize.

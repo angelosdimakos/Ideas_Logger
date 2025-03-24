@@ -21,18 +21,6 @@
       ]
     }
   },
-  "2025-03-23": {
-    "AI / Meta": {
-      "AI System Design": [
-        {
-          "batch": "1-5",
-          "original_summary": "Here's a clear summary of the AI system concept focusing on architecture and interaction design:\n\n**Architecture:**\n\n1. **Event-driven Architecture**: This enables real-time interactions between components and tighter integration with an Integrated Development Environment (IDE).\n2. **Plugin-Based Modular Systems**: The codebase is designed to be modular, ensuring integrity and making it easier to expand features without affecting the entire system.\n3. **Reactive Programming**: This allows for real-time model switching across different domains, such as programming, image creation, or storytelling.\n\n**Interaction Design:**\n\n1. **Test-driven Development (TDD)**: Tests are used to validate classes and helper functions, making development easier and more efficient.\n2. **Multi-Agent System**: The system enables multiple AI agents to interact with each other in the same world state, requiring **Test Isolation** to ensure correctness.\n\nIn summary, this AI system is designed around an event-driven architecture, utilizing modular plugins for scalability and reactive programming for real-time adaptability. Testing plays a crucial role in ensuring the integrity of individual components and their interactions within the system.",
-          "corrected_summary": "",
-          "correction_timestamp": "2025-03-23 15:05:39"
-        }
-      ]
-    }
-  },
   "2025-03-22": {
     "Creative": {
       "Visual or Audio Prompt": [
@@ -59,30 +47,80 @@
           "correction_timestamp": "2025-03-22 13:27:51"
         }
       ]
-    },
-    "TestCat": {
-      "SubCat": [
+    }
+  },
+  "global": {
+    "AI / Meta": {
+      "AI System Design": [
         {
-          "batch": "1-5",
-          "original_summary": "- Entry 0: Initial state or starting point of the system, without any changes.\n   - Entry 1: First step or change in the system, resulting from an event or action.\n   - Entry 2: Second step or further change in the system, possibly as a response to the previous change.\n   - Entry 3: Third step or continued evolution of the system, demonstrating how the changes accumulate over time.\n   - Entry 4: Fourth step or current state of the system, showcasing the effects of all previous changes.\n\nEach entry represents a specific moment in the development or progression of a given system or process. The idea is to track and understand the dynamics of change and evolution within a system over time.",
+          "batch": "2025-03-21 22:08:26 → 2025-03-21 22:26:39",
+          "original_summary": "The AI system concept revolves around an advanced interactive system designed primarily for generating concise, yet elaborate summaries. This system is intended to enhance the efficiency of a Rapid Annotation and Generalization (RAG) training process by providing high-quality, corrected entries that serve as learning material for the RAG model.\n\nThe AI system architecture includes:\n1. Data Input: The system accepts text inputs from various sources such as documents, websites, or user-generated content.\n2. Processing: Once inputted, the data undergoes preprocessing to ensure it's in a format suitable for analysis and summarization. This may include cleaning, tokenization, and other linguistic transformations.\n3. Model: The heart of the system is an advanced model (in this case, ChatGPT) responsible for generating concise yet comprehensive summaries based on the inputted data.\n4. Review & Edit: To ensure quality and accuracy, the summaries are reviewed and edited by human moderators before being integrated into the RAG training process.\n5. Output: The final output is a well-crafted summary, ready to be utilized for RAG training purposes.\n\nFor efficient operation and reduced dependency on external APIs, an initial plan includes implementing a local Ollama inference pipeline. This will help optimize performance and minimize potential delays associated with third-party API usage.\n\nTo kickstart the process, three initial entries are provided for each subcategory to allow the model to contextualize better and improve early accuracy. The ultimate goal is to accumulate around 100-200 entries to ensure high-quality summaries with minimal corrections.",
           "corrected_summary": "",
-          "correction_timestamp": "2025-03-24 18:21:17"
+          "correction_timestamp": "2025-03-24 23:44:52",
+          "start": "2025-03-21 22:08:26",
+          "end": "2025-03-21 22:26:39"
         },
         {
-          "batch": "1-5",
-          "original_summary": "This is a mocked summary.",
+          "batch": "2025-03-21 22:26:50 → 2025-03-22 14:54:12",
+          "original_summary": "The AI system concept revolves around the design of a flexible and efficient architecture that enables RAG summarization (Ready, Actionable, and General) using optimized prompt templates. For faster context adaptation, the system employs the Rank-Aware Gradient (RAG) method instead of fine-tuning.\n\nThe interaction design focuses on tight command line integration. While Graphical User Interfaces (GUIs) are valuable for debugging purposes, they might not be ideal for overall automation in an AI system.\n\nThe system allows the user to utilize various Language Learning Models (LLMs), depending on their computational resources. Users with internet access and weaker computing systems can use OpenAI, while power users can opt for locally-stored LLMs.\n\nLastly, a global config.json file is implemented to facilitate better configuration options with different templates based on the user's specific requirements or use cases. This design aims at creating an adaptable, efficient, and easy-to-configure AI system.",
           "corrected_summary": "",
-          "correction_timestamp": "2025-03-24 18:21:17"
+          "correction_timestamp": "2025-03-24 23:46:04",
+          "start": "2025-03-21 22:26:50",
+          "end": "2025-03-22 14:54:12"
+        }
+      ],
+      "Tooling & Automation": [
+        {
+          "batch": "2025-03-21 21:42:13 → 2025-03-21 22:00:46",
+          "original_summary": "1. Modularization of Logger's Core Logic: The logger's core functionality has been separated from its User Interface (UI), enhancing readability and maintainability.\n\n2. JSON Hierarchy for Faster Injection: A nested hierarchy has been implemented within JSON for efficient data injection across various domains in the logger.\n\n3. Multi-domain Idea Logger: A customized logger designed to capture personal ideas across multiple domains or topics.\n\n4. Modulirisation (separation of core logic from UI): This process was implemented to improve the scalability and manageability of the overall system architecture.\n\n5. Retrieval Augmented Generation using FAISS: A method that employs FAISS for automated summarization, allowing the generation of concise summaries and tagging data for Large Language Models (LLM) in future applications.",
+          "corrected_summary": "",
+          "correction_timestamp": "2025-03-24 23:48:32",
+          "start": "2025-03-21 21:42:13",
+          "end": "2025-03-21 22:00:46"
+        },
+        {
+          "batch": "2025-03-21 22:14:10 → 2025-03-22 13:11:25",
+          "original_summary": "1. Integrating RAG with FAISS for automated summarization and tagging.\n2. Embedding LLaMA3 for automatic summarization every ten entries, with corrections incorporated in the summary.\n3. Development of a feature to generate images programmatically instead of relying on webpage sources.\n4. Testing limitation: If 5 entries are not created within a single session, unsummarized entries might occur.\n5. Transition from Automatic1111 to command-line interface for image generation in a programmatic approach.",
+          "corrected_summary": "",
+          "correction_timestamp": "2025-03-24 23:50:25",
+          "start": "2025-03-21 22:14:10",
+          "end": "2025-03-22 13:11:25"
+        },
+        {
+          "batch": "2025-03-22 13:12:27 → 2025-03-22 13:24:55",
+          "original_summary": "1. Python script: Automatically selects settings (for machine learning models), positive and negative prompts, and output directory.\n\n2. Prompt Database: A database for storing prompts for easier lookup and future injection into local Large Language Models.\n\n3. Config.json files: Different config.json files can be created based on context (idea logger, writing, lab use, development, etc.).\n\n4. JSON Structure: A structured hierarchy is essential for json files to enable faster lookup. This includes different subcategories.\n\n5. Idea Logger: A lightweight tool for weaker machines, optionally disabling summarization. For portable usage, an executable (exe) file can be generated.",
+          "corrected_summary": "",
+          "correction_timestamp": "2025-03-24 23:50:31",
+          "start": "2025-03-22 13:12:27",
+          "end": "2025-03-22 13:24:55"
         }
       ]
     },
-    "CrossDayCat": {
-      "SubCross": [
+    "Creative": {
+      "Visual or Audio Prompt": [
         {
-          "batch": "1-3",
-          "original_summary": "- Concept Introduction: None provided, let's assume this is a new concept.\n   - Entry 0: This is likely the base or initial state of the concept. It could be described as follows:\n      * Initial configuration or starting point\n      * Potentially undefined or unspecified\n   - Entry 1: This is likely the first modification or development of the concept from its initial state. It might be summarized as:\n      * First change or evolution\n      * May introduce new characteristics, states, or behaviors\n   - Entry 2: This represents a subsequent modification or development from Entry 1. Here's a possible summary:\n      * Second change or evolution\n      * Further development or refinement of the concept from its first state (Entry 1)",
+          "batch": "2025-03-21 22:24:55 → 2025-03-21 22:46:46",
+          "original_summary": "In a symphony of pixels, the canvas hums to life as DreamShaper XL breathes life into realistic yet stylized narratives. Neighboring, Juggernaut XL towers with its intricate, photorealistic tapestry, painting the world in high-fidelity brushstrokes. Together, they weave a visual tale, an artful dance of AI and creativity that illuminates the screen like a beacon in the digital night.",
           "corrected_summary": "",
-          "correction_timestamp": "2025-03-24 18:21:18"
+          "correction_timestamp": "2025-03-24 23:46:47",
+          "start": "2025-03-21 22:24:55",
+          "end": "2025-03-21 22:46:46"
+        },
+        {
+          "batch": "2025-03-21 22:46:56 → 2025-03-21 22:47:41",
+          "original_summary": "In this creative realm, imagine a vibrant spectrum of visual and audio narratives unfolding: MeinaMix V12 Final paints intimate, nuanced romance scenes with exquisite accuracy and consistency, resonating with the depth of human emotion. Realistic Vision V6 captures lifelike portraits and scenes that mirror our world in stunning photographic realism. RevAnimated V2 Rebirth brings anime-inspired stylization to life, breathtakingly expressing narratives with dynamic energy. SDXL 1.0 constructs detailed, coherent environments, setting the stage for captivating stories. And V1-5-pruned-emaonly swiftly iterates through concepts, accelerating the process of rapid prototyping and visual generation in this symphony of creativity.",
+          "corrected_summary": "",
+          "correction_timestamp": "2025-03-24 23:47:04",
+          "start": "2025-03-21 22:46:56",
+          "end": "2025-03-21 22:47:41"
+        },
+        {
+          "batch": "2025-03-22 13:00:33 → 2025-03-22 13:06:32",
+          "original_summary": "Imagining a digital art studio, we find an artist meticulously adjusting a canvas of medium size (700x700 pixels). The canvas is surrounded by a variety of smaller canvases, each depicting different styles, some vibrant and full of life, others more subdued and somber. A dynamic neural network hums in the background, receiving both positive and negative prompts from the artist, fine-tuning its style based on the models at hand. On a smaller screen next to the artist, a simplified interface allows for LoRA (Low-Rank Adaptation), enabling intricate control over the artistic process. In another corner, static poses are displayed neatly, while in the center of the room, a more complex scene is under construction, with multiple artists working in harmony, their strokes overlapping to create dynamic, ever-evolving images. The studio's ambiance subtly adjusts based on the requested style, creating an immersive environment for the artist and their creations.",
+          "corrected_summary": "",
+          "correction_timestamp": "2025-03-24 23:47:33",
+          "start": "2025-03-22 13:00:33",
+          "end": "2025-03-22 13:06:32"
         }
       ]
     }
