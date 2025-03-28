@@ -71,6 +71,10 @@
     "test_logs_dir": "tests/mock_data/logs",
     "test_vector_store_dir": "tests/mock_data/vector_store",
     "test_export_dir": "tests/mock_data/exports",
+    "test_correction_summaries_path": "tests/mock_data/logs/test_correction_summaries.json",
+    "test_raw_log_path": "tests/mock_data/logs/test_zephyrus_log.json",
+    "test_summary_tracker_path": "tests/mock_data/logs/test_summary_tracker.json",
+
   
     "_comment_future": "==== ADVANCED / FUTURE ====",
     "remote_sync": false,                    

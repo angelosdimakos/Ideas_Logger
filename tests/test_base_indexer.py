@@ -1,33 +1,29 @@
-import os
 import pytest
+import logging
+import numpy as np
 from unittest.mock import patch
 from scripts.base_indexer import BaseIndexer
-import numpy as np  # import numpy
-import logging
+from scripts.config_loader import get_config_value,get_effective_config
 
-# Constants for testing
-MOCK_INDEX_PATH = "tests/mock_data/exports/test_index"
-MOCK_METADATA_PATH = "tests/mock_data/exports/test_metadata.pkl"
-MOCK_SUMMARIES_PATH = "tests/mock_data/exports/test_summaries.json"
 
 @pytest.fixture
-def base_indexer():
-    # Clean state
-    for path in [MOCK_INDEX_PATH, MOCK_METADATA_PATH, MOCK_SUMMARIES_PATH]:
-        if os.path.exists(path):
-            os.remove(path)
+def base_indexer(temp_dir):
+
+    config = get_effective_config()
 
     with patch("scripts.base_indexer.SentenceTransformer") as MockModel:
         mock_model = MockModel.return_value
-        # ✅ Convert mock output to a numpy array
         mock_model.encode.side_effect = lambda texts, **kwargs: np.array([[i + 0.1 for i in range(384)] for _ in texts])
 
         indexer = BaseIndexer(
-            summaries_path=MOCK_SUMMARIES_PATH,
-            index_path=MOCK_INDEX_PATH,
-            metadata_path=MOCK_METADATA_PATH
+            summaries_path=get_config_value(config, "correction_summaries_path", temp_dir / "logs" / "correction_summaries.json"),
+            index_path=get_config_value(config, "faiss_index_path", temp_dir / "vector_store" / "summary_index.faiss"),
+            metadata_path=get_config_value(config, "faiss_metadata_path", temp_dir / "vector_store" / "summary_metadata.pkl")
         )
         yield indexer
+
+
+
 
 def test_build_index_success(base_indexer):
     texts = ["This is a test sentence", "Another idea worth indexing"]
@@ -36,8 +32,10 @@ def test_build_index_success(base_indexer):
     assert base_indexer.index is not None
     assert base_indexer.metadata == metadata
 
+
 def test_build_index_empty_input(base_indexer):
     assert base_indexer.build_index([], []) is False
+
 
 def test_save_and_load_index(base_indexer):
     texts = ["Zephyrus", "Loop memory fragments"]
@@ -45,19 +43,22 @@ def test_save_and_load_index(base_indexer):
     base_indexer.build_index(texts, metadata)
     base_indexer.save_index()
 
+    config = get_effective_config()
+
     with patch("scripts.base_indexer.SentenceTransformer") as MockModel:
         mock_model = MockModel.return_value
         mock_model.encode.side_effect = lambda texts, **kwargs: np.array([[i + 0.2 for i in range(384)] for _ in texts])
 
         new_indexer = BaseIndexer(
-            summaries_path=MOCK_SUMMARIES_PATH,
-            index_path=MOCK_INDEX_PATH,
-            metadata_path=MOCK_METADATA_PATH
+            summaries_path=get_config_value(config, "correction_summaries_path", None),
+            index_path=get_config_value(config, "faiss_index_path", None),
+            metadata_path=get_config_value(config, "faiss_metadata_path", None)
         )
         new_indexer.load_index()
 
         assert new_indexer.index is not None
         assert len(new_indexer.metadata) == 2
+
 
 def test_search_returns_results(base_indexer):
     texts = ["robotic welding detection", "Mechids unlocking loop memory"]
@@ -69,14 +70,15 @@ def test_search_returns_results(base_indexer):
     assert results[0]["tag"] == "robot"
     assert "similarity" in results[0]
 
+
 def test_build_index_failure_due_to_empty_texts(base_indexer, caplog):
     with caplog.at_level(logging.WARNING):
         result = base_indexer.build_index([], [])
         assert result is False
         assert "No texts provided" in caplog.text
 
+
 def test_save_index_failure(caplog, base_indexer, monkeypatch):
-    # Force an error in writing the index by monkeypatching faiss.write_index to throw an error.
     monkeypatch.setattr("faiss.write_index", lambda index, path: (_ for _ in ()).throw(Exception("Write error")))
     with caplog.at_level(logging.ERROR):
         result = base_indexer.build_index(["Test"], [{"id": 1}])

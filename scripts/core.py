@@ -5,7 +5,7 @@ import logging
 import re
 
 from scripts.ai_summarizer import AISummarizer
-from scripts.config_loader import load_config, get_config_value, get_absolute_path
+from scripts.config_loader import get_config_value, get_absolute_path, get_effective_config
 from utils.file_utils import sanitize_filename, write_json, read_json, make_backup
 
 logger = logging.getLogger(__name__)
@@ -28,21 +28,35 @@ class ZephyrusLoggerCore:
             script_dir: The directory where the script is running from.
         """
         self.script_dir = Path(script_dir)
-        self.config = load_config()
-
-        # Load paths from config or use fallback defaults.
-        self.log_dir = Path(get_absolute_path(get_config_value(self.config, "logs_dir", str(self.script_dir / "logs"))))
-        self.export_dir = Path(get_absolute_path(get_config_value(self.config, "export_dir", str(self.script_dir / "exports"))))
-
-        self.json_log_file = Path(get_absolute_path(get_config_value(
-            self.config, "raw_log_path", str(self.log_dir / "zephyrus_log.json")
-        )))
-        self.txt_log_file = self.log_dir / "zephyrus_log.txt"
-        self.correction_summaries_file = Path(get_absolute_path(get_config_value(
-            self.config, "correction_summaries_path", str(self.log_dir / "correction_summaries.json")
-        )))
-        self.summary_tracker_file = self.log_dir / "summary_tracker.json"
+        self.config = get_effective_config()
         self.config_file = Path(get_absolute_path("config/config.json"))
+
+
+        # 🔒 Override paths if in test mode
+        if self.config.get("test_mode", False):
+            logger.warning("[TEST MODE: ACTIVE] Using test directories from config")
+            self.log_dir = Path(get_absolute_path(self.config["test_logs_dir"]))
+            self.export_dir = Path(get_absolute_path(self.config["test_export_dir"]))
+            self.json_log_file = self.log_dir / "zephyrus_log.json"
+            self.txt_log_file = self.log_dir / "zephyrus_log.txt"
+            self.correction_summaries_file = self.log_dir / "correction_summaries.json"
+            self.summary_tracker_file = self.log_dir / "summary_tracker.json"
+        else:
+            # Load paths from config or use fallback defaults.
+            self.log_dir = Path(
+                get_absolute_path(get_config_value(self.config, "logs_dir", str(self.script_dir / "logs"))))
+            self.export_dir = Path(
+                get_absolute_path(get_config_value(self.config, "export_dir", str(self.script_dir / "exports"))))
+
+            self.json_log_file = Path(get_absolute_path(get_config_value(
+                self.config, "raw_log_path", str(self.log_dir / "zephyrus_log.json")
+            )))
+            self.txt_log_file = self.log_dir / "zephyrus_log.txt"
+            self.correction_summaries_file = Path(get_absolute_path(get_config_value(
+                self.config, "correction_summaries_path", str(self.log_dir / "correction_summaries.json")
+            )))
+            self.summary_tracker_file = self.log_dir / "summary_tracker.json"
+
 
         self.ai_summarizer = AISummarizer()
 
@@ -193,6 +207,7 @@ class ZephyrusLoggerCore:
         Generate a summary using the next unsummarized batch (5 entries),
         and track via batch metadata (start/end timestamps).
         """
+
         batch_entries = self.get_unsummarized_batch_entries(main_category, subcategory)
         if len(batch_entries) < self.BATCH_SIZE:
             logger.info("[SKIP] Not enough unsummarized entries globally for %s → %s", main_category, subcategory)
@@ -236,6 +251,8 @@ class ZephyrusLoggerCore:
         write_json(self.correction_summaries_file, correction_data)
 
         self.update_summary_tracker(main_category, subcategory, summarized=self.BATCH_SIZE)
+
+
         logger.info("[SUCCESS] Global summary written for %s → %s (Batch: %s)", main_category, subcategory, batch_label)
         return True
 

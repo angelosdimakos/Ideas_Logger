@@ -93,5 +93,30 @@ class TestConfigLoader(unittest.TestCase):
         config = load_config(fake_path)
         self.assertEqual(config, {})
 
+    def test_get_effective_config_test_mode_paths(self):
+        """
+        Validates that `get_effective_config` overrides production paths with test paths
+        when `test_mode` is True.
+        """
+        from scripts.config_loader import get_effective_config
+        from tests.test_utils import assert_resolved_test_path
+
+        config_override = {
+            "test_mode": True,
+            "test_logs_dir": "tests/mock_data/logs",
+            "test_export_dir": "tests/mock_data/exports",
+            "test_vector_store_dir": "tests/mock_data/vector_store"
+        }
+
+        with open(self.config_file, "w", encoding="utf-8") as f:
+            json.dump(config_override, f)
+
+        config = get_effective_config(self.config_file)
+
+        assert_resolved_test_path(config, "logs_dir", "logs")
+        assert_resolved_test_path(config, "export_dir", "exports")
+        assert_resolved_test_path(config, "vector_store_dir", "vector_store")
+
+
 if __name__ == "__main__":
     unittest.main()

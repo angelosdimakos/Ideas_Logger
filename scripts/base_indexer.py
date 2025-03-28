@@ -135,3 +135,21 @@ class BaseIndexer:
             else:
                 logger.warning("Index %d out of range for metadata of length %d", idx, len(self.metadata))
         return results
+
+    def build_index_from_logs(self):
+        """
+        Loads entries using self.load_entries() and builds the FAISS index from them.
+        Returns:
+            bool: True if successful, False otherwise.
+        """
+        try:
+            texts, meta = self.load_entries()
+        except AttributeError:
+            logger.error("This indexer does not implement a `load_entries()` method.")
+            return False
+
+        if not texts:
+            logger.warning("No entries found to build index from.")
+            return False
+
+        return self.build_index(texts, meta)

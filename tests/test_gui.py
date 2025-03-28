@@ -1,24 +1,14 @@
-
 import pytest
 import tkinter as tk
 from unittest.mock import MagicMock, patch
 from scripts.gui import ZephyrusLoggerGUI
-
-class DummyLoggerCore:
-    def save_entry(self, main_cat, subcat, entry):
-        return True
-    def generate_summary(self, date, main_cat, subcat):
-        return True
-    @property
-    def json_log_file(self):
-        from pathlib import Path
-        return Path("tests/mock_data/mock_log.json")
+from tests.test_utils import make_dummy_logger_core
 
 @pytest.fixture
 def gui_instance():
     root = tk.Tk()
-    root.withdraw()  # Prevents the window from popping up during tests
-    gui = ZephyrusLoggerGUI(DummyLoggerCore())
+    root.withdraw()  # Prevents GUI window from popping up
+    gui = ZephyrusLoggerGUI(make_dummy_logger_core())
     yield gui
     root.destroy()
 
