@@ -3,9 +3,20 @@ import os
 from pathlib import Path
 from unittest.mock import MagicMock
 import json
-
+from unittest.mock import patch
 # === TEST DIR CREATION ===
+from ollama import Client
 
+
+@pytest.fixture(autouse=True)
+def mock_ollama():
+    with patch.object(Client, "generate") as mock_generate, \
+            patch.object(Client, "chat") as mock_chat:
+        # Define mock responses
+        mock_generate.return_value = {"response": "Mock summary"}
+        mock_chat.return_value = {"message": {"content": "Mock fallback summary"}}
+
+        yield mock_generate, mock_chat
 @pytest.fixture(scope="function")
 def temp_dir(tmp_path):
     paths = [tmp_path / "logs", tmp_path / "exports", tmp_path / "vector_store"]
