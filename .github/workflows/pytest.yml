@@ -15,10 +15,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}/Ideas_Logger  # 👈 Adjust for double nesting
-
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v3
@@ -30,34 +26,32 @@ jobs:
 
       - name: 📦 Install dependencies
         run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then cd Ideas_Logger; fi
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
-      - name: 📂 Show working directory structure
+      - name: 🐛 Show working dir and collect tests
         run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then cd Ideas_Logger; fi
           echo "📍 Current dir: $(pwd)"
-          ls -la
-          echo "📁 Listing tests/unit:"
-          ls -la tests/unit
-
-      - name: 🐛 Collect tests (debug step)
-        run: |
           python -m pytest --collect-only -q
 
       - name: 🧪 Run tests with coverage (XML)
         run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then cd Ideas_Logger; fi
           python -m pytest tests/unit tests/integration tests/mocks \
             --cov=scripts --cov-config=.coveragerc --cov-report=xml
 
       - name: 📊 Generate HTML coverage report
         run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then cd Ideas_Logger; fi
           python -m pytest tests/unit tests/integration tests/mocks \
             --cov=scripts --cov-config=.coveragerc --cov-report=html
 
-      - name: 📤 Upload HTML coverage report
+      - name: 📤 Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: htmlcov-${{ matrix.os }}
-          path: htmlcov/
+          path: ${{ matrix.os == 'windows-latest' && 'Ideas_Logger/htmlcov/' || 'htmlcov/' }}
