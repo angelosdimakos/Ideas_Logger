@@ -1,4 +1,4 @@
-name: 🔁 Run Tests (Windows + Ubuntu)
+name: 🔁 Run Tests (Windows Only)
 
 on:
   push:
@@ -8,12 +8,7 @@ on:
 
 jobs:
   test:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-      fail-fast: false
-
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
 
     steps:
       - name: ⬇️ Checkout code
@@ -24,31 +19,34 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: 📦 Install dependencies
+      - name: 📦 Install dependencies (with Torch Nightly)
+        shell: powershell
         run: |
           python -m pip install --upgrade pip
+          pip install -r requirements.txt --find-links https://download.pytorch.org/whl/nightly/cu128/torch_nightly.html
           pip install pytest pytest-cov
-          pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/nightly/cu128
 
-      - name: 🐛 Show working dir and collect tests
+      - name: 🐛 Show working dir and files
+        shell: powershell
         run: |
-          echo "📍 Current dir: $(pwd)"
-          ls -la
-          python -m pytest --collect-only -q || true
+          Write-Output "📍 Current dir: $(Get-Location)"
+          Get-ChildItem
 
       - name: 🧪 Run tests with coverage (XML)
+        shell: powershell
         run: |
-          python -m pytest tests/unit tests/integration tests/mocks \
+          python -m pytest tests/unit tests/integration tests/mocks `
             --cov=scripts --cov-config=.coveragerc --cov-report=xml
 
       - name: 📊 Generate HTML coverage report
+        shell: powershell
         run: |
-          python -m pytest tests/unit tests/integration tests/mocks \
+          python -m pytest tests/unit tests/integration tests/mocks `
             --cov=scripts --cov-config=.coveragerc --cov-report=html
 
       - name: 📤 Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: htmlcov-${{ matrix.os }}
+          name: htmlcov-windows
           path: htmlcov/
