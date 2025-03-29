@@ -17,7 +17,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./  # ✅ Optional if you want root context
+        working-directory: ${{ github.workspace }}
 
     steps:
       - name: ⬇️ Checkout code
@@ -34,11 +34,20 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
+      - name: 🐛Show working dir and collect tests
+        run: |
+          echo "Working Directory: $(pwd)"
+          python -m pytest --collect-only -q
+
       - name: 🧪 Run tests with coverage
-        run: python -m pytest --cov=./ --cov-report=xml
+        run: |
+          python -m pytest tests/unit tests/integration tests/mocks \
+            --cov=scripts --cov-config=.coveragerc --cov-report=xml
 
       - name: 📊 Generate HTML coverage report
-        run: python -m pytest --cov=./ --cov-report=html
+        run: |
+          python -m pytest tests/unit tests/integration tests/mocks \
+            --cov=scripts --cov-config=.coveragerc --cov-report=html
 
       - name: 📤 Upload HTML report
         if: always()
