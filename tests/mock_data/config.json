@@ -1,0 +1,1 @@
+{"batch_size": 10, "correction_summaries_path": "logs/test_correction_summaries.json", "test_mode": true}
