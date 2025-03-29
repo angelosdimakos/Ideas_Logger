@@ -1,4 +1,4 @@
-name: 🔁 Run Tests (Windows Only)
+name: Run Tests (Windows Only)
 
 on:
   push:
@@ -11,41 +11,40 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: ⬇️ Checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: 🐍 Set up Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
 
-      - name: 📦 Install dependencies (with Torch Nightly)
+      - name: Install dependencies (with Torch Nightly)
         shell: powershell
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt --find-links https://download.pytorch.org/whl/nightly/cu128/torch_nightly.html
           pip install pytest pytest-cov
 
-      - name: 🐛 Show working dir and files
+      - name: Show working dir and files
         shell: powershell
         run: |
-          Write-Host 📍 Current dir: $((Get-Location).Path)
+          Write-Host "Current dir: $((Get-Location).Path)"
           Get-ChildItem
-      
 
-      - name: 🧪 Run tests with coverage (XML)
+      - name: Run tests with coverage (XML)
         shell: powershell
         run: |
           python -m pytest tests/unit tests/integration tests/mocks `
             --cov=scripts --cov-config=.coveragerc --cov-report=xml
 
-      - name: 📊 Generate HTML coverage report
+      - name: Generate HTML coverage report
         shell: powershell
         run: |
           python -m pytest tests/unit tests/integration tests/mocks `
             --cov=scripts --cov-config=.coveragerc --cov-report=html
 
-      - name: 📤 Upload HTML report
+      - name: Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
