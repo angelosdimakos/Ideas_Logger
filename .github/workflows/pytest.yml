@@ -22,7 +22,7 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"  # Using Python 3.9 since latest PyTorch requires 3.9+
+          python-version: "3.11"  # Using Python 3.9 since latest PyTorch requires 3.9+
 
       - name: 📦 Install PyTorch nightly
         run: |
