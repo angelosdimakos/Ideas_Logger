@@ -19,12 +19,12 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Dependencies (Torch Nightly)
+      - name: Install dependencies explicitly
         shell: powershell
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-cov
-          pip install -r requirements.txt 
+          pip install numpy==1.24.0 pydantic==1.10.2 ollama==0.1.0 faiss-cpu==1.7.0 sentence-transformers pytest pytest-cov
+          pip install torch==2.6.0 
           pip freeze
 
       - name: Debug Working Directory and Test Files
@@ -35,13 +35,14 @@ jobs:
           Write-Host "Listing test files recursively:"
           Get-ChildItem tests -Recurse
 
-      - name: Run Tests with Coverage (XML + HTML)
+      - name: Run tests explicitly with pytest.ini
         shell: powershell
         run: |
           python -m pytest -c pytest.ini `
-            --cov=scripts --cov-config=.coveragerc --cov-report=xml --cov-report=html
+            --cov=scripts --cov-config=.coveragerc --cov-report=xml `
+            --cov-report=html
 
-      - name: Upload HTML Coverage Report
+      - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v4
         with:
