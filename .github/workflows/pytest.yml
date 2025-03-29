@@ -38,11 +38,9 @@ jobs:
         run: |
           python -m pytest --cov=./ --cov-report=html
 
-      - name: 📤 Upload coverage report
+      - name: 📤 Upload HTML report (if generated)
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: coverage-report-${{ matrix.os }}
-          path: |
-            htmlcov/
-            coverage.xml
+          name: htmlcov-${{ matrix.os }}
+          path: htmlcov/
