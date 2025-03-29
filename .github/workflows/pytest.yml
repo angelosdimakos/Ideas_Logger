@@ -19,12 +19,14 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies explicitly
+      - name: Install Dependencies (Explicit)
         shell: powershell
         run: |
-          python -m pip install --upgrade pip
-          pip install numpy==1.24.0 pydantic==1.10.2 ollama==0.1.0 faiss-cpu==1.7.0 sentence-transformers pytest pytest-cov
-          pip install torch==2.6.0 
+          python -m pip install --upgrade pip wheel setuptools
+          pip install pytest
+          pip install numpy==1.24.0 pydantic==1.10.2 ollama==0.1.0 sentence-transformers pytest pytest-cov
+          pip install torch
+          pip install faiss-cpu --only-binary=faiss-cpu
           pip freeze
 
       - name: Debug Working Directory and Test Files
