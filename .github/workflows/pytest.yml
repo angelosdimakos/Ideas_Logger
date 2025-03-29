@@ -17,7 +17,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ github.workspace }}/Ideas_Logger  # 👈 Adjust for double nesting
 
     steps:
       - name: ⬇️ Checkout code
@@ -34,12 +34,18 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
-      - name: 🐛Show working dir and collect tests
+      - name: 📂 Show working directory structure
         run: |
-          echo "Working Directory: $(pwd)"
+          echo "📍 Current dir: $(pwd)"
+          ls -la
+          echo "📁 Listing tests/unit:"
+          ls -la tests/unit
+
+      - name: 🐛 Collect tests (debug step)
+        run: |
           python -m pytest --collect-only -q
 
-      - name: 🧪 Run tests with coverage
+      - name: 🧪 Run tests with coverage (XML)
         run: |
           python -m pytest tests/unit tests/integration tests/mocks \
             --cov=scripts --cov-config=.coveragerc --cov-report=xml
@@ -49,7 +55,7 @@ jobs:
           python -m pytest tests/unit tests/integration tests/mocks \
             --cov=scripts --cov-config=.coveragerc --cov-report=html
 
-      - name: 📤 Upload HTML report
+      - name: 📤 Upload HTML coverage report
         if: always()
         uses: actions/upload-artifact@v4
         with:
