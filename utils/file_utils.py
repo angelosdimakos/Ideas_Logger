@@ -81,7 +81,7 @@ def make_backup(file_path: str) -> str:
             json.dump(data, f, indent=4)
         return backup_path 
     except Exception as e:
-        print(f"Error creating backup: {e}")
+        logger.warning(f"Error creating backup: {e}")
         return None
         
 

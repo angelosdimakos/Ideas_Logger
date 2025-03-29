@@ -1,5 +1,8 @@
 import argparse
 from utils.file_utils import zip_python_files
+import logging
+
+logger = logging.getLogger(__name__)
 
 def main():
     parser = argparse.ArgumentParser(description="Zip all .py files in a project (excluding .venv, .git, etc.)")
@@ -24,7 +27,7 @@ def main():
 
     args = parser.parse_args()
     zip_python_files(args.output, args.root, args.exclude)
-    print(f"✅ Zipped .py files into: {args.output}")
+    logger.info(f"✅ Zipped .py files into: {args.output}")
 
 if __name__ == "__main__":
     main()

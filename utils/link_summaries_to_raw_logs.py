@@ -2,6 +2,9 @@ import json
 from pathlib import Path
 from scripts.config_loader import load_config, get_config_value, get_absolute_path
 from datetime import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def flatten_raw_entries(raw_logs, main_cat, subcat):
@@ -57,20 +60,20 @@ def inject_entries_into_summaries():
             # Flatten all raw entries for this category/subcategory in chronological order.
             flat_entries = flatten_raw_entries(raw_logs, main_cat, subcat)
             if not flat_entries:
-                print(f"[⚠️ Warning] No raw entries found for {main_cat} → {subcat}")
+                logger.warning(f"[⚠️ Warning] No raw entries found for {main_cat} → {subcat}")
                 continue
 
             for batch in batches:
                 batch_label = batch.get("batch", "")
                 if not batch_label or "-" not in batch_label:
-                    print(f"[⚠️ Warning] Skipping batch with invalid label: {batch_label}")
+                    logger.warning(f"[⚠️ Warning] Skipping batch with invalid label: {batch_label}")
                     continue
                 try:
                     start_str, end_str = batch_label.split("-")
                     start_idx = int(start_str)
                     end_idx = int(end_str)
                 except Exception as e:
-                    print(f"[⚠️ Warning] Could not parse batch label '{batch_label}': {e}")
+                    logger.warning(f"[⚠️ Warning] Could not parse batch label '{batch_label}': {e}")
                     continue
 
                 # Adjust for zero-based indexing.
