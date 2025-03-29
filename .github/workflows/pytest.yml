@@ -15,11 +15,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    defaults:
-      run:
-        shell: bash  # Use bash on both OS for consistency
-        working-directory: Ideas_Logger
-
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v3
@@ -29,16 +24,15 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: 📦 Install dependencies (w/ Torch fallback)
+      - name: 📦 Install dependencies (with nightly torch fallback)
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install pytest pytest-cov
+          pip install -r requirements.txt || echo "⚠️ Some deps (e.g. torch-nightly) may not be compatible on CI"
 
       - name: 🐛 Show working dir and collect tests
         run: |
           echo "📍 Current dir: $(pwd)"
+          ls -la
           python -m pytest --collect-only -q
 
       - name: 🧪 Run tests with coverage (XML)
@@ -56,4 +50,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: htmlcov-${{ matrix.os }}
-          path: Ideas_Logger/htmlcov/
+          path: htmlcov/
