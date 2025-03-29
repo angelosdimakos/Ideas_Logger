@@ -10,9 +10,18 @@ logger = logging.getLogger(__name__)
 
 class SummaryIndexer(BaseIndexer):
     def __init__(self, summaries_path=None, index_path=None, metadata_path=None):
+
             """
-            Initializes the SummaryIndexer. If paths are not provided, they are read from config
-            and resolved using get_absolute_path.
+            Initializes the SummaryIndexer class and sets up paths for summaries, index, and metadata.
+
+            If paths are not provided, they are read from the configuration and resolved
+            using get_absolute_path. This ensures that all paths are absolute and correctly
+            configured for the indexing and summarization process.
+
+            Args:
+                summaries_path (str, optional): Path to the summaries file. Defaults to the path specified in the config.
+                index_path (str, optional): Path to the FAISS index file. Defaults to the path specified in the config.
+                metadata_path (str, optional): Path to the metadata file. Defaults to the path specified in the config.
             """
             config = load_config()
             # Use the provided paths if given; otherwise, use config values.

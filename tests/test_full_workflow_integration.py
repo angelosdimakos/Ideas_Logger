@@ -6,6 +6,15 @@ from scripts.config_loader import get_config_value
 
 @pytest.fixture
 def logger_core():
+    """
+    Provides a ZephyrusLoggerCore instance in test mode.
+
+    This fixture sets up and tears down the test mode and logger state
+    automatically, allowing you to focus on writing test code.
+
+    Yields:
+        ZephyrusLoggerCore: A ZephyrusLoggerCore instance in test mode.
+    """
     toggle_test_mode(True)
     try:
         logger = ZephyrusLoggerCore(".")
@@ -15,6 +24,14 @@ def logger_core():
         toggle_test_mode(False)
 
 def test_sequential_workflow(logger_core):
+    """
+    Verifies that the core workflow works end-to-end:
+    1. Logs entries to JSON
+    2. Generates a global summary
+    3. Saves the summary to file
+    4. Loads the summary from file
+    5. Verifies that the loaded summary is correct
+    """
     date = "2025-03-22"
     ts = f"{date} 12:00:00"
     cat = "SequentialTest"
@@ -32,6 +49,14 @@ def test_sequential_workflow(logger_core):
     assert sub in summaries["global"][cat]
 
 def test_fallback_mechanism(logger_core, monkeypatch):
+    """
+    Test the fallback mechanism for summary generation in the event of an AI failure.
+
+    This test ensures that:
+    - The AI summarization process is intentionally failed.
+    - The system falls back to a predefined summary.
+    - The fallback summary is used in place of the AI-generated summary.
+    """
     class DummySummarizer:
         def summarize_entries_bulk(self, entries, subcategory=None):
             raise Exception("Intentional AI failure")
@@ -54,6 +79,15 @@ def test_fallback_mechanism(logger_core, monkeypatch):
         assert logger_core.generate_global_summary(cat, sub), "Fallback summary failed"
 
 def test_faiss_index_build_and_search(logger_core):
+    """
+    Test the integration of building and searching a FAISS index using generated summaries.
+
+    This test verifies that:
+    - The logger core can log entries and generate a global summary.
+    - A FAISS index is built from the generated summaries.
+    - The index can be saved and loaded.
+    - A search on the index returns expected results.
+    """
     from scripts.summary_indexer import SummaryIndexer
 
     cat = "IntegrationTest"
@@ -86,6 +120,10 @@ def test_faiss_index_build_and_search(logger_core):
 
 
 def test_raw_log_index_integration(logger_core):
+    """
+    Tests that FAISS index is built and can be used to search for
+    summaries based on content.
+    """
     from scripts.raw_log_indexer import RawLogIndexer
 
     cat = "FAISS"

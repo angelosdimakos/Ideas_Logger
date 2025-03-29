@@ -60,9 +60,17 @@ class BaseIndexer:
 
         return True
 
+
     def save_index(self):
         """
         Saves the FAISS index and metadata to their respective files.
+
+        The index is saved using the `faiss.write_index` function, and the metadata
+        is serialized and saved using the `pickle` module. If any error occurs during
+        the saving process, it is logged and the exception is raised.
+
+        Raises:
+            Exception: If there is an error saving the FAISS index or metadata.
         """
         try:
             faiss.write_index(self.index, self.index_path)
@@ -77,12 +85,18 @@ class BaseIndexer:
             logger.error("Failed to save metadata: %s", e, exc_info=True)
             raise
 
+
     def load_index(self):
         """
-        Loads the FAISS index and metadata from their respective files.
-        
+        Loads the FAISS index and associated metadata from their respective files.
+
+        This method checks for the existence of the index and metadata files and
+        attempts to read them. If the files are not found or an error occurs during
+        the loading process, an appropriate error is logged and the exception is raised.
+
         Raises:
-            FileNotFoundError: If the index or metadata file doesn't exist.
+            FileNotFoundError: If the FAISS index or metadata file does not exist.
+            Exception: If there is an error reading the FAISS index or loading the metadata.
         """
         if not os.path.exists(self.index_path) or not os.path.exists(self.metadata_path):
             error_msg = "FAISS index or metadata file not found."
@@ -138,9 +152,17 @@ class BaseIndexer:
 
     def build_index_from_logs(self):
         """
-        Loads entries using self.load_entries() and builds the FAISS index from them.
+        Loads entries and builds the FAISS index from them.
+
+        This method attempts to load entries using the `self.load_entries()` method.
+        If the method is not implemented, an `AttributeError` is logged and the method
+        returns `False`. If no entries are found, a warning is logged and the method
+        returns `False`. Otherwise, it proceeds to build the FAISS index using
+        the `build_index()` method.
+
         Returns:
-            bool: True if successful, False otherwise.
+            bool: True if the index is successfully built from the loaded entries,
+                  False if an error occurs or no entries are found.
         """
         try:
             texts, meta = self.load_entries()

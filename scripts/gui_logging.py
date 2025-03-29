@@ -5,10 +5,18 @@ class GUILogHandler(logging.Handler):
     A logging handler that appends log messages to a Tkinter Text widget.
     """
     def __init__(self, text_widget):
+        """
+        :param text_widget: The Text widget where log messages should be appended.
+        """
         super().__init__()
         self.text_widget = text_widget
 
     def emit(self, record):
+        """
+        Emits a log message to the associated Text widget.
+
+        :param record: logging.LogRecord
+        """
         try:
             msg = self.format(record)
             # Schedule GUI update in the main thread
@@ -17,6 +25,12 @@ class GUILogHandler(logging.Handler):
             self.handleError(record)
 
     def append_message(self, msg):
+        """
+        Appends a log message to the associated Text widget.
+
+        This method is designed to be called from the main thread,
+        and will block until the message is appended.
+        """
         self.text_widget.configure(state='normal')
         self.text_widget.insert('end', msg + "\n")
         self.text_widget.configure(state='disabled')

@@ -7,6 +7,16 @@ from unittest.mock import MagicMock
 
 @pytest.fixture(scope="function")
 def temp_dir(tmp_path):
+    """Yield a temporary directory for test logs, exports, and vector stores.
+
+    This fixture will create a temporary directory with the following subdirectories:
+    - logs
+    - exports
+    - vector_store
+
+    The path to the temporary directory is yielded, and the directory is automatically
+    cleaned up after the test is finished.
+    """
     paths = [
         tmp_path / "logs",
         tmp_path / "exports",
@@ -20,6 +30,10 @@ def temp_dir(tmp_path):
 
 @pytest.fixture(scope="function", autouse=True)
 def patch_config_and_paths(monkeypatch, temp_dir):
+    """
+    Automatically patches the config and effective config with the test directory paths before every test.
+    This fixture is marked as autouse, so it will be automatically applied to every test in the suite.
+    """
     test_config = {
         "batch_size": 5,
         "test_mode": True,
@@ -49,6 +63,9 @@ def patch_config_and_paths(monkeypatch, temp_dir):
 
 @pytest.fixture
 def mock_ai(monkeypatch):
+    """
+    Optional fixture to mock out the AI summarizer instance.
+    """
     mock_ai = MagicMock()
     mock_ai.summarize_entries_bulk.return_value = "This is a mocked summary."
     mock_ai._fallback_summary.return_value = "Fallback summary used."
@@ -58,6 +75,12 @@ def mock_ai(monkeypatch):
 
 @pytest.fixture(scope="function", autouse=True)
 def patch_aisummarizer(monkeypatch):
+    """
+    Automatically patches the AISummarizer with a mock instance that returns
+    predefined summaries for testing purposes. Ensures that any call to
+    AISummarizer within tests uses the mocked version, allowing for consistent
+    and controlled test outcomes.
+    """
     mock_ai = MagicMock()
     mock_ai.summarize_entries_bulk.return_value = "This is a mocked summary."
     mock_ai._fallback_summary.return_value = "Fallback summary used."
@@ -67,5 +90,17 @@ def patch_aisummarizer(monkeypatch):
 
 @pytest.fixture(scope="function")
 def logger_core(temp_dir):
+    """
+    Creates a ZephyrusLoggerCore instance with temp_dir as the script dir.
+
+    This fixture provides a fully functional ZephyrusLoggerCore instance with
+    all the correct paths pointing to the temporary directory created by the
+    temp_dir fixture. This allows for easy testing of the core's methods
+    without having to manually set up the configuration and paths.
+
+    Returns:
+        ZephyrusLoggerCore: A ZephyrusLoggerCore instance with temp_dir as the
+            script dir.
+    """
     from scripts.core import ZephyrusLoggerCore
     return ZephyrusLoggerCore(script_dir=temp_dir)

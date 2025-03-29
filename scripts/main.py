@@ -7,6 +7,15 @@ from scripts.gui_logging import GUILogHandler
 import logging
 
 if __name__ == "__main__":
+    """
+    Main entry point for the Zephyrus Logger application.
+
+    This script initializes the logging system, loads the configuration,
+    and creates the GUI application.
+
+    The application is started in either TEST or PRODUCTION mode,
+    depending on the "test_mode" setting in the configuration file.
+    """
     # Set up centralized logging for the application.
     setup_logging()
     

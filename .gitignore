@@ -10,6 +10,9 @@ __pycache__/
 *.py[cod]
 *.pyo
 
+#Compiled exe
+dist/
+
 # Ignore logs, debug info, etc.
 *.log
 

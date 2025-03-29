@@ -6,6 +6,17 @@ from unittest.mock import MagicMock
 
 
 def test_generate_summary_triggers_and_writes_summary(logger_core):
+    """
+    Tests that the generate_summary method on logger_core triggers the summary generation
+    and writes the summary correctly to the correction_summaries_file.
+
+    This test ensures that:
+    - The generate_summary method returns a success status.
+    - The generated summary file contains the expected hierarchical structure:
+      - 'global' category
+      - The specified main category within 'global'
+      - The specified subcategory within the main category.
+    """
     date_str = "2025-03-22"
     main_category = "TestCat"
     subcategory = "SubCat"
@@ -25,6 +36,9 @@ def test_generate_summary_triggers_and_writes_summary(logger_core):
     assert subcategory in summaries["global"][main_category]
 
 def test_generate_summary_fallback(logger_core, monkeypatch):
+    """
+    Verify that generate_summary() will fallback to a simpler summary if the AI fails.
+    """
     class DummySummarizer:
         def summarize_entries_bulk(self, entries, subcategory=None):
             raise Exception("Mock failure")

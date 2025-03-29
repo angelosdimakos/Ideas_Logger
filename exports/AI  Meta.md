@@ -16,3 +16,10 @@
 ## 2025-03-24
 
 - **Tooling & Automation**: Trying to make logic in order to track entries across days in order to properly summarize.
+
+## 2025-03-28
+- **Tooling & Automation**: Will need to include a way to pick up on log phrasing and automatically generate a Gantt Chart.
+- **Tooling & Automation**: Will need to reverse engineer a way for new entries to be tagged based on existing FAISS search.
+- **AI System Design**: Will need to add mind map to logically link ideas together.
+
+- **AI System Design**: Will need to include emotion detection from sentiment analysis to better prioritize tasks.

@@ -7,6 +7,7 @@ def setup_logging():
     """
     Configures logging for the entire application.
     This function sets up a basic logging configuration that can be adjusted later based on config settings.
+    It will default to an INFO level, but this can be overridden later.
     """
     # Default log level is INFO. This can be overridden later.
     level_str = "INFO"
@@ -36,6 +37,12 @@ def load_config(config_path=CONFIG_FILE_PATH):
     """
     Safely load the config file from the config folder.
     If it doesn't exist or has errors, return an empty dict.
+
+    Args:
+        config_path (str): The path to the config file. Defaults to CONFIG_FILE_PATH.
+
+    Returns:
+        dict: The loaded config dictionary.
     """
     if not os.path.exists(config_path):
         logger.warning(f"Config file '{config_path}' not found. Using defaults.")
@@ -62,7 +69,17 @@ def load_config(config_path=CONFIG_FILE_PATH):
 def get_config_value(config, key, default):
     """
     Retrieve a configuration value by key.
-    Logs a warning only if the key is missing.
+
+    Args:
+        config (dict): The configuration dictionary.
+        key (str): The key of the value to retrieve.
+        default (Any): The default value if key is not present.
+
+    Returns:
+        Any: The retrieved value, or the default if key is not present.
+
+    Warning:
+        Logs a warning if key is missing.
     """
     if key not in config:
         logger.warning(f"Missing key '{key}' in config. Using default value: {default}")
@@ -72,6 +89,12 @@ def get_config_value(config, key, default):
 def get_absolute_path(relative_path):
     """
     Build an absolute path from a project-root-relative path.
+
+    Args:
+        relative_path (str): The path relative to the project root.
+
+    Returns:
+        str: The absolute path, or None if the path can't be resolved.
     """
     try:
         return os.path.join(BASE_DIR, relative_path)
@@ -81,7 +104,17 @@ def get_absolute_path(relative_path):
 
 def is_test_mode(config=None):
     """
-    Returns True if 'test_mode' is enabled in the config, else False.
+    Check if 'test_mode' is enabled in the configuration.
+
+    This function verifies whether the application is running in test mode
+    by checking the 'test_mode' flag in the provided configuration dictionary.
+
+    Args:
+        config (dict, optional): The configuration dictionary. If not provided,
+                                 the configuration is loaded using `load_config()`.
+
+    Returns:
+        bool: True if 'test_mode' is enabled in the config, False otherwise.
     """
     if config is None:
         config = load_config()
@@ -89,7 +122,18 @@ def is_test_mode(config=None):
 
 def get_effective_config(config_path=CONFIG_FILE_PATH):
     """
-    Loads the config and overrides paths with test-safe ones if test_mode is enabled.
+    Loads the configuration from the specified path and overrides paths with test-safe ones if 'test_mode' is enabled.
+
+    If 'test_mode' is enabled, the following configuration values are overridden:
+
+        - 'logs_dir'
+        - 'vector_store_dir'
+        - 'export_dir'
+        - 'raw_log_path'
+        - 'correction_summaries_path'
+        - 'summary_tracker_path'
+
+    The overridden values are computed by joining the overridden directory paths with the original file names.
     """
     config = load_config(config_path)
     if config.get("test_mode", False):
