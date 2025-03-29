@@ -36,7 +36,7 @@ jobs:
 
       - name: 🧪 Run unit tests with coverage
         run: |
-          python -m pytest tests/unit -v --cov=./ --cov-report=xml
+          python -m pytest tests/unit -v --cov=${{ github.workspace }} --cov-report=xml
 
       - name: 🧪 Run integration tests
         run: |
@@ -49,7 +49,7 @@ jobs:
       - name: 📊 Generate HTML coverage report
         if: always()
         run: |
-          python -m pytest tests/unit --cov=./ --cov-report=html
+          python -m pytest tests/unit --cov=${{ github.workspace }} --cov-report=html
         continue-on-error: true
 
       - name: 📤 Upload HTML report (if generated)
