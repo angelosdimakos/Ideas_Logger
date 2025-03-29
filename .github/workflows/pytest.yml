@@ -24,30 +24,33 @@ jobs:
         with:
           python-version: "3.11"  # Using Python 3.9 since latest PyTorch requires 3.9+
 
-      - name: 📦 Install PyTorch nightly
+      - name: 📦 Install PyTorch nightly with CUDA 12.8
         run: |
           python -m pip install --upgrade pip
           pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128
-        if: matrix.os == 'ubuntu-latest'
 
-      - name: 📦 Install PyTorch nightly (Windows)
+      - name: 📦 Install package and dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128
-        if: matrix.os == 'windows-latest'
-
-      - name: 📦 Install other dependencies
-        run: |
-          pip install -r requirements.txt --no-deps
+          pip install -e .
           pip install pytest pytest-cov
 
-      - name: 🧪 Run tests with coverage
+      - name: 🧪 Run unit tests with coverage
         run: |
-          python -m pytest --cov=./ --cov-report=xml
+          python -m pytest tests/unit -v --cov=./ --cov-report=xml
+
+      - name: 🧪 Run integration tests
+        run: |
+          python -m pytest tests/integration -v
+
+      - name: 🧪 Run mock data tests
+        run: |
+          python -m pytest tests/mock_data -v
 
       - name: 📊 Generate HTML coverage report
+        if: always()
         run: |
-          python -m pytest --cov=./ --cov-report=html
+          python -m pytest tests/unit --cov=./ --cov-report=html
+        continue-on-error: true
 
       - name: 📤 Upload HTML report (if generated)
         if: always()
