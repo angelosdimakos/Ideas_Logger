@@ -29,8 +29,9 @@ jobs:
       - name: 🐛 Show working dir and files
         shell: powershell
         run: |
-          Write-Output "📍 Current dir: $(Get-Location)"
+          Write-Host "📍 Current dir: $((Get-Location).Path)"
           Get-ChildItem
+      
 
       - name: 🧪 Run tests with coverage (XML)
         shell: powershell
