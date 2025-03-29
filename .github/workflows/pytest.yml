@@ -15,6 +15,11 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    defaults:
+      run:
+        shell: bash  # Use bash on both OS for consistency
+        working-directory: Ideas_Logger
+
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v3
@@ -24,28 +29,25 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: 📦 Install dependencies
+      - name: 📦 Install dependencies (w/ Torch fallback)
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then cd Ideas_Logger; fi
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install pytest pytest-cov
 
       - name: 🐛 Show working dir and collect tests
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then cd Ideas_Logger; fi
           echo "📍 Current dir: $(pwd)"
           python -m pytest --collect-only -q
 
       - name: 🧪 Run tests with coverage (XML)
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then cd Ideas_Logger; fi
           python -m pytest tests/unit tests/integration tests/mocks \
             --cov=scripts --cov-config=.coveragerc --cov-report=xml
 
       - name: 📊 Generate HTML coverage report
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then cd Ideas_Logger; fi
           python -m pytest tests/unit tests/integration tests/mocks \
             --cov=scripts --cov-config=.coveragerc --cov-report=html
 
@@ -54,4 +56,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: htmlcov-${{ matrix.os }}
-          path: ${{ matrix.os == 'windows-latest' && 'Ideas_Logger/htmlcov/' || 'htmlcov/' }}
+          path: Ideas_Logger/htmlcov/
