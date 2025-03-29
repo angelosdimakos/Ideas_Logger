@@ -26,13 +26,15 @@ jobs:
           pip install pytest pytest-cov
 
       - name: Run tests
+        shell: powershell
         run: |
-          python -m pytest tests/unit tests/integration tests/mocks `
+          python -m pytest ./tests/unit ./tests/integration ./tests/mocks `
             --cov=scripts --cov-config=.coveragerc --cov-report=xml
 
       - name: Generate HTML coverage report
+        shell: powershell
         run: |
-          python -m pytest tests/unit tests/integration tests/mocks `
+          python -m pytest ./tests/unit ./tests/integration ./tests/mocks `
             --cov=scripts --cov-config=.coveragerc --cov-report=html
 
       - name: Upload coverage report
