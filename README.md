@@ -148,3 +148,5 @@ Crafted by a slightly caffeinated architect with a taste for structured chaos.
 > *You don’t need more ideas. You need better processing.*
 
 Welcome to Zephyrus. Let the ideas flow. 🌬️
+
+[![Run Tests (Windows Only)](https://github.com/The-Mechid-Archivist-69/Ideas_Logger/actions/workflows/pytest.yml/badge.svg)](https://github.com/The-Mechid-Archivist-69/Ideas_Logger/actions/workflows/pytest.yml)
