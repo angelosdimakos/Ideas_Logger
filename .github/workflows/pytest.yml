@@ -1,3 +1,11 @@
+name: 🔁 Run Tests (Windows + Ubuntu)
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
 jobs:
   test:
     strategy:
@@ -9,7 +17,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./  # ✅ All steps will now run from root
+        working-directory: ./  # ✅ Optional if you want root context
 
     steps:
       - name: ⬇️ Checkout code
@@ -32,7 +40,7 @@ jobs:
       - name: 📊 Generate HTML coverage report
         run: python -m pytest --cov=./ --cov-report=html
 
-      - name: 📤 Upload HTML report (if generated)
+      - name: 📤 Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
