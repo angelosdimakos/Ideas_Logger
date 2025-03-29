@@ -22,12 +22,23 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.9"  # Using Python 3.9 since latest PyTorch requires 3.9+
 
-      - name: 📦 Install dependencies
+      - name: 📦 Install PyTorch nightly
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128
+        if: matrix.os == 'ubuntu-latest'
+
+      - name: 📦 Install PyTorch nightly (Windows)
+        run: |
+          python -m pip install --upgrade pip
+          pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128
+        if: matrix.os == 'windows-latest'
+
+      - name: 📦 Install other dependencies
+        run: |
+          pip install -r requirements.txt --no-deps
           pip install pytest pytest-cov
 
       - name: 🧪 Run tests with coverage
