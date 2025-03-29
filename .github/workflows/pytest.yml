@@ -19,32 +19,23 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies (with Torch Nightly)
-        shell: powershell
+      - name: Install dependencies (Torch Nightly)
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt --find-links https://download.pytorch.org/whl/nightly/cu128/torch_nightly.html
           pip install pytest pytest-cov
 
-      - name: Show working dir and files
-        shell: powershell
-        run: |
-          Write-Host "Current dir: $((Get-Location).Path)"
-          Get-ChildItem
-
-      - name: Run tests with coverage (XML)
-        shell: powershell
+      - name: Run tests
         run: |
           python -m pytest tests/unit tests/integration tests/mocks `
             --cov=scripts --cov-config=.coveragerc --cov-report=xml
 
       - name: Generate HTML coverage report
-        shell: powershell
         run: |
           python -m pytest tests/unit tests/integration tests/mocks `
             --cov=scripts --cov-config=.coveragerc --cov-report=html
 
-      - name: Upload HTML report
+      - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v4
         with:
