@@ -1,5 +1,5 @@
 import argparse
-from utils.file_utils import zip_python_files
+from scripts.utils.file_utils import zip_python_files
 import logging
 
 logger = logging.getLogger(__name__)

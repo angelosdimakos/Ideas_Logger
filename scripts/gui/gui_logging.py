@@ -1,4 +1,5 @@
 import logging
+import tkinter as tk
 
 class GUILogHandler(logging.Handler):
     """
@@ -21,7 +22,7 @@ class GUILogHandler(logging.Handler):
             msg = self.format(record)
             # Schedule GUI update in the main thread
             self.text_widget.after(0, self.append_message, msg)
-        except Exception:
+        except (AttributeError, RuntimeError) as e:
             self.handleError(record)
 
     def append_message(self, msg):
@@ -31,7 +32,14 @@ class GUILogHandler(logging.Handler):
         This method is designed to be called from the main thread,
         and will block until the message is appended.
         """
-        self.text_widget.configure(state='normal')
-        self.text_widget.insert('end', msg + "\n")
-        self.text_widget.configure(state='disabled')
-        self.text_widget.see('end')
+        if not self.text_widget.winfo_exists():
+            return  # Avoid writing to a destroyed widget
+
+        try:
+            self.text_widget.configure(state='normal')
+            self.text_widget.insert('end', msg + "\n")
+            self.text_widget.configure(state='disabled')
+            self.text_widget.see('end')
+        except (tk.TclError, RuntimeError) as e:
+            logging.getLogger(__name__).debug(f"GUI append failed: {e}")
+

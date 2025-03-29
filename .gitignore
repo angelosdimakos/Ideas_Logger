@@ -1,26 +1,55 @@
-# Ignore Python virtual environments
-.venv/
-venv/
-
-# Ignore VSCode settings
-.vscode/
-
-# Byte-compiled / cache
+# === Python ===
 __pycache__/
 *.py[cod]
 *.pyo
-
-#Compiled exe
-dist/
-
-# Ignore logs, debug info, etc.
-*.log
-
-# FAISS / vector indexes (optional)
-vector_store/
+*.pyd
 *.pkl
 *.faiss
 
-# System files
+# === Virtual Envs ===
+.venv/
+venv/
+
+# === IDE ===
+.vscode/
+.idea/
 .DS_Store
 Thumbs.db
+
+# === Build Artifacts ===
+dist/
+build/
+*.spec
+*.egg-info/
+
+# === Logs & Runtime ===
+*.log
+*.bak
+*.tmp
+*.swp
+*.zip
+*.gz
+*.rar
+
+# === Outputs & Dirs ===
+logs/
+exports/
+vector_store/
+backup/
+
+# === Environment Files ===
+.env
+.env.*
+
+# === PyInstaller ===
+ZephyrusLogger.spec
+
+# === Coverage / Testing ===
+htmlcov/
+.coverage
+pytest_cache/
+.tox/
+.cache/
+
+# === Jupyter / Markdown Trash ===
+.ipynb_checkpoints/

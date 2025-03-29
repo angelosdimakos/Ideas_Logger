@@ -1,16 +1,15 @@
-import json
 from pathlib import Path
 from datetime import datetime
 import logging
 import re
 
-from scripts.ai_summarizer import AISummarizer
-from scripts.config_loader import get_config_value, get_absolute_path, get_effective_config
-from utils.file_utils import sanitize_filename, write_json, read_json, make_backup
-
+from scripts.ai.ai_summarizer import AISummarizer
+from scripts.config.config_loader import get_config_value, get_absolute_path, get_effective_config
+from scripts.utils.file_utils import sanitize_filename, write_json, read_json, make_backup
+"Bad Example of previous code with tight coupling between I/O, summary tracking, and breaking SRP."
 logger = logging.getLogger(__name__)
 
-class ZephyrusLoggerCore:
+class ZephyrusLoggerLegacyCore:
     # Constants for frequently used string literals
     TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
     DATE_FORMAT = "%Y-%m-%d"
@@ -35,7 +34,7 @@ class ZephyrusLoggerCore:
         """
         self.script_dir = Path(script_dir)
         self.config = get_effective_config()
-        self.config_file = Path(get_absolute_path("config/config.json"))
+        self.config_file = Path(get_absolute_path("../config/config.json"))
 
 
         # 🔒 Override paths if in test mode

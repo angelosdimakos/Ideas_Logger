@@ -1,10 +1,9 @@
 # base_indexer.py
 import os
-import json
 import pickle
 import faiss
 from sentence_transformers import SentenceTransformer
-from scripts.config_loader import load_config, get_config_value, get_absolute_path
+from scripts.config.config_loader import load_config, get_config_value, get_absolute_path
 import logging
 
 logger = logging.getLogger(__name__)
@@ -31,13 +30,13 @@ class BaseIndexer:
     def build_index(self, texts, meta):
         """
         Builds a FAISS index from the provided texts and metadata.
-        
+
         Args:
             texts (list of str): The text data to index.
             meta (list of dict): The metadata associated with the texts.
-        
+
         Returns:
-            bool: True if the index is successfully built, False if no texts are provided.
+            bool: True if the index is successfully built, False if an error occurs.
         """
         if not texts:
             logger.warning("No texts provided to build FAISS index.")
@@ -45,21 +44,25 @@ class BaseIndexer:
 
         try:
             embeddings = self.embedding_model.encode(texts, convert_to_numpy=True)
-        except Exception as e:
-            logger.error("Error generating embeddings: %s", e, exc_info=True)
+        except (ValueError, RuntimeError) as e:
+            logger.error("Embedding generation failed: %s", e, exc_info=True)
             return False
 
         try:
             self.index = faiss.IndexFlatL2(embeddings.shape[1])
             self.index.add(embeddings)
             self.metadata = meta
+        except (TypeError, ValueError, RuntimeError, OSError) as e:
+            logger.error("FAISS index creation/addition failed: %s", e, exc_info=True)
+            return False
+
+        try:
             self.save_index()
         except Exception as e:
-            logger.error("Error building FAISS index: %s", e, exc_info=True)
+            logger.error("Failed to save FAISS index: %s", e, exc_info=True)
             return False
 
         return True
-
 
     def save_index(self):
         """
@@ -175,3 +178,12 @@ class BaseIndexer:
             return False
 
         return self.build_index(texts, meta)
+
+    def load_entries(self):
+        """
+        Subclasses must override this to load text and metadata for indexing.
+
+        Returns:
+            tuple[list[str], list[dict]]: texts and metadata.
+        """
+        raise NotImplementedError("Subclasses must implement `load_entries()`.")

@@ -298,5 +298,19 @@
         }
       ]
     }
+  },
+  "2025-03-29": {
+    "AI / Meta": {
+      "Execution Strategy": [
+        {
+          "timestamp": "2025-03-29 13:29:54",
+          "content": "Need to calculate Halstead scores with radon to ensure that code complexity remains low, and if not, refactor module into different classes."
+        },
+        {
+          "timestamp": "2025-03-29 14:25:06",
+          "content": "Utils should be inside script folder, unless used for multiple projects."
+        }
+      ]
+    }
   }
 }

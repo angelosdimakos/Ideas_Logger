@@ -1,7 +1,6 @@
-import os
 import json
-from scripts.config_loader import load_config, get_config_value, get_absolute_path
-from scripts.base_indexer import BaseIndexer
+from scripts.config.config_loader import load_config, get_config_value, get_absolute_path
+from scripts.indexers.base_indexer import BaseIndexer
 import logging
 
 logger = logging.getLogger(__name__)
@@ -58,8 +57,8 @@ class RawLogIndexer(BaseIndexer):
         except json.JSONDecodeError as e:
             logger.error("Failed to decode JSON from raw log file: %s", e, exc_info=True)
             return [], []
-        except Exception as e:
-            logger.error("Unexpected error reading raw log file: %s", e, exc_info=True)
+        except OSError as e:
+            logger.error("OS error while reading raw log file: %s", e, exc_info=True)
             return [], []
 
         texts, meta = [], []
@@ -90,7 +89,7 @@ class RawLogIndexer(BaseIndexer):
         for main_cat, subcats in categories.items():
             try:
                 texts, meta = self._process_subcategories(date, main_cat, subcats, texts, meta)
-            except Exception as e:
+            except (KeyError, TypeError, AttributeError) as e:
                 logger.warning("Error processing category '%s' on date '%s': %s", main_cat, date, e, exc_info=True)
         return texts, meta
 
@@ -113,7 +112,7 @@ class RawLogIndexer(BaseIndexer):
         for subcat, entries in subcats.items():
             try:
                 texts, meta = self._process_entries(date, main_cat, subcat, entries, texts, meta)
-            except Exception as e:
+            except (KeyError, TypeError, AttributeError) as e:
                 logger.warning("Error processing subcategory '%s' under '%s' on date '%s': %s", subcat, main_cat, date, e, exc_info=True)
         return texts, meta
 
@@ -148,6 +147,6 @@ class RawLogIndexer(BaseIndexer):
                     })
                 else:
                     logger.warning("Missing content in an entry on date %s, category %s, subcategory %s.", date, main_cat, subcat)
-            except Exception as e:
+            except (KeyError, TypeError, AttributeError) as e:
                 logger.error("Error processing an entry in %s → %s → %s: %s", date, main_cat, subcat, e, exc_info=True)
         return texts, meta

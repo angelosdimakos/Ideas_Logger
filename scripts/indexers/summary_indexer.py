@@ -1,8 +1,6 @@
-from scripts.base_indexer import BaseIndexer
+from scripts.indexers.base_indexer import BaseIndexer
 import json
-from scripts.config_loader import load_config, get_config_value, get_absolute_path
-import faiss
-import numpy as np
+from scripts.config.config_loader import load_config, get_config_value, get_absolute_path
 import logging
 import os
 
@@ -100,7 +98,7 @@ class SummaryIndexer(BaseIndexer):
         for main_cat, subcats in categories.items():
             try:
                 texts, meta = self._process_subcategories(date, main_cat, subcats, texts, meta)
-            except Exception as e:
+            except (KeyError, TypeError, AttributeError) as e:
                 logger.warning("Error processing category '%s' on date '%s': %s", main_cat, date, e, exc_info=True)
         return texts, meta
 
@@ -123,7 +121,7 @@ class SummaryIndexer(BaseIndexer):
         for subcat, batches in subcats.items():
             try:
                 texts, meta = self._process_batches(date, main_cat, subcat, batches, texts, meta)
-            except Exception as e:
+            except (KeyError, TypeError, AttributeError) as e:
                 logger.warning("Error processing subcategory '%s' under '%s' on date '%s': %s", subcat, main_cat, date, e, exc_info=True)
         return texts, meta
 
@@ -158,6 +156,6 @@ class SummaryIndexer(BaseIndexer):
                     })
                 else:
                     logger.warning("Batch in %s → %s → %s has no summary text.", date, main_cat, subcat)
-            except Exception as e:
+            except (KeyError, TypeError, AttributeError) as e:
                 logger.error("Error processing batch in %s → %s → %s: %s", date, main_cat, subcat, e, exc_info=True)
         return texts, meta

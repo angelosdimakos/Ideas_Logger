@@ -23,3 +23,8 @@
 - **AI System Design**: Will need to add mind map to logically link ideas together.
 
 - **AI System Design**: Will need to include emotion detection from sentiment analysis to better prioritize tasks.
+
+## 2025-03-29
+- **Execution Strategy**: Utils should be inside script folder, unless used for multiple projects.
+
+- **Execution Strategy**: Need to calculate Halstead scores with radon to ensure that code complexity remains low, and if not, refactor module into different classes.

@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
-from pathlib import Path
-from utils.file_utils import read_json, write_json
+from scripts.utils.file_utils import read_json, write_json
 from tkinter import scrolledtext
 
 

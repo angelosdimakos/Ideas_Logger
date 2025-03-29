@@ -28,10 +28,11 @@ setup_logging()
 logger = logging.getLogger(__name__)
 
 # Compute project base directory.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parents[2]  # ← resolves to project root (Zephyrus root folder)
 # Define the directory where configuration files are stored.
 CONFIG_DIR = os.path.join(BASE_DIR, "config")
-CONFIG_FILE_PATH = os.path.join(CONFIG_DIR, "config.json")
+CONFIG_FILE_PATH = Path(__file__).resolve().parent / "config.json"
+
 
 def load_config(config_path=CONFIG_FILE_PATH):
     """
@@ -62,8 +63,8 @@ def load_config(config_path=CONFIG_FILE_PATH):
     except json.JSONDecodeError as e:
         logger.error(f"Failed to parse config file '{config_path}': {e}. Using defaults.")
         return {}
-    except Exception as e:
-        logger.error(f"Unexpected error while loading config file '{config_path}': {e}. Using defaults.")
+    except OSError as e:
+        logger.error(f"I/O error while loading config file '{config_path}': {e}. Using defaults.")
         return {}
 
 def get_config_value(config, key, default):
@@ -97,9 +98,9 @@ def get_absolute_path(relative_path):
         str: The absolute path, or None if the path can't be resolved.
     """
     try:
-        return os.path.join(BASE_DIR, relative_path)
-    except Exception as e:
-        logger.error(f"Failed to resolve absolute path for '{relative_path}': {e}.")
+        return str(Path(BASE_DIR) / relative_path)
+    except (TypeError, ValueError, OSError) as e:
+        logger.error(f"Failed to resolve absolute path for '{relative_path}': {e}")
         return None
 
 def is_test_mode(config=None):
@@ -136,18 +137,20 @@ def get_effective_config(config_path=CONFIG_FILE_PATH):
     The overridden values are computed by joining the overridden directory paths with the original file names.
     """
     config = load_config(config_path)
-    if config.get("test_mode", False):
-        logger.warning("⚠️ Test mode is active. Overriding config paths with test equivalents.")
+    try:
+        if config.get("test_mode", False):
+            logger.warning("⚠️ Test mode is active. Overriding config paths with test equivalents.")
 
-        config["logs_dir"] = config.get("test_logs_dir", "tests/mock_data/logs")
-        config["vector_store_dir"] = config.get("test_vector_store_dir", "tests/mock_data/vector_store")
-        config["export_dir"] = config.get("test_export_dir", "tests/mock_data/exports")
+            config["logs_dir"] = config.get("test_logs_dir", "tests/mock_data/logs")
+            config["vector_store_dir"] = config.get("test_vector_store_dir", "tests/mock_data/vector_store")
+            config["export_dir"] = config.get("test_export_dir", "tests/mock_data/exports")
 
-        # Override all path-specific keys using those dirs
-        config["raw_log_path"] = str(Path(config["logs_dir"]) / "zephyrus_log.json")
-        config["correction_summaries_path"] = str(Path(config["logs_dir"]) / "correction_summaries.json")
-        config["summary_tracker_path"] = str(Path(config["logs_dir"]) / "summary_tracker.json")
-
+            # Override all path-specific keys using those dirs
+            config["raw_log_path"] = str(Path(config["logs_dir"]) / "zephyrus_log.json")
+            config["correction_summaries_path"] = str(Path(config["logs_dir"]) / "correction_summaries.json")
+            config["summary_tracker_path"] = str(Path(config["logs_dir"]) / "summary_tracker.json")
+    except TypeError as e:
+        logger.error("Invalid directory paths in test config override: %s", e)
     return config
 
 

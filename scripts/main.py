@@ -1,9 +1,7 @@
 
-from scripts.core import ZephyrusLoggerCore
-from scripts.gui import ZephyrusLoggerGUI
-from scripts.config_loader import load_config, setup_logging
-from scripts.ai_summarizer import AISummarizer
-from scripts.gui_logging import GUILogHandler
+from scripts.core.core import ZephyrusLoggerCore
+from scripts.gui.gui import ZephyrusLoggerGUI,GUILogHandler
+from scripts.config.config_loader import load_config, setup_logging
 import logging
 
 if __name__ == "__main__":

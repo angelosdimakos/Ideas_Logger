@@ -4,6 +4,7 @@ import datetime
 import re
 import logging
 import zipfile
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -24,10 +25,11 @@ def get_timestamp():
 
 def safe_path(path):
     """
-    Ensure directory exists before using file path.
+    Ensure the parent directory for a file path exists.
     """
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
     return path
+
 
 
 def write_json(path, data):
@@ -39,8 +41,14 @@ def write_json(path, data):
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
         logger.debug(f"Wrote JSON to: {path}")
-    except Exception as e:
-        logger.error(f"Failed to write JSON to {path}: {e}")
+    except FileNotFoundError:
+        logger.error("Target directory does not exist: %s", path, exc_info=True)
+    except PermissionError:
+        logger.error("Permission denied while writing JSON to %s", path, exc_info=True)
+    except TypeError as e:
+        logger.error("Data contains non-serializable values: %s", e, exc_info=True)
+    except OSError as e:
+        logger.error("OS-level failure while writing JSON: %s", e, exc_info=True)
 
 
 def read_json(path):

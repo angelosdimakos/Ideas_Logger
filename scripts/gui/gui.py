@@ -1,13 +1,13 @@
 import tkinter as tk
-from tkinter import messagebox, scrolledtext
+from tkinter import messagebox
 from datetime import datetime
 import json
 import os
-from scripts.summary_indexer import SummaryIndexer
-from scripts.raw_log_indexer import RawLogIndexer
-from scripts.config_loader import load_config, get_config_value, get_absolute_path
-import utils.gui_helpers as gui_helpers
-from scripts.gui_logging import GUILogHandler  # Import your custom GUI logging handler
+from scripts.indexers.summary_indexer import SummaryIndexer
+from scripts.indexers.raw_log_indexer import RawLogIndexer
+from scripts.config.config_loader import load_config, get_config_value, get_absolute_path
+import scripts.utils.gui_helpers as gui_helpers
+from scripts.gui.gui_logging import GUILogHandler  # Import your custom GUI logging handler
 import logging
 
 class ZephyrusLoggerGUI:
@@ -84,7 +84,10 @@ class ZephyrusLoggerGUI:
         default_main = next(iter(self.category_structure), "")
         self.selected_category_main.set(default_main)
 
-        main_menu = tk.OptionMenu(frame, self.selected_category_main, *self.category_structure.keys())
+        options = list(self.category_structure.keys())
+        default_value = options[0] if options else "Default"
+        self.selected_category_main.set(default_value)
+        main_menu = tk.OptionMenu(frame, self.selected_category_main, default_value, *options)
         main_menu.pack(side=tk.LEFT, padx=(0, 15))
 
         self.selected_category_main.trace_add("write", lambda *args: self._update_subcategories(self.selected_category_main.get()))
@@ -163,7 +166,7 @@ class ZephyrusLoggerGUI:
 
         try:
             self.indexer.load_index()
-        except Exception as e:
+        except FileNotFoundError as e:
             self.log_message(f"[Error] Could not load FAISS index: {e}")
             messagebox.showerror("Load Error", "Could not load FAISS index. Try rebuilding it.")
             return
@@ -198,8 +201,8 @@ class ZephyrusLoggerGUI:
 
         try:
             self.raw_indexer.load_index()
-        except Exception as e:
-            self.log_message(f"[Error] Could not load raw log FAISS index: {e}")
+        except FileNotFoundError as e:
+            self.log_message(f"[Error] Raw log FAISS index not found: {e}")
             messagebox.showerror("Load Error", "Could not load raw log FAISS index. Try rebuilding it.")
             return
 
@@ -244,7 +247,7 @@ class ZephyrusLoggerGUI:
 
         try:
             logs = json.loads(self.logger_core.json_log_file.read_text(encoding="utf-8"))
-        except Exception as e:
+        except (json.JSONDecodeError, OSError) as e:
             self.log_message(f"[Error] Failed to read logs: {e}")
             messagebox.showwarning("Missing Log File", "zephyrus_log.json is missing or corrupted.")
             return
