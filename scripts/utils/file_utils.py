@@ -7,7 +7,8 @@ import zipfile
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
-
+DEFAULT_JSON_INDENT = 2
+BACKUP_JSON_INDENT = 4
 
 def sanitize_filename(name):
     """
@@ -39,7 +40,7 @@ def write_json(path, data):
     try:
         safe_path(path)
         with open(path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+            json.dump(data, f, indent=DEFAULT_JSON_INDENT, ensure_ascii=False)
         logger.debug(f"Wrote JSON to: {path}")
     except FileNotFoundError:
         logger.error("Target directory does not exist: %s", path, exc_info=True)
@@ -86,7 +87,7 @@ def make_backup(file_path: str) -> str:
     try:
         data = read_json(file_path)
         with open(backup_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4)
+            json.dump(data, f, indent=BACKUP_JSON_INDENT)
         return backup_path 
     except Exception as e:
         logger.warning(f"Error creating backup: {e}")

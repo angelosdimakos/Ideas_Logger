@@ -91,3 +91,63 @@ def calculate_cyclomatic_complexity_for_module(module):
     except Exception as e:
         print(f"Error parsing module {module}: {str(e)}")
         return None
+
+def analyze_refactor_changes(
+    original_path: str,
+    refactored_path: str,
+    test_file_path: Optional[str] = None,
+    as_string: bool = True
+) -> str | dict:
+    """
+    Entry point for analyzing refactor changes between two modules or directories.
+    Returns either a string summary (for CLI) or structured diff (for testing and API).
+    """
+    structured_result = {
+        "summary": {},
+        "missing_tests": [],
+        "renamed_candidates": []
+    }
+
+    if os.path.isdir(original_path) and os.path.isdir(refactored_path):
+        structured_result["summary"] = analyze_project_structure(original_path, refactored_path)
+        return str(structured_result) if as_string else structured_result
+
+    original_classes = extract_class_methods(original_path)
+    refactored_classes = extract_class_methods(refactored_path)
+
+    for orig_cls in original_classes:
+        matching = next((rc for rc in refactored_classes if rc.class_name == orig_cls.class_name), None)
+        if matching:
+            comp = compare_class_methods(orig_cls, matching)
+            structured_result["summary"][orig_cls.class_name] = comp
+
+            # Optional: Guess renamed methods (same count, different names)
+            if len(comp["missing"]) == len(comp["added"]) == 1:
+                structured_result["renamed_candidates"].append({
+                    "class": orig_cls.class_name,
+                    "from": comp["missing"][0],
+                    "to": comp["added"][0]
+                })
+
+        else:
+            structured_result["summary"][orig_cls.class_name] = {
+                "missing": list(orig_cls.methods.keys()),
+                "added": []
+            }
+
+    for ref_cls in refactored_classes:
+        if not any(rc.class_name == ref_cls.class_name for rc in original_classes):
+            structured_result["summary"][ref_cls.class_name] = {
+                "missing": [],
+                "added": list(ref_cls.methods.keys())
+            }
+
+    if test_file_path and os.path.exists(test_file_path):
+        with open(test_file_path, 'r') as f:
+            test_code = f.read()
+        for cls in refactored_classes:
+            for method in cls.methods:
+                if method not in test_code:
+                    structured_result["missing_tests"].append(method)
+
+    return str(structured_result) if as_string else structured_result
