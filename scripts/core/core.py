@@ -31,7 +31,7 @@ class ZephyrusLoggerCore:
             logger.warning("[TEST MODE: ACTIVE] Using test directories from config")
 
         self.ai_summarizer = AISummarizer()
-        self.summary_tracker = SummaryTracker(self.paths.summary_tracker_file, self.paths.json_log_file)
+        self.summary_tracker = SummaryTracker(self.paths)
         force_rebuild = get_config_value(self.config, "force_summary_tracker_rebuild", False)
         if force_rebuild or not SummaryTracker.validate(self.summary_tracker.tracker):
             logger.warning("[RECOVERY] Summary tracker is empty or invalid. Rebuilding from log.")
@@ -164,6 +164,19 @@ class ZephyrusLoggerCore:
             logger.error("Error in log_to_markdown: %s", e, exc_info=True)
             return False
 
+    def force_summary_all(self):
+        """
+        Forces summarization for all log entries across all dates, main categories, and subcategories.
+        Iterates until no more unsummarized batches are available.
+        """
+        logs = self.log_manager.read_logs()
+        for date in sorted(logs.keys()):
+            for main_cat, subcats in logs[date].items():
+                for sub_cat in subcats.keys():
+                    # Continue generating summary for each (main_cat, sub_cat) until no more batches are ready.
+                    while self.generate_global_summary(main_cat, sub_cat):
+                        pass
+
     def save_entry(self, main_category, subcategory, entry) -> bool:
         if not main_category or not subcategory or not entry:
             logger.error("Invalid input: main_category, subcategory, and entry must not be empty")
@@ -173,3 +186,17 @@ class ZephyrusLoggerCore:
         json_success = self.log_to_json(timestamp, date_str, main_category, subcategory, entry)
         md_success = self.log_to_markdown(date_str, main_category, subcategory, entry)
         return json_success and md_success
+
+    def search_summaries(self, query: str, top_k=5):
+        return self.summary_tracker.summary_indexer.search(query, top_k)
+
+    def search_raw_logs(self, query: str, top_k=5):
+        return self.summary_tracker.raw_indexer.search(query, top_k)
+
+    def log_new_entry(self, main_category, subcategory, entry):
+        """
+        Wrapper for save_entry to support the GUI controller interface.
+        """
+        return self.save_entry(main_category, subcategory, entry)
+
+

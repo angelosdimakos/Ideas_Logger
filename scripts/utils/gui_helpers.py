@@ -5,6 +5,7 @@ from scripts.utils.file_utils import read_json, write_json
 from tkinter import scrolledtext
 
 
+
 def validate_log_input(content):
     if not content.strip():
         messagebox.showwarning("Input Error", "Log entry cannot be empty.")
@@ -102,3 +103,56 @@ def create_text_entry(root, height=8, width=70):
     text_entry = tk.Text(root, height=height, width=width)
     text_entry.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
     return text_entry
+
+def format_summary_results(results):
+    """
+    Formats FAISS search results for display in the GUI.
+    Supports tuples, lists, or dicts with 'score' and 'text' keys.
+    """
+    formatted = []
+    for r in results:
+        try:
+            if isinstance(r, dict):
+                score = r.get("score", 0.0)
+                text = r.get("text", str(r))
+            elif isinstance(r, (list, tuple)) and len(r) >= 2:
+                score, text = r[0], r[1]
+            else:
+                score, text = 0.0, str(r)
+            formatted.append(f"Score: {score:.2f}\n{text}")
+        except Exception as e:
+            formatted.append(f"[ERROR displaying result]: {str(e)}\nRaw: {str(r)}")
+    return "\n\n".join(formatted)
+
+def format_raw_results(results):
+    """
+    Formats raw log search results for display in the GUI.
+    Handles string, tuple, or dict-based formats.
+    """
+    formatted = []
+    for r in results:
+        try:
+            if isinstance(r, dict):
+                text = r.get("text", str(r))
+            elif isinstance(r, (list, tuple)):
+                text = r[0]
+            else:
+                text = str(r)
+            formatted.append(f"[RAW LOG MATCH]\n{text}")
+        except Exception as e:
+            formatted.append(f"[ERROR displaying result]: {str(e)}\nRaw: {str(r)}")
+    return "\n\n".join(formatted)
+
+def display_message(title, message):
+    """
+    Displays an informational message box.
+    """
+    messagebox.showinfo(title, message)
+
+def display_error(title, message):
+    """
+    Displays an error message box.
+    """
+    messagebox.showerror(title, message)
+
+

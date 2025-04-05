@@ -327,6 +327,10 @@
         {
           "timestamp": "2025-04-05 09:41:02",
           "content": "Created project scaffold to enable rapid development of projects."
+        },
+        {
+          "timestamp": "2025-04-05 10:38:14",
+          "content": "Need to begin taking integration testing more seriously, in order to validate what GUI actions lead to in terms of file operations."
         }
       ],
       "Tooling & Automation": [

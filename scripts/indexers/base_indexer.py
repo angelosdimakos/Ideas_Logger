@@ -1,42 +1,45 @@
-# base_indexer.py
+from typing import List, Dict, Tuple, Any
 import os
 import pickle
 import faiss
 from sentence_transformers import SentenceTransformer
-from scripts.config.config_loader import load_config, get_config_value, get_absolute_path
+from scripts.config.config_manager import ConfigManager
 import logging
 
 logger = logging.getLogger(__name__)
 
+
 class BaseIndexer:
-    def __init__(self, summaries_path, index_path, metadata_path):
+    def __init__(self, summaries_path: str, index_path: str, metadata_path: str) -> None:
         """
         Initializes the BaseIndexer class and sets up paths for summaries, index, and metadata.
-        
+
         Args:
             summaries_path (str): Path to the summaries file.
             index_path (str): Path to the FAISS index file.
             metadata_path (str): Path to the metadata file.
         """
-        self.summaries_path = get_absolute_path(summaries_path)
-        self.index_path = get_absolute_path(index_path)
-        self.metadata_path = get_absolute_path(metadata_path)
-        config = load_config()
-        model_name = get_config_value(config, "embedding_model", "all-MiniLM-L6-v2")
-        self.embedding_model = SentenceTransformer(model_name)
-        self.index = None
-        self.metadata = []
+        # Assume provided paths are already absolute (or resolved via ZephyrusPaths)
+        self.summaries_path: str = summaries_path
+        self.index_path: str = index_path
+        self.metadata_path: str = metadata_path
 
-    def build_index(self, texts, meta):
+        config = ConfigManager.load_config()
+        model_name: str = ConfigManager.get_value("embedding_model", "all-MiniLM-L6-v2")
+        self.embedding_model: SentenceTransformer = SentenceTransformer(model_name)
+        self.index = None
+        self.metadata: List[Dict[str, Any]] = []
+
+    def build_index(self, texts: List[str], meta: List[Dict[str, Any]]) -> bool:
         """
         Builds a FAISS index from the provided texts and metadata.
 
         Args:
-            texts (list of str): The text data to index.
-            meta (list of dict): The metadata associated with the texts.
+            texts (List[str]): The text data to index.
+            meta (List[Dict[str, Any]]): The metadata associated with the texts.
 
         Returns:
-            bool: True if the index is successfully built, False if an error occurs.
+            bool: True if the index is successfully built, False otherwise.
         """
         if not texts:
             logger.warning("No texts provided to build FAISS index.")
@@ -64,13 +67,9 @@ class BaseIndexer:
 
         return True
 
-    def save_index(self):
+    def save_index(self) -> None:
         """
         Saves the FAISS index and metadata to their respective files.
-
-        The index is saved using the `faiss.write_index` function, and the metadata
-        is serialized and saved using the `pickle` module. If any error occurs during
-        the saving process, it is logged and the exception is raised.
 
         Raises:
             Exception: If there is an error saving the FAISS index or metadata.
@@ -88,14 +87,9 @@ class BaseIndexer:
             logger.error("Failed to save metadata: %s", e, exc_info=True)
             raise
 
-
-    def load_index(self):
+    def load_index(self) -> None:
         """
         Loads the FAISS index and associated metadata from their respective files.
-
-        This method checks for the existence of the index and metadata files and
-        attempts to read them. If the files are not found or an error occurs during
-        the loading process, an appropriate error is logged and the exception is raised.
 
         Raises:
             FileNotFoundError: If the FAISS index or metadata file does not exist.
@@ -119,16 +113,16 @@ class BaseIndexer:
             logger.error("Failed to load metadata: %s", e, exc_info=True)
             raise
 
-    def search(self, query, top_k=5):
+    def search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
         """
         Searches for the most similar entries to a given query using the FAISS index.
-        
+
         Args:
             query (str): The query text to search for in the index.
             top_k (int): The number of top results to return.
-        
+
         Returns:
-            list of dict: The top K results with metadata and a similarity score.
+            List[Dict[str, Any]]: The top K results with metadata and a similarity score.
         """
         try:
             embedding = self.embedding_model.encode([query], convert_to_numpy=True)
@@ -142,7 +136,7 @@ class BaseIndexer:
             logger.error("Search failed: %s", e, exc_info=True)
             return []
 
-        results = []
+        results: List[Dict[str, Any]] = []
         for i, idx in enumerate(I[0]):
             if idx < len(self.metadata):
                 result = dict(self.metadata[idx])
@@ -153,19 +147,12 @@ class BaseIndexer:
                 logger.warning("Index %d out of range for metadata of length %d", idx, len(self.metadata))
         return results
 
-    def build_index_from_logs(self):
+    def build_index_from_logs(self) -> bool:
         """
         Loads entries and builds the FAISS index from them.
 
-        This method attempts to load entries using the `self.load_entries()` method.
-        If the method is not implemented, an `AttributeError` is logged and the method
-        returns `False`. If no entries are found, a warning is logged and the method
-        returns `False`. Otherwise, it proceeds to build the FAISS index using
-        the `build_index()` method.
-
         Returns:
-            bool: True if the index is successfully built from the loaded entries,
-                  False if an error occurs or no entries are found.
+            bool: True if the index is successfully built from the loaded entries, False otherwise.
         """
         try:
             texts, meta = self.load_entries()
@@ -179,11 +166,11 @@ class BaseIndexer:
 
         return self.build_index(texts, meta)
 
-    def load_entries(self):
+    def load_entries(self) -> Tuple[List[str], List[Dict[str, Any]]]:
         """
         Subclasses must override this to load text and metadata for indexing.
 
         Returns:
-            tuple[list[str], list[dict]]: texts and metadata.
+            Tuple[List[str], List[Dict[str, Any]]]: texts and metadata.
         """
         raise NotImplementedError("Subclasses must implement `load_entries()`.")

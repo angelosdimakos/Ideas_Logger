@@ -1,17 +1,14 @@
 import pytest
 import os
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 import json
-from unittest.mock import patch
-# === TEST DIR CREATION ===
-from ollama import Client
-
+from ollama import Client  # Assuming this is used by your AI module
 
 @pytest.fixture(autouse=True)
 def mock_ollama():
-    with patch("ollama.generate") as mock_generate, \
-         patch("ollama.chat") as mock_chat:
+    from unittest.mock import patch
+    with patch("ollama.generate") as mock_generate, patch("ollama.chat") as mock_chat:
         mock_generate.return_value = {"response": "Mock summary"}
         mock_chat.return_value = {"message": {"content": "Mock fallback summary"}}
         yield mock_generate, mock_chat
@@ -23,6 +20,7 @@ def temp_dir(tmp_path):
     for path in paths:
         path.mkdir(parents=True, exist_ok=True)
     return tmp_path
+
 
 @pytest.fixture(scope="function")
 def temp_config_file(temp_dir):
@@ -73,16 +71,42 @@ def temp_config_file(temp_dir):
     config_path.write_text(json.dumps(test_config), encoding="utf-8")
     return config_path
 
-# === PATCHED CONFIG + EFFECTIVE CONFIG (AUTOUSE) ===
 
 @pytest.fixture(scope="function", autouse=True)
 def patch_config_and_paths(monkeypatch, temp_dir):
     test_config = {
+        # Basic settings
+        "mode": "test",
+        "use_gui": False,
+        "interface_theme": "dark",
         "batch_size": 5,
+        "autosave_interval": 10,
+        "log_level": "DEBUG",
+        "summarization": True,
+        "llm_provider": "ollama",
+        "llm_model": "mistral",
+        "openai_model": "gpt-4",
+        "api_keys": {"openai": "test-key"},
+        "embedding_model": "all-MiniLM-L6-v2",
+        "faiss_top_k": 5,
+        "log_format": "json",
+        "markdown_export": True,
+        "default_tags": ["test"],
+        "use_templates": True,
+        "persona": "test_persona",
+        "category_structure": {"Test": ["Subtest"]},
+        "prompts_by_subcategory": {"Subtest": "Test prompt"},
+
+        # Test mode specific overrides
         "test_mode": True,
         "test_logs_dir": str(temp_dir / "logs"),
-        "test_export_dir": str(temp_dir / "exports"),
         "test_vector_store_dir": str(temp_dir / "vector_store"),
+        "test_export_dir": str(temp_dir / "exports"),
+        "test_correction_summaries_path": str(temp_dir / "logs" / "test_corrections.json"),
+        "test_raw_log_path": str(temp_dir / "logs" / "test_raw_log.json"),
+        "test_summary_tracker_path": str(temp_dir / "logs" / "test_summary_tracker.json"),
+
+        # Production paths overridden in test mode
         "logs_dir": str(temp_dir / "logs"),
         "export_dir": str(temp_dir / "exports"),
         "vector_store_dir": str(temp_dir / "vector_store"),
@@ -92,33 +116,40 @@ def patch_config_and_paths(monkeypatch, temp_dir):
         "raw_log_metadata_path": str(temp_dir / "vector_store" / "raw_metadata.pkl"),
         "faiss_index_path": str(temp_dir / "vector_store" / "summary_index.faiss"),
         "faiss_metadata_path": str(temp_dir / "vector_store" / "summary_metadata.pkl"),
-        "force_summary_tracker_rebuild": True
+
+        # Other settings
+        "force_summary_tracker_rebuild": True,
+        "remote_sync": False,
+        "plugin_dir": str(temp_dir / "plugins"),
+        "enable_debug_logging": True,
+        "strict_offline_mode": True
     }
 
     monkeypatch.setattr("scripts.config.config_loader.load_config", lambda config_path=None: test_config)
-    monkeypatch.setattr("scripts.config.config_loader.get_absolute_path", lambda rel: str(Path(rel)))
+    monkeypatch.setattr("scripts.config.config_loader.get_absolute_path", lambda rel: str(Path(rel).resolve()))
 
-# === OPTIONAL AI MOCK ===
+
 
 @pytest.fixture
 def mock_ai(monkeypatch):
+    from unittest.mock import MagicMock
     mock_ai = MagicMock()
     mock_ai.summarize_entries_bulk.return_value = "This is a mocked summary."
     mock_ai._fallback_summary.return_value = "Fallback summary used."
     monkeypatch.setattr("scripts.ai.ai_summarizer.AISummarizer", lambda: mock_ai)
 
-# === DEFAULT AI PATCH (AUTOUSE) ===
 
 @pytest.fixture(scope="function", autouse=True)
 def patch_aisummarizer(monkeypatch):
+    from unittest.mock import MagicMock
     mock_ai = MagicMock()
     mock_ai.summarize_entries_bulk.return_value = "This is a mocked summary."
     mock_ai._fallback_summary.return_value = "Fallback summary used."
     monkeypatch.setattr("scripts.ai.ai_summarizer.AISummarizer", lambda: mock_ai)
 
-# === CORE OBJECT FIXTURE ===
 
+# === CORE OBJECT FIXTURE ===
 @pytest.fixture(scope="function")
 def logger_core(temp_dir):
     from scripts.core.core import ZephyrusLoggerCore
-    return ZephyrusLoggerCore(script_dir=temp_dir)
+    return ZephyrusLoggerCore(script_dir=str(temp_dir))

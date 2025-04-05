@@ -1,6 +1,9 @@
 import logging
 from pathlib import Path
 from scripts.utils.file_utils import read_json, write_json
+from scripts.indexers.summary_indexer import SummaryIndexer
+from scripts.indexers.raw_log_indexer import RawLogIndexer
+from scripts.paths import ZephyrusPaths
 
 logger = logging.getLogger(__name__)
 
@@ -20,21 +23,21 @@ class SummaryTracker:
         }
     """
 
-    def __init__(self, tracker_file: Path, logs_file: Path):
+    def __init__(self, paths: ZephyrusPaths):
         """
         Args:
-            tracker_file (Path): The file where the summary tracker is stored.
-            logs_file (Path): The JSON log file used to rebuild the tracker if needed.
+            paths (ZephyrusPaths): An instance containing all relevant file paths.
         """
-        self.tracker_file = tracker_file
-        self.logs_file = logs_file
+        self.paths = paths
         self.tracker = self._load_tracker()
+        self.summary_indexer = SummaryIndexer(summaries_path=str(self.paths.correction_summaries_file))
+        self.raw_indexer = RawLogIndexer(log_path=str(self.paths.json_log_file))
 
     def _load_tracker(self) -> dict:
-        if not self.tracker_file.exists():
+        if not self.paths.summary_tracker_file.exists():
             return {}
         try:
-            tracker = read_json(self.tracker_file)
+            tracker = read_json(self.paths.summary_tracker_file)
             if not self.validate(tracker):
                 logger.warning("Invalid tracker format detected. Initializing empty tracker.")
                 return {}
@@ -67,7 +70,7 @@ class SummaryTracker:
 
     def save(self):
         try:
-            write_json(self.tracker_file, self.tracker)
+            write_json(self.paths.summary_tracker_file, self.tracker)
         except Exception as e:
             logger.error("Error saving summary tracker: %s", e, exc_info=True)
 
@@ -91,7 +94,7 @@ class SummaryTracker:
         Rebuild the tracker by parsing the JSON logs file.
         """
         try:
-            logs = read_json(self.logs_file)
+            logs = read_json(self.paths.json_log_file)
             new_tracker = {}
             for date, categories in logs.items():
                 for main_cat, subcats in categories.items():

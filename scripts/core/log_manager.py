@@ -60,3 +60,6 @@ class LogManager:
             .setdefault(subcategory, [])\
             .append(new_data)
         write_json(self.correction_summaries_file, data)
+
+
+
