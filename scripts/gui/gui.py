@@ -5,6 +5,7 @@ import json
 import os
 from scripts.indexers.summary_indexer import SummaryIndexer
 from scripts.indexers.raw_log_indexer import RawLogIndexer
+from scripts.core.log_manager import LogManager
 from scripts.config.config_loader import load_config, get_config_value, get_absolute_path
 import scripts.utils.gui_helpers as gui_helpers
 from scripts.gui.gui_logging import GUILogHandler  # Import your custom GUI logging handler
@@ -246,7 +247,9 @@ class ZephyrusLoggerGUI:
         self.root.update()
 
         try:
-            logs = json.loads(self.logger_core.json_log_file.read_text(encoding="utf-8"))
+            logs = json.loads(
+                self.logger_core.log_manager.json_log_file.read_text(encoding="utf-8")
+            )
         except (json.JSONDecodeError, OSError) as e:
             self.log_message(f"[Error] Failed to read logs: {e}")
             messagebox.showwarning("Missing Log File", "zephyrus_log.json is missing or corrupted.")

@@ -28,3 +28,10 @@
 - **Execution Strategy**: Utils should be inside script folder, unless used for multiple projects.
 
 - **Execution Strategy**: Need to calculate Halstead scores with radon to ensure that code complexity remains low, and if not, refactor module into different classes.
+
+## 2025-04-05
+- **AI System Design**: Created project scaffold to enable rapid development of projects.
+- **Tooling & Automation**: Will need to flesh out refactor guard to have a lightweight tool capable of assisting with code refactoring suggestions and log creationg for LLM ingestion.
+- **AI System Design**: Different design patterns adopted from software engineering principles can be adopted to enable easier maintainability, extensibility and readibility.
+
+- **AI System Design**: Created project scaffold to enable rapid development for other projects.

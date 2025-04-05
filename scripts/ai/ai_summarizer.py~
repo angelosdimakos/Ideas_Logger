@@ -9,13 +9,7 @@ class AISummarizer:
     def __init__(self):
         """
         Initializes the AISummarizer class.
-
         Loads configuration values to set up the language model and prompt behavior.
-
-        The following configuration values are used:
-
-        - llm_model: The language model to use for summarization, e.g. "mistral".
-        - prompts_by_subcategory: A dictionary mapping subcategory names to custom prompts.
         """
         config = load_config()
         self.model = get_config_value(config, "llm_model", "mistral")
