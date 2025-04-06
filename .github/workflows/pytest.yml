@@ -37,11 +37,11 @@ jobs:
           pip install -e .
           pip freeze
 
-      - name: 🧪 Run Tests & Export Coverage
+      - name: ✅ Run Unit + Integration Tests
+        shell: powershell
         run: |
-          pytest -c pytest.ini \
-            --cov=scripts --cov-config=.coveragerc \
-            --cov-report=xml --cov-report=html
+          python -m pytest -c pytest.ini --cov=scripts --cov-config=.coveragerc --cov-report=xml --cov-report=html
+      
 
       - name: 📄 Check for Coverage Report
         run: |
