@@ -110,7 +110,7 @@ def handle_output(result, args, guard):
     summary = result if args.all else result.get("summary", {})
 
     if args.json:
-        handle_json_output(summary, os.path.basename(args.refactored))
+        handle_json_output(summary, "refactor_audit")
     else:
         print_summary(summary, guard, args)
 

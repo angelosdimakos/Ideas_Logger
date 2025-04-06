@@ -64,12 +64,14 @@ jobs:
             --refactored scripts `
             --all `
             --missing-tests `
-            --json > refactor_audit.json
+            --json
+      
 
-      - name: 🚨 Show Complexity Warnings (Python)
-        shell: bash
+      - name: 🚨 Show Complexity Warnings
+        shell: powershell
         run: |
-          python scripts/utils/complexity_summary.py
+          python scripts/utils/complexity_summary.py refactor_audit.json
+      
       
       
 
@@ -109,16 +111,3 @@ jobs:
         shell: powershell
         run: |
           $json = Get-Content -Raw -Path refactor_audit.json | ConvertFrom-Json
-          $methodCount = 0
-          $fileCount = $json.PSObject.Properties.Count
-
-          foreach ($file in $json.PSObject.Properties.Name) {
-            $complexity = $json[$file].complexity
-            if ($complexity) {
-              $methodCount += $complexity.PSObject.Properties.Count
-            }
-          }
-
-          Write-Host "`n📊 Summary:"
-          Write-Host "🧠 Methods analyzed: $methodCount"
-          Write-Host "🔧 Files analyzed: $fileCount"
