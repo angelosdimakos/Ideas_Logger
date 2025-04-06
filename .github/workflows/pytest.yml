@@ -26,7 +26,7 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.11.8"  # ← Pin due to broken tkinter in 3.11.9 on GitHub Actions (as of Apr 2025)
 
       - name: 📦 Install Dependencies
         run: |
