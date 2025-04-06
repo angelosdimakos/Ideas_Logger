@@ -27,8 +27,7 @@ def analyze_complexity(file_path="refactor_audit.json", max_complexity=10):
                 print("\n".join(content.splitlines()[:10]))
                 sys.exit(1)
 
-        return run_analysis(data, max_complexity, use_emoji=True)
-
+        return analyze_complexity_with_emoji(data, max_complexity)
 
     except Exception as e:
         print(f"❌ Unexpected error: {e}")
