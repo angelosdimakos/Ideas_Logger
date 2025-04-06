@@ -1,12 +1,12 @@
 import argparse
 import os
 import sys
+import json
 
-# 👇 Add parent of 'scripts' to sys.path to avoid "ModuleNotFoundError: scripts"
+# 👇 Add parent of 'scripts' to sys.path to avoid import errors
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 from scripts.refactor.refactor_guard import RefactorGuard
-
 
 def main():
     parser = argparse.ArgumentParser(description="RefactorGuard CLI: Audit Python refactors.")
@@ -27,16 +27,23 @@ def main():
         # Default to scripts/ if --all is enabled
         original = args.original or "scripts"
         refactored = args.refactored or "scripts"
-        summary = guard.analyze_directory(original, refactored)
+        summary = guard.analyze_directory_recursive(original, refactored)
+
         if args.json:
-            import json
             print(json.dumps(summary, indent=2))
         else:
             for file, result in summary.items():
                 print(f"\n📂 File: {file}")
                 if not args.diff_only:
-                    print("Complexity:", result.get("complexity"))
-                print("Method Changes:", result.get("method_diff"))
+                    print("📊 Total Complexity:", result.get("complexity", {}).get(refactored, "N/A"))
+
+                    if args.complexity_warnings:
+                        method_complexities = result.get("complexity", {}).get("methods", {})
+                        for method, score in method_complexities.items():
+                            emoji = "⚠️" if score > guard.config.get("max_complexity", 10) else "✅"
+                            print(f"  {emoji} {method}: {score}")
+                print("🔧 Method Changes:", result.get("method_diff"))
+
     else:
         result = guard.analyze_refactor_changes(
             original_path=args.original,
@@ -44,7 +51,18 @@ def main():
             test_file_path=args.tests,
             as_string=not args.json
         )
-        print(result)
+        if args.json:
+            print(json.dumps(result, indent=2) if isinstance(result, dict) else result)
+        else:
+            print(result)
+
+        if not args.diff_only and args.complexity_warnings and isinstance(result, dict):
+            complexity = result.get("summary", {}).get("complexity", {})
+            method_complexities = complexity.get("methods", {})
+            print("\n📊 Method Complexity:")
+            for method, score in method_complexities.items():
+                emoji = "⚠️" if score > guard.config.get("max_complexity", 10) else "✅"
+                print(f"  {emoji} {method}: {score}")
 
     if args.missing_tests and args.tests:
         print("\n🧪 Missing Tests:")
@@ -54,7 +72,6 @@ def main():
                 print(f"❌ {item['class']} → {item['method']}")
         else:
             print("✅ All public methods have tests!")
-
 
 if __name__ == "__main__":
     main()
