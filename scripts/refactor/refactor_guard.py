@@ -21,13 +21,14 @@ class RefactorGuard:
     def analyze_module(self, original_path: str, refactored_path: str) -> Dict:
         result = {"method_diff": {}, "complexity": {}}
 
-        # Parse the methods and their diff
+        if not original_path.strip():
+            original_path = refactored_path
+
         original_classes = extract_class_methods(original_path)
         refactored_classes = extract_class_methods(refactored_path)
         orig_classes_dict = {cls.class_name: cls for cls in original_classes}
         ref_classes_dict = {cls.class_name: cls for cls in refactored_classes}
 
-        # Handle method diffs
         for cls_name, orig_info in orig_classes_dict.items():
             if cls_name in ref_classes_dict:
                 diff = compare_class_methods(orig_info, ref_classes_dict[cls_name])
@@ -41,23 +42,40 @@ class RefactorGuard:
 
         # Detailed complexity per function/method
         complexity_map = calculate_function_complexity_map(refactored_path)
-        result["complexity"] = complexity_map
 
-        # 🔍 Try to enrich complexity with coverage data
+        # ⬇️ Try to enrich complexity map with coverage info
         tree = parse_coverage_with_debug(verbose=False)
         if tree:
             coverage_data = extract_coverage_hits(tree)
-            enriched = {}
+            enriched_map = {}
+
             for method, score in complexity_map.items():
-                if isinstance(score, int):  # avoid nested keys like 'methods'
-                    coverage_info = coverage_data.get(method, {})
-                    enriched[method] = {
-                        "complexity": score,
-                        "coverage": coverage_info.get("coverage", "N/A"),
-                        "hits": coverage_info.get("hits", "N/A"),
-                        "lines": coverage_info.get("lines", "N/A")
-                    }
-            result["complexity"] = enriched
+                coverage_info = coverage_data.get(method, {})
+
+                # Fallback: match ".method" suffix if not found
+                if not coverage_info:
+                    for k in coverage_data:
+                        if k.endswith(f".{method}"):
+                            coverage_info = coverage_data[k]
+                            break
+
+                enriched_map[method] = {
+                    "complexity": score,
+                    "coverage": coverage_info.get("coverage", "N/A"),
+                    "hits": coverage_info.get("hits", "N/A"),
+                    "lines": coverage_info.get("lines", "N/A"),
+                }
+
+            result["complexity"] = enriched_map
+        else:
+            result["complexity"] = {
+                method: {
+                    "complexity": score,
+                    "coverage": "N/A",
+                    "hits": "N/A",
+                    "lines": "N/A"
+                } for method, score in complexity_map.items()
+            }
 
         return result
 
@@ -146,10 +164,10 @@ class RefactorGuard:
 def parse_coverage_with_debug(possible_paths=None, verbose=True):
     if possible_paths is None:
         possible_paths = [
-            "./coverage.xml",  # Default coverage.xml location
-            "./htmlcov/coverage.xml",
-            "./reports/coverage.xml",
-            "./scripts/coverage.xml"
+            "coverage.xml",
+            "htmlcov/coverage.xml",
+            "reports/coverage.xml",
+            "scripts/coverage.xml"
         ]
 
     for path in possible_paths:
@@ -166,10 +184,9 @@ def parse_coverage_with_debug(possible_paths=None, verbose=True):
             if verbose:
                 print(f"🔍 Tried: {path} — Not found.")
 
-    if verbose:
-        print("⚠️ No valid coverage.xml found. Skipping coverage injection.")
-    return None
-
+        if verbose:
+            print("⚠️ No valid coverage.xml found. Skipping coverage injection.")
+        return None
 
 def extract_coverage_hits(tree: ET.ElementTree) -> Dict[str, Dict]:
     """
