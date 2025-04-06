@@ -44,13 +44,15 @@ jobs:
       
 
       - name: 📄 Check for Coverage Report
+        shell: powershell
         run: |
-          if not exist coverage.xml (
-            echo ❌ coverage.xml not found!
-            exit /b 1
-          ) else (
-            echo ✅ Found coverage.xml
-          )
+          if (-Not (Test-Path "coverage.xml")) {
+            Write-Host "❌ coverage.xml not found!"
+            exit 1
+          } else {
+            Write-Host "✅ Found coverage.xml"
+          }
+      
 
       - name: 📈 Upload HTML Coverage Report
         if: always()
