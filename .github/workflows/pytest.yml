@@ -35,7 +35,7 @@ jobs:
           pip install pytest pytest-cov
           pip install numpy==1.24.0 pydantic==1.10.2 ollama==0.1.0 sentence-transformers
           pip install torch faiss-cpu --only-binary=faiss-cpu
-          pip install -e .
+          pip install -r requirements.txt
           pip freeze
 
       - name: ✅ Run Unit + Integration Tests
