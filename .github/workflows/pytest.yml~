@@ -66,27 +66,31 @@ jobs:
             --missing-tests `
             --json > refactor_audit.json
 
-      - name: 🚨 Show Complexity Warnings (Python-safe)
-        shell: python
+      - name: 🚨 Show Complexity Warnings
+        shell: powershell
         run: |
-          import json
-          with open("refactor_audit.json", encoding="utf-8") as f:
-              audit = json.load(f)
-          max_allowed = 10
-          warnings = []
-          for file, data in audit.items():
-              for method, score in data.get("complexity", {}).items():
-                  if isinstance(score, dict):
-                      score = score.get("complexity", 0)
-                  if score > max_allowed:
-                      warnings.append(f"⚠️ {file} → {method}: {score}")
-          if warnings:
-              print("\n⚠️ Complexity Warnings:")
-              for line in warnings:
-                  print(line)
-          else:
-              print("✅ No complexity warnings.")
-      
+          $audit = Get-Content -Raw -Path refactor_audit.json | ConvertFrom-Json
+          $maxAllowed = 10
+          $warnings = @()
+
+          foreach ($file in $audit.PSObject.Properties.Name) {
+            $complexity = $audit[$file].complexity
+            if ($complexity) {
+              foreach ($method in $complexity.PSObject.Properties) {
+                $score = $complexity[$method.Name]
+                if ($score -gt $maxAllowed) {
+                  $warnings += "⚠️ $file → $($method.Name): $score"
+                }
+              }
+            }
+          }
+
+          if ($warnings.Count -gt 0) {
+            Write-Host "`n⚠️ Complexity Warnings:"
+            $warnings | ForEach-Object { Write-Host $_ }
+          } else {
+            Write-Host "✅ No complexity warnings."
+          }
 
       - name: 📤 Upload Refactor Audit (Artifact)
         if: always()
