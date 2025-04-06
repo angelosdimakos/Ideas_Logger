@@ -33,6 +33,15 @@ BASE_DIR = Path(__file__).resolve().parents[2]  # ← resolves to project root (
 CONFIG_DIR = os.path.join(BASE_DIR, "config")
 CONFIG_FILE_PATH = Path(__file__).resolve().parent / "config.json"
 
+import json
+import logging
+import os
+
+logger = logging.getLogger(__name__)
+
+# Default config file path
+CONFIG_FILE_PATH = "config/config.json"
+
 
 def load_config(config_path=CONFIG_FILE_PATH):
     """
@@ -48,24 +57,33 @@ def load_config(config_path=CONFIG_FILE_PATH):
     if not os.path.exists(config_path):
         logger.warning(f"Config file '{config_path}' not found. Using defaults.")
         return {}
+
     try:
+        # Attempt to read the config file
         with open(config_path, "r", encoding="utf-8") as f:
             data = json.load(f)
         logger.debug(f"Successfully loaded config from '{config_path}'. Keys: {list(data.keys())}")
         logger.debug("Full config dump:\n" + json.dumps(data, indent=2))
-        # After loading, adjust the logger level based on test_mode.
+
+        # Adjust logging level based on 'test_mode' value in the config
         if data.get("test_mode", False):
             logger.setLevel(logging.DEBUG)
             logger.debug("Test mode enabled: setting logger level to DEBUG.")
         else:
             logger.setLevel(logging.INFO)
+
         return data
+
     except json.JSONDecodeError as e:
+        # If JSON is invalid, log an error and return an empty dict
         logger.error(f"Failed to parse config file '{config_path}': {e}. Using defaults.")
         return {}
+
     except OSError as e:
+        # Handle I/O errors (file permission issues, etc.)
         logger.error(f"I/O error while loading config file '{config_path}': {e}. Using defaults.")
         return {}
+
 
 def get_config_value(config, key, default):
     """

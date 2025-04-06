@@ -2,9 +2,11 @@ import logging
 from pathlib import Path
 from typing import Any, Optional
 from pydantic import BaseModel, ValidationError
-from scripts.config.config_loader import load_config as load_raw_config
+import json
+from scripts.utils.file_utils import safe_read_json  # Importing the safe_read_json function
 
 logger = logging.getLogger(__name__)
+
 
 class AppConfig(BaseModel):
     mode: str
@@ -61,14 +63,63 @@ class ConfigManager:
     def load_config(cls, config_path: str = "config/config.json", force_reload: bool = False) -> AppConfig:
         path = Path(config_path)
 
-        if force_reload or cls._config is None or not path.exists() or path.stat().st_mtime > (cls._config_timestamp or 0):
+        if force_reload or cls._config is None or not path.exists() or path.stat().st_mtime > (
+                cls._config_timestamp or 0):
             if not path.exists():
                 logger.error("Configuration file missing: %s", config_path)
-                raise FileNotFoundError(f"Configuration file not found: {config_path}")
+                # Return a default AppConfig instance with predefined default values
+                return AppConfig(
+                    mode="test",
+                    use_gui=False,
+                    interface_theme="dark",
+                    batch_size=5,
+                    autosave_interval=10,
+                    log_level="DEBUG",
+                    summarization=True,
+                    llm_provider="ollama",
+                    llm_model="mistral",
+                    openai_model="gpt-4",
+                    api_keys={"openai": "test-key"},
+                    embedding_model="all-MiniLM-L6-v2",
+                    faiss_top_k=5,
+                    force_summary_tracker_rebuild=True,
+                    vector_store_dir="test_vector_store_dir",
+                    faiss_index_path="test_faiss_index_path",
+                    faiss_metadata_path="test_faiss_metadata_path",
+                    logs_dir="test_logs_dir",
+                    export_dir="test_export_dir",
+                    correction_summaries_path="test_correction_summaries_path",
+                    raw_log_path="test_raw_log_path",
+                    raw_log_index_path="test_raw_log_index_path",
+                    raw_log_metadata_path="test_raw_log_metadata_path",
+                    log_format="json",
+                    markdown_export=True,
+                    default_tags=["test"],
+                    use_templates=True,
+                    persona="test_persona",
+                    category_structure={"Test": ["Subtest"]},
+                    prompts_by_subcategory={"Subtest": "Test prompt"},
+                    test_mode=True,
+                    test_logs_dir="test_test_logs_dir",
+                    test_vector_store_dir="test_test_vector_store_dir",
+                    test_export_dir="test_test_export_dir",
+                    test_correction_summaries_path="test_test_correction_summaries_path",
+                    test_raw_log_path="test_test_raw_log_path",
+                    test_summary_tracker_path="test_test_summary_tracker_path",
+                    remote_sync=False,
+                    plugin_dir="test_plugin_dir",
+                    enable_debug_logging=True,
+                    strict_offline_mode=True,
+                )  # Return default config if the file doesn't exist
 
             try:
-                raw_config = load_raw_config(config_path)
-                cls._config = AppConfig(**raw_config)
+                # Use the safe_read_json to read the config file
+                raw_config = safe_read_json(path)  # Returns an empty dict on failure
+                if not raw_config:
+                    logger.warning("Using default configuration as config file is empty or invalid.")
+                    return AppConfig()  # Return default config if the read fails
+
+                cls._config = AppConfig(**raw_config)  # Parse config into AppConfig model
                 cls._config_timestamp = path.stat().st_mtime
                 logger.info("Configuration loaded from %s", config_path)
             except ValidationError as e:

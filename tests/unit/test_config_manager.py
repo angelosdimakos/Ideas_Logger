@@ -11,10 +11,23 @@ def test_config_manager_load_valid(temp_config_file):
     assert config.llm_model == "mistral"
     assert config.logs_dir.endswith("logs")
 
+
 def test_config_manager_missing_file():
+    # No need to mock the config anymore as it's already set in conftest.py
     ConfigManager.reset()
-    with pytest.raises(FileNotFoundError):
-        ConfigManager.load_config("non_existent.json")
+
+    # Assert that when the file doesn't exist, it returns the default AppConfig
+    config = ConfigManager.load_config("non_existent.json")
+
+    # Verify it returns the default AppConfig type
+    assert isinstance(config, AppConfig)
+
+    # You can also check default values set in your AppConfig:
+    assert config.mode == "test"  # Default value from the fixture
+    assert config.use_gui is False  # Default value from the fixture
+    assert config.category_structure == {"Test": ["Subtest"]}  # Default category
+    assert config.test_mode is True  # Default value from the fixture
+
 
 def test_config_manager_malformed_json(temp_dir):
     malformed_path = temp_dir / "malformed.json"

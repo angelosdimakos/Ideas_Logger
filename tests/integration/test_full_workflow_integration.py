@@ -1,131 +1,71 @@
-from scripts.utils.file_utils import read_json
-from scripts.config.config_loader import get_config_value
-
-# Use the refactored core; ensure the import points to the refactored module.
-from scripts.core.core import ZephyrusLoggerCore
 import pytest
-pytestmark = [pytest.mark.integration]
+from scripts.utils.file_utils import read_json
 
-
-@pytest.fixture
-def logger_core(tmp_path):
-    """
-    Provides a ZephyrusLoggerCore instance (from the refactored module) in test mode.
-    The temporary directory (tmp_path) is used as the script directory.
-    """
-    # If needed, toggle test mode via your configuration system (or monkeypatch) here.
-    # For this example, assume that conftest.py already patches the configuration.
-    return ZephyrusLoggerCore(script_dir=tmp_path)
 
 def test_sequential_workflow(logger_core):
-    """
-    Verifies the full end-to-end workflow:
-    1. Log entries to the JSON log file.
-    2. Rebuild the summary tracker.
-    3. Generate a global summary.
-    4. Verify that the correction summaries file is updated.
-    """
-    date = "2025-03-22"
-    ts = f"{date} 12:00:00"
-    cat = "SequentialTest"
-    sub = "Flow"
-
-    # Log 5 entries.
+    cat, sub = "SequentialTest", "Flow"
+    # Log enough entries to trigger a summary generation.
     for i in range(5):
-        logger_core.log_to_json(ts, date, cat, sub, f"Entry {i}")
+        logger_core.log_new_entry(cat, sub, f"Sequential message {i + 1}")
+    logger_core.generate_global_summary(cat, sub)
 
-    # Rebuild summary tracker from the log (simulate tracker initialization).
-    logger_core.summary_tracker.rebuild()
-    success = logger_core.generate_global_summary(cat, sub)
-    assert success, f"Global summarization failed for {cat} → {sub}"
+    data = read_json(logger_core.paths.summary_tracker_file)
+    # Verify that the tracker has our category and subcategory.
+    assert cat in data, f"Category {cat} not found in summary tracker."
+    assert sub in data[cat], f"Subcategory {sub} not found in summary tracker for {cat}."
+    # Check that the summaries were generated.
+    assert data[cat][sub].get("summarized_total", 0) > 0, f"No summaries generated for {cat} → {sub}."
 
-    # Verify that correction summaries file contains the expected summary.
-    summaries = read_json(logger_core.paths.correction_summaries_file)
-    assert "global" in summaries
-    assert cat in summaries["global"]
-    assert sub in summaries["global"][cat]
 
 def test_fallback_mechanism(logger_core, monkeypatch):
-    """
-    Test that when the AI summarization fails, the fallback summary is used.
-    """
-    class DummySummarizer:
-        def summarize_entries_bulk(self, entries, subcategory=None):
-            raise Exception("Intentional AI failure")
-        def _fallback_summary(self, full_prompt):
-            return "Fallback summary used."
+    def fail_bulk_summary(*args, **kwargs):
+        raise Exception("Simulated failure")
 
-    monkeypatch.setattr(logger_core, "ai_summarizer", DummySummarizer())
-
-    date = "2025-03-22"
-    ts = f"{date} 10:00:00"
-    cat = "FallbackTest"
-    sub = "Flow"
-
+    # Force bulk summarization to fail.
+    logger_core.ai_summarizer.summarize_entries_bulk = fail_bulk_summary
+    # Patch individual summarization to return a fallback summary.
+    monkeypatch.setattr(
+        logger_core.ai_summarizer,
+        "summarize_entry",
+        lambda entry: f"Fallback summary for: {entry['content']}"
+    )
+    cat, sub = "FallbackTest", "Flow"
     for i in range(5):
-        logger_core.log_to_json(ts, date, cat, sub, f"Log {i}")
+        logger_core.log_new_entry(cat, sub, f"Fallback test message {i + 1}")
+    logger_core.generate_global_summary(cat, sub)
 
-    logger_core.summary_tracker.rebuild()
-    assert logger_core.generate_global_summary(cat, sub), "Fallback summary generation failed"
+    data = read_json(logger_core.paths.summary_tracker_file)
+    assert cat in data, f"Category {cat} not found in summary tracker (fallback)."
+    assert sub in data[cat], f"Subcategory {sub} not found in summary tracker (fallback)."
+    assert data[cat][sub].get("summarized_total", 0) > 0, f"No fallback summaries generated for {cat} → {sub}."
+
 
 def test_faiss_index_build_and_search(logger_core):
-    """
-    Test integration with FAISS index building and searching using generated summaries.
-    """
-    from scripts.indexers.summary_indexer import SummaryIndexer
-
-    cat = "IntegrationTest"
-    sub = "Workflow"
-    date = "2025-03-22"
-    ts = f"{date} 12:00:00"
-
+    cat, sub = "IntegrationTest", "Workflow"
     for i in range(5):
-        logger_core.log_to_json(ts, date, cat, sub, f"Test entry {i}")
+        logger_core.log_new_entry(cat, sub, f"Index test message {i + 1}")
+    logger_core.generate_global_summary(cat, sub)
 
-    logger_core.summary_tracker.rebuild()
-    success = logger_core.generate_global_summary(cat, sub)
-    assert success
+    data = read_json(logger_core.paths.summary_tracker_file)
+    assert cat in data, f"Category {cat} not found in summary tracker for FAISS indexing."
+    assert sub in data[cat], f"Subcategory {sub} not found in summary tracker for {cat} during FAISS indexing."
+    assert data[cat][sub].get("summarized_total", 0) > 0, "Failed to generate summary before FAISS indexing."
 
-    # Build a FAISS index from the generated summaries.
-    indexer = SummaryIndexer(
-        summaries_path=str(logger_core.paths.correction_summaries_file),
-        index_path=get_config_value(logger_core.config, "faiss_index_path", "vector_store/summary_index.faiss"),
-        metadata_path=get_config_value(logger_core.config, "faiss_metadata_path", "vector_store/summary_metadata.pkl"),
-    )
-    texts, metadata = indexer.load_entries()
-    assert indexer.build_index(texts, metadata)
-    indexer.save_index()
-    indexer.load_index()
-    results = indexer.search("entry")
-    assert isinstance(results, list)
-    assert len(results) > 0
+    results = logger_core.search_summaries("index test", top_k=3)
+    assert isinstance(results, list) and len(results) > 0, "Expected at least one FAISS search result."
+
 
 def test_raw_log_index_integration(logger_core):
-    """
-    Tests that the raw log FAISS index is built and searchable based on content.
-    """
-    from scripts.indexers.raw_log_indexer import RawLogIndexer
-
-    cat = "FAISS"
-    sub = "Check"
-    date = "2025-03-22"
-    ts = f"{date} 12:00:00"
-
+    cat, sub = "FAISS", "Check"
     for i in range(5):
-        logger_core.log_to_json(ts, date, cat, sub, f"Indexing log {i}")
+        logger_core.log_new_entry(cat, sub, f"Raw log entry {i + 1}")
+    logger_core.generate_global_summary(cat, sub)
 
-    logger_core.summary_tracker.rebuild()
-    assert logger_core.generate_global_summary(cat, sub)
+    data = read_json(logger_core.paths.summary_tracker_file)
+    assert cat in data, f"Category {cat} not found in summary tracker for raw log indexing."
+    assert sub in data[cat], f"Subcategory {sub} not found in summary tracker for {cat} during raw log indexing."
+    assert data[cat][sub].get("summarized_total", 0) > 0, "Summary required before raw log indexing."
 
-    indexer = RawLogIndexer(
-        log_path=str(logger_core.paths.json_log_file),
-        index_path=get_config_value(logger_core.config, "raw_log_index_path", "vector_store/raw_index.faiss"),
-        metadata_path=get_config_value(logger_core.config, "raw_log_metadata_path", "vector_store/raw_metadata.pkl"),
-    )
-    texts, meta = indexer.load_entries()
-    assert indexer.build_index(texts, meta)
-    indexer.save_index()
-    indexer.load_index()
-    results = indexer.search("Indexing")
-    assert isinstance(results, list)
-    assert len(results) > 0
+    # Instead of accessing a raw_log_indexer attribute, use the core's search_raw_logs method.
+    results = logger_core.search_raw_logs("raw log", top_k=2)
+    assert isinstance(results, list) and len(results) > 0, "Expected at least one raw log search result."

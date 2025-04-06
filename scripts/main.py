@@ -1,41 +1,38 @@
-
-from scripts.core.core import ZephyrusLoggerCore
-from scripts.gui.gui import ZephyrusLoggerGUI,GUILogHandler
-from scripts.config.config_loader import load_config, setup_logging
 import logging
+from scripts.config.config_loader import load_config, setup_logging
+from scripts.core.core import ZephyrusLoggerCore
+from scripts.gui.gui import ZephyrusLoggerGUI
+from scripts.gui.gui_controller import GUIController
+from scripts.gui.gui_logging import GUILogHandler
 
 if __name__ == "__main__":
-    """
-    Main entry point for the Zephyrus Logger application.
-
-    This script initializes the logging system, loads the configuration,
-    and creates the GUI application.
-
-    The application is started in either TEST or PRODUCTION mode,
-    depending on the "test_mode" setting in the configuration file.
-    """
-    # Set up centralized logging for the application.
+    # 1. Setup logging
     setup_logging()
-    
+
+    # 2. Load config and print mode
     config = load_config()
     IS_TEST_MODE = config.get("test_mode", False)
     logger = logging.getLogger(__name__)
     logger.info("Running in %s mode.", "TEST" if IS_TEST_MODE else "PRODUCTION")
-    
-    # Initialize the core logger component.
-    logger_core = ZephyrusLoggerCore(script_dir=".")
-    
-    # Create the GUI application.
-    app = ZephyrusLoggerGUI(logger_core)
-    
-    # After the GUI (and its log_text widget) has been created,
-    # add the GUI logging handler so that log messages also appear in the GUI.
-    root_logger = logging.getLogger()
-    gui_handler = GUILogHandler(app.log_text)
-    gui_handler.setLevel(logging.ERROR)  # Change to a lower level (e.g., INFO) if you want more messages.
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    gui_handler.setFormatter(formatter)
-    root_logger.addHandler(gui_handler)
-    
-    # Run the GUI event loop.
-    app.run()
+
+    try:
+        # 3. Initialize core and GUI controller
+        logger_core = ZephyrusLoggerCore(script_dir=".")
+        controller = GUIController(logger_core=logger_core)
+
+        # NEW: Explicit log validation feedback after core is ready
+        if controller.core.summary_tracker.validate():
+            logger.info("[INIT] Summary tracker validated successfully.")
+        else:
+            logger.warning("[INIT] Summary tracker may have inconsistencies. Review logs.")
+
+        # 4. Start the GUI
+        app = ZephyrusLoggerGUI(controller)
+
+        logger.info("[GUI] ZephyrusLoggerGUI launched. Awaiting user interaction.")
+
+        # 6. Run the GUI event loop
+        app.run()
+
+    except Exception as e:
+        logger.critical("Fatal error during startup: %s", e, exc_info=True)

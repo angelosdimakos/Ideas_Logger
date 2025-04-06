@@ -54,13 +54,36 @@ def write_json(path, data):
 
 def read_json(path):
     """
-    Safely read and return a JSON object from a file.
+    Safely read and return a log JSON object from a file.
     """
     try:
         with open(path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
         logger.error(f"Failed to read JSON from {path}: {e}")
+        return {}
+
+
+def safe_read_json(filepath: Path) -> dict:
+    """
+    Safely reads a config JSON file. Returns an empty dictionary if the file doesn't exist
+    or there is an error reading the file.
+
+    Args:
+        filepath (Path): Path to the JSON file to be read.
+
+    Returns:
+        dict: The contents of the JSON file, or an empty dictionary if an error occurs.
+    """
+    try:
+        if not filepath.exists():
+            logger.warning(f"File '{filepath}' not found. Returning empty dictionary.")
+            return {}
+
+        with open(filepath, 'r', encoding='utf-8') as file:
+            return json.load(file)
+    except (json.JSONDecodeError, OSError) as e:
+        logger.error(f"Failed to read JSON from {filepath}: {e}")
         return {}
 
 

@@ -156,3 +156,34 @@ def display_error(title, message):
     messagebox.showerror(title, message)
 
 
+def format_coverage_data(data: list[dict]) -> str:
+    """
+    Formats the structured coverage data into a readable string grouped by main category.
+
+    Args:
+        data (list[dict]): List of coverage data entries.
+
+    Returns:
+        str: A nicely formatted string for displaying coverage stats.
+    """
+    from collections import defaultdict
+
+    grouped = defaultdict(list)
+    for entry in data:
+        grouped[entry["main_category"]].append(entry)
+
+    lines = []
+    for main_cat, entries in grouped.items():
+        lines.append(f"📘 {main_cat}")
+        for e in entries:
+            summarized = e.get("estimated_summarized_entries", e.get("summarized_total", 0))
+            lines.append(
+                f"  - {e['subcategory']}: {summarized}/{e['logged_total']} ({e['coverage_percent']}%)"
+            )
+
+    return "\n".join(lines)
+
+
+
+
+

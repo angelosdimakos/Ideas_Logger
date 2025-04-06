@@ -1,0 +1,287 @@
+import tkinter as tk
+from tkinter import simpledialog, scrolledtext, ttk
+import logging
+
+from scripts.config.config_loader import load_config, get_config_value
+from scripts.gui.gui_logging import GUILogHandler
+from scripts.gui.gui_controller import GUIController
+import scripts.utils.gui_helpers as gui_helpers
+
+
+class ZephyrusLoggerGUI:
+    def __init__(self, controller: GUIController):
+        self.logger = logging.getLogger(__name__)
+        self.logger.info("Initializing ZephyrusLoggerGUI...")
+
+        self.controller = controller
+        self.config = load_config()
+        self.category_structure = get_config_value(self.config, "category_structure", {})
+
+        self.root = tk.Tk()
+        self.root.title("Zephyrus Ideas Logger")
+        self.root.geometry("1024x1024")
+
+        self._build_widgets()
+        self._setup_gui_logging()
+        self._update_coverage_display()
+
+    def _setup_gui_logging(self):
+        gui_handler = GUILogHandler(self.log_display)
+        gui_handler.setLevel(logging.INFO)
+        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        gui_handler.setFormatter(formatter)
+        logging.getLogger().addHandler(gui_handler)
+
+    def _build_widgets(self):
+        # Create main container frames
+        top_frame = tk.Frame(self.root)
+        top_frame.pack(fill=tk.X, padx=10, pady=5)
+
+        middle_frame = tk.Frame(self.root)
+        middle_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+
+        bottom_frame = tk.Frame(self.root)
+        bottom_frame.pack(fill=tk.X, padx=10, pady=5)
+
+        # --- Logs and Outputs (Top) ---
+        logs_frame = tk.LabelFrame(top_frame, text="Logs and Outputs")
+        logs_frame.pack(fill=tk.X, expand=True)
+
+        self.log_display = scrolledtext.ScrolledText(logs_frame, width=120, height=10)
+        self.log_display.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+
+        # --- Middle section (split into left and right) ---
+        left_panel = tk.Frame(middle_frame)
+        left_panel.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        right_panel = tk.Frame(middle_frame)
+        right_panel.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+        # --- Coverage Overview (Left) ---
+        coverage_frame = tk.LabelFrame(left_panel, text="Coverage Overview")
+        coverage_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+
+        self.coverage_frame = scrolledtext.ScrolledText(coverage_frame, width=60, height=15, state='disabled')
+        self.coverage_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+
+        # --- Search Panels (Right) ---
+        # Search Summary
+        search_summary_frame = tk.LabelFrame(right_panel, text="Search Summary")
+        search_summary_frame.pack(fill=tk.X, padx=5, pady=5)
+
+        tk.Label(search_summary_frame, text="Search Term").pack(pady=2)
+        self.summary_search_entry = tk.Entry(search_summary_frame)
+        self.summary_search_entry.pack(fill=tk.X, padx=5, pady=5)
+
+        tk.Label(search_summary_frame, text="Best Match").pack(pady=2)
+        self.summary_results = scrolledtext.ScrolledText(search_summary_frame, width=50, height=5)
+        self.summary_results.pack(fill=tk.X, padx=5, pady=5)
+
+        search_summary_button = tk.Button(search_summary_frame, text="Search Summaries",
+                                          command=self._search_summary_from_entry)
+        search_summary_button.pack(pady=5)
+
+        # Search Raw Log
+        search_raw_frame = tk.LabelFrame(right_panel, text="Search Raw Log")
+        search_raw_frame.pack(fill=tk.X, padx=5, pady=5)
+
+        tk.Label(search_raw_frame, text="Search Term").pack(pady=2)
+        self.raw_search_entry = tk.Entry(search_raw_frame)
+        self.raw_search_entry.pack(fill=tk.X, padx=5, pady=5)
+
+        tk.Label(search_raw_frame, text="Best Match").pack(pady=2)
+        self.raw_results = scrolledtext.ScrolledText(search_raw_frame, width=50, height=5)
+        self.raw_results.pack(fill=tk.X, padx=5, pady=5)
+
+        search_raw_button = tk.Button(search_raw_frame, text="Search Raw Logs",
+                                      command=self._search_raw_from_entry)
+        search_raw_button.pack(pady=5)
+
+        # --- Log New Entry (Bottom) ---
+        entry_frame = tk.LabelFrame(bottom_frame, text="Log New Entry")
+        entry_frame.pack(fill=tk.BOTH, expand=True)
+
+        self.entry_box = tk.Text(entry_frame, height=8, width=120)
+        self.entry_box.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+
+        # Category selection at the bottom
+        cat_frame = tk.Frame(entry_frame)
+        cat_frame.pack(fill=tk.X, padx=5, pady=5)
+
+        # --- Category Selection ---
+        self.selected_category_main = tk.StringVar()
+        self.selected_subcategory = tk.StringVar()
+
+        tk.Label(cat_frame, text="Main Category:").pack(side=tk.LEFT)
+        self.main_menu = tk.OptionMenu(cat_frame, self.selected_category_main, "")
+        self.main_menu.pack(side=tk.LEFT, padx=(5, 20))
+
+        tk.Label(cat_frame, text="Subcategory:").pack(side=tk.LEFT)
+        self.sub_menu = tk.OptionMenu(cat_frame, self.selected_subcategory, "")
+        self.sub_menu.pack(side=tk.LEFT, padx=5)
+
+        self._populate_category_dropdown()
+
+        # Log button
+        log_button = tk.Button(entry_frame, text="Log Entry", width=15, height=2, command=self._log_entry)
+        log_button.pack(side=tk.RIGHT, padx=10, pady=10)
+
+        # Add tracker status display
+        self.tracker_status = tk.StringVar()
+        self.tracker_status.set(f"Summary Tracker: {self.controller.get_tracker_status()}")
+        self.status_label = tk.Label(self.root, textvariable=self.tracker_status, fg="blue")
+        self.status_label.pack(pady=5)
+
+        # Add action buttons frame at the very bottom
+        button_frame = tk.Frame(self.root)
+        button_frame.pack(fill=tk.X, padx=10, pady=5)
+
+        self.summarize_button = tk.Button(button_frame, text="🧠 Summarize",
+                                          width=15, command=self._manual_summarize)
+        self.summarize_button.pack(side=tk.LEFT, padx=5)
+
+        self.coverage_button = tk.Button(button_frame, text="📊 Coverage",
+                                         width=15, command=self._show_coverage)
+        self.coverage_button.pack(side=tk.LEFT, padx=5)
+
+        self.rebuild_button = tk.Button(button_frame, text="📁 Rebuild Tracker",
+                                        width=15, command=self._rebuild_tracker)
+        self.rebuild_button.pack(side=tk.LEFT, padx=5)
+
+    def _update_coverage_display(self):
+        try:
+            data = self.controller.get_coverage_data()
+            self.coverage_frame.configure(state='normal')
+            self.coverage_frame.delete('1.0', tk.END)
+
+            for entry in data:
+                summarized = entry.get("summarized_total") or entry.get("estimated_summarized_entries", 0)
+                percent = entry.get("coverage_percent", 0)
+                symbol = '✅' if percent >= 30 else '⚠️' if percent > 0 else '❌'
+                line = f"{symbol} {entry['main_category']} > {entry['subcategory']}: {percent}% ({summarized}/{entry['logged_total']})\n"
+                self.coverage_frame.insert(tk.END, line)
+
+            self.coverage_frame.configure(state='disabled')
+        except Exception as e:
+            self.coverage_frame.configure(state='normal')
+            self.coverage_frame.delete('1.0', tk.END)
+            self.coverage_frame.insert(tk.END, f"Error updating coverage: {str(e)}\n")
+            self.coverage_frame.configure(state='disabled')
+
+    def _populate_category_dropdown(self):
+        categories = list(self.category_structure.keys())
+        self.selected_category_main.set(categories[0] if categories else "NoCategories")
+        self.main_menu["menu"].delete(0, "end")
+        for cat in categories:
+            self.main_menu["menu"].add_command(label=cat, command=lambda c=cat: self._update_main_category(c))
+        self._update_main_category(self.selected_category_main.get())
+
+    def _update_main_category(self, new_main):
+        self.selected_category_main.set(new_main)
+        subcats = self.category_structure.get(new_main, [])
+        self.selected_subcategory.set(subcats[0] if subcats else "")
+        self.sub_menu["menu"].delete(0, "end")
+        for sc in subcats:
+            self.sub_menu["menu"].add_command(label=sc, command=lambda s=sc: self.selected_subcategory.set(s))
+
+    def _log_entry(self):
+        main = self.selected_category_main.get()
+        sub = self.selected_subcategory.get()
+        text = self.entry_box.get("1.0", tk.END).strip()
+        if text:
+            try:
+                result = self.controller.log_entry(main, sub, text)
+                gui_helpers.display_message("Logged", f"Entry logged successfully: {result}")
+                self.entry_box.delete("1.0", tk.END)
+                self._update_coverage_display()
+            except Exception as e:
+                gui_helpers.display_error("Logging Error", str(e))
+        else:
+            gui_helpers.display_error("Error", "No text entered.")
+
+    def _manual_summarize(self):
+        main = self.selected_category_main.get()
+        sub = self.selected_subcategory.get()
+        try:
+            result = self.controller.core.generate_global_summary(main, sub)
+            gui_helpers.display_message("Summarized", f"Summary generated: {result}")
+            self._update_coverage_display()
+        except Exception as e:
+            gui_helpers.display_error("Summarization Error", str(e))
+
+    def _search_summary(self):
+        query = simpledialog.askstring("Search Summaries", "Enter your search query:")
+        if query:
+            try:
+                results = self.controller.search_summaries(query)
+                if results:
+                    formatted = gui_helpers.format_summary_results(results)
+                    gui_helpers.display_message("Search Summary", f"Found summaries:\n{formatted}")
+                else:
+                    gui_helpers.display_message("Search Summary", "No summaries found.")
+            except Exception as e:
+                gui_helpers.display_error("Search Error", str(e))
+
+    def _search_raw(self):
+        query = simpledialog.askstring("Search Raw Logs", "Enter your search query:")
+        if query:
+            try:
+                results = self.controller.search_raw_logs(query)
+                if results:
+                    formatted = gui_helpers.format_raw_results(results)
+                    gui_helpers.display_message("Search Raw Log", f"Found raw logs:\n{formatted}")
+                else:
+                    gui_helpers.display_message("Search Raw Log", "No raw logs found.")
+            except Exception as e:
+                gui_helpers.display_error("Search Error", str(e))
+
+    def _rebuild_tracker(self):
+        try:
+            success = self.controller.rebuild_tracker()
+            self.tracker_status.set(f"Summary Tracker: {'✅ Valid (After Rebuild)' if success else '❌ Still Invalid'}")
+            msg = "Tracker successfully rebuilt." if success else "Tracker rebuild failed. Still invalid."
+            gui_helpers.display_message("Rebuild Tracker", msg)
+            self._update_coverage_display()
+        except Exception as e:
+            gui_helpers.display_error("Tracker Rebuild Error", str(e))
+
+    def _show_coverage(self):
+        try:
+            coverage_data = self.controller.get_coverage_data()
+            formatted = gui_helpers.format_coverage_data(coverage_data)
+            gui_helpers.display_message("Summary Coverage", formatted)
+        except Exception as e:
+            gui_helpers.display_error("Coverage Error", str(e))
+
+    def _search_summary_from_entry(self):
+        query = self.summary_search_entry.get().strip()
+        if query:
+            try:
+                results = self.controller.search_summaries(query)
+                self.summary_results.delete('1.0', tk.END)
+                if results:
+                    formatted = gui_helpers.format_summary_results(results[:1])  # Just show best match
+                    self.summary_results.insert(tk.END, formatted)
+                else:
+                    self.summary_results.insert(tk.END, "No summaries found.")
+            except Exception as e:
+                self.summary_results.delete('1.0', tk.END)
+                self.summary_results.insert(tk.END, f"Error: {str(e)}")
+
+    def _search_raw_from_entry(self):
+        query = self.raw_search_entry.get().strip()
+        if query:
+            try:
+                results = self.controller.search_raw_logs(query)
+                self.raw_results.delete('1.0', tk.END)
+                if results:
+                    formatted = gui_helpers.format_raw_results(results[:1])  # Just show best match
+                    self.raw_results.insert(tk.END, formatted)
+                else:
+                    self.raw_results.insert(tk.END, "No raw logs found.")
+            except Exception as e:
+                self.raw_results.delete('1.0', tk.END)
+                self.raw_results.insert(tk.END, f"Error: {str(e)}")
+
+    def run(self):
+        self.root.mainloop()

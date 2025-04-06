@@ -30,6 +30,12 @@
 - **Execution Strategy**: Need to calculate Halstead scores with radon to ensure that code complexity remains low, and if not, refactor module into different classes.
 
 ## 2025-04-05
+- **Meta Reflection**: Before writing a single line of code, it is imperative to properly define scope and classes of project.
+- **Execution Strategy**: Need to create doc strings for everything so AI can pick up on what is needed faster
+- **AI System Design**: Factories enable the creation of different objects or classes instances.
+- **AI System Design**: Software engineering patterns are extremely useful for extensibility, maintainability and readbility.
+- **AI System Design**: Created a project scaffold to enable rapid creation of different projects using AI from ingestion to exporting.
+- **Execution Strategy**: Decoupling GUI from core control is imperative.
 - **AI System Design**: Need to begin taking integration testing more seriously, in order to validate what GUI actions lead to in terms of file operations.
 - **AI System Design**: Created project scaffold to enable rapid development of projects.
 - **Tooling & Automation**: Will need to flesh out refactor guard to have a lightweight tool capable of assisting with code refactoring suggestions and log creationg for LLM ingestion.
