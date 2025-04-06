@@ -15,7 +15,7 @@ from scripts.refactor.refactor_guard import RefactorGuard
 
 def handle_json_output(summary, output_name):
     filename = f"refactor_audit_{output_name}.json"
-    with open(filename, "w", encoding="utf-8") as f:
+    with open(filename, "w", encoding="utf-8-sig") as f:
         json.dump(summary, f, indent=2)
     print(f"\n📌 Saved audit report to {filename}")
 

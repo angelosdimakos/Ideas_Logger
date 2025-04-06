@@ -66,26 +66,11 @@ jobs:
             --missing-tests `
             --json > refactor_audit.json
 
-      - name: 🚨 Show Complexity Warnings (Python-safe)
-        shell: python
+      - name: 🚨 Show Complexity Warnings (Python)
+        shell: bash
         run: |
-          import json
-          with open("refactor_audit.json", encoding="utf-8") as f:
-              audit = json.load(f)
-          max_allowed = 10
-          warnings = []
-          for file, data in audit.items():
-              for method, score in data.get("complexity", {}).items():
-                  if isinstance(score, dict):
-                      score = score.get("complexity", 0)
-                  if score > max_allowed:
-                      warnings.append(f"⚠️ {file} → {method}: {score}")
-          if warnings:
-              print("\n⚠️ Complexity Warnings:")
-              for line in warnings:
-                  print(line)
-          else:
-              print("✅ No complexity warnings.")
+          python scripts/utils/complexity_summary.py
+      
       
 
       - name: 📤 Upload Refactor Audit (Artifact)
