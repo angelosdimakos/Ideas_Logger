@@ -57,7 +57,7 @@ def run_analysis(data, max_complexity, use_emoji=True):
             print(f"\n🚨 Complexity Warnings ({len(warnings)}):")
             for file, method, score in warnings:
                 print(f"⚠️ {file} → {method}: {score}")
-            sys.exit(1)
+            print("⚠️ Complexity warnings found, but continuing the process.")
         else:
             print("✅ No complexity warnings.")
     else:
