@@ -1,79 +1,85 @@
 import pytest
-from scripts.utils import refactor_guard
 import tempfile
+import os
+from textwrap import dedent
 
-pytestmark = [pytest.mark.unit]
+from scripts.refactor.refactor_guard import RefactorGuard
 
-def test_detects_added_method(tmp_path):
-    original = tmp_path / "original.py"
-    refactored = tmp_path / "refactored.py"
+def test_refactor_guard_module_comparison():
+    """Test analyzing two modules that differ slightly."""
+    original_code = dedent("""
+        class Foo:
+            def bar(self):
+                pass
+    """)
+    refactored_code = dedent("""
+        class Foo:
+            def baz(self):
+                pass
+    """)
 
-    original.write_text("""
-class Dummy:
-    def foo(self): pass
-    def bar(self): pass
-""")
+    with tempfile.NamedTemporaryFile(suffix='.py', delete=False, mode='w') as orig, \
+         tempfile.NamedTemporaryFile(suffix='.py', delete=False, mode='w') as ref:
+        orig.write(original_code)
+        ref.write(refactored_code)
+        orig.flush()
+        ref.flush()
 
-    refactored.write_text("""
-class Dummy:
-    def foo(self): pass
-    def bar(self): pass
-    def baz(self): pass
-""")
+        orig_path = orig.name
+        ref_path = ref.name
 
-    result = refactor_guard.analyze_refactor_changes(original, refactored, as_string=False)
-    assert "Dummy" in result["summary"]
-    assert "baz" in result["summary"]["Dummy"]["added"]
-    assert not result["summary"]["Dummy"]["missing"]
+    try:
+        guard = RefactorGuard()
+        result = guard.analyze_refactor_changes(orig_path, ref_path, as_string=False)
+        # result is a dict with "summary", "missing_tests", etc.
 
-def test_detects_removed_method(tmp_path):
-    original = tmp_path / "original.py"
-    refactored = tmp_path / "refactored.py"
+        assert "summary" in result
+        # Because we used single-file mode, "summary" should be a dict with method diffs
+        summary = result["summary"]
+        assert "method_diff" in summary, "Expect method_diff for single-file analysis"
+        method_diff = summary["method_diff"]
+        assert "Foo" in method_diff, "Class Foo should be recognized"
+        diff = method_diff["Foo"]
+        assert diff["missing"] == ["bar"]
+        assert diff["added"] == ["baz"]
 
-    original.write_text("""
-class Dummy:
-    def foo(self): pass
-    def old(self): pass
-""")
+    finally:
+        os.remove(orig_path)
+        os.remove(ref_path)
 
-    refactored.write_text("""
-class Dummy:
-    def foo(self): pass
-""")
 
-    result = refactor_guard.analyze_refactor_changes(original, refactored, as_string=False)
-    assert "Dummy" in result["summary"]
-    assert "old" in result["summary"]["Dummy"]["missing"]
-    assert not result["summary"]["Dummy"]["added"]
+def test_refactor_guard_missing_tests():
+    """Check that the guard detects missing tests for refactored methods."""
+    refactored_code = dedent("""
+        class Foo:
+            def bar(self):
+                pass
+    """)
+    # Updated test code: removed any mention of 'bar'
+    test_code = dedent("""
+        import pytest
 
-def test_detects_method_renames():
-    original_code = "class Dummy:\n    def do_work(self): pass\n"
-    refactored_code = "class Dummy:\n    def execute_task(self): pass\n"
+        def test_something_else():
+            assert True
+    """)
 
-    with tempfile.NamedTemporaryFile("w+", delete=False, suffix=".py") as orig_file, \
-         tempfile.NamedTemporaryFile("w+", delete=False, suffix=".py") as ref_file:
+    with tempfile.NamedTemporaryFile(suffix='.py', delete=False, mode='w') as ref, \
+         tempfile.NamedTemporaryFile(suffix='.py', delete=False, mode='w') as test:
+        ref.write(refactored_code)
+        test.write(test_code)
+        ref.flush()
+        test.flush()
+        ref_path = ref.name
+        test_path = test.name
 
-        orig_file.write(original_code)
-        orig_file.seek(0)
-        ref_file.write(refactored_code)
-        ref_file.seek(0)
-
-        result = refactor_guard.analyze_refactor_changes(orig_file.name, ref_file.name, as_string=False)
-        assert "Dummy" in result["summary"]
-        assert "do_work" in result["summary"]["Dummy"]["missing"]
-        assert "execute_task" in result["summary"]["Dummy"]["added"]
-
-        rename_candidates = result.get("renamed_candidates", [])
-        assert any(candidate["from"] == "do_work" and candidate["to"] == "execute_task" for candidate in rename_candidates)
-
-def test_detects_test_coverage(tmp_path):
-    original = tmp_path / "original.py"
-    refactored = tmp_path / "refactored.py"
-    test_file = tmp_path / "test_dummy.py"
-
-    original.write_text("class Dummy:\n    def work(self): pass\n")
-    refactored.write_text("class Dummy:\n    def work(self): pass\n    def new_func(self): pass\n")
-    test_file.write_text("def test_work(): pass\n")
-
-    result = refactor_guard.analyze_refactor_changes(original, refactored, test_file, as_string=False)
-    assert "new_func" in result.get("missing_tests", [])
+    try:
+        guard = RefactorGuard()
+        # Pass an empty string for original_path to focus on missing test logic.
+        result = guard.analyze_refactor_changes("", ref_path, test_file_path=test_path, as_string=False)
+        assert len(result["missing_tests"]) == 1, "Expected one missing test"
+        missing = result["missing_tests"][0]
+        assert missing["class"] == "Foo"
+        assert missing["method"] == "bar"
+    finally:
+        os.remove(ref_path)
+        os.remove(test_path)

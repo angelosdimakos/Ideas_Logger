@@ -11,15 +11,15 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
+      - name: 🧾 Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
 
-      - name: Install Dependencies (Explicit)
+      - name: 📦 Install Dependencies (Explicit)
         shell: powershell
         run: |
           python -m pip install --upgrade pip wheel setuptools
@@ -29,7 +29,7 @@ jobs:
           pip install faiss-cpu --only-binary=faiss-cpu
           pip freeze
 
-      - name: Debug Working Directory and Test Files
+      - name: 🔍 Debug Working Directory and Test Files
         shell: powershell
         run: |
           Write-Host "Current Directory:"
@@ -37,21 +37,35 @@ jobs:
           Write-Host "Listing test files recursively:"
           Get-ChildItem tests -Recurse
 
-      - name: Run tests explicitly with pytest.ini
+      - name: ✅ Run Unit + Integration Tests
         shell: powershell
         run: |
           python -m pytest -c pytest.ini `
             --cov=scripts --cov-config=.coveragerc `
             --cov-report=xml --cov-report=html
 
-      - name: Upload coverage reports (Artifact)
+      - name: 🧠 Run RefactorGuard (Audit Only - Non-blocking)
+        shell: powershell
+        run: |
+          python scripts/refactor/refactor_guard_cli.py `
+            --all scripts `
+            --missing-tests `
+            --json > refactor_audit.json
+
+      - name: 📤 Upload Refactor Audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: refactor-audit
+          path: refactor_audit.json
+
+      - name: 📈 Upload Coverage Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: htmlcov-windows
           path: htmlcov/
 
-      - name: Debug coverage file presence
+      - name: 🧪 Debug coverage file presence
         run: |
           if (-Not (Test-Path "./coverage.xml")) {
             Write-Host "❌ coverage.xml not found!"
@@ -61,12 +75,10 @@ jobs:
           }
         shell: powershell
 
-
-      - name: Upload to Codecov
+      - name: ☁️ Upload to Codecov
         uses: codecov/codecov-action@v4
         with:
           files: ./coverage.xml
           fail_ci_if_error: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
