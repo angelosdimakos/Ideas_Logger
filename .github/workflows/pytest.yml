@@ -44,15 +44,16 @@ jobs:
             --cov=scripts --cov-config=.coveragerc `
             --cov-report=xml --cov-report=html
 
-      - name: 🧠 Run RefactorGuard (Audit Only - Non-blocking)
+      - name: 🧠 Run RefactorGuard CLI (Non-blocking Audit)
         shell: powershell
         run: |
           python scripts/refactor/refactor_guard_cli.py `
-            --all scripts `
+            --all `
             --missing-tests `
             --json > refactor_audit.json
 
-      - name: 📤 Upload Refactor Audit
+      - name: 📤 Upload Refactor Audit (Artifact)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: refactor-audit
@@ -66,6 +67,7 @@ jobs:
           path: htmlcov/
 
       - name: 🧪 Debug coverage file presence
+        shell: powershell
         run: |
           if (-Not (Test-Path "./coverage.xml")) {
             Write-Host "❌ coverage.xml not found!"
@@ -73,7 +75,6 @@ jobs:
           } else {
             Write-Host "✅ coverage.xml found, ready for Codecov upload."
           }
-        shell: powershell
 
       - name: ☁️ Upload to Codecov
         uses: codecov/codecov-action@v4
