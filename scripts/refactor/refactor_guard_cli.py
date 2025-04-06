@@ -2,7 +2,9 @@ import argparse
 import os
 import sys
 import json
+from scripts.refactor.refactor_guard import RefactorGuard
 import io
+import xml.etree.ElementTree as ET
 
 # Force UTF-8 stdout if possible (safe fallback for CI)
 try:
@@ -14,12 +16,10 @@ try:
 except Exception:
     pass  # Silently ignore for CI environments
 
-
 # 👇 Add parent of 'scripts' to sys.path to avoid import errors
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 from scripts.utils.git_utils import get_changed_files
-from scripts.refactor.refactor_guard import RefactorGuard
 
 def handle_json_output(summary, output_name):
     filename = f"{output_name}.json"
@@ -75,13 +75,11 @@ def parse_args():
     parser.add_argument("--git-diff", action="store_true", help="Only analyze Git-changed files vs origin/main")
     return parser.parse_args()
 
-
 def dispatch_mode(args, guard):
     if args.all:
         return handle_full_scan(args, guard)
     else:
         return handle_single_file(args, guard)
-
 
 def handle_full_scan(args, guard):
     original = args.original or "scripts"
@@ -100,7 +98,6 @@ def handle_full_scan(args, guard):
 
     return summary
 
-
 def handle_single_file(args, guard):
     return guard.analyze_refactor_changes(
         original_path=args.original,
@@ -108,7 +105,6 @@ def handle_single_file(args, guard):
         test_file_path=args.tests,
         as_string=False
     )
-
 
 def handle_output(result, args, guard):
     summary = result if args.all else result.get("summary", {})
@@ -127,11 +123,20 @@ def handle_output(result, args, guard):
                 emoji = "⚠️" if score > guard.config.get("max_complexity", 10) else "✅"
                 print(f"  {emoji} {method}: {score}")
 
-
 def main():
     args = parse_args()
     guard = RefactorGuard()
+
+    # 🚀 Optional: Load coverage data from coverage.xml if available
+    from scripts.refactor.refactor_guard import parse_coverage_with_debug
+    coverage_hits = parse_coverage_with_debug()  # ← Just call it with default paths
+
+    if coverage_hits:
+        # Directly assign to the guard instance variable
+        guard.coverage_hits = coverage_hits  # Store in internal coverage_hits variable for use
+
     result = dispatch_mode(args, guard)
+
     handle_output(result, args, guard)
 
     if args.missing_tests and args.tests:
@@ -142,7 +147,6 @@ def main():
                 print(f"❌ {item['class']} → {item['method']}")
         else:
             print("✅ All public methods have tests!")
-
 
 if __name__ == "__main__":
     main()

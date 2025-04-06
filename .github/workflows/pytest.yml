@@ -93,5 +93,5 @@ jobs:
       - name: 🧾 Audit Summary Recap
         shell: bash
         run: |
-          python -c "import json; f=open('refactor_audit.json'); data=json.load(f); method_count = sum(len(file.get('complexity', {})) for file in data.values()); file_count = len(data); print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')"
+          python -c "import json; f=open('refactor_audit.json', encoding='utf-8-sig'); data=json.load(f); method_count = sum(len(file.get('complexity', {})) for file in data.values()); file_count = len(data); print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')"
       

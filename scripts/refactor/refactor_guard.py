@@ -1,14 +1,11 @@
-# refactor_guard.py
 import os
 from typing import Optional, Union, Dict
 import json
 import re
-import os
 import xml.etree.ElementTree as ET
 
 from scripts.refactor.ast_extractor import extract_class_methods, compare_class_methods
 from scripts.refactor.complexity_analyzer import calculate_function_complexity_map
-
 
 class RefactorGuard:
     def __init__(self, config: Optional[Dict] = None):
@@ -17,6 +14,7 @@ class RefactorGuard:
             "ignore_files": [],
             "ignore_dirs": [],
         }
+        self.coverage_hits = {}  # Store coverage hits in this attribute
 
     def analyze_module(self, original_path: str, refactored_path: str) -> Dict:
         result = {"method_diff": {}, "complexity": {}}
@@ -43,20 +41,18 @@ class RefactorGuard:
         # Detailed complexity per function/method
         complexity_map = calculate_function_complexity_map(refactored_path)
 
-        # ⬇️ Try to enrich complexity map with coverage info
-        tree = parse_coverage_with_debug(verbose=False)
-        if tree:
-            coverage_data = extract_coverage_hits(tree)
+        # ⬇️ Enrich complexity map with coverage info if available
+        if self.coverage_hits:
             enriched_map = {}
 
             for method, score in complexity_map.items():
-                coverage_info = coverage_data.get(method, {})
+                coverage_info = self.coverage_hits.get(method, {})
 
                 # Fallback: match ".method" suffix if not found
                 if not coverage_info:
-                    for k in coverage_data:
+                    for k in self.coverage_hits:
                         if k.endswith(f".{method}"):
-                            coverage_info = coverage_data[k]
+                            coverage_info = self.coverage_hits[k]
                             break
 
                 enriched_map[method] = {
@@ -79,88 +75,25 @@ class RefactorGuard:
 
         return result
 
-    def analyze_directory(self, original_dir: str, refactored_dir: str) -> Dict[str, Dict]:
-        summary = {}
-        for filename in os.listdir(original_dir):
-            if not filename.endswith(".py") or any(ignored in filename for ignored in self.config.get("ignore_files", [])):
-                continue
-            orig_path = os.path.join(original_dir, filename)
-            ref_path = os.path.join(refactored_dir, filename)
-            if not os.path.exists(ref_path):
-                continue
-            summary[filename] = self.analyze_module(orig_path, ref_path)
-        return summary
+    def attach_coverage_hits(self, coverage_tree):
+        """
+        Injects coverage data (parsed from coverage.xml) into internal state
+        so methods can be enriched with coverage info.
+        """
+        if coverage_tree is None:
+            return
 
-    def analyze_tests(self, refactored_path: str, test_file_path: Optional[str] = None) -> Dict:
-        missing_tests = []
-        if test_file_path and os.path.exists(test_file_path):
-            with open(test_file_path, 'r', encoding='utf-8') as f:
-                test_code = f.read()
-            classes = extract_class_methods(refactored_path)
-            for cls in classes:
-                for method in cls.methods:
-                    pattern = r'\b' + re.escape(method) + r'\b'
-                    if not re.search(pattern, test_code):
-                        missing_tests.append({"class": cls.class_name, "method": method})
-        return {"missing_tests": missing_tests}
+        self.coverage_hits = {}
 
-    def analyze_refactor_changes(self, original_path: str, refactored_path: str, test_file_path: Optional[str] = None, as_string: bool = True) -> Union[str, Dict]:
-        structured_result = {
-            "summary": {},
-            "missing_tests": [],
-            "renamed_candidates": []
-        }
+        for class_ in coverage_tree.findall(".//class"):
+            filename = class_.get("filename")
+            for line in class_.findall("lines/line"):
+                number = int(line.get("number"))
+                hits = int(line.get("hits"))
+                key = f"{filename}:{number}"
+                self.coverage_hits[key] = hits
 
-        if os.path.isdir(original_path) and os.path.isdir(refactored_path):
-            structured_result["summary"] = self.analyze_directory_recursive(original_path, refactored_path)
-        else:
-            structured_result["summary"] = self.analyze_module(original_path, refactored_path)
-
-        test_results = self.analyze_tests(refactored_path, test_file_path)
-        structured_result["missing_tests"] = test_results.get("missing_tests", [])
-
-        for class_name, diff in structured_result["summary"].items():
-            if isinstance(diff, dict) and "method_diff" in diff:
-                method_diff = diff["method_diff"]
-                for cls, changes in method_diff.items():
-                    missing = changes.get("missing", [])
-                    added = changes.get("added", [])
-                    if len(missing) == 1 and len(added) == 1:
-                        structured_result["renamed_candidates"].append({
-                            "file": class_name,
-                            "class": cls,
-                            "from": missing[0],
-                            "to": added[0]
-                        })
-            elif isinstance(diff, dict):
-                missing = diff.get("missing", [])
-                added = diff.get("added", [])
-                if len(missing) == 1 and len(added) == 1:
-                    structured_result["renamed_candidates"].append({
-                        "file": original_path,
-                        "class": class_name,
-                        "from": missing[0],
-                        "to": added[0]
-                    })
-
-        return json.dumps(structured_result, indent=2) if as_string else structured_result
-
-    def analyze_directory_recursive(self, original_dir: str, refactored_dir: str) -> Dict[str, Dict]:
-        summary = {}
-        for root, _, files in os.walk(original_dir):
-            for filename in files:
-                if not filename.endswith(".py"):
-                    continue
-                rel_path = os.path.relpath(os.path.join(root, filename), original_dir)
-                orig_path = os.path.join(original_dir, rel_path)
-                ref_path = os.path.join(refactored_dir, rel_path)
-                if not os.path.exists(ref_path):
-                    continue
-                summary[rel_path] = self.analyze_module(orig_path, ref_path)
-        return summary
-
-
-
+# Function to parse the coverage data and return the hits
 def parse_coverage_with_debug(possible_paths=None, verbose=True):
     if possible_paths is None:
         possible_paths = [
@@ -175,46 +108,49 @@ def parse_coverage_with_debug(possible_paths=None, verbose=True):
             if verbose:
                 print(f"✅ Found coverage report at: {path}")
             try:
-                return ET.parse(path)
+                tree = ET.parse(path)
+                root = tree.getroot()
+                return extract_coverage_hits(root, verbose=verbose)
             except ET.ParseError as e:
                 if verbose:
                     print(f"❌ Failed to parse {path}: {e}")
                 continue
-        else:
-            if verbose:
-                print(f"🔍 Tried: {path} — Not found.")
 
-        if verbose:
-            print("⚠️ No valid coverage.xml found. Skipping coverage injection.")
-        return None
+    if verbose:
+        print("⚠️ No valid coverage.xml found. Skipping coverage injection.")
+    return {}
 
-def extract_coverage_hits(tree: ET.ElementTree) -> Dict[str, Dict]:
-    """
-    Parses a coverage.xml ElementTree and returns a mapping:
-    { "filename.Class.method": {hits: int, lines: int, coverage: float}, ... }
-    """
-    coverage_data = {}
-    root = tree.getroot()
+def extract_coverage_hits(root, verbose=False):
+    result = {}
 
-    for class_tag in root.findall(".//class"):
-        class_name = class_tag.attrib.get("name", "")
-        filename = class_tag.attrib.get("filename", "").replace("\\", "/")
+    for class_el in root.findall(".//class"):
+        file_path = class_el.attrib.get("filename")
+        if not file_path:
+            continue
+        methods = {}
+        for method in class_el.findall("methods/method"):
+            method_name = method.attrib.get("name")
+            hits = 0
+            total_lines = 0
 
-        for method_tag in class_tag.findall(".//method"):
-            method_name = method_tag.attrib.get("name", "")
-            full_name = f"{class_name}.{method_name}"
-
-            lines = method_tag.findall("lines/line")
-            total_lines = len(lines)
-            hit_lines = sum(1 for l in lines if int(l.attrib.get("hits", "0")) > 0)
+            for line in method.findall("lines/line"):
+                total_lines += 1
+                if int(line.attrib.get("hits", 0)) > 0:
+                    hits += 1
 
             if total_lines == 0:
-                continue  # Skip empty methods
+                continue
 
-            coverage_data[full_name] = {
-                "hits": hit_lines,
-                "lines": total_lines,
-                "coverage": round(hit_lines / total_lines, 2)
+            coverage = hits / total_lines if total_lines else 0.0
+            methods[method_name] = {
+                "coverage": coverage,
+                "hits": hits,
+                "lines": total_lines
             }
 
-    return coverage_data
+        if methods:
+            result[file_path] = methods
+
+    if verbose:
+        print(f"📄 Parsed coverage for {len(result)} files.")
+    return result
