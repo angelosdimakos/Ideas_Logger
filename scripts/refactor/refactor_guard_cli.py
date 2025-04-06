@@ -4,8 +4,16 @@ import sys
 import json
 import io
 
-# Force stdout to UTF-8 to avoid encoding errors in Windows
-sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
+# Force UTF-8 stdout if possible (safe fallback for CI)
+try:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+    else:
+        import io
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+except Exception:
+    pass  # Silently ignore for CI environments
+
 
 # 👇 Add parent of 'scripts' to sys.path to avoid import errors
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
