@@ -146,10 +146,10 @@ class RefactorGuard:
 def parse_coverage_with_debug(possible_paths=None, verbose=True):
     if possible_paths is None:
         possible_paths = [
-            "./coverage.xml",  # Default coverage.xml location
-            "./htmlcov/coverage.xml",
-            "./reports/coverage.xml",
-            "./scripts/coverage.xml"
+            "coverage.xml",  # Default coverage.xml location
+            "htmlcov/coverage.xml",
+            "reports/coverage.xml",
+            "scripts/coverage.xml"
         ]
 
     for path in possible_paths:

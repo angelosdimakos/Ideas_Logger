@@ -27,6 +27,10 @@ def handle_json_output(summary, output_name):
         json.dump(summary, f, indent=2)
     print(f"\n📌 Saved audit report to {filename}")
 
+    # Debug log to see if coverage fields are in place
+    for method, data in summary.get("complexity", {}).items():
+        print(f"Method: {method}, Coverage: {data.get('coverage', 'N/A')}")
+
     method_count = sum(len(v.get("complexity", {})) for v in summary.values())
     print(f"🧠 Methods analyzed: {method_count}")
     print(f"🔧 Files changed: {len(summary)}")

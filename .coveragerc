@@ -1,0 +1,7 @@
+[run]
+branch = True
+source = scripts, core, utils, gui, config, refactor
+
+[report]
+show_missing = True
+skip_covered = True
