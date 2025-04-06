@@ -27,6 +27,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
+
       - name: 🌐 Force UTF-8 Output Encoding
         shell: powershell
         run: |
@@ -57,38 +58,6 @@ jobs:
             --cov=scripts --cov-config=.coveragerc `
             --cov-report=xml --cov-report=html
 
-      - name: 🧠 Run RefactorGuard (Audit Only - Non-blocking)
-        shell: powershell
-        run: |
-          python scripts/refactor/refactor_guard_cli.py `
-            --refactored scripts `
-            --all `
-            --missing-tests `
-            --json
-      
-
-      - name: 🚨 Show Complexity Warnings
-        shell: powershell
-        run: |
-          python scripts/utils/complexity_summary.py refactor_audit.json
-      
-      
-      
-
-      - name: 📤 Upload Refactor Audit (Artifact)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: refactor-audit
-          path: refactor_audit.json
-
-      - name: 📈 Upload Coverage Reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: htmlcov-windows
-          path: htmlcov/
-
       - name: 🧪 Debug coverage file presence
         shell: powershell
         run: |
@@ -99,6 +68,13 @@ jobs:
             Write-Host "✅ coverage.xml found, ready for Codecov upload."
           }
 
+      - name: 📈 Upload Coverage Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: htmlcov-windows
+          path: htmlcov/
+
       - name: ☁️ Upload to Codecov
         uses: codecov/codecov-action@v4
         with:
@@ -107,7 +83,41 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: 🧠 Run RefactorGuard (Audit Only - Non-blocking)
+        shell: powershell
+        run: |
+          python scripts/refactor/refactor_guard_cli.py `
+            --refactored scripts `
+            --all `
+            --missing-tests `
+            --json
+
+      - name: 🚨 Show Complexity Warnings
+        shell: powershell
+        run: |
+          python scripts/utils/complexity_summary.py refactor_audit.json
+
+      - name: 📤 Upload Refactor Audit (Artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: refactor-audit
+          path: refactor_audit.json
+
       - name: 🧾 Audit Summary Recap
         shell: powershell
         run: |
           $json = Get-Content -Raw -Path refactor_audit.json | ConvertFrom-Json
+          $methodCount = 0
+          $fileCount = $json.PSObject.Properties.Count
+
+          foreach ($file in $json.PSObject.Properties.Name) {
+            $complexity = $json[$file].complexity
+            if ($complexity) {
+              $methodCount += $complexity.PSObject.Properties.Count
+            }
+          }
+
+          Write-Host "`n📊 Summary:"
+          Write-Host "🧠 Methods analyzed: $methodCount"
+          Write-Host "🔧 Files analyzed: $fileCount"
