@@ -2,17 +2,26 @@ name: Run Tests (Windows Only)
 
 on:
   push:
-    branches: [main, master]
+    branches:
+      - main
+      - master
+      - feature/**
+      - fix/**
+      - dev/**
   pull_request:
-    branches: [main, master]
+    branches:
+      - main
+      - master
 
 jobs:
   test:
     runs-on: windows-latest
 
     steps:
-      - name: 🧾 Checkout code
+      - name: 🧾 Checkout full history
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: 🐍 Set up Python
         uses: actions/setup-python@v4
@@ -52,7 +61,32 @@ jobs:
             --all `
             --missing-tests `
             --json > refactor_audit.json
-      
+
+      - name: 🚨 Show Complexity Warnings
+        shell: powershell
+        run: |
+          $audit = Get-Content -Raw -Path refactor_audit.json | ConvertFrom-Json
+          $maxAllowed = 10
+          $warnings = @()
+
+          foreach ($file in $audit.PSObject.Properties.Name) {
+            $complexity = $audit[$file].complexity
+            if ($complexity) {
+              foreach ($method in $complexity.PSObject.Properties) {
+                $score = $complexity[$method.Name]
+                if ($score -gt $maxAllowed) {
+                  $warnings += "⚠️ $file → $($method.Name): $score"
+                }
+              }
+            }
+          }
+
+          if ($warnings.Count -gt 0) {
+            Write-Host "`n⚠️ Complexity Warnings:"
+            $warnings | ForEach-Object { Write-Host $_ }
+          } else {
+            Write-Host "✅ No complexity warnings."
+          }
 
       - name: 📤 Upload Refactor Audit (Artifact)
         if: always()
@@ -85,3 +119,21 @@ jobs:
           fail_ci_if_error: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: 🧾 Audit Summary Recap
+        shell: powershell
+        run: |
+          $json = Get-Content -Raw -Path refactor_audit.json | ConvertFrom-Json
+          $methodCount = 0
+          $fileCount = $json.PSObject.Properties.Count
+
+          foreach ($file in $json.PSObject.Properties.Name) {
+            $complexity = $json[$file].complexity
+            if ($complexity) {
+              $methodCount += $complexity.PSObject.Properties.Count
+            }
+          }
+
+          Write-Host "`n📊 Summary:"
+          Write-Host "🧠 Methods analyzed: $methodCount"
+          Write-Host "🔧 Files analyzed: $fileCount"

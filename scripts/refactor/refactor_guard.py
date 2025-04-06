@@ -3,6 +3,8 @@ import os
 from typing import Optional, Union, Dict
 import json
 import re
+import os
+import xml.etree.ElementTree as ET
 
 from scripts.refactor.ast_extractor import extract_class_methods, compare_class_methods
 from scripts.refactor.complexity_analyzer import calculate_function_complexity_map
@@ -41,6 +43,22 @@ class RefactorGuard:
         # Detailed complexity per function/method
         complexity_map = calculate_function_complexity_map(refactored_path)
         result["complexity"] = complexity_map
+
+        # 🔍 Try to enrich complexity with coverage data
+        tree = parse_coverage_with_debug(verbose=False)
+        if tree:
+            coverage_data = extract_coverage_hits(tree)
+            enriched = {}
+            for method, score in complexity_map.items():
+                if isinstance(score, int):  # avoid nested keys like 'methods'
+                    coverage_info = coverage_data.get(method, {})
+                    enriched[method] = {
+                        "complexity": score,
+                        "coverage": coverage_info.get("coverage", "N/A"),
+                        "hits": coverage_info.get("hits", "N/A"),
+                        "lines": coverage_info.get("lines", "N/A")
+                    }
+            result["complexity"] = enriched
 
         return result
 
@@ -123,3 +141,63 @@ class RefactorGuard:
                     continue
                 summary[rel_path] = self.analyze_module(orig_path, ref_path)
         return summary
+
+
+
+def parse_coverage_with_debug(possible_paths=None, verbose=True):
+    if possible_paths is None:
+        possible_paths = [
+            "coverage.xml",
+            "htmlcov/coverage.xml",
+            "reports/coverage.xml",
+            "scripts/coverage.xml"
+        ]
+
+    for path in possible_paths:
+        if os.path.exists(path):
+            if verbose:
+                print(f"✅ Found coverage report at: {path}")
+            try:
+                return ET.parse(path)
+            except ET.ParseError as e:
+                if verbose:
+                    print(f"❌ Failed to parse {path}: {e}")
+                continue
+        else:
+            if verbose:
+                print(f"🔍 Tried: {path} — Not found.")
+
+        if verbose:
+            print("⚠️ No valid coverage.xml found. Skipping coverage injection.")
+        return None
+
+def extract_coverage_hits(tree: ET.ElementTree) -> Dict[str, Dict]:
+    """
+    Parses a coverage.xml ElementTree and returns a mapping:
+    { "filename.Class.method": {hits: int, lines: int, coverage: float}, ... }
+    """
+    coverage_data = {}
+    root = tree.getroot()
+
+    for class_tag in root.findall(".//class"):
+        class_name = class_tag.attrib.get("name", "")
+        filename = class_tag.attrib.get("filename", "").replace("\\", "/")
+
+        for method_tag in class_tag.findall(".//method"):
+            method_name = method_tag.attrib.get("name", "")
+            full_name = f"{class_name}.{method_name}"
+
+            lines = method_tag.findall("lines/line")
+            total_lines = len(lines)
+            hit_lines = sum(1 for l in lines if int(l.attrib.get("hits", "0")) > 0)
+
+            if total_lines == 0:
+                continue  # Skip empty methods
+
+            coverage_data[full_name] = {
+                "hits": hit_lines,
+                "lines": total_lines,
+                "coverage": round(hit_lines / total_lines, 2)
+            }
+
+    return coverage_data
