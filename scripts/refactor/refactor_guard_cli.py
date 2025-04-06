@@ -2,9 +2,12 @@ import argparse
 import os
 import sys
 import json
+import io
+
+# Force stdout to UTF-8 to avoid encoding errors in Windows
+sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
 
 # 👇 Add parent of 'scripts' to sys.path to avoid import errors
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 from scripts.utils.git_utils import get_changed_files
