@@ -1,5 +1,5 @@
 import os
-from typing import Optional, Union, Dict
+from typing import Optional, Dict
 import json
 import re
 import xml.etree.ElementTree as ET
@@ -14,19 +14,44 @@ class RefactorGuard:
             "ignore_files": [],
             "ignore_dirs": [],
         }
-        self.coverage_hits = {}  # Store coverage hits in this attribute
+        # Store flattened coverage hits: {method_name: {coverage, hits, lines}}
+        self.coverage_hits = {}
 
-    def analyze_module(self, original_path: str, refactored_path: str) -> Dict:
-        result = {"method_diff": {}, "complexity": {}}
+    def analyze_tests(self, refactored_path: str, test_file_path: Optional[str] = None) -> Dict:
+        """
+        Analyzes if tests exist for methods in the refactored code.
+        """
+        missing_tests = []
+
+        # Only analyze if a test file is provided
+        if test_file_path and os.path.exists(test_file_path):
+            with open(test_file_path, 'r', encoding='utf-8') as f:
+                test_code = f.read()
+
+            # Extract the classes and methods from the refactored code
+            classes = extract_class_methods(refactored_path)
+
+            for cls in classes:
+                for method in cls.methods:
+                    pattern = r'\b' + re.escape(method) + r'\b'
+                    if not re.search(pattern, test_code):
+                        missing_tests.append({"class": cls.class_name, "method": method})
+
+        return {"missing_tests": missing_tests}
+
+    def analyze_module(self, original_path: str, refactored_path: str, test_file_path: Optional[str] = None) -> Dict:
+        result = {"method_diff": {}, "complexity": {}, "missing_tests": []}
 
         if not original_path.strip():
             original_path = refactored_path
 
+        # Extract methods from both original and refactored code
         original_classes = extract_class_methods(original_path)
         refactored_classes = extract_class_methods(refactored_path)
         orig_classes_dict = {cls.class_name: cls for cls in original_classes}
         ref_classes_dict = {cls.class_name: cls for cls in refactored_classes}
 
+        # Detect method differences between original and refactored versions
         for cls_name, orig_info in orig_classes_dict.items():
             if cls_name in ref_classes_dict:
                 diff = compare_class_methods(orig_info, ref_classes_dict[cls_name])
@@ -38,30 +63,29 @@ class RefactorGuard:
             if cls_name not in orig_classes_dict:
                 result["method_diff"][cls_name] = {"missing": [], "added": list(ref_info.methods.keys())}
 
+        # Check for missing tests using the provided test file path
+        missing_tests_result = self.analyze_tests(refactored_path, test_file_path=test_file_path)
+        result["missing_tests"] = missing_tests_result.get("missing_tests", [])
+
         # Detailed complexity per function/method
         complexity_map = calculate_function_complexity_map(refactored_path)
 
         # ⬇️ Enrich complexity map with coverage info if available
         if self.coverage_hits:
             enriched_map = {}
-
             for method, score in complexity_map.items():
                 coverage_info = self.coverage_hits.get(method, {})
-
-                # Fallback: match ".method" suffix if not found
-                if not coverage_info:
-                    for k in self.coverage_hits:
-                        if k.endswith(f".{method}"):
-                            coverage_info = self.coverage_hits[k]
-                            break
-
+                # Fallback: if key not found and method contains a dot,
+                # use the simple method name (portion after the dot)
+                if not coverage_info and "." in method:
+                    simple_method = method.split(".")[-1]
+                    coverage_info = self.coverage_hits.get(simple_method, {})
                 enriched_map[method] = {
                     "complexity": score,
                     "coverage": coverage_info.get("coverage", "N/A"),
                     "hits": coverage_info.get("hits", "N/A"),
                     "lines": coverage_info.get("lines", "N/A"),
                 }
-
             result["complexity"] = enriched_map
         else:
             result["complexity"] = {
@@ -75,23 +99,21 @@ class RefactorGuard:
 
         return result
 
-    def attach_coverage_hits(self, coverage_tree):
+    def attach_coverage_hits(self, coverage_data):
         """
-        Injects coverage data (parsed from coverage.xml) into internal state
-        so methods can be enriched with coverage info.
+        Injects coverage data (parsed from coverage.xml) into internal state.
+        The coverage_data should be the dictionary returned from extract_coverage_hits.
+        This method flattens the data to map method names to their coverage info.
         """
-        if coverage_tree is None:
+        if not coverage_data:
             return
 
-        self.coverage_hits = {}
-
-        for class_ in coverage_tree.findall(".//class"):
-            filename = class_.get("filename")
-            for line in class_.findall("lines/line"):
-                number = int(line.get("number"))
-                hits = int(line.get("hits"))
-                key = f"{filename}:{number}"
-                self.coverage_hits[key] = hits
+        flat_coverage = {}
+        # Flatten from {file_path: {method: {coverage, hits, lines}}} to {method: {coverage, hits, lines}}
+        for file_path, methods in coverage_data.items():
+            for method_name, data in methods.items():
+                flat_coverage[method_name] = data
+        self.coverage_hits = flat_coverage
 
 # Function to parse the coverage data and return the hits
 def parse_coverage_with_debug(possible_paths=None, verbose=True):
@@ -141,7 +163,7 @@ def extract_coverage_hits(root, verbose=False):
             if total_lines == 0:
                 continue
 
-            coverage = hits / total_lines if total_lines else 0.0
+            coverage = hits / total_lines
             methods[method_name] = {
                 "coverage": coverage,
                 "hits": hits,

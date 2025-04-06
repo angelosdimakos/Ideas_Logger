@@ -51,17 +51,9 @@ class Example:
 
 def test_refactor_guard_enrichment(test_paths, monkeypatch):
     # Patch coverage search to only use our test coverage file
-    monkeypatch.setattr(
-        "scripts.refactor.refactor_guard.parse_coverage_with_debug",
-        lambda **_: parse_coverage_with_debug([test_paths["coverage_path"]], verbose=True)
-    )
+    monkeypatch.setattr("scripts.refactor.refactor_guard.parse_coverage_with_debug", lambda **_: parse_coverage_with_debug([test_paths["coverage_path"]], verbose=True))
 
     guard = RefactorGuard()
-    # Attach the coverage data to the guard so enrichment occurs.
-    coverage_data = parse_coverage_with_debug([test_paths["coverage_path"]], verbose=True)
-    if coverage_data:
-        guard.attach_coverage_hits(coverage_data)
-
     result = guard.analyze_module(test_paths["original"], test_paths["refactored"])
 
     # Basic assertions
