@@ -26,9 +26,10 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11.8"  # ← Pin due to broken tkinter in 3.11.9 on GitHub Actions (as of Apr 2025)
+          python-version: "3.11.8"  # ← Avoid 3.11.9 tkinter issue on GitHub Actions (as of Apr 2025)
 
       - name: 📦 Install Dependencies
+        shell: bash
         run: |
           python -m pip install --upgrade pip wheel setuptools
           pip install pytest pytest-cov
@@ -38,21 +39,21 @@ jobs:
           pip freeze
 
       - name: ✅ Run Unit + Integration Tests
-        shell: powershell
+        shell: bash
         run: |
-          python -m pytest -c pytest.ini --cov=scripts --cov-config=.coveragerc --cov-report=xml --cov-report=html
-      
+          python -m pytest -c pytest.ini \
+            --cov=scripts --cov-config=.coveragerc \
+            --cov-report=xml --cov-report=html
 
       - name: 📄 Check for Coverage Report
-        shell: powershell
+        shell: bash
         run: |
-          if (-Not (Test-Path "coverage.xml")) {
-            Write-Host "❌ coverage.xml not found!"
+          if [ ! -f coverage.xml ]; then
+            echo "❌ coverage.xml not found!"
             exit 1
-          } else {
-            Write-Host "✅ Found coverage.xml"
-          }
-      
+          else
+            echo "✅ Found coverage.xml"
+          fi
 
       - name: 📈 Upload HTML Coverage Report
         if: always()
@@ -70,6 +71,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: 🧠 Run RefactorGuard Audit
+        shell: bash
         run: |
           python scripts/refactor/refactor_guard_cli.py \
             --refactored scripts \
@@ -78,7 +80,9 @@ jobs:
             --json
 
       - name: 🚨 Show Complexity Summary
-        run: python scripts/utils/complexity_summary.py refactor_audit.json
+        shell: bash
+        run: |
+          python scripts/utils/complexity_summary.py refactor_audit.json
 
       - name: 📤 Upload Refactor Audit
         if: always()
@@ -88,12 +92,13 @@ jobs:
           path: refactor_audit.json
 
       - name: 🧾 Audit Summary Recap
+        shell: bash
         run: |
           python -c "
-          import json
-          with open('refactor_audit.json') as f:
-              data = json.load(f)
-          method_count = sum(len(file.get('complexity', {})) for file in data.values())
-          file_count = len(data)
-          print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')
+            import json
+            with open('refactor_audit.json') as f:
+                data = json.load(f)
+            method_count = sum(len(file.get('complexity', {})) for file in data.values())
+            file_count = len(data)
+            print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')
           "
