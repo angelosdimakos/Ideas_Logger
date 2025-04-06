@@ -1,5 +1,6 @@
-# This file configures GitHub branch protections for your repository.
-# Requires GitHub Admin access or GitHub CLI automation via actions
+# ✅ GitHub repository settings for main branch protection
+# 🚨 Requires GitHub Pro and admin permissions
+# 💾 Place this in .github/settings.yml (or sync via GitHub CLI)
 
 branches:
   - name: main
@@ -7,13 +8,13 @@ branches:
       required_status_checks:
         strict: true
         contexts:
-          - Run Tests (Windows Only)  # 👈 Make sure this matches the exact name of your CI job
+          - Run Tests (Windows Only)  # 👈 Must match CI job name exactly
       enforce_admins: true
       required_pull_request_reviews:
         dismiss_stale_reviews: true
         require_code_owner_reviews: false
         required_approving_review_count: 1
-      restrictions: null
+      restrictions: null  # 👈 Allows all devs to push (but guarded by CI)
       required_linear_history: true
       allow_force_pushes: false
       allow_deletions: false
