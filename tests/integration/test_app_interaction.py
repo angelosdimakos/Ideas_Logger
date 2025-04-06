@@ -29,6 +29,10 @@ class DummyErrorController:
         # Simulate an error condition in coverage data retrieval
         raise Exception("Coverage data error")
 
+@unittest.skipIf(
+    not os.environ.get("DISPLAY") and os.name != "nt",
+    "🛑 Skipping GUI integration tests — no display available"
+)
 
 class TestMainTabCascade(unittest.TestCase):
     def setUp(self):
@@ -79,10 +83,6 @@ class TestMainTabCascade(unittest.TestCase):
         self.main_tab.entry_panel.refresh.assert_called_once()
         self.main_tab.action_panel.refresh.assert_called_once()
 
-@unittest.skipIf(
-    not os.environ.get("DISPLAY") and os.name != "nt",
-    "🛑 Skipping GUI integration tests — no display available"
-)
 
 class TestErrorHandling(unittest.TestCase):
     def setUp(self):
