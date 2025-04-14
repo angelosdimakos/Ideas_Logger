@@ -6,3 +6,5 @@ source = scripts
 [report]
 show_missing = True
 skip_covered = False
+omit =
+    scripts/gui/*

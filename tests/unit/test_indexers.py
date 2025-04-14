@@ -48,6 +48,31 @@ class BaseIndexerTest:
         assert results, "Expected results after autoloading index"
         assert results[0]["id"] == 42
 
+    def test_invalid_index_name_raises(self, temp_dir):
+        from scripts.indexers.base_indexer import BaseIndexer
+        with pytest.raises(ValueError):
+            BaseIndexer(paths=temp_dir, index_name="💥invalid")
+
+    def test_load_index_missing_files_raises(self, temp_dir):
+        indexer = self.IndexerClass(paths=temp_dir)
+        if hasattr(indexer, "load_index"):
+            with pytest.raises(FileNotFoundError):
+                indexer.load_index()
+
+    def test_search_without_index_returns_empty(self, temp_dir):
+        indexer = self.IndexerClass(paths=temp_dir)
+        indexer.index = None
+        results = indexer.search("irrelevant")
+        assert results == []
+
+    @patch("scripts.indexers.base_indexer.faiss.IndexFlatL2.search", side_effect=RuntimeError("Mocked failure"))
+    def test_search_failure_handled(self, mock_search, temp_dir):
+        indexer = self.IndexerClass(paths=temp_dir)
+        indexer.build_index(["fail search"], [{"id": 999}])
+        indexer.index.search = mock_search
+        results = indexer.search("fail")
+        assert results == []
+
 
 class TestRawLogIndexer(BaseIndexerTest):
     IndexerClass = RawLogIndexer
