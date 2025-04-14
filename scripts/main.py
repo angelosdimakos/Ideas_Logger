@@ -28,8 +28,14 @@ def bootstrap(start_gui: bool = True):
             logger.warning("[INIT] Summary tracker may have inconsistencies. Review logs.")
 
         # 4. Start the GUI
-        app = ZephyrusLoggerGUI(controller)
-        logger.info("[GUI] ZephyrusLoggerGUI launched. Awaiting user interaction.")
+        # With this conditional
+        if start_gui:
+            app = ZephyrusLoggerGUI(controller)
+            logger.info("[GUI] ZephyrusLoggerGUI launched. Awaiting user interaction.")
+            app.run()
+            return app
+        else:
+            return controller  # return controller in headless test mode
 
         # 5. Run the GUI event loop
         if start_gui:

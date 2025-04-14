@@ -49,7 +49,8 @@ jobs:
           mkdir -p lint-reports
           black --check scripts > lint-reports/black.txt 2>&1 || true
           flake8 scripts > lint-reports/flake8.txt 2>&1 || true
-          mypy scripts > lint-reports/mypy.txt 2>&1 || true
+          MYPYPATH=. mypy --explicit-package-bases scripts > lint-reports/mypy.txt 2>&1 || true
+      
 
       - name: 📄 Upload Lint Reports
         if: always()
