@@ -93,3 +93,18 @@ class RefactorGuard:
         if not coverage_data:
             return
         self.coverage_hits = coverage_data
+
+    def analyze_directory_recursive(self, original_dir: str, refactored_dir: str) -> Dict[str, Dict]:
+        summary = {}
+        for root, _, files in os.walk(original_dir):
+            for filename in files:
+                if not filename.endswith(".py"):
+                    continue
+                rel_path = os.path.relpath(os.path.join(root, filename), original_dir)
+                orig_path = os.path.join(original_dir, rel_path)
+                ref_path = os.path.join(refactored_dir, rel_path)
+                if not os.path.exists(ref_path):
+                    continue
+                summary[rel_path] = self.analyze_module(orig_path, ref_path)
+        return summary
+
