@@ -125,6 +125,9 @@ class BaseIndexer:
 
         This method must be called after `build_index` or `load_index` has been called.
         """
+        # Ensure parent directory exists
+        self.index_path.parent.mkdir(parents=True, exist_ok=True)
+
         faiss.write_index(self.index, str(self.index_path))
         with open(self.metadata_path, "wb") as f:
             pickle.dump(self.metadata, f)
