@@ -1,10 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 
+
 class WidgetFactory:
     """
     Factory for creating common widgets with standardized styling.
     """
+
     @staticmethod
     def create_button(parent, text, command, style="TButton", **options):
         """

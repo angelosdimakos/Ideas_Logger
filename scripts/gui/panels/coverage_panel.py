@@ -4,10 +4,12 @@ from typing import Optional
 
 from scripts.gui.base.base_panel import BasePanel
 
+
 class CoveragePanel(BasePanel):
     """
     CoveragePanel displays coverage metrics in a tree view.
     """
+
     def __init__(self, parent, controller=None, **kwargs):
         # Define instance attributes for type checkers
         self.frame: Optional[ttk.LabelFrame] = None

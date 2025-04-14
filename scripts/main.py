@@ -5,6 +5,7 @@ from scripts.gui.gui import ZephyrusLoggerGUI
 from scripts.gui.gui_controller import GUIController
 from scripts.gui.gui_logging import GUILogHandler
 
+
 def bootstrap(start_gui: bool = True):
     # 1. Setup logging
     setup_logging()
@@ -39,6 +40,7 @@ def bootstrap(start_gui: bool = True):
     except Exception as e:
         logger.critical("Fatal error during startup: %s", e, exc_info=True)
         raise
+
 
 if __name__ == "__main__":
     bootstrap()

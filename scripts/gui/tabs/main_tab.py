@@ -7,11 +7,13 @@ from scripts.gui.panels.coverage_panel import CoveragePanel
 from scripts.gui.panels.entry_panel import EntryPanel
 from scripts.gui.panels.action_panel import ActionPanel
 
+
 class MainTab(BaseTab):
     """
     MainTab is the primary tab for logging functionality.
     It organizes child panels: LogPanel, CoveragePanel, EntryPanel, and ActionPanel.
     """
+
     def setup_tab(self):
         # Create a container frame to hold the child panels
         container = ttk.Frame(self)
@@ -37,11 +39,11 @@ class MainTab(BaseTab):
         """
         Called when the MainTab becomes active. This refreshes all child panels.
         """
-        if hasattr(self, 'log_panel'):
+        if hasattr(self, "log_panel"):
             self.log_panel.refresh()
-        if hasattr(self, 'coverage_panel'):
+        if hasattr(self, "coverage_panel"):
             self.coverage_panel.refresh()
-        if hasattr(self, 'entry_panel'):
+        if hasattr(self, "entry_panel"):
             self.entry_panel.refresh()
-        if hasattr(self, 'action_panel'):
+        if hasattr(self, "action_panel"):
             self.action_panel.refresh()

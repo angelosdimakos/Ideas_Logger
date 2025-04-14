@@ -10,11 +10,12 @@ logger = logging.getLogger(__name__)
 DEFAULT_JSON_INDENT = 2
 BACKUP_JSON_INDENT = 4
 
+
 def sanitize_filename(name):
     """
     Remove invalid characters and trim length for safe file naming.
     """
-    return re.sub(r'[^\w\-_. ]', '', name)[:100]
+    return re.sub(r"[^\w\-_. ]", "", name)[:100]
 
 
 def get_timestamp():
@@ -32,14 +33,13 @@ def safe_path(path):
     return path
 
 
-
 def write_json(path, data):
     """
     Safely write a Python object to a JSON file.
     """
     try:
         safe_path(path)
-        with open(path, 'w', encoding='utf-8') as f:
+        with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=DEFAULT_JSON_INDENT, ensure_ascii=False)
         logger.debug(f"Wrote JSON to: {path}")
     except FileNotFoundError:
@@ -57,7 +57,7 @@ def read_json(path):
     Safely read and return a log JSON object from a file.
     """
     try:
-        with open(path, 'r', encoding='utf-8') as f:
+        with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception as e:
         logger.error(f"Failed to read JSON from {path}: {e}")
@@ -80,7 +80,7 @@ def safe_read_json(filepath: Path) -> dict:
             logger.warning(f"File '{filepath}' not found. Returning empty dictionary.")
             return {}
 
-        with open(filepath, 'r', encoding='utf-8') as file:
+        with open(filepath, "r", encoding="utf-8") as file:
             return json.load(file)
     except (json.JSONDecodeError, OSError) as e:
         logger.error(f"Failed to read JSON from {filepath}: {e}")
@@ -111,11 +111,11 @@ def make_backup(file_path: str) -> str:
         data = read_json(file_path)
         with open(backup_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=BACKUP_JSON_INDENT)
-        return backup_path 
+        return backup_path
     except Exception as e:
         logger.warning(f"Error creating backup: {e}")
         return None
-        
+
 
 def zip_python_files(output_path: str, root_dir: str = ".", exclude_dirs=None):
     """
@@ -128,7 +128,7 @@ def zip_python_files(output_path: str, root_dir: str = ".", exclude_dirs=None):
         exclude_dirs (list[str], optional): List of directory names to exclude.
     """
     exclude_dirs = set(exclude_dirs or [".venv", ".git", "__pycache__", "node_modules"])
-    with zipfile.ZipFile(output_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+    with zipfile.ZipFile(output_path, "w", zipfile.ZIP_DEFLATED) as zipf:
         for foldername, subfolders, filenames in os.walk(root_dir):
             # Skip excluded directories
             if any(excl in foldername for excl in exclude_dirs):
@@ -138,4 +138,3 @@ def zip_python_files(output_path: str, root_dir: str = ".", exclude_dirs=None):
                     file_path = os.path.join(foldername, filename)
                     arcname = os.path.relpath(file_path, root_dir)  # keep relative structure
                     zipf.write(file_path, arcname)
-

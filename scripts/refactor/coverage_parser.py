@@ -2,7 +2,10 @@ import os
 import xml.etree.ElementTree as ET
 from typing import Dict, Tuple, Set
 
-def parse_coverage_xml_to_method_hits(xml_path: str, method_ranges: Dict[str, Tuple[int, int]]) -> Dict[str, Dict]:
+
+def parse_coverage_xml_to_method_hits(
+    xml_path: str, method_ranges: Dict[str, Tuple[int, int]]
+) -> Dict[str, Dict]:
     """
     Parse coverage.xml and map line-level coverage to method-level stats.
 
@@ -27,6 +30,7 @@ def parse_coverage_xml_to_method_hits(xml_path: str, method_ranges: Dict[str, Tu
     file_line_hits = _extract_file_line_hits(root)
     return _compute_method_coverage(method_ranges, file_line_hits)
 
+
 def _extract_file_line_hits(root: ET.Element) -> Dict[str, Set[int]]:
     file_line_hits = {}
     for cls in root.findall(".//class"):
@@ -41,7 +45,10 @@ def _extract_file_line_hits(root: ET.Element) -> Dict[str, Set[int]]:
         file_line_hits[file_path] = hit_lines
     return file_line_hits
 
-def _compute_method_coverage(method_ranges: Dict[str, Tuple[int, int]], file_line_hits: Dict[str, Set[int]]) -> Dict[str, Dict]:
+
+def _compute_method_coverage(
+    method_ranges: Dict[str, Tuple[int, int]], file_line_hits: Dict[str, Set[int]]
+) -> Dict[str, Dict]:
     method_coverage = {}
     for method, (start, end) in method_ranges.items():
         total_lines = end - start + 1
@@ -53,6 +60,6 @@ def _compute_method_coverage(method_ranges: Dict[str, Tuple[int, int]], file_lin
         method_coverage[method] = {
             "coverage": hit_count / total_lines if total_lines > 0 else 0.0,
             "hits": hit_count,
-            "lines": total_lines
+            "lines": total_lines,
         }
     return method_coverage

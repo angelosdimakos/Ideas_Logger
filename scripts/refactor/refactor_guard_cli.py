@@ -15,6 +15,7 @@ try:
         sys.stdout.reconfigure(encoding="utf-8")
     else:
         import io
+
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 except Exception:
     pass  # Silently ignore for CI environments
@@ -23,6 +24,7 @@ from scripts.utils.git_utils import get_changed_files
 from scripts.refactor.refactor_guard import RefactorGuard
 from scripts.refactor.coverage_parser import parse_coverage_xml_to_method_hits
 from scripts.refactor.method_line_ranges import extract_method_line_ranges
+
 
 def safe_collect_method_ranges(path: str) -> dict:
     method_ranges = {}
@@ -39,6 +41,7 @@ def safe_collect_method_ranges(path: str) -> dict:
                         print(f"⚠️ Failed to parse {full_path}: {e}")
     return method_ranges
 
+
 def handle_json_output(summary, output_name):
     filename = f"{output_name}.json"
     with open(filename, "w", encoding="utf-8-sig") as f:
@@ -51,6 +54,7 @@ def handle_json_output(summary, output_name):
     method_count = sum(len(v.get("complexity", {})) for v in summary.values())
     print(f"🧠 Methods analyzed: {method_count}")
     print(f"🔧 Files changed: {len(summary)}")
+
 
 def print_method_stats(method_complexities, guard):
     if all(isinstance(v, dict) and "complexity" in v for v in method_complexities.values()):
@@ -67,10 +71,12 @@ def print_method_stats(method_complexities, guard):
             coverage = stats.get("coverage")
             coverage_str = f"{coverage * 100:.1f}%" if isinstance(coverage, float) else "N/A"
             print(
-                f"  {emoji} {method} | Complexity: {stats['complexity']} | Coverage: {coverage_str} ({stats.get('hits', 'N/A')}/{stats.get('lines', 'N/A')})")
+                f"  {emoji} {method} | Complexity: {stats['complexity']} | Coverage: {coverage_str} ({stats.get('hits', 'N/A')}/{stats.get('lines', 'N/A')})"
+            )
         else:
             emoji = "⚠️" if stats > guard.config.get("max_complexity", 10) else "✅"
             print(f"  {emoji} {method}: {stats}")
+
 
 def print_summary(summary, guard, args):
     for file, result in summary.items():
@@ -79,24 +85,33 @@ def print_summary(summary, guard, args):
             method_complexities = result.get("complexity", {})
             print_method_stats(method_complexities, guard)
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description="RefactorGuard CLI: Audit Python refactors.")
     parser.add_argument("--original", type=str, default="", help="Original file/dir")
     parser.add_argument("--refactored", type=str, required=True, help="Refactored file/dir")
-    parser.add_argument("--tests", type=str, help="Optional test file to check for missing test coverage")
+    parser.add_argument(
+        "--tests", type=str, help="Optional test file to check for missing test coverage"
+    )
     parser.add_argument("--all", action="store_true", help="Audit entire scripts dir")
     parser.add_argument("--diff-only", action="store_true", help="Ignore complexity checks")
     parser.add_argument("--missing-tests", action="store_true", help="List methods lacking tests")
-    parser.add_argument("--complexity-warnings", action="store_true", help="Show cyclomatic complexity warnings")
+    parser.add_argument(
+        "--complexity-warnings", action="store_true", help="Show cyclomatic complexity warnings"
+    )
     parser.add_argument("--json", action="store_true", help="Export result as structured JSON")
-    parser.add_argument("--git-diff", action="store_true", help="Only analyze Git-changed files vs origin/main")
+    parser.add_argument(
+        "--git-diff", action="store_true", help="Only analyze Git-changed files vs origin/main"
+    )
     return parser.parse_args()
+
 
 def dispatch_mode(args, guard):
     if args.all:
         return handle_full_scan(args, guard)
     else:
         return handle_single_file(args, guard)
+
 
 def handle_full_scan(args, guard):
     original = args.original or "scripts"
@@ -115,13 +130,15 @@ def handle_full_scan(args, guard):
 
     return summary
 
+
 def handle_single_file(args, guard):
     return guard.analyze_refactor_changes(
         original_path=args.original,
         refactored_path=args.refactored,
         test_file_path=args.tests,
-        as_string=False
+        as_string=False,
     )
+
 
 def handle_output(result, args, guard):
     summary = result if args.all else result.get("summary", {})
@@ -139,6 +156,7 @@ def handle_output(result, args, guard):
             for method, score in method_complexities.items():
                 emoji = "⚠️" if score > guard.config.get("max_complexity", 10) else "✅"
                 print(f"  {emoji} {method}: {score}")
+
 
 def main():
     args = parse_args()
@@ -161,6 +179,7 @@ def main():
                 print(f"❌ {item['class']} → {item['method']}")
         else:
             print("✅ All public methods have tests!")
+
 
 if __name__ == "__main__":
     main()

@@ -5,6 +5,7 @@ from scripts.config.config_loader import load_config, get_config_value
 
 logger = logging.getLogger(__name__)
 
+
 class AISummarizer:
     def __init__(self):
         """
@@ -28,10 +29,10 @@ class AISummarizer:
         """
         logger.info("[AI] Attempting fallback approach (chat)")
         try:
-            response = ollama.chat(model=self.model, messages=[
-                {'role': 'user', 'content': full_prompt}
-            ])
-            content = response.get('message', {}).get('content', '').strip()
+            response = ollama.chat(
+                model=self.model, messages=[{"role": "user", "content": full_prompt}]
+            )
+            content = response.get("message", {}).get("content", "").strip()
             if content:
                 logger.debug("[AI-Fallback] Fallback summary:\n%s", content)
                 return content
@@ -44,13 +45,15 @@ class AISummarizer:
         """
         Summarizes a single log entry with an optional subcategory prompt.
         """
-        prompt = self.prompts_by_subcategory.get(subcategory, self.prompts_by_subcategory.get("_default", "Summarize this:")).strip()
+        prompt = self.prompts_by_subcategory.get(
+            subcategory, self.prompts_by_subcategory.get("_default", "Summarize this:")
+        ).strip()
         full_prompt = f"{prompt}\n\n{entry_text}"
 
         try:
             logger.debug("[AI] Single-entry prompt:\n%s", full_prompt)
             response = ollama.generate(model=self.model, prompt=full_prompt)
-            return response['response'].strip()
+            return response["response"].strip()
         except (KeyError, TypeError, RequestException) as e:
             logger.warning("summarize_entry failed: %s", e, exc_info=True)
             return self._fallback_summary(full_prompt)
@@ -63,13 +66,15 @@ class AISummarizer:
             logger.warning("[EmptyInput] summarize_entries_bulk received empty list")
             return "No entries provided"
 
-        prompt_intro = self.prompts_by_subcategory.get(subcategory, self.prompts_by_subcategory.get("_default", "Summarize these points:")).strip()
+        prompt_intro = self.prompts_by_subcategory.get(
+            subcategory, self.prompts_by_subcategory.get("_default", "Summarize these points:")
+        ).strip()
         combined_text = "\n".join(f"- {entry}" for entry in entries)
         full_prompt = f"{prompt_intro}\n\n{combined_text}"
 
         try:
             response = ollama.generate(model=self.model, prompt=full_prompt)
-            return response['response'].strip()
+            return response["response"].strip()
         except (KeyError, TypeError, RequestException) as e:
             logger.warning("summarize_entries_bulk failed: %s", e, exc_info=True)
             return self._fallback_summary(full_prompt)

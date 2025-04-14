@@ -40,7 +40,8 @@ def inject_entries_into_summaries():
     # Adjust these keys if needed based on your updated config.
     log_path = get_absolute_path(get_config_value(config, "raw_log_path", "logs/zephyrus_log.json"))
     summary_path = get_absolute_path(
-        get_config_value(config, "correction_summaries_path", "logs/correction_summaries.json"))
+        get_config_value(config, "correction_summaries_path", "logs/correction_summaries.json")
+    )
 
     # Load raw logs and summaries.
     with open(log_path, "r", encoding="utf-8") as f:
@@ -75,9 +76,11 @@ def inject_entries_into_summaries():
                     continue
 
                 # Adjust for zero-based indexing.
-                selected_entries = flat_entries[start_idx - 1: end_idx]
+                selected_entries = flat_entries[start_idx - 1 : end_idx]
                 # Extract the "content" field from each entry.
-                entries_to_inject = [entry.get("content", "") for entry in selected_entries if "content" in entry]
+                entries_to_inject = [
+                    entry.get("content", "") for entry in selected_entries if "content" in entry
+                ]
                 batch["entries"] = entries_to_inject
                 updated_count += 1
 

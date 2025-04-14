@@ -8,6 +8,7 @@ from scripts.paths import ZephyrusPaths
 
 logger = logging.getLogger(__name__)
 
+
 class BaseIndexer:
     def __init__(self, paths: ZephyrusPaths, index_name: str) -> None:
         """
@@ -24,7 +25,9 @@ class BaseIndexer:
         else:
             raise ValueError(f"Unsupported index_name: {index_name}")
 
-        model_name = get_config_value(ConfigManager.load_config(), "embedding_model", "all-MiniLM-L6-v2")
+        model_name = get_config_value(
+            ConfigManager.load_config(), "embedding_model", "all-MiniLM-L6-v2"
+        )
         self.embedding_model: SentenceTransformer = SentenceTransformer(model_name)
         self.index = None
         self.metadata: List[Dict[str, Any]] = []
@@ -88,7 +91,9 @@ class BaseIndexer:
                 results.append(result)
         return results
 
-    def build_index(self, texts: List[str], meta: List[Dict[str, Any]], fail_on_empty: bool = False) -> bool:
+    def build_index(
+        self, texts: List[str], meta: List[Dict[str, Any]], fail_on_empty: bool = False
+    ) -> bool:
         """
         Builds a FAISS index from provided texts and metadata.
 
@@ -118,7 +123,6 @@ class BaseIndexer:
             return False
 
     def save_index(self) -> None:
-
         """
         Saves the FAISS index to a file, and the associated metadata.
 

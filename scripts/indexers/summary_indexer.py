@@ -15,7 +15,6 @@ class SummaryIndexer(BaseIndexer):
     """
 
     def __init__(self, paths: ZephyrusPaths, autoload: bool = True) -> None:
-
         """
         Initializes a SummaryIndexer object.
 
@@ -44,7 +43,7 @@ class SummaryIndexer(BaseIndexer):
 
         Returns:
             Tuple[List[str], List[Dict[str, Any]]]: Summarized entry texts and metadata.
-    """
+        """
         try:
             with open(self.summaries_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
@@ -67,8 +66,9 @@ class SummaryIndexer(BaseIndexer):
 
         return texts, meta
 
-    def _process_categories(self, date: str, categories: dict, texts: List[str],
-                            meta: List[Dict[str, Any]]) -> Tuple[List[str], List[Dict[str, Any]]]:
+    def _process_categories(
+        self, date: str, categories: dict, texts: List[str], meta: List[Dict[str, Any]]
+    ) -> Tuple[List[str], List[Dict[str, Any]]]:
         """
         Process a dictionary of categories and their subcategories.
 
@@ -89,12 +89,14 @@ class SummaryIndexer(BaseIndexer):
             try:
                 texts, meta = self._process_subcategories(date, main_cat, subcats, texts, meta)
             except Exception as e:
-                logger.warning("Error in category '%s' on '%s': %s", main_cat, date, e, exc_info=True)
+                logger.warning(
+                    "Error in category '%s' on '%s': %s", main_cat, date, e, exc_info=True
+                )
         return texts, meta
 
-    def _process_subcategories(self, date: str, main_cat: str, subcats: dict, texts: List[str],
-                               meta: List[Dict[str, Any]]) -> Tuple[List[str], List[Dict[str, Any]]]:
-
+    def _process_subcategories(
+        self, date: str, main_cat: str, subcats: dict, texts: List[str], meta: List[Dict[str, Any]]
+    ) -> Tuple[List[str], List[Dict[str, Any]]]:
         """
         Process a dictionary of subcategories and their batches of summaries.
 
@@ -116,11 +118,25 @@ class SummaryIndexer(BaseIndexer):
             try:
                 texts, meta = self._process_batches(date, main_cat, subcat, batches, texts, meta)
             except Exception as e:
-                logger.warning("Error in subcategory '%s' → '%s' on '%s': %s", main_cat, subcat, date, e, exc_info=True)
+                logger.warning(
+                    "Error in subcategory '%s' → '%s' on '%s': %s",
+                    main_cat,
+                    subcat,
+                    date,
+                    e,
+                    exc_info=True,
+                )
         return texts, meta
 
-    def _process_batches(self, date: str, main_cat: str, subcat: str, batches: list, texts: List[str],
-                         meta: List[Dict[str, Any]]) -> Tuple[List[str], List[Dict[str, Any]]]:
+    def _process_batches(
+        self,
+        date: str,
+        main_cat: str,
+        subcat: str,
+        batches: list,
+        texts: List[str],
+        meta: List[Dict[str, Any]],
+    ) -> Tuple[List[str], List[Dict[str, Any]]]:
         """
         Process a list of batches of summaries.
 
@@ -144,17 +160,26 @@ class SummaryIndexer(BaseIndexer):
                 text = batch.get("corrected_summary") or batch.get("original_summary")
                 if text:
                     texts.append(text)
-                    meta.append({
-                        "date": date,
-                        "main_category": main_cat,
-                        "subcategory": subcat,
-                        "batch": batch.get("batch"),
-                        "timestamp": batch.get("correction_timestamp")
-                    })
+                    meta.append(
+                        {
+                            "date": date,
+                            "main_category": main_cat,
+                            "subcategory": subcat,
+                            "batch": batch.get("batch"),
+                            "timestamp": batch.get("correction_timestamp"),
+                        }
+                    )
                 else:
                     logger.warning("Missing summary in %s → %s → %s", date, main_cat, subcat)
             except Exception as e:
-                logger.error("Failed to process batch %s → %s → %s: %s", date, main_cat, subcat, e, exc_info=True)
+                logger.error(
+                    "Failed to process batch %s → %s → %s: %s",
+                    date,
+                    main_cat,
+                    subcat,
+                    e,
+                    exc_info=True,
+                )
         return texts, meta
 
     def build_index_from_logs(self) -> bool:

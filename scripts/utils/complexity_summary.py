@@ -8,6 +8,7 @@ try:
 except Exception:
     pass
 
+
 def analyze_complexity(file_path="refactor_audit.json", max_complexity=10):
     try:
         if not os.path.exists(file_path):
@@ -28,7 +29,6 @@ def analyze_complexity(file_path="refactor_audit.json", max_complexity=10):
                 sys.exit(1)
 
         return run_analysis(data, max_complexity, use_emoji=True)
-
 
     except Exception as e:
         print(f"❌ Unexpected error: {e}")
@@ -72,6 +72,7 @@ def run_analysis(data, max_complexity, use_emoji=True):
             sys.exit(1)
         else:
             print("No complexity warnings.")
+
 
 if __name__ == "__main__":
     analyze_complexity()

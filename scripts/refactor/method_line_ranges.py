@@ -1,6 +1,7 @@
 import ast
 from typing import Dict, Tuple
 
+
 class MethodRangeVisitor(ast.NodeVisitor):
     def __init__(self):
         self.ranges: Dict[str, Tuple[int, int]] = {}
@@ -14,7 +15,7 @@ class MethodRangeVisitor(ast.NodeVisitor):
 
     def visit_FunctionDef(self, node):
         start = node.lineno
-        end = getattr(node, 'end_lineno', None)
+        end = getattr(node, "end_lineno", None)
 
         if end is None:
             end = self._find_end_lineno(node)
@@ -25,11 +26,12 @@ class MethodRangeVisitor(ast.NodeVisitor):
     def _find_end_lineno(self, node):
         last_node = node.body[-1]
         if isinstance(last_node, ast.stmt):
-            return getattr(last_node, 'lineno', node.lineno)
+            return getattr(last_node, "lineno", node.lineno)
         return node.lineno
 
+
 def extract_method_line_ranges(file_path: str) -> Dict[str, Tuple[int, int]]:
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, "r", encoding="utf-8") as f:
         tree = ast.parse(f.read(), filename=file_path)
 
     visitor = MethodRangeVisitor()

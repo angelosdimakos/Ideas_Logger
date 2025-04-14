@@ -1,6 +1,7 @@
 # complexity_analyzer.py
 import ast
 
+
 class ComplexityVisitor(ast.NodeVisitor):
     def __init__(self):
         self.function_scores = {}  # {"ClassName.method": complexity}
@@ -22,19 +23,24 @@ class ComplexityVisitor(ast.NodeVisitor):
     def _calculate_complexity(self, node):
         complexity = 1
         for child in ast.walk(node):
-            if isinstance(child, (ast.If, ast.For, ast.While, ast.Try, ast.With, ast.BoolOp, ast.ExceptHandler)):  # common decision points
+            if isinstance(
+                child,
+                (ast.If, ast.For, ast.While, ast.Try, ast.With, ast.BoolOp, ast.ExceptHandler),
+            ):  # common decision points
                 complexity += 1
         return complexity
 
+
 def calculate_function_complexity_map(file_path: str) -> dict:
     """Returns a dict of function names to complexity scores."""
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, "r", encoding="utf-8") as f:
         source = f.read()
 
     tree = ast.parse(source)
     visitor = ComplexityVisitor()
     visitor.visit(tree)
     return visitor.function_scores
+
 
 def calculate_module_complexity(module_path: str) -> int:
     """
@@ -47,6 +53,7 @@ def calculate_module_complexity(module_path: str) -> int:
     except Exception as e:
         print(f"Error parsing module {module_path}: {str(e)}")
         return -1
+
 
 def calculate_cyclomatic_complexity_for_module(module_path: str) -> int:
     """Wrapper to calculate total cyclomatic complexity for the module."""

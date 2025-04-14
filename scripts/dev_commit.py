@@ -8,16 +8,22 @@ from datetime import datetime
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from scripts.utils.git_utils import interactive_commit_flow
 
+
 def get_current_branch():
-    result = subprocess.run(["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True)
+    result = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True
+    )
     return result.stdout.strip()
+
 
 def get_modified_files():
     result = subprocess.run(["git", "diff", "--name-only"], capture_output=True, text=True)
     return result.stdout.strip().splitlines()
 
+
 def is_valid_branch_name(name):
     return bool(re.match(r"^[\w\-/]+$", name))  # Alphanumeric, underscore, dash, slash
+
 
 def generate_suggested_branch_name():
     files = get_modified_files()
@@ -35,6 +41,7 @@ def generate_suggested_branch_name():
     date = datetime.now().strftime("%Y-%m-%d")
     return f"fix/{base}-{date}"
 
+
 def switch_to_new_branch():
     try:
         suggested = generate_suggested_branch_name()
@@ -47,7 +54,9 @@ def switch_to_new_branch():
     new_branch = user_input or suggested
 
     if not is_valid_branch_name(new_branch):
-        print("❌ Invalid branch name. Use only letters, numbers, dashes, slashes, and underscores.")
+        print(
+            "❌ Invalid branch name. Use only letters, numbers, dashes, slashes, and underscores."
+        )
         sys.exit(1)
         return  # <- to stop execution in test context
 
@@ -58,6 +67,7 @@ def switch_to_new_branch():
     except subprocess.CalledProcessError as e:
         print(f"❌ Git error: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     try:

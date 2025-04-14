@@ -1,10 +1,12 @@
 import logging
 import tkinter as tk
 
+
 class GUILogHandler(logging.Handler):
     """
     A logging handler that appends log messages to a Tkinter Text widget.
     """
+
     def __init__(self, text_widget):
         """
         :param text_widget: The Text widget where log messages should be appended.
@@ -36,10 +38,9 @@ class GUILogHandler(logging.Handler):
             return  # Avoid writing to a destroyed widget
 
         try:
-            self.text_widget.configure(state='normal')
-            self.text_widget.insert('end', msg + "\n")
-            self.text_widget.configure(state='disabled')
-            self.text_widget.see('end')
+            self.text_widget.configure(state="normal")
+            self.text_widget.insert("end", msg + "\n")
+            self.text_widget.configure(state="disabled")
+            self.text_widget.see("end")
         except (tk.TclError, RuntimeError) as e:
             logging.getLogger(__name__).debug(f"GUI append failed: {e}")
-
