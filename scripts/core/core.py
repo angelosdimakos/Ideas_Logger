@@ -12,6 +12,7 @@ from scripts.paths import ZephyrusPaths
 
 logger = logging.getLogger(__name__)
 
+
 class ZephyrusLoggerCore:
     TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
     DATE_FORMAT = "%Y-%m-%d"
@@ -59,7 +60,7 @@ class ZephyrusLoggerCore:
             self.paths.correction_summaries_file,
             self.TIMESTAMP_FORMAT,
             self.CONTENT_KEY,
-            self.TIMESTAMP_KEY
+            self.TIMESTAMP_KEY,
         )
 
     def _safe_read_json(self, filepath: Path) -> dict:
@@ -112,7 +113,10 @@ class ZephyrusLoggerCore:
 
         # Correction summaries
         if not self.paths.correction_summaries_file.exists():
-            logger.info("Creating empty correction summaries file at: %s", self.paths.correction_summaries_file)
+            logger.info(
+                "Creating empty correction summaries file at: %s",
+                self.paths.correction_summaries_file,
+            )
             write_json(self.paths.correction_summaries_file, {})
         elif self.paths.correction_summaries_file.stat().st_size == 0:
             logger.warning("correction_summaries_file is empty. Initializing to empty JSON.")
@@ -120,12 +124,13 @@ class ZephyrusLoggerCore:
 
         # Config safety net (should already exist in prod)
         if not self.paths.config_file.exists():
-            logger.warning("Missing config file at %s — recreating minimal config.", self.paths.config_file)
+            logger.warning(
+                "Missing config file at %s — recreating minimal config.", self.paths.config_file
+            )
             self.paths.config_file.parent.mkdir(parents=True, exist_ok=True)
             write_json(self.paths.config_file, {"batch_size": 5})
 
     def _get_summary_for_batch(self, batch_entries, subcategory: str) -> str:
-
         """
         Gets a summary for a batch of log entries.
 
@@ -138,8 +143,7 @@ class ZephyrusLoggerCore:
         """
         try:
             summary = self.ai_summarizer.summarize_entries_bulk(
-                [entry[self.CONTENT_KEY] for entry in batch_entries],
-                subcategory=subcategory
+                [entry[self.CONTENT_KEY] for entry in batch_entries], subcategory=subcategory
             )
         except Exception as e:
             logger.error("AI summarization failed: %s", e, exc_info=True)
@@ -153,7 +157,6 @@ class ZephyrusLoggerCore:
         return summary.strip() if summary and summary.strip() else None
 
     def log_to_json(self, timestamp, date_str, main_category, subcategory, entry) -> bool:
-
         """
         Logs an entry to the JSON log file and updates the summary tracker.
 
@@ -174,18 +177,27 @@ class ZephyrusLoggerCore:
             tracker = self.summary_tracker.tracker.get(main_category, {}).get(subcategory, {})
             unsummarized = tracker.get("logged_total", 0) - tracker.get("summarized_total", 0)
             if unsummarized >= self.BATCH_SIZE:
-                logger.info("[BATCH READY] %d unsummarized entries in %s → %s", unsummarized, main_category, subcategory)
+                logger.info(
+                    "[BATCH READY] %d unsummarized entries in %s → %s",
+                    unsummarized,
+                    main_category,
+                    subcategory,
+                )
                 self.generate_global_summary(main_category, subcategory)
             else:
                 needed = self.BATCH_SIZE - unsummarized
-                logger.info("[LOGGED] Entry added for %s → %s. Need %d more entries to trigger summary.", main_category, subcategory, needed)
+                logger.info(
+                    "[LOGGED] Entry added for %s → %s. Need %d more entries to trigger summary.",
+                    main_category,
+                    subcategory,
+                    needed,
+                )
             return True
         except Exception as e:
             logger.error("Error in log_to_json: %s", e, exc_info=True)
             return False
 
     def generate_global_summary(self, main_category: str, subcategory: str) -> bool:
-
         """
         Generates a global summary for the given main category and subcategory.
 
@@ -200,10 +212,12 @@ class ZephyrusLoggerCore:
             main_category,
             subcategory,
             self.summary_tracker.get_summarized_count(main_category, subcategory),
-            self.BATCH_SIZE
+            self.BATCH_SIZE,
         )
         if len(batch_entries) < self.BATCH_SIZE:
-            logger.info("[SKIP] Not enough unsummarized entries for %s → %s", main_category, subcategory)
+            logger.info(
+                "[SKIP] Not enough unsummarized entries for %s → %s", main_category, subcategory
+            )
             return False
         summary = self._get_summary_for_batch(batch_entries, subcategory)
         if not summary:
@@ -218,13 +232,17 @@ class ZephyrusLoggerCore:
             self.CORRECTED_SUMMARY_KEY: "",
             self.CORRECTION_TIMESTAMP_KEY: datetime.now().strftime(self.TIMESTAMP_FORMAT),
             "start": start_ts,
-            "end": end_ts
+            "end": end_ts,
         }
         self.log_manager.update_correction_summaries(main_category, subcategory, new_data)
         self.summary_tracker.update(main_category, subcategory, summarized=self.BATCH_SIZE)
-        logger.info("[SUCCESS] Global summary written for %s → %s (Batch: %s)", main_category, subcategory, batch_label)
+        logger.info(
+            "[SUCCESS] Global summary written for %s → %s (Batch: %s)",
+            main_category,
+            subcategory,
+            batch_label,
+        )
         return True
-
 
     def generate_summary(self, date_str, main_category, subcategory):
         """
@@ -241,7 +259,6 @@ class ZephyrusLoggerCore:
         return self.generate_global_summary(main_category, subcategory)
 
     def log_to_markdown(self, date_str, main_category, subcategory, entry) -> bool:
-
         """
         Logs an entry to a Markdown file, organizing by date and subcategory.
 
@@ -266,7 +283,9 @@ class ZephyrusLoggerCore:
             if md_path.exists():
                 content = md_path.read_text(encoding="utf-8")
                 if date_header in content:
-                    updated_content = re.sub(f"({date_header}\\n)", f"\\1{md_content}", content, count=1)
+                    updated_content = re.sub(
+                        f"({date_header}\\n)", f"\\1{md_content}", content, count=1
+                    )
                 else:
                     updated_content = f"{content}\n{date_header}\n\n{md_content}"
             else:
@@ -303,7 +322,6 @@ class ZephyrusLoggerCore:
         md_success = self.log_to_markdown(date_str, main_category, subcategory, entry)
         return json_success and md_success
 
-
     def search_summaries(self, query: str, top_k=5):
         """
         Searches through all summaries (across all dates, main categories, and subcategories)
@@ -318,7 +336,6 @@ class ZephyrusLoggerCore:
         """
         return self.summary_tracker.summary_indexer.search(query, top_k)
 
-
     def search_raw_logs(self, query: str, top_k=5):
         """
         Searches through the raw logs using the specified query and returns the top-k most relevant results.
@@ -331,8 +348,6 @@ class ZephyrusLoggerCore:
             List[Dict[str, Any]]: A list of dictionaries containing the search results.
         """
         return self.summary_tracker.raw_indexer.search(query, top_k)
-
-
 
     def log_new_entry(self, main_category, subcategory, entry):
         """
@@ -348,5 +363,3 @@ class ZephyrusLoggerCore:
 
         """
         return self.save_entry(main_category, subcategory, entry)
-
-

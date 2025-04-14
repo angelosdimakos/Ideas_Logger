@@ -8,6 +8,7 @@ from scripts.paths import ZephyrusPaths
 
 logger = logging.getLogger(__name__)
 
+
 class BaseIndexer:
     def __init__(self, paths: ZephyrusPaths, index_name: str) -> None:
         """
@@ -24,7 +25,9 @@ class BaseIndexer:
         else:
             raise ValueError(f"Unsupported index_name: {index_name}")
 
-        model_name = get_config_value(ConfigManager.load_config(), "embedding_model", "all-MiniLM-L6-v2")
+        model_name = get_config_value(
+            ConfigManager.load_config(), "embedding_model", "all-MiniLM-L6-v2"
+        )
         self.embedding_model: SentenceTransformer = SentenceTransformer(model_name)
         self.index = None
         self.metadata: List[Dict[str, Any]] = []
@@ -83,30 +86,31 @@ class BaseIndexer:
         results = []
         for i, idx in enumerate(I[0]):
             if idx < len(self.metadata):
-                result = dict(self.metadata[idx])
+                result = dict(self.metadata[int(idx)])
                 result["similarity"] = float(1.0 / (1.0 + D[0][i]))
                 results.append(result)
         return results
 
-
-    def build_index(self, texts: List[str], meta: List[Dict[str, Any]]) -> bool:
+    def build_index(
+        self, texts: List[str], meta: List[Dict[str, Any]], fail_on_empty: bool = False
+    ) -> bool:
         """
         Builds a FAISS index from provided texts and metadata.
 
-        This method encodes the given texts into embeddings using a sentence transformer model.
-        It creates a FAISS index with the embeddings and associates it with the provided metadata.
-        The index and metadata are then saved to their respective files.
-
         Args:
             texts (List[str]): A list of texts to encode and index.
-            meta (List[Dict[str, Any]]): A list of metadata dictionaries corresponding to each text.
+            meta (List[Dict[str, Any]]): Metadata per text entry.
+            fail_on_empty (bool): Raise ValueError if input is empty (useful for tests).
 
         Returns:
-            bool: True if the index is built and saved successfully, False otherwise.
+            bool: True if successful, False otherwise.
         """
         if not texts:
             logger.warning("No data to build index.")
+            if fail_on_empty:
+                raise ValueError("Cannot build index with empty data.")
             return False
+
         try:
             embeddings = self.embedding_model.encode(texts, convert_to_numpy=True)
             self.index = faiss.IndexFlatL2(embeddings.shape[1])
@@ -119,12 +123,14 @@ class BaseIndexer:
             return False
 
     def save_index(self) -> None:
-
         """
         Saves the FAISS index to a file, and the associated metadata.
 
         This method must be called after `build_index` or `load_index` has been called.
         """
+        # Ensure parent directory exists
+        self.index_path.parent.mkdir(parents=True, exist_ok=True)
+
         faiss.write_index(self.index, str(self.index_path))
         with open(self.metadata_path, "wb") as f:
             pickle.dump(self.metadata, f)

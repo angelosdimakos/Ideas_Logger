@@ -52,8 +52,9 @@ class RawLogIndexer(BaseIndexer):
 
         return texts, meta
 
-    def _process_categories(self, date: str, categories: dict, texts: List[str],
-                            meta: List[Dict[str, Any]]) -> Tuple[List[str], List[Dict[str, Any]]]:
+    def _process_categories(
+        self, date: str, categories: dict, texts: List[str], meta: List[Dict[str, Any]]
+    ) -> Tuple[List[str], List[Dict[str, Any]]]:
         """
         Processes categories for a given date, updating the texts and metadata.
 
@@ -70,11 +71,18 @@ class RawLogIndexer(BaseIndexer):
             try:
                 texts, meta = self._process_subcategories(date, main_cat, subcats, texts, meta)
             except Exception as e:
-                logger.warning("Error processing category '%s' on date '%s': %s", main_cat, date, e, exc_info=True)
+                logger.warning(
+                    "Error processing category '%s' on date '%s': %s",
+                    main_cat,
+                    date,
+                    e,
+                    exc_info=True,
+                )
         return texts, meta
 
-    def _process_subcategories(self, date: str, main_cat: str, subcats: dict, texts: List[str],
-                               meta: List[Dict[str, Any]]) -> Tuple[List[str], List[Dict[str, Any]]]:
+    def _process_subcategories(
+        self, date: str, main_cat: str, subcats: dict, texts: List[str], meta: List[Dict[str, Any]]
+    ) -> Tuple[List[str], List[Dict[str, Any]]]:
         """
         Processes subcategories within a main category for a given date.
 
@@ -92,12 +100,25 @@ class RawLogIndexer(BaseIndexer):
             try:
                 texts, meta = self._process_entries(date, main_cat, subcat, entries, texts, meta)
             except Exception as e:
-                logger.warning("Error processing subcategory '%s' under '%s' on date '%s': %s",
-                               subcat, main_cat, date, e, exc_info=True)
+                logger.warning(
+                    "Error processing subcategory '%s' under '%s' on date '%s': %s",
+                    subcat,
+                    main_cat,
+                    date,
+                    e,
+                    exc_info=True,
+                )
         return texts, meta
 
-    def _process_entries(self, date: str, main_cat: str, subcat: str, entries: List[Any], texts: List[str],
-                         meta: List[Dict[str, Any]]) -> Tuple[List[str], List[Dict[str, Any]]]:
+    def _process_entries(
+        self,
+        date: str,
+        main_cat: str,
+        subcat: str,
+        entries: List[Any],
+        texts: List[str],
+        meta: List[Dict[str, Any]],
+    ) -> Tuple[List[str], List[Dict[str, Any]]]:
         """
         Processes a list of entries for a given date, main category, and subcategory.
 
@@ -118,16 +139,27 @@ class RawLogIndexer(BaseIndexer):
                 timestamp = entry.get("timestamp")
                 if content:
                     texts.append(content)
-                    meta.append({
-                        "date": date,
-                        "main_category": main_cat,
-                        "subcategory": subcat,
-                        "timestamp": timestamp
-                    })
+                    meta.append(
+                        {
+                            "date": date,
+                            "main_category": main_cat,
+                            "subcategory": subcat,
+                            "timestamp": timestamp,
+                        }
+                    )
                 else:
-                    logger.warning("Missing content in entry (%s → %s → %s)", date, main_cat, subcat)
+                    logger.warning(
+                        "Missing content in entry (%s → %s → %s)", date, main_cat, subcat
+                    )
             except Exception as e:
-                logger.error("Failed to process entry (%s → %s → %s): %s", date, main_cat, subcat, e, exc_info=True)
+                logger.error(
+                    "Failed to process entry (%s → %s → %s): %s",
+                    date,
+                    main_cat,
+                    subcat,
+                    e,
+                    exc_info=True,
+                )
         return texts, meta
 
     def build_index_from_logs(self) -> bool:
@@ -151,4 +183,3 @@ class RawLogIndexer(BaseIndexer):
             self.save_index()
         else:
             logger.warning("Raw index rebuild aborted: no entries to index.")
-

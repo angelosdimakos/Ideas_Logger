@@ -1,0 +1,10 @@
+# .coveragerc (new, minimal and accurate)
+[run]
+branch = True
+source = scripts
+
+[report]
+show_missing = True
+skip_covered = False
+omit =
+    scripts/gui/*

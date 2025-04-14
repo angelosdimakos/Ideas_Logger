@@ -42,3 +42,7 @@
 - **AI System Design**: Different design patterns adopted from software engineering principles can be adopted to enable easier maintainability, extensibility and readibility.
 
 - **AI System Design**: Created project scaffold to enable rapid development for other projects.
+
+## 2025-04-06
+
+- **Execution Strategy**: Updated CI to generate complexity method wise.

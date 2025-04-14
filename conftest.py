@@ -150,7 +150,7 @@ def stub_indexers(monkeypatch, mock_raw_log_file, mock_correction_summaries_file
             return np.array([[0.1] * 384 for _ in texts])
 
     def mock_init_summary(self, *args, **kwargs):
-        self.paths = kwargs.get("paths") or args[0]
+        self.paths = kwargs.get("paths") if "paths" in kwargs else kwargs.get("index_root")
         self.index = None
         self.metadata = []
         self.embedding_model = DummyEmbeddingModel()
@@ -159,7 +159,7 @@ def stub_indexers(monkeypatch, mock_raw_log_file, mock_correction_summaries_file
         self.metadata_path = temp_dir / "vector_store" / "summary_metadata.pkl"
 
     def mock_init_raw(self, *args, **kwargs):
-        self.paths = kwargs.get("paths") or args[0]
+        self.paths = kwargs.get("paths") if "paths" in kwargs else kwargs.get("index_root")
         self.index = None
         self.metadata = []
         self.embedding_model = DummyEmbeddingModel()

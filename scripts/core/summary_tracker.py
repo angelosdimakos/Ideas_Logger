@@ -13,6 +13,7 @@ from scripts.paths import ZephyrusPaths
 
 logger = logging.getLogger(__name__)
 
+
 class SummaryTracker:
     def __init__(self, paths: ZephyrusPaths):
         self.paths = paths
@@ -48,9 +49,15 @@ class SummaryTracker:
     def get_summarized_count(self, main_category: str, subcategory: str) -> int:
         return self.tracker.get(main_category, {}).get(subcategory, {}).get("summarized_total", 0)
 
-    def update(self, main_category: str, subcategory: str, summarized: int = 0, new_entries: int = 0):
-        logger.debug(f"Updating {main_category} → {subcategory} | Summarized: {summarized}, New: {new_entries}")
-        self.tracker.setdefault(main_category, {}).setdefault(subcategory, {"summarized_total": 0, "logged_total": 0})
+    def update(
+        self, main_category: str, subcategory: str, summarized: int = 0, new_entries: int = 0
+    ):
+        logger.debug(
+            f"Updating {main_category} → {subcategory} | Summarized: {summarized}, New: {new_entries}"
+        )
+        self.tracker.setdefault(main_category, {}).setdefault(
+            subcategory, {"summarized_total": 0, "logged_total": 0}
+        )
         self.tracker[main_category][subcategory]["summarized_total"] += summarized
         self.tracker[main_category][subcategory]["logged_total"] += new_entries
         self._save()
@@ -74,7 +81,9 @@ class SummaryTracker:
                     self.update(main_cat, subcat, new_entries=len(entries))
 
         # === Count Summarized ===
-        summarized_counts: DefaultDict[str, DefaultDict[str, int]] = defaultdict(lambda: defaultdict(int))
+        summarized_counts: DefaultDict[str, DefaultDict[str, int]] = defaultdict(
+            lambda: defaultdict(int)
+        )
         for date, categories in summaries_data.items():
             for main_cat, subcats in categories.items():
                 for subcat, summaries in subcats.items():
@@ -114,20 +123,24 @@ class SummaryTracker:
                 for main_cat, subcats in categories.items():
                     for subcat, batches in subcats.items():
                         expected = sum(
-                            1 for batch in batches if batch.get("corrected_summary") or batch.get("original_summary")
+                            1
+                            for batch in batches
+                            if batch.get("corrected_summary") or batch.get("original_summary")
                         )
                         actual = self.get_summarized_count(main_cat, subcat)
 
                         if expected != actual:
                             logger.warning(
                                 "[VALIDATION] ❌ Mismatch in %s → %s | tracker=%d vs actual=%d",
-                                main_cat, subcat, actual, expected
+                                main_cat,
+                                subcat,
+                                actual,
+                                expected,
                             )
                             valid = False
                         elif verbose:
                             logger.info(
-                                "[VALIDATION] ✅ %s → %s | tracker=%d",
-                                main_cat, subcat, actual
+                                "[VALIDATION] ✅ %s → %s | tracker=%d", main_cat, subcat, actual
                             )
 
             if valid:
@@ -153,6 +166,7 @@ class SummaryTracker:
         - coverage_percent (0–100)
         """
         from scripts.config.config_loader import get_effective_config, get_config_value
+
         config = get_effective_config()
         batch_size = int(get_config_value(config, "batch_size", 5))
 
@@ -163,12 +177,13 @@ class SummaryTracker:
                 summarized_batches = counts.get("summarized_total", 0)
                 estimated_entries = summarized_batches * batch_size
                 coverage = (estimated_entries / logged) * 100 if logged > 0 else 0
-                data.append({
-                    "main_category": main_cat,
-                    "subcategory": subcat,
-                    "logged_total": logged,
-                    "estimated_summarized_entries": estimated_entries,
-                    "coverage_percent": round(coverage, 2)
-                })
+                data.append(
+                    {
+                        "main_category": main_cat,
+                        "subcategory": subcat,
+                        "logged_total": logged,
+                        "estimated_summarized_entries": estimated_entries,
+                        "coverage_percent": round(coverage, 2),
+                    }
+                )
         return data
-

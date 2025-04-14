@@ -38,20 +38,23 @@ class ZephyrusLoggerGUI:
             "error": "#f44336",  # Red for errors
             "text": "#212121",  # Dark text
             "light_text": "#757575",  # Light text
-            "border": "#e0e0e0"  # Border color
+            "border": "#e0e0e0",  # Border color
         }
 
         # Configure ttk styles
         self.style = ttk.Style()
         self.style.configure("TFrame", background=self.colors["secondary"])
-        self.style.configure("TLabel", background=self.colors["secondary"], foreground=self.colors["text"])
-        self.style.configure("TButton",
-                             background=self.colors["primary"],
-                             foreground="white",
-                             padding=6,
-                             relief="flat")
-        self.style.map("TButton",
-                       background=[("active", "#303f9f"), ("disabled", "#bdbdbd")])
+        self.style.configure(
+            "TLabel", background=self.colors["secondary"], foreground=self.colors["text"]
+        )
+        self.style.configure(
+            "TButton",
+            background=self.colors["primary"],
+            foreground="white",
+            padding=6,
+            relief="flat",
+        )
+        self.style.map("TButton", background=[("active", "#303f9f"), ("disabled", "#bdbdbd")])
 
         # Create primary notebook for tabbed interface
         self.notebook = ttk.Notebook(self.root)
@@ -98,7 +101,7 @@ class ZephyrusLoggerGUI:
             height=8,
             bg=self.colors["secondary"],
             fg=self.colors["text"],
-            font=("Consolas", 10)
+            font=("Consolas", 10),
         )
         self.log_display.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
@@ -113,7 +116,9 @@ class ZephyrusLoggerGUI:
 
         # Replace scrolledtext with a proper Treeview for coverage data
         columns = ("Category", "Subcategory", "Coverage", "Progress")
-        self.coverage_tree = ttk.Treeview(coverage_frame, columns=columns, show="headings", height=10)
+        self.coverage_tree = ttk.Treeview(
+            coverage_frame, columns=columns, show="headings", height=10
+        )
 
         # Configure columns
         self.coverage_tree.heading("Category", text="Main Category")
@@ -127,7 +132,9 @@ class ZephyrusLoggerGUI:
         self.coverage_tree.column("Progress", width=80, anchor="center")
 
         # Add scrollbar to treeview
-        coverage_scrollbar = ttk.Scrollbar(coverage_frame, orient="vertical", command=self.coverage_tree.yview)
+        coverage_scrollbar = ttk.Scrollbar(
+            coverage_frame, orient="vertical", command=self.coverage_tree.yview
+        )
         self.coverage_tree.configure(yscrollcommand=coverage_scrollbar.set)
 
         coverage_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -148,7 +155,7 @@ class ZephyrusLoggerGUI:
             font=("Segoe UI", 10),
             padx=5,
             pady=5,
-            wrap=tk.WORD
+            wrap=tk.WORD,
         )
         self.entry_box.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
@@ -170,24 +177,25 @@ class ZephyrusLoggerGUI:
 
         ttk.Label(cat_label_frame, text="Main Category:").pack(side=tk.LEFT, padx=(0, 5))
         self.selected_category_main = tk.StringVar()
-        self.main_combobox = ttk.Combobox(cat_label_frame, textvariable=self.selected_category_main, state="readonly",
-                                          width=20)
+        self.main_combobox = ttk.Combobox(
+            cat_label_frame, textvariable=self.selected_category_main, state="readonly", width=20
+        )
         self.main_combobox.pack(side=tk.LEFT, padx=5)
-        self.main_combobox.bind("<<ComboboxSelected>>",
-                                lambda e: self._update_main_category(self.selected_category_main.get()))
+        self.main_combobox.bind(
+            "<<ComboboxSelected>>",
+            lambda e: self._update_main_category(self.selected_category_main.get()),
+        )
 
         ttk.Label(cat_label_frame, text="Subcategory:").pack(side=tk.LEFT, padx=(10, 5))
         self.selected_subcategory = tk.StringVar()
-        self.sub_combobox = ttk.Combobox(cat_label_frame, textvariable=self.selected_subcategory, state="readonly",
-                                         width=20)
+        self.sub_combobox = ttk.Combobox(
+            cat_label_frame, textvariable=self.selected_subcategory, state="readonly", width=20
+        )
         self.sub_combobox.pack(side=tk.LEFT, padx=5)
 
         # Log button
         log_button = ttk.Button(
-            cat_frame,
-            text="Log Entry",
-            command=self._log_entry,
-            style="Accent.TButton"
+            cat_frame, text="Log Entry", command=self._log_entry, style="Accent.TButton"
         )
         log_button.pack(side=tk.RIGHT, padx=5)
 
@@ -205,23 +213,17 @@ class ZephyrusLoggerGUI:
 
         # Create buttons with icons (using text for now, can be replaced with actual icons)
         self.summarize_button = ttk.Button(
-            action_frame,
-            text="🧠 Summarize",
-            command=self._manual_summarize
+            action_frame, text="🧠 Summarize", command=self._manual_summarize
         )
         self.summarize_button.pack(side=tk.LEFT, padx=5)
 
         self.coverage_button = ttk.Button(
-            action_frame,
-            text="📊 Coverage",
-            command=self._show_coverage
+            action_frame, text="📊 Coverage", command=self._show_coverage
         )
         self.coverage_button.pack(side=tk.LEFT, padx=5)
 
         self.rebuild_button = ttk.Button(
-            action_frame,
-            text="📁 Rebuild Tracker",
-            command=self._rebuild_tracker
+            action_frame, text="📁 Rebuild Tracker", command=self._rebuild_tracker
         )
         self.rebuild_button.pack(side=tk.LEFT, padx=5)
 
@@ -257,9 +259,7 @@ class ZephyrusLoggerGUI:
         self.summary_search_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
         search_button = ttk.Button(
-            search_frame,
-            text="Search",
-            command=self._search_summary_from_entry
+            search_frame, text="Search", command=self._search_summary_from_entry
         )
         search_button.pack(side=tk.RIGHT, padx=5)
 
@@ -275,9 +275,11 @@ class ZephyrusLoggerGUI:
             fg=self.colors["text"],
             font=("Consolas", 10),
             padx=5,
-            pady=5
+            pady=5,
         )
-        results_scrollbar = ttk.Scrollbar(results_frame, orient="vertical", command=self.summary_results.yview)
+        results_scrollbar = ttk.Scrollbar(
+            results_frame, orient="vertical", command=self.summary_results.yview
+        )
         self.summary_results.configure(yscrollcommand=results_scrollbar.set)
 
         results_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -298,11 +300,7 @@ class ZephyrusLoggerGUI:
         self.raw_search_entry = ttk.Entry(search_frame, width=40)
         self.raw_search_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
-        search_button = ttk.Button(
-            search_frame,
-            text="Search",
-            command=self._search_raw_from_entry
-        )
+        search_button = ttk.Button(search_frame, text="Search", command=self._search_raw_from_entry)
         search_button.pack(side=tk.RIGHT, padx=5)
 
         # Results area with a better display
@@ -317,9 +315,11 @@ class ZephyrusLoggerGUI:
             fg=self.colors["text"],
             font=("Consolas", 10),
             padx=5,
-            pady=5
+            pady=5,
         )
-        results_scrollbar = ttk.Scrollbar(results_frame, orient="vertical", command=self.raw_results.yview)
+        results_scrollbar = ttk.Scrollbar(
+            results_frame, orient="vertical", command=self.raw_results.yview
+        )
         self.raw_results.configure(yscrollcommand=results_scrollbar.set)
 
         results_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -330,7 +330,9 @@ class ZephyrusLoggerGUI:
         self.raw_results.tag_configure("value", foreground="#1a237e")
         self.raw_results.tag_configure("number", foreground="#1b5e20")
         self.raw_results.tag_configure("string", foreground="#b71c1c")
-        self.raw_results.tag_configure("header", foreground="#880e4f", font=("Consolas", 10, "bold"))
+        self.raw_results.tag_configure(
+            "header", foreground="#880e4f", font=("Consolas", 10, "bold")
+        )
 
     def _build_advanced_search(self, parent):
         # Placeholder for advanced search (can be implemented later)
@@ -356,8 +358,12 @@ class ZephyrusLoggerGUI:
         controls_frame = ttk.Frame(analytics_container)
         controls_frame.pack(fill=tk.X, padx=5, pady=5)
 
-        ttk.Button(controls_frame, text="Generate Reports", command=lambda: None).pack(side=tk.LEFT, padx=5)
-        ttk.Button(controls_frame, text="Export Data", command=lambda: None).pack(side=tk.LEFT, padx=5)
+        ttk.Button(controls_frame, text="Generate Reports", command=lambda: None).pack(
+            side=tk.LEFT, padx=5
+        )
+        ttk.Button(controls_frame, text="Export Data", command=lambda: None).pack(
+            side=tk.LEFT, padx=5
+        )
 
     def _create_status_bar(self):
         status_bar = ttk.Frame(self.root, relief=tk.SUNKEN, borderwidth=1)
@@ -378,7 +384,7 @@ class ZephyrusLoggerGUI:
         categories = list(self.category_structure.keys())
 
         # Configure main category dropdown
-        self.main_combobox['values'] = categories
+        self.main_combobox["values"] = categories
         if categories:
             self.selected_category_main.set(categories[0])
             self._update_main_category(categories[0])
@@ -390,7 +396,7 @@ class ZephyrusLoggerGUI:
         subcats = self.category_structure.get(new_main, [])
 
         # Configure subcategory dropdown
-        self.sub_combobox['values'] = subcats
+        self.sub_combobox["values"] = subcats
         if subcats:
             self.selected_subcategory.set(subcats[0])
         else:
@@ -406,7 +412,9 @@ class ZephyrusLoggerGUI:
 
             # Add new data
             for i, entry in enumerate(data):
-                summarized = entry.get("summarized_total") or entry.get("estimated_summarized_entries", 0)
+                summarized = entry.get("summarized_total") or entry.get(
+                    "estimated_summarized_entries", 0
+                )
                 percent = entry.get("coverage_percent", 0)
 
                 # Set row colors based on coverage percent
@@ -422,12 +430,12 @@ class ZephyrusLoggerGUI:
                     "",
                     "end",
                     values=(
-                        entry['main_category'],
-                        entry['subcategory'],
+                        entry["main_category"],
+                        entry["subcategory"],
                         f"{percent}%",
-                        f"{summarized}/{entry['logged_total']}"
+                        f"{summarized}/{entry['logged_total']}",
                     ),
-                    tags=(tag,)
+                    tags=(tag,),
                 )
 
         except Exception as e:
@@ -464,6 +472,7 @@ class ZephyrusLoggerGUI:
     def _format_json_for_display(self, text_widget, json_text):
         """Helper function to display formatted JSON with syntax highlighting"""
         import json
+
         try:
             # Parse and re-stringify the JSON with nice formatting
             parsed = json.loads(json_text) if isinstance(json_text, str) else json_text
@@ -474,14 +483,15 @@ class ZephyrusLoggerGUI:
 
             # Insert with syntax highlighting
             import re
-            lines = formatted.split('\n')
+
+            lines = formatted.split("\n")
             for line in lines:
                 # Highlight keys
                 key_match = re.search(r'"([^"]+)"\s*:', line)
                 if key_match:
-                    pre = line[:key_match.start()]
-                    key = line[key_match.start():key_match.end()]
-                    post = line[key_match.end():]
+                    pre = line[: key_match.start()]
+                    key = line[key_match.start() : key_match.end()]
+                    post = line[key_match.end() :]
 
                     text_widget.insert(tk.END, pre)
                     text_widget.insert(tk.END, key, "key")
@@ -494,7 +504,11 @@ class ZephyrusLoggerGUI:
                         text_widget.insert(tk.END, colon_part)
 
                         # Number value
-                        if re.match(r'^-?\d+(\.\d+)?$', value_part) or value_part in ["true", "false", "null"]:
+                        if re.match(r"^-?\d+(\.\d+)?$", value_part) or value_part in [
+                            "true",
+                            "false",
+                            "null",
+                        ]:
                             text_widget.insert(tk.END, value_part, "number")
                         # String value
                         elif re.match(r'^"[^"]*"', value_part):
@@ -565,8 +579,14 @@ class ZephyrusLoggerGUI:
     def _rebuild_tracker(self):
         try:
             success = self.controller.rebuild_tracker()
-            self.tracker_status.set(f"Summary Tracker: {'✅ Valid (Rebuilt)' if success else '❌ Still Invalid'}")
-            msg = "Tracker successfully rebuilt." if success else "Tracker rebuild failed. Still invalid."
+            self.tracker_status.set(
+                f"Summary Tracker: {'✅ Valid (Rebuilt)' if success else '❌ Still Invalid'}"
+            )
+            msg = (
+                "Tracker successfully rebuilt."
+                if success
+                else "Tracker rebuild failed. Still invalid."
+            )
             gui_helpers.display_message("Tracker Status", msg)
             self._update_coverage_display()
         except Exception as e:

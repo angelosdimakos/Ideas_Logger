@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import scrolledtext, ttk
 from scripts.gui.base.base_panel import BasePanel
 
+
 class LogPanel(BasePanel):
     """
     LogPanel manages the display area for logs.

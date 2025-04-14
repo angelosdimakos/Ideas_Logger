@@ -60,11 +60,17 @@ class ConfigManager:
     _config_timestamp: Optional[float] = None
 
     @classmethod
-    def load_config(cls, config_path: str = "config/config.json", force_reload: bool = False) -> AppConfig:
+    def load_config(
+        cls, config_path: str = "config/config.json", force_reload: bool = False
+    ) -> AppConfig:
         path = Path(config_path)
 
-        if force_reload or cls._config is None or not path.exists() or path.stat().st_mtime > (
-                cls._config_timestamp or 0):
+        if (
+            force_reload
+            or cls._config is None
+            or not path.exists()
+            or path.stat().st_mtime > (cls._config_timestamp or 0)
+        ):
             if not path.exists():
                 logger.error("Configuration file missing: %s", config_path)
                 # Return a default AppConfig instance with predefined default values
@@ -116,7 +122,9 @@ class ConfigManager:
                 # Use the safe_read_json to read the config file
                 raw_config = safe_read_json(path)  # Returns an empty dict on failure
                 if not raw_config:
-                    logger.warning("Using default configuration as config file is empty or invalid.")
+                    logger.warning(
+                        "Using default configuration as config file is empty or invalid."
+                    )
                     return AppConfig()  # Return default config if the read fails
 
                 cls._config = AppConfig(**raw_config)  # Parse config into AppConfig model

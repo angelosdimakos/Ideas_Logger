@@ -4,6 +4,7 @@ from pathlib import Path
 from scripts.config.config_loader import get_effective_config, get_config_value
 from scripts.indexers.base_indexer import BaseIndexer
 from scripts.indexers.summary_indexer import SummaryIndexer
+from scripts.indexers.raw_log_indexer import RawLogIndexer
 from scripts.utils.file_utils import read_json, write_json
 from scripts.paths import ZephyrusPaths
 from scripts.core.core import ZephyrusLoggerCore  # 🔥 Real core used here

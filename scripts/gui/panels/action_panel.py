@@ -5,10 +5,12 @@ from typing import Optional
 from scripts.gui.base.base_panel import BasePanel
 from scripts.gui.widget_factory import WidgetFactory
 
+
 class ActionPanel(BasePanel):
     """
     ActionPanel hosts buttons for actions such as summarizing or rebuilding.
     """
+
     def __init__(self, parent, controller=None, **kwargs):
         # Define instance attributes for type checkers
         self.frame: Optional[ttk.Frame] = None

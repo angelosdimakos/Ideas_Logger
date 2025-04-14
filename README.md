@@ -114,6 +114,20 @@ python scripts/main.py
 - [ ] Plugin execution from GUI
 
 ---
+### 📚 Full Documentation
+
+Want the full breakdown?
+
+- [Installation Guide](docs/install.md)
+- [Configuration Reference](docs/config.md)
+- [CLI / GUI Usage](docs/usage.md)
+- [Testing & CI Workflows](docs/testing.md)
+- [RefactorGuard & Dev Tools](docs/dev_tools.md)
+- [Architecture Overview](docs/architecture.md)
+- [Troubleshooting & FAQ](docs/troubleshooting.md)
+
+> Prefer it in one scroll? See [📘 Full Docs (Single Page)](docs/README_Full.md)
+---
 
 ### 🧙‍♂️ Author’s Note
 

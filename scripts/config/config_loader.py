@@ -3,6 +3,7 @@ import os
 import logging
 from pathlib import Path
 
+
 def setup_logging():
     """
     Configures logging for the entire application.
@@ -15,11 +16,12 @@ def setup_logging():
     logging.basicConfig(
         level=numeric_level,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        handlers=[logging.StreamHandler()]
+        handlers=[logging.StreamHandler()],
     )
     # Log a debug message to confirm that logging is configured.
     logger = logging.getLogger(__name__)
     logger.debug("Centralized logging configured at level %s", level_str)
+
 
 # Set up logging as early as possible.
 setup_logging()
@@ -105,6 +107,7 @@ def get_config_value(config, key, default):
         return default
     return config[key]
 
+
 def get_absolute_path(relative_path):
     """
     Build an absolute path from a project-root-relative path.
@@ -120,6 +123,7 @@ def get_absolute_path(relative_path):
     except (TypeError, ValueError, OSError) as e:
         logger.error(f"Failed to resolve absolute path for '{relative_path}': {e}")
         return None
+
 
 def is_test_mode(config=None):
     """
@@ -138,6 +142,7 @@ def is_test_mode(config=None):
     if config is None:
         config = load_config()
         return config.get("test_mode", False)
+
 
 def get_effective_config(config_path=CONFIG_FILE_PATH):
     """
@@ -160,12 +165,16 @@ def get_effective_config(config_path=CONFIG_FILE_PATH):
             logger.warning("⚠️ Test mode is active. Overriding config paths with test equivalents.")
 
             config["logs_dir"] = config.get("test_logs_dir", "tests/mock_data/logs")
-            config["vector_store_dir"] = config.get("test_vector_store_dir", "tests/mock_data/vector_store")
+            config["vector_store_dir"] = config.get(
+                "test_vector_store_dir", "tests/mock_data/vector_store"
+            )
             config["export_dir"] = config.get("test_export_dir", "tests/mock_data/exports")
 
             # Override all path-specific keys using those dirs
             config["raw_log_path"] = str(Path(config["logs_dir"]) / "zephyrus_log.json")
-            config["correction_summaries_path"] = str(Path(config["logs_dir"]) / "correction_summaries.json")
+            config["correction_summaries_path"] = str(
+                Path(config["logs_dir"]) / "correction_summaries.json"
+            )
             config["summary_tracker_path"] = str(Path(config["logs_dir"]) / "summary_tracker.json")
     except TypeError as e:
         logger.error("Invalid directory paths in test config override: %s", e)
@@ -176,6 +185,8 @@ def get_effective_config(config_path=CONFIG_FILE_PATH):
 if __name__ == "__main__":
     config = load_config()
     batch_size = get_config_value(config, "batch_size", 5)
-    summary_path = get_absolute_path(get_config_value(config, "correction_summaries_path", "logs/correction_summaries.json"))
+    summary_path = get_absolute_path(
+        get_config_value(config, "correction_summaries_path", "logs/correction_summaries.json")
+    )
     logger.info(f"Batch Size: {batch_size}")
     logger.info(f"Summary Path: {summary_path}")

@@ -4,6 +4,7 @@ from scripts.core.core import ZephyrusLoggerCore
 
 logger = logging.getLogger(__name__)
 
+
 class GUIController:
     def __init__(self, logger_core=None, script_dir=None):
         try:

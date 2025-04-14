@@ -6,12 +6,14 @@ from scripts.gui.widget_factory import WidgetFactory
 from scripts.gui.gui_controller import GUIController  # Import your controller
 from scripts.gui.tabs.main_tab import MainTab  # Concrete implementation of MainTab
 
+
 class ZephyrusLoggerApp:
     """
     Core Application Class that initializes the main window,
     sets up the style manager, creates the main notebook, and
     integrates the concrete tabs.
     """
+
     def __init__(self, controller):
         self.controller = controller
 
@@ -52,6 +54,7 @@ class ZephyrusLoggerApp:
     def run(self):
         """Starts the main event loop."""
         self.root.mainloop()
+
 
 # For testing purposes, instantiate and run the app:
 if __name__ == "__main__":
