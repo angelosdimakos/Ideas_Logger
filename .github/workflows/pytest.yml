@@ -45,11 +45,21 @@ jobs:
           
       - name: 🧹 Lint and Static Analysis
         run: |
-          pip install black flake8 mypy
           mkdir -p lint-reports
           black --check scripts > lint-reports/black.txt 2>&1 || true
           flake8 scripts > lint-reports/flake8.txt 2>&1 || true
           MYPYPATH=. mypy --explicit-package-bases scripts > lint-reports/mypy.txt 2>&1 || true
+
+      - name: 📚 Docstring Linting
+        run: |
+          pydocstyle scripts > lint-reports/pydocstyle.txt 2>&1 || true
+
+      - name: 🧠 Doc Coverage Analysis
+        run: |
+          pip install interrogate
+          interrogate -v scripts > lint-reports/interrogate.txt 2>&1 || true
+
+
       
 
       - name: 📄 Upload Lint Reports
