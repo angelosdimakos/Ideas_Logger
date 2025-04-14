@@ -5,7 +5,7 @@ from scripts.gui.gui import ZephyrusLoggerGUI
 from scripts.gui.gui_controller import GUIController
 from scripts.gui.gui_logging import GUILogHandler
 
-if __name__ == "__main__":
+def bootstrap(start_gui: bool = True):
     # 1. Setup logging
     setup_logging()
 
@@ -28,11 +28,17 @@ if __name__ == "__main__":
 
         # 4. Start the GUI
         app = ZephyrusLoggerGUI(controller)
-
         logger.info("[GUI] ZephyrusLoggerGUI launched. Awaiting user interaction.")
 
-        # 6. Run the GUI event loop
-        app.run()
+        # 5. Run the GUI event loop
+        if start_gui:
+            app.run()
+
+        return app  # so tests can hook it
 
     except Exception as e:
         logger.critical("Fatal error during startup: %s", e, exc_info=True)
+        raise
+
+if __name__ == "__main__":
+    bootstrap()

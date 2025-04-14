@@ -83,30 +83,29 @@ class BaseIndexer:
         results = []
         for i, idx in enumerate(I[0]):
             if idx < len(self.metadata):
-                result = dict(self.metadata[idx])
+                result = dict(self.metadata[int(idx)])
                 result["similarity"] = float(1.0 / (1.0 + D[0][i]))
                 results.append(result)
         return results
 
-
-    def build_index(self, texts: List[str], meta: List[Dict[str, Any]]) -> bool:
+    def build_index(self, texts: List[str], meta: List[Dict[str, Any]], fail_on_empty: bool = False) -> bool:
         """
         Builds a FAISS index from provided texts and metadata.
 
-        This method encodes the given texts into embeddings using a sentence transformer model.
-        It creates a FAISS index with the embeddings and associates it with the provided metadata.
-        The index and metadata are then saved to their respective files.
-
         Args:
             texts (List[str]): A list of texts to encode and index.
-            meta (List[Dict[str, Any]]): A list of metadata dictionaries corresponding to each text.
+            meta (List[Dict[str, Any]]): Metadata per text entry.
+            fail_on_empty (bool): Raise ValueError if input is empty (useful for tests).
 
         Returns:
-            bool: True if the index is built and saved successfully, False otherwise.
+            bool: True if successful, False otherwise.
         """
         if not texts:
             logger.warning("No data to build index.")
+            if fail_on_empty:
+                raise ValueError("Cannot build index with empty data.")
             return False
+
         try:
             embeddings = self.embedding_model.encode(texts, convert_to_numpy=True)
             self.index = faiss.IndexFlatL2(embeddings.shape[1])
