@@ -41,6 +41,7 @@ jobs:
           python -m pip install --upgrade pip wheel setuptools
           pip install numpy==1.24.0 pydantic==1.10.2 ollama==0.1.0 sentence-transformers torch==2.0.1
           pip install pytest pytest-cov black flake8 mypy
+          pip install faiss-cpu --only-binary=faiss-cpu
           pip freeze
 
       - name: 🧹 Lint and Static Analysis
