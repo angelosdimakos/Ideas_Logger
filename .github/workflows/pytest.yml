@@ -1,4 +1,4 @@
-name: Run Tests (Windows Only)
+name: Run Tests (Ubuntu + CI Audit)
 
 on:
   push:
@@ -13,6 +13,10 @@ on:
       - main
       - master
 
+defaults:
+  run:
+    working-directory: ${{ github.workspace }}
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -23,29 +27,33 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: 💾 Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11.8"  # ← Avoid 3.11.9 tkinter issue on GitHub Actions (as of Apr 2025)
+          python-version: "3.11.8"
 
       - name: 📦 Install Dependencies
-        shell: bash
         run: |
           python -m pip install --upgrade pip wheel setuptools
           pip install faiss-cpu --only-binary=faiss-cpu
           pip install -r requirements.txt
           pip freeze
-      
 
       - name: ✅ Run Unit + Integration Tests
-        shell: bash
         run: |
-          python -m pytest -c pytest.ini \
+          python -m pytest -c pytest.ini --exitfirst \
             --cov=scripts --cov-config=.coveragerc \
             --cov-report=xml --cov-report=html
 
       - name: 📄 Check for Coverage Report
-        shell: bash
         run: |
           if [ ! -f coverage.xml ]; then
             echo "❌ coverage.xml not found!"
@@ -70,7 +78,6 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: 🧠 Run RefactorGuard Audit
-        shell: bash
         run: |
           python scripts/refactor/refactor_guard_cli.py \
             --refactored scripts \
@@ -78,8 +85,16 @@ jobs:
             --missing-tests \
             --json
 
+      - name: 🔍 Git Diff Audit (PRs only)
+        if: github.event_name == 'pull_request'
+        run: |
+          python scripts/refactor/refactor_guard_cli.py \
+            --refactored scripts \
+            --all \
+            --git-diff \
+            --json
+
       - name: 🚨 Show Complexity Summary
-        shell: bash
         run: |
           python scripts/utils/complexity_summary.py refactor_audit.json
 
@@ -91,7 +106,5 @@ jobs:
           path: refactor_audit.json
 
       - name: 🧾 Audit Summary Recap
-        shell: bash
         run: |
           python -c "import json; f=open('refactor_audit.json', encoding='utf-8-sig'); data=json.load(f); method_count = sum(len(file.get('complexity', {})) for file in data.values()); file_count = len(data); print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')"
-      

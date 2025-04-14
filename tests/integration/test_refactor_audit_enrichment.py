@@ -1,7 +1,9 @@
 import os
 import json
 import pytest
-from scripts.refactor.refactor_guard import RefactorGuard, parse_coverage_with_debug
+from scripts.refactor.refactor_guard import RefactorGuard
+from scripts.refactor.coverage_parser import parse_coverage_xml_to_method_hits
+from scripts.refactor.method_line_ranges import extract_method_line_ranges
 
 @pytest.fixture
 def test_paths(tmp_path):
@@ -49,18 +51,15 @@ class Example:
         "coverage_path": str(coverage_dir / "coverage.xml")
     }
 
-def test_refactor_guard_enrichment(test_paths, monkeypatch):
-    # Patch coverage search to only use our test coverage file
-    monkeypatch.setattr(
-        "scripts.refactor.refactor_guard.parse_coverage_with_debug",
-        lambda **_: parse_coverage_with_debug([test_paths["coverage_path"]], verbose=True)
-    )
-
+def test_refactor_guard_enrichment(test_paths):
     guard = RefactorGuard()
-    # Attach the coverage data to the guard so enrichment occurs.
-    coverage_data = parse_coverage_with_debug([test_paths["coverage_path"]], verbose=True)
-    if coverage_data:
-        guard.attach_coverage_hits(coverage_data)
+
+    # Extract method ranges from the refactored file
+    method_ranges = extract_method_line_ranges(test_paths["refactored"])
+
+    # Load coverage data and attach
+    coverage_data = parse_coverage_xml_to_method_hits(test_paths["coverage_path"], method_ranges)
+    guard.attach_coverage_hits(coverage_data)
 
     result = guard.analyze_module(test_paths["original"], test_paths["refactored"])
 

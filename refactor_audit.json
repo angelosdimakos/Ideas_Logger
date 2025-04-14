@@ -1,0 +1,1608 @@
+﻿{
+  "dev_commit.py": {
+    "method_diff": {},
+    "complexity": {
+      "get_current_branch": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "get_modified_files": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "is_valid_branch_name": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "generate_suggested_branch_name": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "switch_to_new_branch": {
+        "complexity": 7,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "main.py": {
+    "method_diff": {},
+    "complexity": {},
+    "missing_tests": []
+  },
+  "paths.py": {
+    "method_diff": {
+      "ZephyrusPaths": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "ZephyrusPaths._resolve_path": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusPaths.from_config": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "__init__.py": {
+    "method_diff": {},
+    "complexity": {},
+    "missing_tests": []
+  },
+  "ai\\ai_summarizer.py": {
+    "method_diff": {
+      "AISummarizer": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "AISummarizer.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "AISummarizer._fallback_summary": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "AISummarizer.summarize_entry": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "AISummarizer.summarize_entries_bulk": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "ai\\__init__.py": {
+    "method_diff": {},
+    "complexity": {},
+    "missing_tests": []
+  },
+  "config\\config_loader.py": {
+    "method_diff": {},
+    "complexity": {
+      "setup_logging": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "load_config": {
+        "complexity": 7,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "get_config_value": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "get_absolute_path": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "is_test_mode": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "get_effective_config": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "config\\config_manager.py": {
+    "method_diff": {
+      "AppConfig": {
+        "missing": [],
+        "added": []
+      },
+      "ConfigManager": {
+        "missing": [],
+        "added": []
+      },
+      "Config": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "ConfigManager.load_config": {
+        "complexity": 9,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ConfigManager.get_value": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ConfigManager.reset": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ConfigManager.validate_config_paths": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "config\\constants.py": {
+    "method_diff": {},
+    "complexity": {},
+    "missing_tests": []
+  },
+  "config\\logging_setup.py": {
+    "method_diff": {},
+    "complexity": {
+      "setup_logging": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "config\\__init__.py": {
+    "method_diff": {},
+    "complexity": {},
+    "missing_tests": []
+  },
+  "core\\core.py": {
+    "method_diff": {
+      "ZephyrusLoggerCore": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "ZephyrusLoggerCore.__init__": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerCore._safe_read_json": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerCore._initialize_environment": {
+        "complexity": 6,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerCore._get_summary_for_batch": {
+        "complexity": 6,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerCore.log_to_json": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerCore.generate_global_summary": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerCore.generate_summary": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerCore.log_to_markdown": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerCore.force_summary_all": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerCore.save_entry": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerCore.search_summaries": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerCore.search_raw_logs": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerCore.log_new_entry": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "core\\log_manager.py": {
+    "method_diff": {
+      "LogManager": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "LogManager.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "LogManager._safe_read_or_create_json": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "LogManager.read_logs": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "LogManager.update_logs": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "LogManager.append_entry": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "LogManager.updater": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "LogManager.get_unsummarized_batch": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "LogManager.update_correction_summaries": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "core\\summary_tracker.py": {
+    "method_diff": {
+      "SummaryTracker": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "SummaryTracker.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryTracker._safe_load_tracker": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryTracker._safe_init_summary_indexer": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryTracker._safe_init_raw_indexer": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryTracker.get_summarized_count": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryTracker.update": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryTracker._save": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryTracker.rebuild": {
+        "complexity": 14,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryTracker.validate": {
+        "complexity": 11,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryTracker.get_coverage_data": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "core\\__init__.py": {
+    "method_diff": {},
+    "complexity": {},
+    "missing_tests": []
+  },
+  "gui\\app.py": {
+    "method_diff": {
+      "ZephyrusLoggerApp": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "ZephyrusLoggerApp.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerApp._create_status_bar": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerApp.run": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "gui\\gui.py": {
+    "method_diff": {
+      "ZephyrusLoggerGUI": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "ZephyrusLoggerGUI.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._setup_gui_logging": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._build_main_tab": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._build_search_tab": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._build_summary_search": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._build_raw_search": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._build_advanced_search": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._build_analytics_tab": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._create_status_bar": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._populate_category_dropdown": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._update_main_category": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._update_coverage_display": {
+        "complexity": 8,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._on_entry_focus_in": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._on_entry_focus_out": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._log_entry": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._format_json_for_display": {
+        "complexity": 9,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._search_summary_from_entry": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._search_raw_from_entry": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._manual_summarize": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._rebuild_tracker": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI._show_coverage": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ZephyrusLoggerGUI.run": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "gui\\gui_controller.py": {
+    "method_diff": {
+      "GUIController": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "GUIController.__init__": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "GUIController.log_entry": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "GUIController.force_summarize_all": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "GUIController.search_summaries": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "GUIController.search_raw_logs": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "GUIController.rebuild_tracker": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "GUIController.get_tracker_status": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "GUIController.get_coverage_data": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "GUIController.get_logs": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "gui\\gui_logging.py": {
+    "method_diff": {
+      "GUILogHandler": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "GUILogHandler.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "GUILogHandler.emit": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "GUILogHandler.append_message": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "gui\\style_manager.py": {
+    "method_diff": {
+      "StyleManager": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "StyleManager.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "StyleManager.initialize_styles": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "StyleManager.update_style": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "gui\\widget_factory.py": {
+    "method_diff": {
+      "WidgetFactory": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "WidgetFactory.create_button": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "WidgetFactory.create_label": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "WidgetFactory.create_entry": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "WidgetFactory.create_frame": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "WidgetFactory.create_notebook": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "gui\\__init__.py": {
+    "method_diff": {},
+    "complexity": {},
+    "missing_tests": []
+  },
+  "gui\\base\\base_panel.py": {
+    "method_diff": {
+      "BasePanel": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "BasePanel.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "BasePanel.initialize_ui": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "BasePanel.refresh": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "gui\\base\\base_tab.py": {
+    "method_diff": {
+      "BaseTab": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "BaseTab.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "BaseTab.setup_tab": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "BaseTab.on_show": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "gui\\panels\\action_panel.py": {
+    "method_diff": {
+      "ActionPanel": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "ActionPanel.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ActionPanel.initialize_ui": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ActionPanel.on_summarize": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ActionPanel.on_rebuild": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ActionPanel.refresh": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "gui\\panels\\coverage_panel.py": {
+    "method_diff": {
+      "CoveragePanel": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "CoveragePanel.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "CoveragePanel.initialize_ui": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "CoveragePanel.refresh": {
+        "complexity": 7,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "gui\\panels\\entry_panel.py": {
+    "method_diff": {
+      "EntryPanel": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "EntryPanel.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "EntryPanel.initialize_ui": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "EntryPanel.on_submit": {
+        "complexity": 6,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "EntryPanel.refresh": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "gui\\panels\\log_panel.py": {
+    "method_diff": {
+      "LogPanel": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "LogPanel.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "LogPanel.initialize_ui": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "LogPanel.refresh": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "gui\\tabs\\main_tab.py": {
+    "method_diff": {
+      "MainTab": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "MainTab.setup_tab": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "MainTab.on_show": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "indexers\\base_indexer.py": {
+    "method_diff": {
+      "BaseIndexer": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "BaseIndexer.__init__": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "BaseIndexer.load_index": {
+        "complexity": 7,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "BaseIndexer.search": {
+        "complexity": 6,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "BaseIndexer.build_index": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "BaseIndexer.save_index": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "indexers\\raw_log_indexer.py": {
+    "method_diff": {
+      "RawLogIndexer": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "RawLogIndexer.__init__": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "RawLogIndexer.load_entries": {
+        "complexity": 9,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "RawLogIndexer._process_categories": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "RawLogIndexer._process_subcategories": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "RawLogIndexer._process_entries": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "RawLogIndexer.build_index_from_logs": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "RawLogIndexer.rebuild": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "indexers\\summary_indexer.py": {
+    "method_diff": {
+      "SummaryIndexer": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "SummaryIndexer.__init__": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryIndexer.load_entries": {
+        "complexity": 9,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryIndexer._process_categories": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryIndexer._process_subcategories": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryIndexer._process_batches": {
+        "complexity": 6,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryIndexer.build_index_from_logs": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "SummaryIndexer.rebuild": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "indexers\\__init__.py": {
+    "method_diff": {},
+    "complexity": {},
+    "missing_tests": []
+  },
+  "refactor\\ast_extractor.py": {
+    "method_diff": {
+      "ClassMethodInfo": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "ClassMethodInfo.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ClassMethodInfo.add_method": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ClassMethodInfo.__repr__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "extract_class_methods": {
+        "complexity": 6,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "compare_class_methods": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "refactor\\complexity_analyzer.py": {
+    "method_diff": {
+      "ComplexityVisitor": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "ComplexityVisitor.__init__": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ComplexityVisitor.visit_ClassDef": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ComplexityVisitor.visit_FunctionDef": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "ComplexityVisitor._calculate_complexity": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "calculate_function_complexity_map": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "calculate_module_complexity": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "calculate_cyclomatic_complexity_for_module": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "refactor\\refactor_guard.py": {
+    "method_diff": {
+      "RefactorGuard": {
+        "missing": [],
+        "added": []
+      }
+    },
+    "complexity": {
+      "RefactorGuard.__init__": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "RefactorGuard.analyze_tests": {
+        "complexity": 7,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "RefactorGuard.analyze_module": {
+        "complexity": 10,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "RefactorGuard.attach_coverage_hits": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "parse_coverage_with_debug": {
+        "complexity": 9,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "extract_coverage_hits": {
+        "complexity": 9,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "refactor\\refactor_guard_cli.py": {
+    "method_diff": {},
+    "complexity": {
+      "handle_json_output": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "print_method_stats": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "print_summary": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "parse_args": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "dispatch_mode": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "handle_full_scan": {
+        "complexity": 6,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "handle_single_file": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "handle_output": {
+        "complexity": 6,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "main": {
+        "complexity": 6,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "utils\\complexity_summary.py": {
+    "method_diff": {},
+    "complexity": {
+      "analyze_complexity": {
+        "complexity": 8,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "run_analysis": {
+        "complexity": 10,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "utils\\file_utils.py": {
+    "method_diff": {},
+    "complexity": {
+      "sanitize_filename": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "get_timestamp": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "safe_path": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "write_json": {
+        "complexity": 7,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "read_json": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "safe_read_json": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "make_backup": {
+        "complexity": 5,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "zip_python_files": {
+        "complexity": 7,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "utils\\git_utils.py": {
+    "method_diff": {},
+    "complexity": {
+      "get_changed_files": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "interactive_commit_flow": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "get_current_branch": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "utils\\gui_helpers.py": {
+    "method_diff": {},
+    "complexity": {
+      "validate_log_input": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "get_current_date": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "get_current_timestamp": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "clear_text_input": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "update_status_label": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "get_selected_option": {
+        "complexity": 2,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "append_log_entry": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "get_category_options": {
+        "complexity": 3,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "create_status_label": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "create_log_frame": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "log_message": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "create_dropdown_menu": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "create_button": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "show_messagebox": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "create_text_entry": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "format_summary_results": {
+        "complexity": 7,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "format_raw_results": {
+        "complexity": 6,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "display_message": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "display_error": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "format_coverage_data": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "utils\\link_summaries_to_raw_logs.py": {
+    "method_diff": {},
+    "complexity": {
+      "flatten_raw_entries": {
+        "complexity": 4,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      },
+      "inject_entries_into_summaries": {
+        "complexity": 12,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "utils\\zip_util.py": {
+    "method_diff": {},
+    "complexity": {
+      "main": {
+        "complexity": 1,
+        "coverage": "N/A",
+        "hits": "N/A",
+        "lines": "N/A"
+      }
+    },
+    "missing_tests": []
+  },
+  "utils\\__init__.py": {
+    "method_diff": {},
+    "complexity": {},
+    "missing_tests": []
+  }
+}

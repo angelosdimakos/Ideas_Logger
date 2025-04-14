@@ -2,7 +2,8 @@ import pytest
 import tempfile
 import os
 from textwrap import dedent
-from scripts.refactor.refactor_guard import RefactorGuard, parse_coverage_with_debug
+from scripts.refactor.refactor_guard import RefactorGuard
+
 
 def test_refactor_guard_module_comparison():
     """Test analyzing two modules that differ slightly."""
@@ -29,11 +30,6 @@ def test_refactor_guard_module_comparison():
 
     try:
         guard = RefactorGuard()
-
-        # Load coverage data (if needed) and inject it into the guard instance
-        coverage_hits = parse_coverage_with_debug()  # Adjust if coverage file path is known
-        if coverage_hits:
-            guard.attach_coverage_hits(coverage_hits)
 
         # Use analyze_module to get differences between original and refactored modules
         result = guard.analyze_module(orig_path, ref_path)
@@ -77,11 +73,6 @@ def test_refactor_guard_missing_tests():
 
     try:
         guard = RefactorGuard()
-
-        # Load coverage data (if needed) and inject it into the guard instance
-        coverage_hits = parse_coverage_with_debug()  # Adjust if coverage file path is known
-        if coverage_hits:
-            guard.attach_coverage_hits(coverage_hits)
 
         # Pass the test file path so that the missing tests logic is applied.
         result = guard.analyze_module("", ref_path, test_file_path=test_path)
