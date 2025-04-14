@@ -39,15 +39,30 @@ jobs:
       - name: 📆 Install Dependencies
         run: |
           python -m pip install --upgrade pip wheel setuptools
-          pip install faiss-cpu --only-binary=faiss-cpu
-          pip install -r requirements.txt
+          pip install numpy==1.24.0 pydantic==1.10.2 ollama==0.1.0 sentence-transformers torch==2.0.1
+          pip install pytest pytest-cov black flake8 mypy
           pip freeze
+
+      - name: 🧹 Lint and Static Analysis
+        run: |
+          mkdir -p lint-reports
+          black --check scripts > lint-reports/black.txt 2>&1 || true
+          flake8 scripts > lint-reports/flake8.txt 2>&1 || true
+          mypy scripts > lint-reports/mypy.txt 2>&1 || true
+
+      - name: 🗂 Upload Lint Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-reports
+          path: lint-reports/
+
 
       - name: ✅ Run Unit + Integration Tests
         run: |
           python -m pytest -c pytest.ini \
             --cov=scripts --cov-config=.coveragerc \
-            --cov-report=xml --cov-report=html || true
+            --cov-report=xml --cov-report=html
 
       - name: 📄 Check for Coverage Report
         run: |
@@ -62,7 +77,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: htmlcov-windows
+          name: htmlcov
           path: htmlcov/
 
       - name: ☁️ Upload to Codecov
