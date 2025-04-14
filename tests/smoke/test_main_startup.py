@@ -28,11 +28,11 @@ def test_main_smoke_startup():
 
 
 def test_main_bootstrap_without_gui(monkeypatch):
-    """🧪 Test full main.bootstrap without triggering GUI mainloop."""
-    # Optional: avoid actual logger setup
+    """🧪 Test main.bootstrap when GUI is disabled."""
     monkeypatch.setattr("scripts.config.config_loader.setup_logging", lambda: None)
 
-    with patch("scripts.gui.gui.ZephyrusLoggerGUI") as MockGUI:
-        app = bootstrap(start_gui=False)
-        assert app is not None
-        assert hasattr(app, "run")
+    controller = bootstrap(start_gui=False)
+
+    assert isinstance(controller, GUIController)
+    assert hasattr(controller, "log_entry")  # pick any actual method that matters
+
