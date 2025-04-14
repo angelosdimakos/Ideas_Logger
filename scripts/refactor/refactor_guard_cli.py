@@ -4,7 +4,6 @@ import sys
 import json
 
 # 👇 Add parent of 'scripts' to sys.path to avoid import errors
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 import io
@@ -20,10 +19,10 @@ try:
 except Exception:
     pass  # Silently ignore for CI environments
 
-# 👇 Add parent of 'scripts' to sys.path to avoid import errors
-
 from scripts.utils.git_utils import get_changed_files
 from scripts.refactor.refactor_guard import RefactorGuard
+from scripts.refactor.coverage_parser import parse_coverage_xml_to_method_hits
+from scripts.refactor.method_line_ranges import extract_method_line_ranges
 
 def handle_json_output(summary, output_name):
     filename = f"{output_name}.json"
@@ -31,7 +30,6 @@ def handle_json_output(summary, output_name):
         json.dump(summary, f, indent=2)
     print(f"\n📌 Saved audit report to {filename}")
 
-    # Debug log to see if coverage fields are in place
     for method, data in summary.get("complexity", {}).items():
         print(f"Method: {method}, Coverage: {data.get('coverage', 'N/A')}")
 
@@ -131,16 +129,13 @@ def main():
     args = parse_args()
     guard = RefactorGuard()
 
-    # 🚀 Optional: Load coverage data from coverage.xml if available
-    from scripts.refactor.refactor_guard import parse_coverage_with_debug
-    coverage_hits = parse_coverage_with_debug()  # ← Just call it with default paths
+    method_ranges = extract_method_line_ranges(args.refactored)
+    coverage_hits = parse_coverage_xml_to_method_hits("coverage.xml", method_ranges)
 
     if coverage_hits:
-        # Directly assign to the guard instance variable
-        guard.coverage_hits = coverage_hits  # Store in internal coverage_hits variable for use
+        guard.coverage_hits = coverage_hits
 
     result = dispatch_mode(args, guard)
-
     handle_output(result, args, guard)
 
     if args.missing_tests and args.tests:
