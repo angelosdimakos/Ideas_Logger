@@ -24,6 +24,21 @@ from scripts.refactor.refactor_guard import RefactorGuard
 from scripts.refactor.coverage_parser import parse_coverage_xml_to_method_hits
 from scripts.refactor.method_line_ranges import extract_method_line_ranges
 
+def safe_collect_method_ranges(path: str) -> dict:
+    method_ranges = {}
+    if os.path.isfile(path):
+        method_ranges = extract_method_line_ranges(path)
+    elif os.path.isdir(path):
+        for root, _, files in os.walk(path):
+            for f in files:
+                if f.endswith(".py"):
+                    full_path = os.path.join(root, f)
+                    try:
+                        method_ranges.update(extract_method_line_ranges(full_path))
+                    except Exception as e:
+                        print(f"⚠️ Failed to parse {full_path}: {e}")
+    return method_ranges
+
 def handle_json_output(summary, output_name):
     filename = f"{output_name}.json"
     with open(filename, "w", encoding="utf-8-sig") as f:
@@ -129,7 +144,7 @@ def main():
     args = parse_args()
     guard = RefactorGuard()
 
-    method_ranges = extract_method_line_ranges(args.refactored)
+    method_ranges = safe_collect_method_ranges(args.refactored)
     coverage_hits = parse_coverage_xml_to_method_hits("coverage.xml", method_ranges)
 
     if coverage_hits:
