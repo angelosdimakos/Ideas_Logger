@@ -1,7 +1,8 @@
+# .coveragerc (new, minimal and accurate)
 [run]
 branch = True
-source = scripts, core, utils, gui, config, refactor
+source = scripts
 
 [report]
 show_missing = True
-skip_covered = True
+skip_covered = False
