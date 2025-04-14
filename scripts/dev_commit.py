@@ -49,6 +49,7 @@ def switch_to_new_branch():
     if not is_valid_branch_name(new_branch):
         print("❌ Invalid branch name. Use only letters, numbers, dashes, slashes, and underscores.")
         sys.exit(1)
+        return  # <- to stop execution in test context
 
     print(f"⏳ Running: git checkout -b {new_branch}")
     try:
