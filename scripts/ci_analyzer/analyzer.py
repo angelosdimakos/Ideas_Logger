@@ -34,11 +34,21 @@ class CIInsightReport:
 
             if issues:
                 lines.append("**Top Issues:**")
+                default_file = data.get("file", "N/A")
                 for issue in issues[:5]:
-                    file = issue.get("file", "N/A")
-                    msg = issue.get("message", issue.get("description", "No message"))
-                    line = issue.get("line", None)
-                    lines.append(f"  - `{file}`" + (f":`{line}`" if line else "") + f" — {msg}")
+                    if isinstance(issue, str):
+                        file = default_file
+                        line = None
+                        msg = issue
+                    else:
+                        file = issue.get("file", default_file)
+                        line = issue.get("line")
+                        msg = issue.get("message", issue.get("description", str(issue)))
+                    lines.append(
+                        f"  - `{file}`"
+                        + (f":`{line}`" if line is not None else "")
+                        + f" — {msg}"
+                    )
                 if len(issues) > 5:
                     lines.append(f"  ...and {len(issues) - 5} more.\n")
             else:
@@ -49,9 +59,6 @@ class CIInsightReport:
     def save(self, filepath: str = "ci_summary.md"):
         """
         Writes the generated summary to a Markdown file.
-
-        Args:
-            filepath (str): Path to save the summary markdown.
         """
         summary = self.generate_summary()
         with open(filepath, "w", encoding="utf-8") as f:
