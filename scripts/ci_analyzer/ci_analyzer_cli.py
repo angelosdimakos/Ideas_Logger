@@ -1,7 +1,12 @@
+import os
+import sys
+
+# 👇 Add parent of 'scripts' to sys.path to avoid import errors
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 from scripts.ci_analyzer.analyzer import CIInsightReport
 from scripts.ci_analyzer.lint_parser import LintParser
 from scripts.ci_analyzer.refactor_parser import RefactorParser
-
 
 if __name__ == "__main__":
     artifacts = {
