@@ -1,7 +1,10 @@
 ## 🚀 Ideas Logger – CI-Tested AI-Augmented GUI for Structured Thought
 
-[![Run Tests (Windows Only)](https://github.com/The-Mechid-Archivist-69/Ideas_Logger/actions/workflows/pytest.yml/badge.svg)](https://github.com/The-Mechid-Archivist-69/Ideas_Logger/actions/workflows/pytest.yml)
-
+[![Run Tests](https://github.com/angelosdimakos/Ideas_Logger/actions/workflows/pytest.yml/badge.svg)](https://github.com/angelosdimakos/Ideas_Logger/actions/workflows/pytest.yml)
+[![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/graph/badge.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)![Lint](https://img.shields.io/badge/lint-pass-brightgreen)
+![Docs](https://img.shields.io/badge/doc--coverage-85%25-yellowgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+> `python` • `tkinter` • `ollama` • `faiss` • `gui-app` • `llm` • `summarization` • `productivity`
 A powerful, locally-run GUI tool for capturing, organizing, summarizing, and exporting your best ideas — all powered by local LLMs like **Ollama**, and rigorously tested via full-stack **CI/CD** pipelines.  
 
 🧠 Built for creative thinkers, engineers, and productivity junkies who want their ideas to **survive the chaos** and get **automatically structured**, **summarized**, and **searchable**.
@@ -128,6 +131,17 @@ Want the full breakdown?
 
 > Prefer it in one scroll? See [📘 Full Docs (Single Page)](docs/README_Full.md)
 ---
+
+### 🔒 License
+
+This project is licensed under the **MIT License**.  
+See the [LICENSE](LICENSE) file for full details.
+
+> You're free to use, modify, and distribute — just keep attribution.
+
+---
+
+
 
 ### 🧙‍♂️ Author’s Note
 
