@@ -1,9 +1,20 @@
 import pytest
+import tkinter as tk
 from unittest.mock import MagicMock
 from scripts.main import bootstrap
 from scripts.gui.gui import ZephyrusLoggerGUI
 from scripts.gui.gui_controller import GUIController
 from scripts.core.core import ZephyrusLoggerCore
+
+
+def has_display():
+    try:
+        root = tk.Tk()
+        root.withdraw()
+        root.destroy()
+        return True
+    except tk.TclError:
+        return False
 
 
 def test_main_smoke_startup():
@@ -19,6 +30,7 @@ def test_bootstrap_returns_controller():
     assert gui is None
 
 
+@pytest.mark.skipif(not has_display(), reason="🛑 Skipping GUI test — no display available")
 def test_bootstrap_runs_gui(monkeypatch):
     mocked_run = MagicMock()
     monkeypatch.setattr("scripts.gui.gui.ZephyrusLoggerGUI.run", mocked_run)
@@ -33,7 +45,6 @@ def test_bootstrap_invalid_summary_tracker(monkeypatch, temp_dir):
     Force SummaryTracker.validate to fail by simulating a critical tracker load error.
     """
 
-    # Patch the loader to simulate corruption
     def explode_loader(self):
         raise ValueError("🔥 Tracker load failed hard")
 
@@ -42,15 +53,11 @@ def test_bootstrap_invalid_summary_tracker(monkeypatch, temp_dir):
         explode_loader
     )
 
-    # This time, expect the failure explicitly
     with pytest.raises(ValueError, match="🔥 Tracker load failed hard"):
         ZephyrusLoggerCore(script_dir=temp_dir)
 
 
-
-
 def test_bootstrap_test_and_prod_modes():
-    # Confirm that test_mode is respected in test env
     controller, gui = bootstrap(start_gui=False)
     assert controller.core.config.get("test_mode") is True
 
