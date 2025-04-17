@@ -5,19 +5,16 @@ from scripts.gui.gui import ZephyrusLoggerGUI
 from scripts.gui.gui_controller import GUIController
 from scripts.core.core import ZephyrusLoggerCore
 
-def skip_if_no_gui_support():
+def test_bootstrap_runs_gui(monkeypatch):
+    import tkinter as tk
     try:
-        import tkinter as tk
         root = tk.Tk()
         root.withdraw()
         root.update_idletasks()
         root.destroy()
-        return False
     except (tk.TclError, RuntimeError):
-        return True
+        pytest.skip("🛑 Skipping GUI test — no GUI support available")
 
-@pytest.mark.skipif(skip_if_no_gui_support(), reason="🛑 Skipping GUI test — no GUI support available")
-def test_bootstrap_runs_gui(monkeypatch):
     mocked_run = MagicMock()
     monkeypatch.setattr("scripts.gui.gui.ZephyrusLoggerGUI.run", mocked_run)
 
@@ -25,6 +22,7 @@ def test_bootstrap_runs_gui(monkeypatch):
     assert isinstance(controller, GUIController)
     assert isinstance(gui, ZephyrusLoggerGUI)
     mocked_run.assert_called_once()
+
 
 
 def test_main_smoke_startup():

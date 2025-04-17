@@ -8,7 +8,17 @@ from scripts.indexers.raw_log_indexer import RawLogIndexer
 from scripts.utils.file_utils import read_json, write_json
 from scripts.paths import ZephyrusPaths
 from scripts.core.core import ZephyrusLoggerCore  # 🔥 Real core used here
-import json
+import pytest
+import tkinter as tk
+
+def skip_if_no_display():
+    try:
+        root = tk.Tk()
+        root.withdraw()
+        root.update_idletasks()
+        root.destroy()
+    except (tk.TclError, RuntimeError):
+        pytest.skip("🛑 Skipping GUI test — no GUI support available")
 
 def make_test_indexer(encoding_offset=0.1):
     config = get_effective_config()
