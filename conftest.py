@@ -1,12 +1,17 @@
-import pytest
 import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 import numpy as np
-from scripts.config.config_manager import ConfigManager
-from scripts.paths import ZephyrusPaths
-from scripts.core.core import ZephyrusLoggerCore
+import pytest
+import tkinter
 
+@pytest.fixture(autouse=True, scope="session")
+def patch_tkinter_for_tests():
+    try:
+        root = tkinter.Tk()
+        root.destroy()
+    except tkinter.TclError:
+        tkinter.Tk = lambda *args, **kwargs: MagicMock()
 
 # ===========================
 # 🔪 OLLAMA AI MOCKING
@@ -93,7 +98,7 @@ def patch_config_and_paths(monkeypatch, temp_dir):
 @pytest.fixture(scope="function", autouse=True)
 def patch_aisummarizer(monkeypatch):
     mock_ai = MagicMock()
-    mock_ai.summarize_entries_bulk.return_value = ["Mocked summary"] * 5
+    mock_ai.summarize_entries_bulk.return_value = "Mocked summary"
 
     mock_ai._fallback_summary.return_value = "Fallback summary used."
     monkeypatch.setattr("scripts.ai.ai_summarizer.AISummarizer", lambda: mock_ai)

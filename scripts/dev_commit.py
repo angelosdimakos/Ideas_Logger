@@ -1,3 +1,4 @@
+
 import os
 import sys
 import subprocess
@@ -10,22 +11,56 @@ from scripts.utils.git_utils import interactive_commit_flow
 
 
 def get_current_branch():
+    """
+    Returns the name of the current Git branch.
+
+    Returns:
+        str: The current branch name.
+    """
     result = subprocess.run(
-        ["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=True  # <-- Add this line
     )
+
     return result.stdout.strip()
 
 
 def get_modified_files():
-    result = subprocess.run(["git", "diff", "--name-only"], capture_output=True, text=True)
-    return result.stdout.strip().splitlines()
+    """
+    Returns a list of files modified (but not yet committed) in the current Git working directory.
+
+    Returns:
+        list[str]: List of modified file paths.
+    """
+    try:
+        result = subprocess.run(["git", "diff", "--name-only"], capture_output=True, text=True, check=True)
+        return result.stdout.strip().splitlines()
+    except subprocess.CalledProcessError:
+        return []
 
 
 def is_valid_branch_name(name):
+    """
+    Checks if the provided branch name is valid according to Git naming conventions.
+
+    Args:
+        name (str): The branch name to validate.
+
+    Returns:
+        bool: True if the branch name is valid, False otherwise.
+    """
     return bool(re.match(r"^[\w\-/]+$", name))  # Alphanumeric, underscore, dash, slash
 
 
 def generate_suggested_branch_name():
+    """
+    Generates a suggested branch name based on modified files and the current date.
+
+    Returns:
+        str: A suggested branch name in the format 'fix/<keywords>-<date>'.
+    """
     files = get_modified_files()
     keywords = []
 
@@ -43,6 +78,11 @@ def generate_suggested_branch_name():
 
 
 def switch_to_new_branch():
+    """
+    Prompts the user to create and switch to a new Git branch.
+    Suggests a branch name based on modified files and validates user input.
+    Exits the script if the branch name is invalid or if Git fails to create the branch.
+    """
     try:
         suggested = generate_suggested_branch_name()
     except Exception as e:
@@ -70,6 +110,13 @@ def switch_to_new_branch():
 
 
 if __name__ == "__main__":
+    """
+    Main script logic:
+    - Checks the current branch.
+    - Prevents direct commits to 'main' or 'master'.
+    - Prompts the user to create a new branch if necessary.
+    - Initiates the interactive commit flow.
+    """
     try:
         current_branch = get_current_branch()
         print(f"🌿 Current branch: {current_branch}")

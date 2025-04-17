@@ -56,3 +56,5 @@ pytest_cache/
 
 !conftest.py
 
+
+.qodo

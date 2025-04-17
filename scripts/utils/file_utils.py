@@ -44,12 +44,16 @@ def write_json(path, data):
         logger.debug(f"Wrote JSON to: {path}")
     except FileNotFoundError:
         logger.error("Target directory does not exist: %s", path, exc_info=True)
+        raise
     except PermissionError:
         logger.error("Permission denied while writing JSON to %s", path, exc_info=True)
+        raise
     except TypeError as e:
         logger.error("Data contains non-serializable values: %s", e, exc_info=True)
+        raise
     except OSError as e:
         logger.error("OS-level failure while writing JSON: %s", e, exc_info=True)
+        raise
 
 
 def read_json(path):
