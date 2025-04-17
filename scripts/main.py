@@ -1,3 +1,4 @@
+import os
 import logging
 from scripts.config.config_loader import load_config, setup_logging
 from scripts.core.core import ZephyrusLoggerCore
@@ -25,6 +26,8 @@ def bootstrap(start_gui: bool = True) -> tuple[GUIController, ZephyrusLoggerGUI 
     # 2. Load config and print mode
     config = load_config()
     IS_TEST_MODE = config.get("test_mode", False)
+    HEADLESS_MODE = os.getenv("ZEPHYRUS_HEADLESS", "0") == "1"
+
     logger = logging.getLogger(__name__)
     logger.info("Running in %s mode.", "TEST" if IS_TEST_MODE else "PRODUCTION")
 
@@ -39,11 +42,18 @@ def bootstrap(start_gui: bool = True) -> tuple[GUIController, ZephyrusLoggerGUI 
         else:
             logger.warning("[INIT] Summary tracker may have inconsistencies. Review logs.")
 
-        # 5. Optionally start GUI
-        app = ZephyrusLoggerGUI(controller) if start_gui else None
-        if app:
-            logger.info("[GUI] ZephyrusLoggerGUI launched. Awaiting user interaction.")
-            app.run()
+        # 5. Optionally start GUI (honors ZEPHYRUS_HEADLESS)
+        app = None
+        if start_gui and not HEADLESS_MODE:
+            try:
+                import tkinter as tk
+                _root = tk.Tk()
+                _root.withdraw()
+                app = ZephyrusLoggerGUI(controller)
+                logger.info("[GUI] ZephyrusLoggerGUI launched. Awaiting user interaction.")
+                app.run()
+            except (tk.TclError, RuntimeError) as e:
+                logger.warning("⚠️ GUI startup skipped — no display available: %s", e)
 
         return controller, app
 
