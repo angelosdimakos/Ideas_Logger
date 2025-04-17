@@ -40,6 +40,35 @@ def mock_raw_log_file(temp_dir):
     path.write_text(json.dumps(content), encoding="utf-8")
     return path
 
+@pytest.fixture
+def sample_lint_file(tmp_path):
+    file = tmp_path / "flake8.txt"
+    file.write_text("scripts/core/core.py:10:1: F401 unused import\nscripts/main.py:5:5: E225 missing whitespace")
+    return str(file)
+
+@pytest.fixture
+def sample_refactor_file(tmp_path):
+    file = tmp_path / "refactor_audit.json"
+    data = {
+        "scripts/core/core.py": {
+            "complexity": {
+                "func_a": {"score": 5},
+                "func_b": {"score": 10}
+            }
+        },
+        "scripts/gui/gui.py": {
+            "complexity": {
+                "gui_main": {"score": 7}
+            }
+        }
+    }
+    file.write_text(json.dumps(data), encoding="utf-8-sig")
+    return str(file)
+
+@pytest.fixture
+def real_lint_artifact():
+    return Path("tests/test_data/real_lint_output.txt").read_text()
+
 
 @pytest.fixture
 def mock_correction_summaries_file(temp_dir):

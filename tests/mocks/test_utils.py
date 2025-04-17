@@ -110,3 +110,23 @@ def reset_logger_state(logger_core):
     ]:
         if path.exists():
             path.write_text("{}", encoding="utf-8")
+
+def count_lines(path: str) -> int:
+    with open(path, "r") as f:
+        return sum(1 for _ in f)
+
+def mock_refactor_data(methods=3, files=2):
+    return {
+        f"scripts/module_{i}/file.py": {
+            "complexity": {
+                f"method_{j}": {"score": j * 5}
+                for j in range(methods)
+            }
+        }
+        for i in range(files)
+    }
+
+def create_temp_file_with_content(tmp_path, content):
+    path = tmp_path / "test.txt"
+    path.write_text(content, encoding="utf-8")
+    return path

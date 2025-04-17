@@ -78,11 +78,6 @@ def generate_suggested_branch_name():
 
 
 def switch_to_new_branch():
-    """
-    Prompts the user to create and switch to a new Git branch.
-    Suggests a branch name based on modified files and validates user input.
-    Exits the script if the branch name is invalid or if Git fails to create the branch.
-    """
     try:
         suggested = generate_suggested_branch_name()
     except Exception as e:
@@ -94,19 +89,22 @@ def switch_to_new_branch():
     new_branch = user_input or suggested
 
     if not is_valid_branch_name(new_branch):
-        print(
-            "❌ Invalid branch name. Use only letters, numbers, dashes, slashes, and underscores."
-        )
+        print("❌ Invalid branch name. Use only letters, numbers, dashes, slashes, and underscores.")
         sys.exit(1)
-        return  # <- to stop execution in test context
 
     print(f"⏳ Running: git checkout -b {new_branch}")
     try:
         subprocess.run(["git", "checkout", "-b", new_branch], check=True)
         print(f"🌱 Created and switched to: {new_branch}")
+
+        # ✅ Automatically push the new branch
+        print(f"📤 Pushing new branch to origin...")
+        subprocess.run(["git", "push", "--set-upstream", "origin", new_branch], check=True)
+
     except subprocess.CalledProcessError as e:
         print(f"❌ Git error: {e}")
         sys.exit(1)
+
 
 
 if __name__ == "__main__":
