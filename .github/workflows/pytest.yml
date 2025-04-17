@@ -17,6 +17,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      ZEPHYRUS_HEADLESS: "1"
+
+
     steps:
       - name: 📎 Checkout full history
         uses: actions/checkout@v3

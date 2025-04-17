@@ -1,52 +1,56 @@
-## 🚀 Ideas Logger – CI-Tested AI-Augmented GUI for Structured Thought
+# 🚀 Ideas Logger – CI-Tested AI-Augmented GUI for Structured Thought
 
 [![Run Tests](https://github.com/angelosdimakos/Ideas_Logger/actions/workflows/pytest.yml/badge.svg)](https://github.com/angelosdimakos/Ideas_Logger/actions/workflows/pytest.yml)
-[![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/graph/badge.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)![Lint](https://img.shields.io/badge/lint-pass-brightgreen)
+[![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/graph/badge.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)
+![Lint](https://img.shields.io/badge/lint-pass-brightgreen)
 ![Docs](https://img.shields.io/badge/doc--coverage-85%25-yellowgreen)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 > `python` • `tkinter` • `ollama` • `faiss` • `gui-app` • `llm` • `summarization` • `productivity`
-A powerful, locally-run GUI tool for capturing, organizing, summarizing, and exporting your best ideas — all powered by local LLMs like **Ollama**, and rigorously tested via full-stack **CI/CD** pipelines.  
 
-🧠 Built for creative thinkers, engineers, and productivity junkies who want their ideas to **survive the chaos** and get **automatically structured**, **summarized**, and **searchable**.
+A powerful, locally-run GUI tool for capturing, organizing, summarizing, and exporting your best ideas — all powered by local LLMs like **Ollama**, and rigorously tested via full-stack **CI/CD** pipelines.
 
----
-
-### 🖥️ Features
-
-✅ **Tkinter GUI** (Cross-platform)  
-✅ **Automatic Summarization** using local Ollama model  
-✅ **FAISS Vector Search** for similarity lookups  
-✅ **Markdown Export**, JSON logs, and batch autosave  
-✅ **Category + Subcategory Classification**  
-✅ **Configurable Prompts by Subcategory**  
-✅ **Complete CI/CD Coverage with Pytest on GitHub Actions**  
-✅ **Mocked Ollama AI for deterministic test coverage**  
-✅ **Strict Test Mode** to prevent data leakage or config overwrite  
-✅ **Plugin-ready architecture** for future expansion (e.g., LangChain agents, mind map UI, Gantt charts)
+🧠 Built for creative thinkers, engineers, and productivity junkies who want their ideas to **survive the chaos** and become **automatically structured**, **summarized**, and **searchable**.
 
 ---
 
-### 💡 Why It’s Different
+## 🖥️ Features
 
-| Feature                     | Ideas Logger                          | Most Note-Takers            |
-|----------------------------|----------------------------------------|-----------------------------|
-| ✅ Local LLM Summarization | Uses Ollama + fallback AI modes        | ❌ Requires OpenAI API keys |
-| ✅ GUI CI Testing          | Tkinter elements tested in CI on push  | ❌ Usually skipped          |
-| ✅ FAISS Indexing          | Fast vector search with metadata       | ❌ No semantic search       |
-| ✅ GitHub-Tested Workflows | Mocked LLMs, config isolation, and CI  | ❌ Unverified edge cases    |
+✅ Cross-platform **Tkinter GUI**  
+✅ **Local LLM summarization** using Ollama  
+✅ **FAISS vector search** for semantic lookup  
+✅ **Markdown export**, JSON logging, and autosave  
+✅ Category + subcategory classification  
+✅ Configurable AI prompts by category  
+✅ Complete **CI/CD coverage with GitHub Actions**  
+✅ Mocked AI backends for fast, reproducible tests  
+✅ Strict "test mode" to prevent config or data overwrite  
+✅ Plugin-ready architecture for future expansion (LangChain, mind maps, Gantt views)
 
 ---
 
-### 🧪 Testing Highlights
+## 💡 Why It’s Different
 
-This repo is **battle-tested** with 🔬:
+| Feature                     | Ideas Logger                           | Most Note-Takers            |
+|----------------------------|-----------------------------------------|-----------------------------|
+| ✅ Local LLM Summarization | Uses Ollama + fallback AI modes         | ❌ Requires OpenAI API keys |
+| ✅ GUI Bootstrap Testing   | Tkinter startup tested in CI (mocked)   | ❌ Usually skipped entirely |
+| ✅ FAISS Indexing          | Fast vector search with metadata        | ❌ No semantic search       |
+| ✅ GitHub-Tested Workflows | Mocked LLMs, config isolation, and CI   | ❌ Unverified edge cases    |
 
-- Full **mocking of Ollama**'s `generate()` and `chat()` endpoints
-- Integration tests for **summarization workflows**
-- Isolated `temp_dir` + test config generation on the fly
-- ✅ GUI testing (Tkinter) *in CI*
-- `AISummarizer` is fully tested **without hitting real LLMs** — no latency, no cost, no flakes
+---
 
+## 🧪 Testing Highlights
+
+This repo is **battle-tested** with:
+
+- Full **mocking of Ollama**'s `generate()` and `chat()` endpoints  
+- Integration tests for summarization + file I/O pipelines  
+- `temp_dir` + isolated test config injection  
+- ✅ **Tkinter GUI bootstrap tested in CI (mocked `run()`)**  
+- ⚠️ **Full GUI rendering/interactions are skipped in headless CI**  
+- 🧪 GUI tests are runnable locally (or with `xvfb` if needed)  
+- Summary workflows and trackers are tested *without real LLM latency*
 ```bash
 pytest tests/ --disable-warnings -v
 ```

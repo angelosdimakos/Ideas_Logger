@@ -14,6 +14,9 @@ logger = logging.getLogger(__name__)
 
 
 class ZephyrusLoggerCore:
+    """
+    ZephyrusLoggerCore manages logging, summarization, and search for categorized entries using JSON and Markdown files. It initializes the environment, handles batch summarization with AI, maintains summary tracking, and provides search functionality across summaries and raw logs. Integrates with organization-specific modules for configuration, file management, and AI summarization.
+    """
     TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
     DATE_FORMAT = "%Y-%m-%d"
     BATCH_KEY = "batch"
@@ -24,6 +27,12 @@ class ZephyrusLoggerCore:
     TIMESTAMP_KEY = "timestamp"
 
     def __init__(self, script_dir):
+        """
+        Initializes the ZephyrusLoggerCore instance by loading configuration, setting up paths, environment, AI summarizer, summary tracker, and log manager. Validates or rebuilds the summary tracker as needed, and configures batch size and logging behavior based on the current configuration.
+
+        Args:
+            script_dir (str or Path): The directory containing the script, used to resolve paths and configuration.
+        """
         self.script_dir = Path(script_dir)
         self.config = get_effective_config()
         self.paths = ZephyrusPaths.from_config(self.script_dir)
@@ -219,13 +228,16 @@ class ZephyrusLoggerCore:
                 "[SKIP] Not enough unsummarized entries for %s → %s", main_category, subcategory
             )
             return False
+
         summary = self._get_summary_for_batch(batch_entries, subcategory)
         if not summary:
             logger.error("[ERROR] AI summary returned empty after attempts.")
             return False
+
         start_ts = batch_entries[0][self.TIMESTAMP_KEY]
         end_ts = batch_entries[-1][self.TIMESTAMP_KEY]
         batch_label = f"{start_ts} → {end_ts}"
+
         new_data = {
             "batch": batch_label,
             self.ORIGINAL_SUMMARY_KEY: summary,
@@ -234,15 +246,20 @@ class ZephyrusLoggerCore:
             "start": start_ts,
             "end": end_ts,
         }
-        self.log_manager.update_correction_summaries(main_category, subcategory, new_data)
-        self.summary_tracker.update(main_category, subcategory, summarized=self.BATCH_SIZE)
-        logger.info(
-            "[SUCCESS] Global summary written for %s → %s (Batch: %s)",
-            main_category,
-            subcategory,
-            batch_label,
-        )
-        return True
+
+        try:
+            self.log_manager.update_correction_summaries(main_category, subcategory, new_data)
+            self.summary_tracker.update(main_category, subcategory, summarized=self.BATCH_SIZE)
+            logger.info(
+                "[SUCCESS] Global summary written for %s → %s (Batch: %s)",
+                main_category,
+                subcategory,
+                batch_label,
+            )
+            return True
+        except Exception as e:
+            logger.error("[ERROR] Failed to write global summary or tracker: %s", e, exc_info=True)
+            return False
 
     def generate_summary(self, date_str, main_category, subcategory):
         """

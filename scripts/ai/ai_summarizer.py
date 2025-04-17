@@ -7,16 +7,12 @@ logger = logging.getLogger(__name__)
 
 
 class AISummarizer:
+    """
+    AISummarizer provides methods to generate summaries for single or multiple text entries using a configurable LLM model and subcategory-specific prompts. It supports fallback to the Ollama chat API if primary summarization fails and loads configuration settings at initialization.
+    """
     def __init__(self):
         """
-        Initializes the AISummarizer class.
-
-        Loads configuration values to set up the language model and prompt behavior.
-
-        The following configuration values are used:
-
-        - llm_model: The language model to use for summarization, e.g. "mistral".
-        - prompts_by_subcategory: A dictionary mapping subcategory names to custom prompts.
+        Initialize AISummarizer by loading configuration, setting the LLM model, and preparing prompts by subcategory.
         """
         config = load_config()
         self.model = get_config_value(config, "llm_model", "mistral")
@@ -25,25 +21,35 @@ class AISummarizer:
 
     def _fallback_summary(self, full_prompt):
         """
-        Fallback summary using Ollama chat API if standard generation fails.
+        Attempt to generate a summary using the Ollama chat API as a fallback when primary summarization fails.
+
+        Args:
+            full_prompt (str): The prompt to send to the chat model.
+
+        Returns:
+            str: The summary response from the chat model, or an error message if the fallback fails.
         """
         logger.info("[AI] Attempting fallback approach (chat)")
         try:
             response = ollama.chat(
                 model=self.model, messages=[{"role": "user", "content": full_prompt}]
             )
-            content = response.get("message", {}).get("content", "").strip()
-            if content:
-                logger.debug("[AI-Fallback] Fallback summary:\n%s", content)
-                return content
-            return "Fallback failed: Empty or invalid format"
+            content = response.get("message", {}).get("content", "")
+            return content.strip() if isinstance(content, str) else "Fallback failed: Invalid format"
         except (KeyError, TypeError, RequestException) as e:
             logger.error("[FallbackError] Ollama fallback failed: %s", e, exc_info=True)
             return "Fallback failed: Ollama not available"
 
     def summarize_entry(self, entry_text, subcategory=None):
         """
-        Summarizes a single log entry with an optional subcategory prompt.
+        Generate a summary for a single text entry using the configured LLM model and an optional subcategory-specific prompt.
+
+        Args:
+            entry_text (str): The text entry to summarize.
+            subcategory (str, optional): Subcategory to select a specific prompt. Defaults to None.
+
+        Returns:
+            str: The generated summary or a fallback message if summarization fails.
         """
         prompt = self.prompts_by_subcategory.get(
             subcategory, self.prompts_by_subcategory.get("_default", "Summarize this:")
@@ -53,14 +59,22 @@ class AISummarizer:
         try:
             logger.debug("[AI] Single-entry prompt:\n%s", full_prompt)
             response = ollama.generate(model=self.model, prompt=full_prompt)
-            return response["response"].strip()
+            result = response.get("response")
+            return result.strip() if isinstance(result, str) else self._fallback_summary(full_prompt)
         except (KeyError, TypeError, RequestException) as e:
             logger.warning("summarize_entry failed: %s", e, exc_info=True)
             return self._fallback_summary(full_prompt)
 
     def summarize_entries_bulk(self, entries, subcategory=None):
         """
-        Summarizes a list of entries using the Ollama generate API.
+        Generate a summary for a list of text entries using the configured LLM model and subcategory-specific prompts.
+
+        Args:
+            entries (list): List of text entries to summarize.
+            subcategory (str, optional): Subcategory to select a specific prompt. Defaults to None.
+
+        Returns:
+            str: The generated summary or a fallback message if summarization fails.
         """
         if not entries:
             logger.warning("[EmptyInput] summarize_entries_bulk received empty list")
@@ -74,7 +88,8 @@ class AISummarizer:
 
         try:
             response = ollama.generate(model=self.model, prompt=full_prompt)
-            return response["response"].strip()
+            result = response.get("response")
+            return result.strip() if isinstance(result, str) else self._fallback_summary(full_prompt)
         except (KeyError, TypeError, RequestException) as e:
             logger.warning("summarize_entries_bulk failed: %s", e, exc_info=True)
             return self._fallback_summary(full_prompt)

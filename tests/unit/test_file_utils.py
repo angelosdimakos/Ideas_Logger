@@ -66,3 +66,17 @@ def test_zip_python_files_excludes_unwanted_dirs():
         files = zipf.namelist()
         assert all(f.endswith(".py") for f in files)
         assert all(".venv" not in f and "__pycache__" not in f for f in files)
+
+def test_read_json_missing_file(tmp_path):
+    from scripts.utils.file_utils import read_json
+    path = tmp_path / "missing.json"
+    data = read_json(path)
+    assert data == {}
+
+def test_write_and_read_json(tmp_path):
+    from scripts.utils.file_utils import write_json, read_json
+    path = tmp_path / "data.json"
+    data = {"x": 1}
+    write_json(path, data)
+    result = read_json(path)
+    assert result == data

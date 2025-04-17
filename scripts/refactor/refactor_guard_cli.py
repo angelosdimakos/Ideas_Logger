@@ -132,12 +132,18 @@ def handle_full_scan(args, guard):
 
 
 def handle_single_file(args, guard):
-    return guard.analyze_refactor_changes(
+    if not os.path.isfile(args.original):
+        raise ValueError(f"[handle_single_file] Expected a file for --original, got: {args.original}")
+    if not os.path.isfile(args.refactored):
+        raise ValueError(f"[handle_single_file] Expected a file for --refactored, got: {args.refactored}")
+
+    result = guard.analyze_module(
         original_path=args.original,
         refactored_path=args.refactored,
-        test_file_path=args.tests,
-        as_string=False,
     )
+    return {"summary": result}
+
+
 
 
 def handle_output(result, args, guard):

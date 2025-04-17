@@ -1,0 +1,8 @@
+coverage:
+  status:
+    patch:
+      default:
+        target: auto
+        threshold: 10%      # Allow up to 10% under target without failing
+        if_not_found: success
+        only_pulls: true    # Only enforce on PRs

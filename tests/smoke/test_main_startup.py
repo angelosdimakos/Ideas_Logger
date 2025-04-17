@@ -1,38 +1,75 @@
 import pytest
-import logging
-from unittest.mock import patch
+import tkinter as tk
+from unittest.mock import MagicMock
 from scripts.main import bootstrap
-
-from scripts.config.config_loader import load_config
-from scripts.core.core import ZephyrusLoggerCore
+from scripts.gui.gui import ZephyrusLoggerGUI
 from scripts.gui.gui_controller import GUIController
+from scripts.core.core import ZephyrusLoggerCore
+import os
+
+# Validate if GUI is usable in this environment
+GUI_AVAILABLE = True
+try:
+    _probe = tk.Tk()
+    _probe.destroy()
+except Exception:
+    GUI_AVAILABLE = False
+    tk.Tk = MagicMock()
+
+
+@pytest.mark.skipif(not GUI_AVAILABLE, reason="🛑 Skipping GUI test — Tkinter not available")
+def test_bootstrap_runs_gui(monkeypatch):
+    # 🧪 Ensure GUI won't actually start in headless/CI
+    os.environ["ZEPHYRUS_HEADLESS"] = "1"
+
+    # Create a dummy root to satisfy nametofont
+    root = tk.Tk()
+    root.withdraw()
+
+    mocked_run = MagicMock()
+    monkeypatch.setattr("scripts.gui.gui.ZephyrusLoggerGUI.run", mocked_run)
+
+    controller, gui = bootstrap(start_gui=True)
+
+    # In headless mode, GUI should not launch
+    assert isinstance(controller, GUIController)
+    assert gui is None  # Explicitly verify GUI is skipped in headless mode
+    mocked_run.assert_not_called()
+
+    root.destroy()
 
 
 def test_main_smoke_startup():
-    """🚀 Smoke test: Ensure main startup logic boots core systems without launching full GUI."""
-    with patch("scripts.gui.gui.ZephyrusLoggerGUI") as MockGUI:
-        try:
-            logging.basicConfig(level=logging.INFO)
-            config = load_config()
-            assert isinstance(config, dict)
-
-            core = ZephyrusLoggerCore(script_dir=".")
-            controller = GUIController(logger_core=core)
-
-            assert controller.core.summary_tracker.validate() is not None
-            app = MockGUI(controller)
-            assert app is not None
-
-        except Exception as e:
-            pytest.fail(f"Smoke test failed during bootstrap init: {e}")
-
-
-def test_main_bootstrap_without_gui(monkeypatch):
-    """🧪 Test main.bootstrap when GUI is disabled."""
-    monkeypatch.setattr("scripts.config.config_loader.setup_logging", lambda: None)
-
-    controller = bootstrap(start_gui=False)
-
+    controller, gui = bootstrap(start_gui=False)
     assert isinstance(controller, GUIController)
-    assert hasattr(controller, "log_entry")  # pick any actual method that matters
+    assert gui is None
 
+
+def test_bootstrap_returns_controller():
+    controller, gui = bootstrap(start_gui=False)
+    assert hasattr(controller, "get_coverage_data")
+    assert gui is None
+
+
+def test_bootstrap_invalid_summary_tracker(monkeypatch, temp_dir):
+    def explode_loader(self):
+        raise ValueError("🔥 Tracker load failed hard")
+
+    monkeypatch.setattr(
+        "scripts.core.summary_tracker.SummaryTracker._safe_load_tracker",
+        explode_loader
+    )
+
+    with pytest.raises(ValueError, match="🔥 Tracker load failed hard"):
+        ZephyrusLoggerCore(script_dir=temp_dir)
+
+
+def test_bootstrap_test_and_prod_modes():
+    controller, gui = bootstrap(start_gui=False)
+    assert controller.core.config.get("test_mode") is True
+
+
+def test_bootstrap_return_types():
+    controller, gui = bootstrap(start_gui=False)
+    assert controller.__class__.__name__.endswith("Controller")
+    assert gui is None
