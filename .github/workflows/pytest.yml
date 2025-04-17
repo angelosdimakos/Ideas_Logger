@@ -17,8 +17,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-  env:
-    ZEPHYRUS_HEADLESS: "1"
+    env:
+      ZEPHYRUS_HEADLESS: "1"
 
 
     steps:
