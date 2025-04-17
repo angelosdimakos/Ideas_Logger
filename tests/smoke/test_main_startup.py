@@ -8,6 +8,7 @@ from scripts.core.core import ZephyrusLoggerCore
 def test_bootstrap_runs_gui(monkeypatch):
     import tkinter as tk
     try:
+        # Create root to avoid "Too early to use font"
         root = tk.Tk()
         root.withdraw()
         root.update_idletasks()
@@ -15,6 +16,11 @@ def test_bootstrap_runs_gui(monkeypatch):
     except (tk.TclError, RuntimeError):
         pytest.skip("🛑 Skipping GUI test — no GUI support available")
 
+    # 🔁 Create dummy root so ZephyrusLoggerGUI doesn’t crash
+    root = tk.Tk()
+    root.withdraw()
+
+    # 👇 Mock `run()` so we don't launch the GUI loop
     mocked_run = MagicMock()
     monkeypatch.setattr("scripts.gui.gui.ZephyrusLoggerGUI.run", mocked_run)
 
@@ -22,6 +28,8 @@ def test_bootstrap_runs_gui(monkeypatch):
     assert isinstance(controller, GUIController)
     assert isinstance(gui, ZephyrusLoggerGUI)
     mocked_run.assert_called_once()
+
+    root.destroy()  # ✅ Clean up manually
 
 
 
