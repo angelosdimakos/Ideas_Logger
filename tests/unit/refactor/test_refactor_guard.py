@@ -1,88 +1,100 @@
+# tests/unit/refactor/test_refactor_guard.py
+
 import pytest
 import tempfile
 import os
+import logging
 from textwrap import dedent
+
 from scripts.refactor.refactor_guard import RefactorGuard
 
+# Ensure our logger captures warnings
+logging.getLogger("scripts.refactor.refactor_guard").setLevel(logging.WARNING)
 
-def test_refactor_guard_module_comparison():
+
+def test_refactor_guard_module_comparison(tmp_path):
     """Test analyzing two modules that differ slightly."""
-    original_code = dedent("""
+    orig_py = tmp_path / "orig.py"
+    ref_py  = tmp_path / "ref.py"
+
+    orig_py.write_text(dedent("""
         class Foo:
             def bar(self):
                 pass
-    """)
-    refactored_code = dedent("""
+    """), encoding="utf-8")
+
+    ref_py.write_text(dedent("""
         class Foo:
             def baz(self):
                 pass
-    """)
+    """), encoding="utf-8")
 
-    with tempfile.NamedTemporaryFile(suffix='.py', delete=False, mode='w') as orig, \
-         tempfile.NamedTemporaryFile(suffix='.py', delete=False, mode='w') as ref:
-        orig.write(original_code)
-        ref.write(refactored_code)
-        orig.flush()
-        ref.flush()
+    guard = RefactorGuard()
+    result = guard.analyze_module(str(orig_py), str(ref_py))
 
-        orig_path = orig.name
-        ref_path = ref.name
-
-    try:
-        guard = RefactorGuard()
-
-        # Use analyze_module to get differences between original and refactored modules
-        result = guard.analyze_module(orig_path, ref_path)
-
-        # Check that method diffs are detected correctly
-        assert "method_diff" in result, "Expect method_diff in result"
-        method_diff = result["method_diff"]
-        assert "Foo" in method_diff, "Class Foo should be recognized"
-        diff = method_diff["Foo"]
-        assert diff["missing"] == ["bar"]
-        assert diff["added"] == ["baz"]
-
-    finally:
-        os.remove(orig_path)
-        os.remove(ref_path)
+    # Check that method diffs are detected correctly
+    assert "method_diff" in result
+    method_diff = result["method_diff"]
+    assert "Foo" in method_diff
+    diff = method_diff["Foo"]
+    assert diff["missing"] == ["bar"]
+    assert diff["added"] == ["baz"]
 
 
-def test_refactor_guard_missing_tests():
+def test_refactor_guard_missing_tests(tmp_path):
     """Check that the guard detects missing tests for refactored methods."""
-    refactored_code = dedent("""
+    ref_py  = tmp_path / "mod.py"
+    test_py = tmp_path / "test_mod.py"
+
+    ref_py.write_text(dedent("""
         class Foo:
             def bar(self):
                 pass
-    """)
-    # Updated test code: removed any mention of 'bar'
-    test_code = dedent("""
+    """), encoding="utf-8")
+
+    test_py.write_text(dedent("""
         import pytest
 
         def test_something_else():
             assert True
-    """)
+    """), encoding="utf-8")
 
-    with tempfile.NamedTemporaryFile(suffix='.py', delete=False, mode='w') as ref, \
-         tempfile.NamedTemporaryFile(suffix='.py', delete=False, mode='w') as test:
-        ref.write(refactored_code)
-        test.write(test_code)
-        ref.flush()
-        test.flush()
-        ref_path = ref.name
-        test_path = test.name
+    guard = RefactorGuard()
+    result = guard.analyze_module("", str(ref_py), test_file_path=str(test_py))
 
-    try:
-        guard = RefactorGuard()
+    # Only 'bar' should be reported missing
+    assert len(result["missing_tests"]) == 1
+    missing = result["missing_tests"][0]
+    assert missing["class"] == "Foo"
+    assert missing["method"] == "bar"
 
-        # Pass the test file path so that the missing tests logic is applied.
-        result = guard.analyze_module("", ref_path, test_file_path=test_path)
 
-        # Check for missing tests in the refactored code
-        assert len(result["missing_tests"]) == 1, "Expected one missing test"
-        missing = result["missing_tests"][0]
-        assert missing["class"] == "Foo"
-        assert missing["method"] == "bar"
+def test_malformed_test_file_logs_warning_and_reports_all_methods(tmp_path, caplog):
+    """
+    If the test file has syntax errors, we log a warning
+    and treat all methods as missing.
+    """
+    ref_py  = tmp_path / "mod.py"
+    test_py = tmp_path / "test_mod.py"
 
-    finally:
-        os.remove(ref_path)
-        os.remove(test_path)
+    # One class with one method
+    ref_py.write_text(dedent("""
+        class A:
+            def m(self):
+                pass
+    """), encoding="utf-8")
+
+    # Malformed syntax in test file
+    test_py.write_text("def bad(:\n    pass", encoding="utf-8")
+
+    guard = RefactorGuard()
+
+    caplog.set_level(logging.WARNING, logger="scripts.refactor.refactor_guard")
+    result = guard.analyze_module("", str(ref_py), test_file_path=str(test_py))
+
+    # Expect the single method to be reported as missing
+    assert result["missing_tests"] == [{"class": "A", "method": "m"}]
+
+    # Confirm a warning was logged about parsing tests
+    warnings = [rec.message for rec in caplog.records if rec.levelno == logging.WARNING]
+    assert any("Could not parse tests" in str(msg) for msg in warnings)

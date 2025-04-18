@@ -1,4 +1,4 @@
-name: Run Tests (Ubuntu + CI Audit)
+name: Run Tests & CI Audit
 
 on:
   push:
@@ -14,18 +14,20 @@ on:
       - master
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
-
     env:
       ZEPHYRUS_HEADLESS: "1"
-
-
     steps:
       - name: 📎 Checkout full history
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11.8"
 
       - name: 💾 Cache pip
         uses: actions/cache@v3
@@ -35,24 +37,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11.8"
-
       - name: 📆 Install Dependencies
         run: |
           python -m pip install --upgrade pip wheel setuptools
-          pip install faiss-cpu --only-binary=faiss-cpu
           pip install -r requirements.txt
-          pip freeze
-          
+
       - name: 🧹 Lint and Static Analysis
         run: |
           mkdir -p lint-reports
           black --check scripts > lint-reports/black.txt 2>&1 || true
-          flake8 scripts > lint-reports/flake8.txt 2>&1 || true
-          MYPYPATH=. mypy --explicit-package-bases scripts > lint-reports/mypy.txt 2>&1 || true
+          flake8 scripts > lint-reports/flake8.txt  2>&1 || true
+          MYPYPATH=. mypy --explicit-package-bases scripts > lint-reports/mypy.txt  2>&1 || true
 
       - name: 📚 Docstring Linting
         run: |
@@ -63,9 +58,6 @@ jobs:
           pip install interrogate
           interrogate -v scripts > lint-reports/interrogate.txt 2>&1 || true
 
-
-      
-
       - name: 📄 Upload Lint Reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -73,12 +65,43 @@ jobs:
           name: lint-reports
           path: lint-reports/
 
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    env:
+      ZEPHYRUS_HEADLESS: "1"
+    steps:
+      - name: 📎 Checkout full history
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11.8"
+
+      - name: 💾 Cache dependencies & pytest cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            .pytest_cache
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-deps-
+
+      - name: 📆 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip wheel setuptools
+          pip install -r requirements.txt
+          pip install pytest-xdist
 
       - name: ✅ Run Unit + Integration Tests
         run: |
-          python -m pytest -c pytest.ini \
-                --cov=scripts --cov-config=.coveragerc \
-                --cov-report=xml --cov-report=html
+          python -m pytest -n auto -c pytest.ini \
+            --cov=scripts --cov-config=.coveragerc \
+            --cov-report=xml --cov-report=html
 
       - name: 📄 Check for Coverage Report
         run: |
@@ -93,7 +116,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: htmlcov-windows
+          name: htmlcov
           path: htmlcov/
 
       - name: ☁️ Upload to Codecov
@@ -105,6 +128,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: 🧠 Run RefactorGuard Audit
+        if: github.event_name == 'push'
         run: |
           python scripts/refactor/refactor_guard_cli.py \
             --refactored scripts \
@@ -119,7 +143,15 @@ jobs:
             --refactored scripts \
             --all \
             --git-diff \
+            --missing-tests \
             --json
+
+      - name: 📋 Enrich Refactor Audit with Quality Data
+        run: |
+          python - <<'PYCODE'
+          from scripts.refactor.quality_checker import merge_into_refactor_guard
+          merge_into_refactor_guard("refactor_audit.json")
+          PYCODE
 
       - name: 🚨 Show Complexity Summary
         run: |
@@ -132,18 +164,16 @@ jobs:
           name: refactor-audit
           path: refactor_audit.json
 
-      - name: 📝 Generate CI Insight Report
-        run: |
-          python scripts/ci_analyzer/ci_analyzer_cli.py
+      #- name: 📝 Generate CI Insight Report
+      #  run: |
+      #    python scripts/ci_analyzer/ci_analyzer_cli.py
 
-      - name: 📄 Upload CI Summary Markdown
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ci-summary
-          path: ci_summary.md
-
-
+      #- name: 📄 Upload CI Summary Markdown
+      #  if: always()
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: ci-summary
+      #    path: ci_summary.md
 
       - name: 🗞 Audit Summary Recap
         run: |
