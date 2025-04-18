@@ -148,6 +148,13 @@ jobs:
             --git-diff \
             --missing-tests \
             --json
+          
+      - name: 📥 Download Lint Reports
+        uses: actions/download-artifact@v4
+        with:
+          name: lint-reports
+          path: .
+
 
       - name: 📋 Enrich Refactor Audit with Quality Data
         run: |

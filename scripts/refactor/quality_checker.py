@@ -79,7 +79,7 @@ def _add_flake8_quality(quality: Dict[str, Dict[str, Any]]) -> None:
         file_path, line_no, col, code, msg = m.groups()
         key = _normalize(file_path)
         entry = quality.setdefault(key, {})
-        entry.setdefault("flake8", {"issues": [], "raw": raw})
+        entry.setdefault("flake8", {"issues": []})
         entry["flake8"]["issues"].append({
             "line": int(line_no),
             "column": int(col),
@@ -96,7 +96,7 @@ def _add_black_quality(quality: Dict[str, Dict[str, Any]]) -> None:
         file_path = line.split()[-1]
         key = _normalize(file_path)
         entry = quality.setdefault(key, {})
-        entry["black"] = {"needs_formatting": True, "raw": raw}
+        entry["black"] = {"needs_formatting": True}
 
 
 def _add_mypy_quality(quality: Dict[str, Dict[str, Any]]) -> None:
@@ -105,7 +105,7 @@ def _add_mypy_quality(quality: Dict[str, Dict[str, Any]]) -> None:
         if ".py" in l and ": error:" in l:
             file_path = l.split(":")[0]
             key = _normalize(file_path)
-            entry = quality.setdefault(key, {}).setdefault("mypy", {"errors": [], "raw": raw})
+            entry = quality.setdefault(key, {}).setdefault("mypy", {"errors": []})
             entry["errors"].append(l.strip())
 
 
@@ -116,7 +116,7 @@ def _add_pydocstyle_quality(quality: Dict[str, Dict[str, Any]]) -> None:
             continue
         file_path = line.split(":", 1)[0]
         key = _normalize(file_path)
-        entry = quality.setdefault(key, {}).setdefault("pydocstyle", {"issues": [], "raw": raw})
+        entry = quality.setdefault(key, {}).setdefault("pydocstyle", {"issues": []})
         entry["issues"].append(line.strip())
 
 
@@ -143,8 +143,9 @@ def _add_coverage_quality(quality: Dict[str, Dict[str, Any]]) -> None:
         key = _normalize(raw_path)
         rate = float(cls.attrib.get("line-rate", "0"))
         entry = quality.setdefault(key, {})["coverage"] = {
-            "percent": round(rate * 100, 1),
-            "raw": raw
+            "percent": round(rate * 100, 1)
+
+
         }
 
 

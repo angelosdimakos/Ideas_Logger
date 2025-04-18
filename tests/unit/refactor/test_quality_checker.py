@@ -29,7 +29,6 @@ from scripts.refactor.quality_checker import (
 
 @pytest.fixture(autouse=True)
 def change_working_dir(tmp_path, monkeypatch):
-    # Run each test in its own temp directory so report files land predictably
     monkeypatch.chdir(tmp_path)
     return tmp_path
 
@@ -54,10 +53,7 @@ def test_run_command_captures_stdout_and_stderr(tmp_path, monkeypatch):
 
 
 def test_read_report(tmp_path):
-    # Missing file -> empty string
     assert _read_report(Path("nofile.txt")) == ""
-
-    # Existing file -> returns contents
     p = Path("report.txt")
     p.write_text("hello world", encoding="utf-8")
     assert _read_report(p) == "hello world"
@@ -70,11 +66,9 @@ def test_add_flake8_quality(change_working_dir):
     quality = {}
     _add_flake8_quality(quality)
 
-    # key is normalized to 'f1.py'
     assert "f1.py" in quality
     entry = quality["f1.py"]["flake8"]
     assert entry["issues"] == [{"line": 10, "column": 5, "code": "E1", "message": "msg"}]
-    assert entry["raw"] == raw
 
 
 def test_add_black_quality(change_working_dir):
@@ -84,11 +78,9 @@ def test_add_black_quality(change_working_dir):
     quality = {}
     _add_black_quality(quality)
 
-    # path normalized to 'a.py'
     assert "a.py" in quality
     entry = quality["a.py"]["black"]
     assert entry["needs_formatting"] is True
-    assert entry["raw"] == raw
 
 
 def test_add_mypy_quality(change_working_dir):
@@ -101,10 +93,8 @@ def test_add_mypy_quality(change_working_dir):
     quality = {}
     _add_mypy_quality(quality)
 
-    # key normalized to 'x.py'
     assert "x.py" in quality
     assert quality["x.py"]["mypy"]["errors"] == ["scripts/x.py:5: error: oops"]
-    assert quality["x.py"]["mypy"]["raw"] == "\n".join(lines)
 
 
 def test_add_pydocstyle_quality(change_working_dir):
@@ -114,11 +104,9 @@ def test_add_pydocstyle_quality(change_working_dir):
     quality = {}
     _add_pydocstyle_quality(quality)
 
-    # key normalized to 'a.py'
     assert "a.py" in quality
     issues = quality["a.py"]["pydocstyle"]["issues"]
     assert issues == raw.splitlines()
-    assert quality["a.py"]["pydocstyle"]["raw"] == raw
 
 
 def _write_xml(tmp_path, root):
@@ -129,38 +117,27 @@ def _write_xml(tmp_path, root):
 
 
 def test_add_coverage_quality_xml(change_working_dir):
-    # Build coverage.xml with one class entry
     root = Element("coverage")
     cls = SubElement(root, "class", filename="src/foo.py", **{"line-rate": "0.75"})
-    xml_path = _write_xml(change_working_dir, root)
+    _write_xml(change_working_dir, root)
 
     quality = {}
     _add_coverage_quality(quality)
 
-    # key normalized to 'foo.py'
     assert "foo.py" in quality
     cov = quality["foo.py"]["coverage"]
     assert cov["percent"] == 75.0
-    # raw contains the xml declaration
-    assert "<?xml" in cov["raw"]
 
 
 def test_merge_with_new_reports(change_working_dir):
-    # Prepare audit JSON
     audit = {"a.py": {}}
     p = Path("refactor_audit.json")
     p.write_text(json.dumps(audit), encoding="utf-8")
 
-    # Flake8
-    fl = "a.py:1:2: E1 msg"
-    Path(FLAKE8_REPORT.name).write_text(fl, encoding="utf-8")
-    # Black
+    Path(FLAKE8_REPORT.name).write_text("a.py:1:2: E1 msg", encoding="utf-8")
     Path(BLACK_REPORT.name).write_text("would reformat a.py\n", encoding="utf-8")
-    # Mypy
     Path(MYPY_REPORT.name).write_text("a.py:2: error: bad\n", encoding="utf-8")
-    # Pydocstyle
     Path(PYDOCSTYLE_REPORT.name).write_text("a.py:3: D100: Doc\n", encoding="utf-8")
-    # Coverage XML
     root = Element("coverage")
     SubElement(root, "class", filename="a.py", **{"line-rate": "0.5"})
     _write_xml(change_working_dir, root)
