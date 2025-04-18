@@ -325,16 +325,19 @@ def assert_all_output_in_temp(tmp_path_factory):
 
     for path in new_files:
         relative = path.relative_to(root_dir)
+
         # ✅ Skip safe locations
         if (
-                any(part in SAFE_DIRS for part in relative.parts)
-                or path.suffix in SAFE_EXTS
-                or tmp_root in path.parents
-                or str(relative).startswith("tests/mock_data/")
+            any(part in SAFE_DIRS for part in relative.parts)
+            or path.suffix in SAFE_EXTS
+            or tmp_root in path.parents
+            or str(relative).startswith("tests/mock_data/")
+            or relative.name.startswith(".coverage.")  # ✅ Ignore xdist coverage fragments
         ):
             continue
 
         raise AssertionError(f"🚨 Test output leaked outside tmp dir: {relative}")
+
 
 @pytest.fixture
 def mock_failed_summarizer():
