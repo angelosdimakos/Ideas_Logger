@@ -20,7 +20,7 @@ def get_current_branch():
         ["git", "rev-parse", "--abbrev-ref", "HEAD"],
         capture_output=True,
         text=True,
-        check=True  # <-- Add this line
+        check=True,  # <-- Add this line
     )
 
     return result.stdout.strip()
@@ -34,7 +34,9 @@ def get_modified_files():
         list[str]: List of modified file paths.
     """
     try:
-        result = subprocess.run(["git", "diff", "--name-only"], capture_output=True, text=True, check=True)
+        result = subprocess.run(
+            ["git", "diff", "--name-only"], capture_output=True, text=True, check=True
+        )
         return result.stdout.strip().splitlines()
     except subprocess.CalledProcessError:
         return []
@@ -93,7 +95,9 @@ def switch_to_new_branch():
     new_branch = user_input or suggested
 
     if not is_valid_branch_name(new_branch):
-        print("❌ Invalid branch name. Use only letters, numbers, dashes, slashes, and underscores.")
+        print(
+            "❌ Invalid branch name. Use only letters, numbers, dashes, slashes, and underscores."
+        )
         sys.exit(1)
         return
 
@@ -132,7 +136,6 @@ if __name__ == "__main__":
             else:
                 print("❌ Commit aborted. Please branch responsibly.")
                 sys.exit(1)
-
 
         # Safe to commit
         interactive_commit_flow(default_branch=current_branch)

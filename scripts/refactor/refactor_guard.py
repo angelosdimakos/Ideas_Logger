@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 class AnalysisError(Exception):
     """Raised when an error occurs during analysis."""
+
     pass
 
 
@@ -28,9 +29,7 @@ class RefactorGuard:
         self.coverage_hits: Dict[str, Any] = {}
 
     def analyze_tests(
-        self,
-        refactored_path: str,
-        test_file_path: Optional[str] = None
+        self, refactored_path: str, test_file_path: Optional[str] = None
     ) -> List[Dict[str, str]]:
         """
         Parse the test file’s AST to find which methods are exercised.
@@ -69,10 +68,7 @@ class RefactorGuard:
         return missing
 
     def analyze_module(
-        self,
-        original_path: str,
-        refactored_path: str,
-        test_file_path: Optional[str] = None
+        self, original_path: str, refactored_path: str, test_file_path: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Compare original vs refactored:
@@ -86,29 +82,25 @@ class RefactorGuard:
             "complexity": {},
         }
 
-        if not original_path.strip() or os.path.abspath(original_path) == os.path.abspath(refactored_path):
+        if not original_path.strip() or os.path.abspath(original_path) == os.path.abspath(
+            refactored_path
+        ):
             orig_infos = {}
         else:
             orig_infos = {c.class_name: c for c in extract_class_methods(original_path)}
 
-        ref_infos  = {c.class_name: c for c in extract_class_methods(refactored_path)}
+        ref_infos = {c.class_name: c for c in extract_class_methods(refactored_path)}
 
         # removed or changed
         for name, orig in orig_infos.items():
             if name in ref_infos:
                 result["method_diff"][name] = compare_class_methods(orig, ref_infos[name])
             else:
-                result["method_diff"][name] = {
-                    "missing": list(orig.methods),
-                    "added": []
-                }
+                result["method_diff"][name] = {"missing": list(orig.methods), "added": []}
         # newly added
         for name, refc in ref_infos.items():
             if name not in orig_infos:
-                result["method_diff"][name] = {
-                    "missing": [],
-                    "added": list(refc.methods)
-                }
+                result["method_diff"][name] = {"missing": [], "added": list(refc.methods)}
 
         # 2) Missing tests
         result["missing_tests"] = self.analyze_tests(refactored_path, test_file_path)
@@ -123,9 +115,7 @@ class RefactorGuard:
         try:
             method_ranges = extract_method_line_ranges(refactored_path)
             coverage_data = parse_coverage_xml_to_method_hits(
-                "coverage.xml",
-                method_ranges,
-                source_file_path=refactored_path
+                "coverage.xml", method_ranges, source_file_path=refactored_path
             )
             # stash for potential reuse
             self.attach_coverage_hits(coverage_data)
@@ -170,10 +160,7 @@ class RefactorGuard:
             self.coverage_hits = coverage_data
 
     def analyze_directory_recursive(
-        self,
-        original_dir: str,
-        refactored_dir: str,
-        test_dir: Optional[str] = None
+        self, original_dir: str, refactored_dir: str, test_dir: Optional[str] = None
     ) -> Dict[str, Dict[str, Any]]:
         """
         Walk original_dir for .py files (respecting ignore_files/ignore_dirs),
@@ -182,7 +169,7 @@ class RefactorGuard:
         """
         summary: Dict[str, Dict[str, Any]] = {}
         ignore_files = self.config.get("ignore_files", [])
-        ignore_dirs  = set(self.config.get("ignore_dirs", []))
+        ignore_dirs = set(self.config.get("ignore_dirs", []))
 
         for root, dirs, files in os.walk(original_dir):
             # skip ignored directories
@@ -199,7 +186,7 @@ class RefactorGuard:
                     continue
 
                 orig = os.path.join(original_dir, rel_path)
-                ref  = os.path.join(refactored_dir, rel_path)
+                ref = os.path.join(refactored_dir, rel_path)
                 if not os.path.exists(ref):
                     continue
 

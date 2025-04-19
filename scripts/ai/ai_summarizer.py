@@ -10,6 +10,7 @@ class AISummarizer:
     """
     AISummarizer provides methods to generate summaries for single or multiple text entries using a configurable LLM model and subcategory-specific prompts. It supports fallback to the Ollama chat API if primary summarization fails and loads configuration settings at initialization.
     """
+
     def __init__(self):
         """
         Initialize AISummarizer by loading configuration, setting the LLM model, and preparing prompts by subcategory.
@@ -35,7 +36,9 @@ class AISummarizer:
                 model=self.model, messages=[{"role": "user", "content": full_prompt}]
             )
             content = response.get("message", {}).get("content", "")
-            return content.strip() if isinstance(content, str) else "Fallback failed: Invalid format"
+            return (
+                content.strip() if isinstance(content, str) else "Fallback failed: Invalid format"
+            )
         except (KeyError, TypeError, RequestException) as e:
             logger.error("[FallbackError] Ollama fallback failed: %s", e, exc_info=True)
             return "Fallback failed: Ollama not available"
@@ -60,7 +63,9 @@ class AISummarizer:
             logger.debug("[AI] Single-entry prompt:\n%s", full_prompt)
             response = ollama.generate(model=self.model, prompt=full_prompt)
             result = response.get("response")
-            return result.strip() if isinstance(result, str) else self._fallback_summary(full_prompt)
+            return (
+                result.strip() if isinstance(result, str) else self._fallback_summary(full_prompt)
+            )
         except (KeyError, TypeError, RequestException) as e:
             logger.warning("summarize_entry failed: %s", e, exc_info=True)
             return self._fallback_summary(full_prompt)
@@ -89,7 +94,9 @@ class AISummarizer:
         try:
             response = ollama.generate(model=self.model, prompt=full_prompt)
             result = response.get("response")
-            return result.strip() if isinstance(result, str) else self._fallback_summary(full_prompt)
+            return (
+                result.strip() if isinstance(result, str) else self._fallback_summary(full_prompt)
+            )
         except (KeyError, TypeError, RequestException) as e:
             logger.warning("summarize_entries_bulk failed: %s", e, exc_info=True)
             return self._fallback_summary(full_prompt)

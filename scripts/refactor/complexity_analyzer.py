@@ -129,7 +129,6 @@ def calculate_module_complexity(module_path: str) -> int:
     return sum(scores.values()) + 1
 
 
-
 def calculate_cyclomatic_complexity_for_module(module_path: str) -> int:
     """
     Deprecated alias for calculate_module_complexity.
@@ -140,6 +139,6 @@ def calculate_cyclomatic_complexity_for_module(module_path: str) -> int:
         "calculate_cyclomatic_complexity_for_module is deprecated; "
         "use calculate_module_complexity instead",
         DeprecationWarning,
-        stacklevel=2
+        stacklevel=2,
     )
     return calculate_module_complexity(module_path)

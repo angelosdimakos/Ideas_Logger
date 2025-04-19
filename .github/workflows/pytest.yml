@@ -174,16 +174,21 @@ jobs:
           name: refactor-audit
           path: refactor_audit.json
 
-      #- name: 📝 Generate CI Insight Report
-      #  run: |
-      #    python scripts/ci_analyzer/ci_analyzer_cli.py
+      - name: 📝 Generate CI Insight Report
+        run: |
+          python scripts/ci_analyzer/cli.py
 
-      #- name: 📄 Upload CI Summary Markdown
-      #  if: always()
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: ci-summary
-      #    path: ci_summary.md
+      - name: 📄 Upload CI Summary Markdown
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-summary
+          path: ci_summary.md
+
+      - name: 📊 Compare CI Trends
+        run: |
+          python scripts/ci_analyzer/ci_trends.py
+
 
       - name: 🗞 Audit Summary Recap
         run: |

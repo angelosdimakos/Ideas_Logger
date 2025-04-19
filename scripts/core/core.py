@@ -17,6 +17,7 @@ class ZephyrusLoggerCore:
     """
     ZephyrusLoggerCore manages logging, summarization, and search for categorized entries using JSON and Markdown files. It initializes the environment, handles batch summarization with AI, maintains summary tracking, and provides search functionality across summaries and raw logs. Integrates with organization-specific modules for configuration, file management, and AI summarization.
     """
+
     TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
     DATE_FORMAT = "%Y-%m-%d"
     BATCH_KEY = "batch"

@@ -63,12 +63,16 @@ class ZephyrusLoggerGUI:
             foreground="white",  # Ensure text is white for contrast
             padding=6,
             relief="flat",
-            font=("Segoe UI", 10, "bold")  # Make text bold for better visibility
+            font=("Segoe UI", 10, "bold"),  # Make text bold for better visibility
         )
-        self.style.map("Navigation.TButton",
-                       background=[("active", "#303f9f"), ("disabled", "#bdbdbd")],
-                       foreground=[("active", "white"), ("disabled", "#757575")]  # Ensure contrast in all states
-                       )
+        self.style.map(
+            "Navigation.TButton",
+            background=[("active", "#303f9f"), ("disabled", "#bdbdbd")],
+            foreground=[
+                ("active", "white"),
+                ("disabled", "#757575"),
+            ],  # Ensure contrast in all states
+        )
 
         # Create primary notebook for tabbed interface
         self.notebook = ttk.Notebook(self.root)
@@ -227,18 +231,26 @@ class ZephyrusLoggerGUI:
 
         # Create buttons with icons (using text for now, can be replaced with actual icons)
         self.summarize_button = ttk.Button(
-            action_frame, text="🧠 Summarize", command=self._manual_summarize, style="Navigation.TButton"
+            action_frame,
+            text="🧠 Summarize",
+            command=self._manual_summarize,
+            style="Navigation.TButton",
         )
         self.summarize_button.pack(side=tk.LEFT, padx=5)
 
         self.coverage_button = ttk.Button(
-            action_frame, text="📊 Coverage", command=self._show_coverage, style="Navigation.TButton"
+            action_frame,
+            text="📊 Coverage",
+            command=self._show_coverage,
+            style="Navigation.TButton",
         )
         self.coverage_button.pack(side=tk.LEFT, padx=5)
 
         self.rebuild_button = ttk.Button(
-            action_frame, text="📁 Rebuild Tracker and Indexers", command=self._rebuild_tracker,
-            style="Navigation.TButton"
+            action_frame,
+            text="📁 Rebuild Tracker and Indexers",
+            command=self._rebuild_tracker,
+            style="Navigation.TButton",
         )
         self.rebuild_button.pack(side=tk.LEFT, padx=5)
 
@@ -505,8 +517,8 @@ class ZephyrusLoggerGUI:
                 key_match = re.search(r'"([^"]+)"\s*:', line)
                 if key_match:
                     pre = line[: key_match.start()]
-                    key = line[key_match.start(): key_match.end()]
-                    post = line[key_match.end():]
+                    key = line[key_match.start() : key_match.end()]
+                    post = line[key_match.end() :]
 
                     text_widget.insert(tk.END, pre)
                     text_widget.insert(tk.END, key, "key")

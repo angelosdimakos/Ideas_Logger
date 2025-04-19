@@ -6,9 +6,7 @@ from typing import Dict, Tuple, Set, Any
 
 
 def parse_coverage_xml_to_method_hits(
-    xml_path: str,
-    method_ranges: Dict[str, Tuple[int, int]],
-    source_file_path: str
+    xml_path: str, method_ranges: Dict[str, Tuple[int, int]], source_file_path: str
 ) -> Dict[str, Dict[str, Any]]:
     """
     Parse coverage XML and map line-level coverage to method-level stats for a single source file.
@@ -37,7 +35,6 @@ def parse_coverage_xml_to_method_hits(
         # Let Python raise FileNotFoundError
         raise FileNotFoundError(f"No coverage.xml found at {xml_path}")
 
-
     if not os.path.exists(xml_path):
         # Missing file → FileNotFoundError as expected by tests
         raise FileNotFoundError(f"No coverage.xml found at {xml_path}")
@@ -45,9 +42,6 @@ def parse_coverage_xml_to_method_hits(
     # Malformed XML → ET.ParseError bubbles up to caller
     tree = ET.parse(xml_path)
     root = tree.getroot()
-
-
-
 
     # Build a map of normalized file paths to their covered line numbers
     hits_by_file: Dict[str, Set[int]] = {}
@@ -98,10 +92,6 @@ def parse_coverage_xml_to_method_hits(
         total = end - start + 1
         hits = sum(1 for ln in range(start, end + 1) if ln in file_hits)
         coverage = (hits / total) if total > 0 else 0.0
-        result[method] = {
-            "coverage": coverage,
-            "hits": hits,
-            "lines": total
-        }
+        result[method] = {"coverage": coverage, "hits": hits, "lines": total}
 
     return result

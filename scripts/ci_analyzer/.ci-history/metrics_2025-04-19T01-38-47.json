@@ -1,0 +1,6 @@
+{
+  "coverage": 76.77,
+  "quality_score": 18.83,
+  "methods_over_threshold": 11,
+  "files_with_avg_complexity_gt_10": 2
+}

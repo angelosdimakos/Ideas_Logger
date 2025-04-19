@@ -27,10 +27,7 @@ def _normalize(path: str) -> str:
         return str(Path(path).name)
 
 
-def run_command(
-    cmd: Sequence[str],
-    output_path: Union[str, os.PathLike]
-) -> int:
+def run_command(cmd: Sequence[str], output_path: Union[str, os.PathLike]) -> int:
     """
     Run a command, capture stdout+stderr, write both into output_path.
     """
@@ -80,12 +77,9 @@ def _add_flake8_quality(quality: Dict[str, Dict[str, Any]]) -> None:
         key = _normalize(file_path)
         entry = quality.setdefault(key, {})
         entry.setdefault("flake8", {"issues": []})
-        entry["flake8"]["issues"].append({
-            "line": int(line_no),
-            "column": int(col),
-            "code": code,
-            "message": msg
-        })
+        entry["flake8"]["issues"].append(
+            {"line": int(line_no), "column": int(col), "code": code, "message": msg}
+        )
 
 
 def _add_black_quality(quality: Dict[str, Dict[str, Any]]) -> None:
@@ -142,11 +136,7 @@ def _add_coverage_quality(quality: Dict[str, Dict[str, Any]]) -> None:
             continue
         key = _normalize(raw_path)
         rate = float(cls.attrib.get("line-rate", "0"))
-        entry = quality.setdefault(key, {})["coverage"] = {
-            "percent": round(rate * 100, 1)
-
-
-        }
+        entry = quality.setdefault(key, {})["coverage"] = {"percent": round(rate * 100, 1)}
 
 
 def merge_into_refactor_guard(audit_path: str = "refactor_audit.json") -> None:

@@ -10,6 +10,7 @@ class ClassMethodInfo:
         class_name: Name of the class.
         methods: Mapping from method name to a tuple(start_lineno, end_lineno).
     """
+
     def __init__(self, class_name: str):
         self.class_name: str = class_name
         self.methods: Dict[str, Tuple[int, int]] = {}
@@ -48,9 +49,9 @@ def extract_class_methods(file_path: str) -> List[ClassMethodInfo]:
             for item in node.body:
                 if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
                     start = item.lineno
-                    end = getattr(item, 'end_lineno', None)
+                    end = getattr(item, "end_lineno", None)
                     if end is None:
-                        end = max(getattr(n, 'lineno', start) for n in ast.walk(item))
+                        end = max(getattr(n, "lineno", start) for n in ast.walk(item))
                     info.add_method(item.name, (start, end))
             self.classes.append(info)
 
@@ -72,8 +73,7 @@ def extract_class_methods(file_path: str) -> List[ClassMethodInfo]:
 
 
 def compare_class_methods(
-    original: ClassMethodInfo,
-    refactored: ClassMethodInfo
+    original: ClassMethodInfo, refactored: ClassMethodInfo
 ) -> Dict[str, List[str]]:
     """
     Compare two ClassMethodInfo objects and return which methods

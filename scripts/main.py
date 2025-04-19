@@ -47,6 +47,7 @@ def bootstrap(start_gui: bool = True) -> tuple[GUIController, ZephyrusLoggerGUI 
         if start_gui and not HEADLESS_MODE:
             try:
                 import tkinter as tk
+
                 _root = tk.Tk()
                 _root.withdraw()
                 app = ZephyrusLoggerGUI(controller)

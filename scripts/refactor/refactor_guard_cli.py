@@ -54,8 +54,7 @@ def handle_json_output(summary, output_name, out_dir=None):
 def print_method_stats(method_complexities, guard):
     """Print the complexity and coverage for each method in human‑readable form."""
     total_complexity = sum(
-        (v["complexity"] if isinstance(v, dict) else v)
-        for v in method_complexities.values()
+        (v["complexity"] if isinstance(v, dict) else v) for v in method_complexities.values()
     )
     print(f"📊 Total Complexity: {total_complexity}")
     print("📊 Method Complexity & Coverage:")
@@ -66,7 +65,9 @@ def print_method_stats(method_complexities, guard):
             cov_str = f"{cov*100:.1f}%" if isinstance(cov, float) else "N/A"
             hits = stats.get("hits", "N/A")
             lines = stats.get("lines", "N/A")
-            print(f"  {emoji} {method} | Complexity: {stats['complexity']} | Coverage: {cov_str} ({hits}/{lines})")
+            print(
+                f"  {emoji} {method} | Complexity: {stats['complexity']} | Coverage: {cov_str} ({hits}/{lines})"
+            )
         else:
             emoji = "⚠️" if stats > guard.config.get("max_complexity", 10) else "✅"
             print(f"  {emoji} {method}: {stats}")
@@ -82,15 +83,15 @@ def print_summary(summary, guard, args):
 
 def parse_args():
     p = argparse.ArgumentParser(description="RefactorGuard CLI: Audit Python refactors.")
-    p.add_argument("--original",   type=str, default="", help="Original file/dir")
+    p.add_argument("--original", type=str, default="", help="Original file/dir")
     p.add_argument("--refactored", type=str, required=True, help="Refactored file/dir")
-    p.add_argument("--tests",      type=str, help="Optional test file or dir to check for missing tests")
-    p.add_argument("--all",        action="store_true", help="Audit entire scripts dir")
-    p.add_argument("--diff-only",  action="store_true", help="Ignore complexity checks")
+    p.add_argument("--tests", type=str, help="Optional test file or dir to check for missing tests")
+    p.add_argument("--all", action="store_true", help="Audit entire scripts dir")
+    p.add_argument("--diff-only", action="store_true", help="Ignore complexity checks")
     p.add_argument("--missing-tests", action="store_true", help="List methods lacking tests")
     p.add_argument("--complexity-warnings", action="store_true", help="Show complexity warnings")
-    p.add_argument("--json",       action="store_true", help="Export result as structured JSON")
-    p.add_argument("--git-diff",   action="store_true", help="Analyze only Git‑changed files")
+    p.add_argument("--json", action="store_true", help="Export result as structured JSON")
+    p.add_argument("--git-diff", action="store_true", help="Analyze only Git‑changed files")
     return p.parse_args()
 
 
@@ -101,7 +102,7 @@ def dispatch_mode(args, guard):
 
 
 def handle_full_scan(args, guard):
-    original   = args.original or "scripts"
+    original = args.original or "scripts"
     refactored = args.refactored or "scripts"
     if args.git_diff:
         summary = {}
@@ -116,9 +117,13 @@ def handle_full_scan(args, guard):
 
 def handle_single_file(args, guard):
     if not os.path.isfile(args.original):
-        raise ValueError(f"[handle_single_file] Expected a file for --original, got: {args.original}")
+        raise ValueError(
+            f"[handle_single_file] Expected a file for --original, got: {args.original}"
+        )
     if not os.path.isfile(args.refactored):
-        raise ValueError(f"[handle_single_file] Expected a file for --refactored, got: {args.refactored}")
+        raise ValueError(
+            f"[handle_single_file] Expected a file for --refactored, got: {args.refactored}"
+        )
     summary = guard.analyze_module(args.original, args.refactored, test_file_path=args.tests)
     fname = os.path.basename(args.refactored)
     # Emit the same shape as full-scan: filename → summary dict
