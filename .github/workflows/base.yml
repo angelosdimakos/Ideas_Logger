@@ -19,14 +19,6 @@ jobs:
         with:
           python-version: "3.11.8"
 
-      - name: 📂 Cache virtualenv
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-venv-
-
       - name: ⚙️ Install dependencies in venv
         id: out
         run: |
@@ -36,7 +28,14 @@ jobs:
           .venv/bin/pip install faiss-cpu --only-binary=faiss-cpu
           echo "venv-path=${GITHUB_WORKSPACE}/.venv" >> "$GITHUB_OUTPUT"
 
-      - name: 📆 Upload .venv for downstream jobs
+      - name: 📆 Ensure .venv exists before upload
+        run: |
+          if [ ! -f .venv/bin/activate ]; then
+            echo "❌ .venv not found. Something went wrong."
+            exit 1
+          fi
+
+      - name: 📅 Upload .venv for downstream jobs
         if: always()
         uses: actions/upload-artifact@v4
         with:
