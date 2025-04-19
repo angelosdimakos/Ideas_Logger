@@ -5,6 +5,10 @@ from pathlib import Path
 from typing import Dict, Any, Sequence, Union
 import os
 import re
+import sys
+
+# 👇 Add parent of 'scripts' to sys.path to avoid import errors when run as a module
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 # Project root, used for normalizing paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
