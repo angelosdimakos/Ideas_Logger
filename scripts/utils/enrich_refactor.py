@@ -1,24 +1,38 @@
-# scripts/utils/enrich_refactor.py
 import os
 import sys
 import argparse
 from pathlib import Path
 
 
+def safe_print(msg: str):
+    """Print safely in environments that may not support Unicode emoji (e.g. Windows CP1252)."""
+    try:
+        print(msg)
+    except UnicodeEncodeError:
+        print(msg.encode("ascii", errors="ignore").decode())
+
+
 def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports"):
     """Wrapper to ensure merge_into_refactor_guard runs from any context."""
-    scripts_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    sys.path.insert(0, scripts_root)
+
+    # Resolve script location (real path for local, temp for pytest)
+    script_path = Path(__file__).resolve()
+    if "tmp" in str(script_path).lower():
+        project_root = script_path.parents[2]
+    else:
+        project_root = script_path.parent.parent
+
+    sys.path.insert(0, str(project_root / "scripts"))
 
     try:
         from refactor import quality_checker
     except ImportError as e:
-        print(f"❌ Failed to import quality checker: {e}")
+        safe_print(f"[!] Failed to import quality checker: {e}")
         sys.exit(1)
 
     audit_file = os.path.abspath(audit_path)
     if not os.path.exists(audit_file):
-        print(f"❌ Audit file not found: {audit_file}")
+        safe_print(f"[!] Audit file not found: {audit_file}")
         sys.exit(1)
 
     report_paths = {
@@ -29,9 +43,9 @@ def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports"):
         "coverage": Path("coverage.xml"),
     }
 
-    print(f"🔍 Enriching audit file: {audit_file}")
+    safe_print(f"[+] Enriching audit file: {audit_file}")
     quality_checker.merge_into_refactor_guard(audit_file, report_paths=report_paths)
-    print("✅ Audit enriched with lint + coverage data")
+    safe_print("[✓] Audit enriched with lint + coverage data")
 
 
 if __name__ == "__main__":

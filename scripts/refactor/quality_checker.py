@@ -6,6 +6,13 @@ from typing import Dict, Any, Sequence, Union
 import os
 import re
 
+# ---------------------- 🔐 Safe Print for Emoji ----------------------
+def safe_print(msg: str):
+    try:
+        print(msg)
+    except UnicodeEncodeError:
+        print(msg.encode("ascii", errors="ignore").decode())
+
 # Default report filenames
 DEFAULT_REPORT_PATHS = {
     "black": Path("black.txt"),
@@ -98,7 +105,7 @@ def _add_coverage_quality(quality: Dict[str, Dict[str, Any]], report_paths) -> N
         tree = ET.parse(str(report_paths["coverage"]))
         root = tree.getroot()
     except ET.ParseError as e:
-        print(f"⚠️ Malformed coverage XML: {e}")
+        safe_print(f"⚠️ Malformed coverage XML: {e}")
         return
 
     for cls in root.findall(".//class"):
@@ -112,14 +119,19 @@ def _add_coverage_quality(quality: Dict[str, Dict[str, Any]], report_paths) -> N
 def merge_into_refactor_guard(audit_path: str = "refactor_audit.json", report_paths=None) -> None:
     audit_file = Path(audit_path)
     if not audit_file.exists():
-        print("❌ Missing refactor audit JSON!")
+        print("[!] Missing refactor audit JSON!")
         return
 
     try:
-        audit = json.loads(audit_file.read_text(encoding="utf-8-sig"))
+        raw_audit = json.loads(audit_file.read_text(encoding="utf-8-sig"))
     except json.JSONDecodeError as e:
-        print(f"❌ Corrupt audit JSON: {e}")
+        print(f"[!] Corrupt audit JSON: {e}")
         return
+
+    # 🧹 Normalize keys to match enrichment keys
+    audit = {
+        _normalize(k): v for k, v in raw_audit.items()
+    }
 
     report_paths = report_paths or DEFAULT_REPORT_PATHS
     quality_by_file: Dict[str, Dict[str, Any]] = {}
@@ -134,4 +146,4 @@ def merge_into_refactor_guard(audit_path: str = "refactor_audit.json", report_pa
         audit.setdefault(file_path, {}).setdefault("quality", {}).update(qdata)
 
     audit_file.write_text(json.dumps(audit, indent=2), encoding="utf-8")
-    print("✅ RefactorGuard audit enriched with quality data!")
+    print("[OK] RefactorGuard audit enriched with quality data.")
