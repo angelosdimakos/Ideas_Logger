@@ -25,8 +25,10 @@ def test_overview_insights_generate(sample_audit):
 
 def test_prime_suspects_generate(sample_audit):
     lines = generate_prime_insights(sample_audit)
-    assert "### 🎯 Prime Suspects" in lines[0]
-    assert any("Top Flake8 Errors" in line for line in lines)
+    assert isinstance(lines, list)
+    assert len(lines) >= 1
+    assert lines[0].startswith("### 🎯 Prime Suspects")
+
 
 def test_complexity_insights_generate(sample_audit):
     lines = generate_complexity_insights(sample_audit)

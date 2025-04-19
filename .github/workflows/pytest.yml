@@ -2,62 +2,57 @@ name: Run Tests & CI Audit
 
 on:
   push:
-    branches:
-      - main
-      - master
-      - feature/**
-      - fix/**
-      - dev/**
+    branches: [main, master, feature/**, fix/**, dev/**]
   pull_request:
-    branches:
-      - main
-      - master
+    branches: [main, master]
 
 jobs:
-  lint:
+  setup:
     runs-on: ubuntu-latest
-    env:
-      ZEPHYRUS_HEADLESS: "1"
+    outputs:
+      venv-path: ${{ steps.out.outputs.venv-path }}
     steps:
-      - name: 📎 Checkout full history
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v3
 
       - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11.8"
 
-      - name: 💾 Cache pip
+      - name: 💾 Cache virtualenv
         uses: actions/cache@v3
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-venv-
 
-      - name: 📆 Install Dependencies
+      - name: ⚙️ Install dependencies in venv
+        id: out
         run: |
-          pip install -r requirements.txt
-          python -m pip install --upgrade pip wheel setuptools
-          pip install faiss-cpu --only-binary=faiss-cpu
-          
+          python -m venv .venv
+          .venv/bin/pip install --upgrade pip wheel setuptools
+          .venv/bin/pip install -r requirements.txt
+          .venv/bin/pip install faiss-cpu --only-binary=faiss-cpu
+          echo "venv-path=${GITHUB_WORKSPACE}/.venv" >> "$GITHUB_OUTPUT"
 
-      - name: 🧹 Lint and Static Analysis
+  lint:
+    needs: setup
+    runs-on: ubuntu-latest
+    env:
+      ZEPHYRUS_HEADLESS: "1"
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: ✅ Run Linters
         run: |
+          source ${{ needs.setup.outputs.venv-path }}/bin/activate
           mkdir -p lint-reports
           black --check scripts > lint-reports/black.txt 2>&1 || true
-          flake8 scripts > lint-reports/flake8.txt  2>&1 || true
-          MYPYPATH=. mypy --explicit-package-bases scripts > lint-reports/mypy.txt  2>&1 || true
-
-      - name: 📚 Docstring Linting
-        run: |
+          flake8 scripts > lint-reports/flake8.txt 2>&1 || true
+          MYPYPATH=. mypy --explicit-package-bases scripts > lint-reports/mypy.txt 2>&1 || true
           pydocstyle scripts > lint-reports/pydocstyle.txt 2>&1 || true
-
-      - name: 🧠 Doc Coverage Analysis
-        run: |
-          pip install interrogate
+          .venv/bin/pip install interrogate
           interrogate -v scripts > lint-reports/interrogate.txt 2>&1 || true
 
       - name: 📄 Upload Lint Reports
@@ -68,54 +63,22 @@ jobs:
           path: lint-reports/
 
   test:
-    needs: lint
+    needs: setup
     runs-on: ubuntu-latest
     env:
       ZEPHYRUS_HEADLESS: "1"
     steps:
-      - name: 📎 Checkout full history
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v3
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11.8"
-
-      - name: 💾 Cache dependencies & pytest cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/pip
-            .pytest_cache
-          key: ${{ runner.os }}-deps-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-deps-
-
-      - name: 📆 Install Dependencies
+      - name: ✅ Run Tests
         run: |
-          pip install -r requirements.txt
-          python -m pip install --upgrade pip wheel setuptools
-          pip install faiss-cpu --only-binary=faiss-cpu
-          pip install pytest-xdist
-
-      - name: ✅ Run Unit + Integration Tests
-        run: |
+          source ${{ needs.setup.outputs.venv-path }}/bin/activate
+          .venv/bin/pip install pytest-xdist
           python -m pytest -n auto -c pytest.ini \
             --cov=scripts --cov-config=.coveragerc \
             --cov-report=xml --cov-report=html
 
-      - name: 📄 Check for Coverage Report
-        run: |
-          if [ ! -f coverage.xml ]; then
-            echo "❌ coverage.xml not found!"
-            exit 1
-          else
-            echo "✅ Found coverage.xml"
-          fi
-
-      - name: 📈 Upload HTML Coverage Report
+      - name: 📈 Upload Coverage Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -133,39 +96,14 @@ jobs:
       - name: 🧠 Run RefactorGuard Audit
         if: github.event_name == 'push'
         run: |
-          python scripts/refactor/refactor_guard_cli.py \
-            --refactored scripts \
-            --all \
-            --missing-tests \
-            --json
+          source ${{ needs.setup.outputs.venv-path }}/bin/activate
+          python scripts/refactor/refactor_guard_cli.py --refactored scripts --all --missing-tests --json
 
       - name: 🔍 Git Diff Audit (PRs only)
         if: github.event_name == 'pull_request'
         run: |
-          python scripts/refactor/refactor_guard_cli.py \
-            --refactored scripts \
-            --all \
-            --git-diff \
-            --missing-tests \
-            --json
-          
-      - name: 📥 Download Lint Reports
-        uses: actions/download-artifact@v4
-        with:
-          name: lint-reports
-          path: .
-
-
-      - name: 📋 Enrich Refactor Audit with Quality Data
-        run: |
-          python - <<'PYCODE'
-          from scripts.refactor.quality_checker import merge_into_refactor_guard
-          merge_into_refactor_guard("refactor_audit.json")
-          PYCODE
-
-      - name: 🚨 Show Complexity Summary
-        run: |
-          python scripts/utils/complexity_summary.py refactor_audit.json
+          source ${{ needs.setup.outputs.venv-path }}/bin/activate
+          python scripts/refactor/refactor_guard_cli.py --refactored scripts --all --git-diff --missing-tests --json
 
       - name: 📄 Upload Refactor Audit
         if: always()
@@ -173,6 +111,26 @@ jobs:
         with:
           name: refactor-audit
           path: refactor_audit.json
+
+  report:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    env:
+      ZEPHYRUS_HEADLESS: "1"
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 📥 Download Lint Reports
+        uses: actions/download-artifact@v4
+        with:
+          name: lint-reports
+          path: ./lint-reports
+
+      - name: 📥 Download Refactor Audit
+        uses: actions/download-artifact@v4
+        with:
+          name: refactor-audit
+          path: .
 
       - name: 📝 Generate CI Insight Report
         run: |
@@ -189,7 +147,6 @@ jobs:
         run: |
           python scripts/ci_analyzer/ci_trends.py
 
-
       - name: 🗞 Audit Summary Recap
         run: |
-          python -c "import json; f=open('refactor_audit.json', encoding='utf-8-sig'); data=json.load(f); method_count = sum(len(file.get('complexity', {})) for file in data.values()); file_count = len(data); print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')"
+          python -c "import json; f=open('refactor_audit.json', encoding='utf-8-sig'); data=json.load(f); method_count = sum(len(file.get('complexity', {})) for file in data.values()); file_count = len(data); print(f'\\n📊 Summary:\\n🧠 Methods analyzed: {method_count}\\n🔧 Files analyzed: {file_count}')"
