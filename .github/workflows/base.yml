@@ -31,6 +31,13 @@ jobs:
           .venv/bin/pip install faiss-cpu --only-binary=faiss-cpu
           echo "venv-path=${GITHUB_WORKSPACE}/.venv" >> "$GITHUB_OUTPUT"
 
+      - name: 🔢 Debug .venv structure
+        run: |
+          echo "📁 Listing .venv contents:"
+          ls -la .venv || echo "❌ .venv missing"
+          echo "📁 Listing .venv/bin:"
+          ls -la .venv/bin || echo "❌ .venv/bin missing"
+
       - name: 📆 Ensure .venv exists before upload
         run: |
           if [ ! -f .venv/bin/activate ]; then
