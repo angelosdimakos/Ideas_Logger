@@ -19,7 +19,7 @@ jobs:
         with:
           python-version: "3.11.8"
 
-      - name: 💾 Cache virtualenv
+      - name: 📂 Cache virtualenv
         uses: actions/cache@v3
         with:
           path: .venv
@@ -36,6 +36,13 @@ jobs:
           .venv/bin/pip install faiss-cpu --only-binary=faiss-cpu
           echo "venv-path=${GITHUB_WORKSPACE}/.venv" >> "$GITHUB_OUTPUT"
 
+      - name: 📆 Upload .venv for downstream jobs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-venv
+          path: .venv
+
   lint:
     needs: setup
     runs-on: ubuntu-latest
@@ -44,9 +51,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: 📅 Download shared venv
+        uses: actions/download-artifact@v4
+        with:
+          name: shared-venv
+          path: .venv
+
       - name: ✅ Run Linters
         run: |
-          source ${{ needs.setup.outputs.venv-path }}/bin/activate
+          source .venv/bin/activate
           mkdir -p lint-reports
           black --check scripts > lint-reports/black.txt 2>&1 || true
           flake8 scripts > lint-reports/flake8.txt 2>&1 || true
@@ -70,9 +83,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: 📅 Download shared venv
+        uses: actions/download-artifact@v4
+        with:
+          name: shared-venv
+          path: .venv
+
       - name: ✅ Run Tests
         run: |
-          source ${{ needs.setup.outputs.venv-path }}/bin/activate
+          source .venv/bin/activate
           .venv/bin/pip install pytest-xdist
           python -m pytest -n auto -c pytest.ini \
             --cov=scripts --cov-config=.coveragerc \
@@ -96,13 +115,13 @@ jobs:
       - name: 🧠 Run RefactorGuard Audit
         if: github.event_name == 'push'
         run: |
-          source ${{ needs.setup.outputs.venv-path }}/bin/activate
+          source .venv/bin/activate
           python scripts/refactor/refactor_guard_cli.py --refactored scripts --all --missing-tests --json
 
       - name: 🔍 Git Diff Audit (PRs only)
         if: github.event_name == 'pull_request'
         run: |
-          source ${{ needs.setup.outputs.venv-path }}/bin/activate
+          source .venv/bin/activate
           python scripts/refactor/refactor_guard_cli.py --refactored scripts --all --git-diff --missing-tests --json
 
       - name: 📄 Upload Refactor Audit
@@ -120,13 +139,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: 📥 Download Lint Reports
+      - name: 📅 Download shared venv
+        uses: actions/download-artifact@v4
+        with:
+          name: shared-venv
+          path: .venv
+
+      - name: 📅 Download Lint Reports
         uses: actions/download-artifact@v4
         with:
           name: lint-reports
           path: ./lint-reports
 
-      - name: 📥 Download Refactor Audit
+      - name: 📅 Download Refactor Audit
         uses: actions/download-artifact@v4
         with:
           name: refactor-audit
@@ -134,6 +159,7 @@ jobs:
 
       - name: 📝 Generate CI Insight Report
         run: |
+          source .venv/bin/activate
           python scripts/ci_analyzer/cli.py
 
       - name: 📄 Upload CI Summary Markdown
@@ -145,8 +171,9 @@ jobs:
 
       - name: 📊 Compare CI Trends
         run: |
+          source .venv/bin/activate
           python scripts/ci_analyzer/ci_trends.py
 
-      - name: 🗞 Audit Summary Recap
+      - name: 🗾️ Audit Summary Recap
         run: |
-          python -c "import json; f=open('refactor_audit.json', encoding='utf-8-sig'); data=json.load(f); method_count = sum(len(file.get('complexity', {})) for file in data.values()); file_count = len(data); print(f'\\n📊 Summary:\\n🧠 Methods analyzed: {method_count}\\n🔧 Files analyzed: {file_count}')"
+          python -c "import json; f=open('refactor_audit.json', encoding='utf-8-sig'); data=json.load(f); method_count = sum(len(file.get('complexity', {})) for file in data.values()); file_count = len(data); print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')"
