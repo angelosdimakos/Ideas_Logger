@@ -186,6 +186,12 @@ jobs:
           path: .
         continue-on-error: true
 
+      - name: 📋 Enrich Refactor Audit with Quality Data
+        run: |
+          source .venv/bin/activate
+          python -c "from scripts.refactor.quality_checker import merge_into_refactor_guard; merge_into_refactor_guard('refactor_audit.json')"
+
+
       - name: 📝 Generate CI Insight Report
         run: |
           source .venv/bin/activate
