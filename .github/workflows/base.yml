@@ -152,7 +152,7 @@ jobs:
           path: refactor_audit.json
 
   report:
-    needs: [lint, test]
+    needs: [ lint, test ]
     runs-on: ubuntu-latest
     if: always()
     env:
@@ -189,8 +189,8 @@ jobs:
       - name: 📋 Enrich Refactor Audit with Quality Data
         run: |
           source .venv/bin/activate
-          python -c "from scripts.refactor.quality_checker import merge_into_refactor_guard; merge_into_refactor_guard('refactor_audit.json')"
-
+          cd lint-reports
+          python -c "from scripts.refactor.quality_checker import merge_into_refactor_guard; merge_into_refactor_guard('../refactor_audit.json')"
 
       - name: 📝 Generate CI Insight Report
         run: |
@@ -216,13 +216,4 @@ jobs:
             python -c "import json; f=open('refactor_audit.json', encoding='utf-8-sig'); data=json.load(f); method_count = sum(len(file.get('complexity', {})) for file in data.values()); file_count = len(data); print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')"
           else
             echo "⚠️ refactor_audit.json not found - skipping summary"
-          fi
-
-      - name: 📝 Post CI Summary
-        if: always()
-        run: |
-          if [ -f ci_summary.md ]; then
-            echo "::group::CI Summary"
-            cat ci_summary.md
-            echo "::endgroup::"
           fi
