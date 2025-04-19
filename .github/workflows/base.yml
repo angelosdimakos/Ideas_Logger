@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: shared-venv
-          path: ${{ github.workspace }}/.venv
+          path: .venv/**
 
   lint:
     needs: setup
@@ -65,6 +65,11 @@ jobs:
         with:
           name: shared-venv
           path: .venv
+
+      - name: 🔧 Reconstruct virtualenv folder
+        run: |
+          mkdir -p .venv
+          mv .venv/** .venv/ || true
 
       - name: ✅ Run Linters
         run: |
@@ -97,6 +102,11 @@ jobs:
         with:
           name: shared-venv
           path: .venv
+
+      - name: 🔧 Reconstruct virtualenv folder
+        run: |
+          mkdir -p .venv
+          mv .venv/** .venv/ || true
 
       - name: ✅ Run Tests
         run: |
@@ -153,6 +163,11 @@ jobs:
         with:
           name: shared-venv
           path: .venv
+
+      - name: 🔧 Reconstruct virtualenv folder
+        run: |
+          mkdir -p .venv
+          mv .venv/** .venv/ || true
 
       - name: 📅 Download Lint Reports
         uses: actions/download-artifact@v4
