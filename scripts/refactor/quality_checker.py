@@ -5,74 +5,50 @@ from pathlib import Path
 from typing import Dict, Any, Sequence, Union
 import os
 import re
-import sys
 
-# 👇 Add parent of 'scripts' to sys.path to avoid import errors when run as a module
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+# Default report filenames
+DEFAULT_REPORT_PATHS = {
+    "black": Path("black.txt"),
+    "flake8": Path("flake8.txt"),
+    "mypy": Path("mypy.txt"),
+    "pydocstyle": Path("pydocstyle.txt"),
+    "coverage": Path("coverage.xml"),
+}
 
-# Project root, used for normalizing paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-# Report filenames
-BLACK_REPORT = Path("black.txt")
-FLAKE8_REPORT = Path("flake8.txt")
-MYPY_REPORT = Path("mypy.txt")
-PYDOCSTYLE_REPORT = Path("pydocstyle.txt")
-COVERAGE_XML = Path("coverage.xml")
-
-
 def _normalize(path: str) -> str:
-    """
-    Normalize a file path to be relative to the project root.
-    """
     try:
         return str(Path(path).resolve().relative_to(PROJECT_ROOT))
     except Exception:
         return str(Path(path).name)
 
-
 def run_command(cmd: Sequence[str], output_path: Union[str, os.PathLike]) -> int:
-    """
-    Run a command, capture stdout+stderr, write both into output_path.
-    """
     result = subprocess.run(cmd, capture_output=True, text=True)
     combined = (result.stdout or "") + ("\n" + result.stderr if result.stderr else "")
     Path(output_path).write_text(combined.strip(), encoding="utf-8")
     return result.returncode
 
-
 def run_black() -> int:
-    """Run Black in check mode."""
-    return run_command(["black", "--check", "scripts"], BLACK_REPORT)
-
+    return run_command(["black", "--check", "scripts"], DEFAULT_REPORT_PATHS["black"])
 
 def run_flake8() -> int:
-    """Run Flake8 in text format."""
-    return run_command(["flake8", "scripts"], FLAKE8_REPORT)
-
+    return run_command(["flake8", "scripts"], DEFAULT_REPORT_PATHS["flake8"])
 
 def run_mypy() -> int:
-    """Run Mypy with strict settings."""
-    return run_command(["mypy", "--strict", "--no-color-output", "scripts"], MYPY_REPORT)
-
+    return run_command(["mypy", "--strict", "--no-color-output", "scripts"], DEFAULT_REPORT_PATHS["mypy"])
 
 def run_pydocstyle() -> int:
-    """Run pydocstyle for docstring compliance."""
-    return run_command(["pydocstyle", "scripts"], PYDOCSTYLE_REPORT)
-
+    return run_command(["pydocstyle", "scripts"], DEFAULT_REPORT_PATHS["pydocstyle"])
 
 def run_coverage_xml() -> int:
-    """Generate coverage XML report."""
-    return run_command(["coverage", "xml"], COVERAGE_XML)
-
+    return run_command(["coverage", "xml"], DEFAULT_REPORT_PATHS["coverage"])
 
 def _read_report(path: Path) -> str:
-    """Return full contents of a report or empty if missing."""
     return path.read_text(encoding="utf-8") if path.exists() else ""
 
-
-def _add_flake8_quality(quality: Dict[str, Dict[str, Any]]) -> None:
-    raw = _read_report(FLAKE8_REPORT)
+def _add_flake8_quality(quality: Dict[str, Dict[str, Any]], report_paths) -> None:
+    raw = _read_report(report_paths["flake8"])
     for line in raw.splitlines():
         m = re.match(r"([^:]+?):(\d+):(\d+):\s*([A-Z]\d+)\s*(.*)", line)
         if not m:
@@ -81,13 +57,12 @@ def _add_flake8_quality(quality: Dict[str, Dict[str, Any]]) -> None:
         key = _normalize(file_path)
         entry = quality.setdefault(key, {})
         entry.setdefault("flake8", {"issues": []})
-        entry["flake8"]["issues"].append(
-            {"line": int(line_no), "column": int(col), "code": code, "message": msg}
-        )
+        entry["flake8"]["issues"].append({
+            "line": int(line_no), "column": int(col), "code": code, "message": msg
+        })
 
-
-def _add_black_quality(quality: Dict[str, Dict[str, Any]]) -> None:
-    raw = _read_report(BLACK_REPORT)
+def _add_black_quality(quality: Dict[str, Dict[str, Any]], report_paths) -> None:
+    raw = _read_report(report_paths["black"])
     for line in raw.splitlines():
         if "would reformat" not in line:
             continue
@@ -96,9 +71,8 @@ def _add_black_quality(quality: Dict[str, Dict[str, Any]]) -> None:
         entry = quality.setdefault(key, {})
         entry["black"] = {"needs_formatting": True}
 
-
-def _add_mypy_quality(quality: Dict[str, Dict[str, Any]]) -> None:
-    raw = _read_report(MYPY_REPORT)
+def _add_mypy_quality(quality: Dict[str, Dict[str, Any]], report_paths) -> None:
+    raw = _read_report(report_paths["mypy"])
     for l in raw.splitlines():
         if ".py" in l and ": error:" in l:
             file_path = l.split(":")[0]
@@ -106,9 +80,8 @@ def _add_mypy_quality(quality: Dict[str, Dict[str, Any]]) -> None:
             entry = quality.setdefault(key, {}).setdefault("mypy", {"errors": []})
             entry["errors"].append(l.strip())
 
-
-def _add_pydocstyle_quality(quality: Dict[str, Dict[str, Any]]) -> None:
-    raw = _read_report(PYDOCSTYLE_REPORT)
+def _add_pydocstyle_quality(quality: Dict[str, Dict[str, Any]], report_paths) -> None:
+    raw = _read_report(report_paths["pydocstyle"])
     for line in raw.splitlines():
         if ":" not in line:
             continue
@@ -117,23 +90,17 @@ def _add_pydocstyle_quality(quality: Dict[str, Dict[str, Any]]) -> None:
         entry = quality.setdefault(key, {}).setdefault("pydocstyle", {"issues": []})
         entry["issues"].append(line.strip())
 
-
-def _add_coverage_quality(quality: Dict[str, Dict[str, Any]]) -> None:
-    """
-    Parse coverage.xml and record per-file line coverage percentage.
-    """
-    if not COVERAGE_XML.exists():
+def _add_coverage_quality(quality: Dict[str, Dict[str, Any]], report_paths) -> None:
+    if not report_paths["coverage"].exists():
         return
 
-    raw = _read_report(COVERAGE_XML)
     try:
-        tree = ET.parse(str(COVERAGE_XML))
+        tree = ET.parse(str(report_paths["coverage"]))
         root = tree.getroot()
     except ET.ParseError as e:
         print(f"⚠️ Malformed coverage XML: {e}")
         return
 
-    # Each <class> element has filename and line-rate (0.0–1.0)
     for cls in root.findall(".//class"):
         raw_path = cls.attrib.get("filename")
         if not raw_path:
@@ -142,11 +109,7 @@ def _add_coverage_quality(quality: Dict[str, Dict[str, Any]]) -> None:
         rate = float(cls.attrib.get("line-rate", "0"))
         entry = quality.setdefault(key, {})["coverage"] = {"percent": round(rate * 100, 1)}
 
-
-def merge_into_refactor_guard(audit_path: str = "refactor_audit.json") -> None:
-    """
-    Enrich refactor_audit.json by inserting a 'quality' dict per file.
-    """
+def merge_into_refactor_guard(audit_path: str = "refactor_audit.json", report_paths=None) -> None:
     audit_file = Path(audit_path)
     if not audit_file.exists():
         print("❌ Missing refactor audit JSON!")
@@ -158,13 +121,14 @@ def merge_into_refactor_guard(audit_path: str = "refactor_audit.json") -> None:
         print(f"❌ Corrupt audit JSON: {e}")
         return
 
+    report_paths = report_paths or DEFAULT_REPORT_PATHS
     quality_by_file: Dict[str, Dict[str, Any]] = {}
 
-    _add_flake8_quality(quality_by_file)
-    _add_black_quality(quality_by_file)
-    _add_mypy_quality(quality_by_file)
-    _add_pydocstyle_quality(quality_by_file)
-    _add_coverage_quality(quality_by_file)
+    _add_flake8_quality(quality_by_file, report_paths)
+    _add_black_quality(quality_by_file, report_paths)
+    _add_mypy_quality(quality_by_file, report_paths)
+    _add_pydocstyle_quality(quality_by_file, report_paths)
+    _add_coverage_quality(quality_by_file, report_paths)
 
     for file_path, qdata in quality_by_file.items():
         audit.setdefault(file_path, {}).setdefault("quality", {}).update(qdata)

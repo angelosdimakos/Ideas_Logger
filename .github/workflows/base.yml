@@ -189,8 +189,7 @@ jobs:
       - name: 📋 Enrich Refactor Audit with Quality Data
         run: |
           source .venv/bin/activate
-          # Run from the project root where 'scripts' module is correctly in the Python path
-          python -c "import sys; sys.path.insert(0, '.'); from scripts.refactor.quality_checker import merge_into_refactor_guard; merge_into_refactor_guard('refactor_audit.json')"
+          python scripts/utils/enrich_refactor.py --audit refactor_audit.json --reports lint-reports
 
       - name: 📝 Generate CI Insight Report
         run: |
