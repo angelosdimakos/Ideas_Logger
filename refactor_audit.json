@@ -74,112 +74,16 @@
       "flake8": {
         "issues": [
           {
-            "line": 15,
+            "line": 3,
             "column": 1,
-            "code": "E302",
-            "message": "expected 2 blank lines, found 1"
+            "code": "F401",
+            "message": "'datetime.datetime' imported but unused"
           },
           {
-            "line": 39,
-            "column": 29,
-            "code": "E701",
-            "message": "multiple statements on one line (colon)"
-          },
-          {
-            "line": 39,
-            "column": 42,
-            "code": "E702",
-            "message": "multiple statements on one line (semicolon)"
-          },
-          {
-            "line": 40,
-            "column": 28,
-            "code": "E701",
-            "message": "multiple statements on one line (colon)"
-          },
-          {
-            "line": 40,
-            "column": 41,
-            "code": "E702",
-            "message": "multiple statements on one line (semicolon)"
-          },
-          {
-            "line": 40,
+            "line": 64,
             "column": 101,
             "code": "E501",
-            "message": "line too long (101 > 100 characters)"
-          },
-          {
-            "line": 41,
-            "column": 27,
-            "code": "E701",
-            "message": "multiple statements on one line (colon)"
-          },
-          {
-            "line": 41,
-            "column": 40,
-            "code": "E702",
-            "message": "multiple statements on one line (semicolon)"
-          },
-          {
-            "line": 42,
-            "column": 33,
-            "code": "E701",
-            "message": "multiple statements on one line (colon)"
-          },
-          {
-            "line": 42,
-            "column": 46,
-            "code": "E702",
-            "message": "multiple statements on one line (semicolon)"
-          },
-          {
-            "line": 42,
-            "column": 101,
-            "code": "E501",
-            "message": "line too long (104 > 100 characters)"
-          },
-          {
-            "line": 43,
-            "column": 31,
-            "code": "E701",
-            "message": "multiple statements on one line (colon)"
-          },
-          {
-            "line": 43,
-            "column": 44,
-            "code": "E702",
-            "message": "multiple statements on one line (semicolon)"
-          },
-          {
-            "line": 62,
-            "column": 1,
-            "code": "E302",
-            "message": "expected 2 blank lines, found 1"
-          },
-          {
-            "line": 68,
-            "column": 1,
-            "code": "E302",
-            "message": "expected 2 blank lines, found 1"
-          },
-          {
-            "line": 75,
-            "column": 1,
-            "code": "E302",
-            "message": "expected 2 blank lines, found 1"
-          },
-          {
-            "line": 89,
-            "column": 1,
-            "code": "E305",
-            "message": "expected 2 blank lines after class or function definition, found 1"
-          },
-          {
-            "line": 97,
-            "column": 75,
-            "code": "W292",
-            "message": "no newline at end of file"
+            "message": "line too long (102 > 100 characters)"
           }
         ]
       },
@@ -188,20 +92,24 @@
       },
       "mypy": {
         "errors": [
-          "scripts\\ci_analyzer\\ci_trends.py:15: error: Function \"builtins.any\" is not valid as a type  [valid-type]",
-          "scripts\\ci_analyzer\\ci_trends.py:20: error: any? has no attribute \"get\"  [attr-defined]",
-          "scripts\\ci_analyzer\\ci_trends.py:35: error: any? has no attribute \"get\"  [attr-defined]",
-          "scripts\\ci_analyzer\\ci_trends.py:49: error: any? has no attribute \"get\"  [attr-defined]",
-          "scripts\\ci_analyzer\\ci_trends.py:51: error: any? has no attribute \"get\"  [attr-defined]",
-          "scripts\\ci_analyzer\\ci_trends.py:73: error: Returning Any from function declared to return \"dict[str, float] | None\"  [no-any-return]"
+          "scripts\\ci_analyzer\\ci_trends.py:11: error: Returning Any from function declared to return \"dict[str, Any]\"  [no-any-return]",
+          "scripts\\ci_analyzer\\ci_trends.py:42: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\ci_analyzer\\ci_trends.py:52: error: Returning Any from function declared to return \"dict[str, Any]\"  [no-any-return]",
+          "scripts\\ci_analyzer\\ci_trends.py:55: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\ci_analyzer\\ci_trends.py:62: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\ci_analyzer\\ci_trends.py:77: error: Call to untyped function \"main\" in typed context  [no-untyped-call]"
         ]
       },
       "pydocstyle": {
         "issues": [
           "scripts\\ci_analyzer\\ci_trends.py:1 at module level:",
-          "scripts\\ci_analyzer\\ci_trends.py:62 in public function `save_metrics`:",
-          "scripts\\ci_analyzer\\ci_trends.py:68 in public function `load_last_metrics`:",
-          "scripts\\ci_analyzer\\ci_trends.py:75 in public function `generate_trend_summary`:"
+          "scripts\\ci_analyzer\\ci_trends.py:9 in public function `load_audit`:",
+          "scripts\\ci_analyzer\\ci_trends.py:14 in public function `extract_metrics`:",
+          "scripts\\ci_analyzer\\ci_trends.py:34 in public function `compare_metrics`:",
+          "scripts\\ci_analyzer\\ci_trends.py:42 in public function `save_metrics`:",
+          "scripts\\ci_analyzer\\ci_trends.py:48 in public function `load_previous_metrics`:",
+          "scripts\\ci_analyzer\\ci_trends.py:55 in public function `print_comparison`:",
+          "scripts\\ci_analyzer\\ci_trends.py:62 in public function `main`:"
         ]
       }
     }
@@ -887,13 +795,13 @@
       "flake8": {
         "issues": [
           {
-            "line": 8,
+            "line": 9,
             "column": 101,
             "code": "E501",
             "message": "line too long (168 > 100 characters)"
           },
           {
-            "line": 29,
+            "line": 30,
             "column": 1,
             "code": "E302",
             "message": "expected 2 blank lines, found 1"
@@ -905,19 +813,19 @@
       },
       "mypy": {
         "errors": [
-          "scripts\\ci_analyzer\\orchestrator.py:33: error: Returning Any from function declared to return \"dict[str, Any]\"  [no-any-return]",
-          "scripts\\ci_analyzer\\orchestrator.py:62: error: Function is missing a return type annotation  [no-untyped-def]",
-          "scripts\\ci_analyzer\\orchestrator.py:70: error: Call to untyped function \"main\" in typed context  [no-untyped-call]"
+          "scripts\\ci_analyzer\\orchestrator.py:34: error: Returning Any from function declared to return \"dict[str, Any]\"  [no-any-return]",
+          "scripts\\ci_analyzer\\orchestrator.py:63: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\ci_analyzer\\orchestrator.py:76: error: Call to untyped function \"main\" in typed context  [no-untyped-call]"
         ]
       },
       "pydocstyle": {
         "issues": [
           "scripts\\ci_analyzer\\orchestrator.py:1 at module level:",
-          "scripts\\ci_analyzer\\orchestrator.py:29 in public function `load_audit`:",
-          "scripts\\ci_analyzer\\orchestrator.py:36 in public function `header_block`:",
-          "scripts\\ci_analyzer\\orchestrator.py:47 in public function `generate_ci_summary`:",
-          "scripts\\ci_analyzer\\orchestrator.py:58 in public function `save_summary`:",
-          "scripts\\ci_analyzer\\orchestrator.py:62 in public function `main`:"
+          "scripts\\ci_analyzer\\orchestrator.py:30 in public function `load_audit`:",
+          "scripts\\ci_analyzer\\orchestrator.py:37 in public function `header_block`:",
+          "scripts\\ci_analyzer\\orchestrator.py:48 in public function `generate_ci_summary`:",
+          "scripts\\ci_analyzer\\orchestrator.py:59 in public function `save_summary`:",
+          "scripts\\ci_analyzer\\orchestrator.py:63 in public function `main`:"
         ]
       }
     }
@@ -2269,13 +2177,14 @@
           "scripts\\refactor\\refactor_guard_cli.py:56: error: Function is missing a type annotation  [no-untyped-def]",
           "scripts\\refactor\\refactor_guard_cli.py:80: error: Function is missing a return type annotation  [no-untyped-def]",
           "scripts\\refactor\\refactor_guard_cli.py:80: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]",
+          "scripts\\refactor\\refactor_guard_cli.py:88: error: Call to untyped function \"get_changed_files\" in typed context  [no-untyped-call]",
           "scripts\\refactor\\refactor_guard_cli.py:136: error: Function is missing a return type annotation  [no-untyped-def]",
           "scripts\\refactor\\refactor_guard_cli.py:136: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]",
           "scripts\\refactor\\refactor_guard_cli.py:161: error: Function is missing a return type annotation  [no-untyped-def]",
           "scripts\\refactor\\refactor_guard_cli.py:162: error: Call to untyped function \"parse_args\" in typed context  [no-untyped-call]",
-          "scripts\\refactor\\refactor_guard_cli.py:167: error: Argument 1 to \"int\" has incompatible type \"str | None\"; expected \"str | Buffer | SupportsInt | SupportsIndex | SupportsTrunc\"  [arg-type]",
-          "scripts\\refactor\\refactor_guard_cli.py:172: error: Call to untyped function \"handle_merge\" in typed context  [no-untyped-call]",
-          "scripts\\refactor\\refactor_guard_cli.py:193: error: Call to untyped function \"main\" in typed context  [no-untyped-call]"
+          "scripts\\refactor\\refactor_guard_cli.py:168: error: Argument 1 to \"int\" has incompatible type \"str | None\"; expected \"str | Buffer | SupportsInt | SupportsIndex | SupportsTrunc\"  [arg-type]",
+          "scripts\\refactor\\refactor_guard_cli.py:174: error: Call to untyped function \"handle_merge\" in typed context  [no-untyped-call]",
+          "scripts\\refactor\\refactor_guard_cli.py:198: error: Call to untyped function \"main\" in typed context  [no-untyped-call]"
         ]
       },
       "pydocstyle": {
@@ -2415,6 +2324,39 @@
       }
     }
   },
+  "utils\\git_utils.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 39,
+            "column": 1,
+            "code": "E302",
+            "message": "expected 2 blank lines, found 1"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\utils\\git_utils.py:5: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\git_utils.py:39: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\git_utils.py:43: error: Call to untyped function \"get_current_branch\" in typed context  [no-untyped-call]",
+          "scripts\\utils\\git_utils.py:63: error: Function is missing a return type annotation  [no-untyped-def]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\utils\\git_utils.py:1 at module level:",
+          "scripts\\utils\\git_utils.py:6 in public function `get_changed_files`:",
+          "scripts\\utils\\git_utils.py:39 in public function `interactive_commit_flow`:",
+          "scripts\\utils\\git_utils.py:63 in public function `get_current_branch`:"
+        ]
+      },
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
   "utils\\gui_helpers.py": {
     "quality": {
       "flake8": {
@@ -2538,28 +2480,6 @@
     "quality": {
       "black": {
         "needs_formatting": true
-      }
-    }
-  },
-  "utils\\git_utils.py": {
-    "quality": {
-      "mypy": {
-        "errors": [
-          "scripts\\utils\\git_utils.py:17: error: Function is missing a type annotation  [no-untyped-def]",
-          "scripts\\utils\\git_utils.py:21: error: Call to untyped function \"get_current_branch\" in typed context  [no-untyped-call]",
-          "scripts\\utils\\git_utils.py:41: error: Function is missing a return type annotation  [no-untyped-def]"
-        ]
-      },
-      "pydocstyle": {
-        "issues": [
-          "scripts\\utils\\git_utils.py:1 at module level:",
-          "scripts\\utils\\git_utils.py:6 in public function `get_changed_files`:",
-          "scripts\\utils\\git_utils.py:17 in public function `interactive_commit_flow`:",
-          "scripts\\utils\\git_utils.py:41 in public function `get_current_branch`:"
-        ]
-      },
-      "coverage": {
-        "percent": 0.0
       }
     }
   },
@@ -2945,7 +2865,6 @@
           "D401: First line should be in imperative mood (perhaps 'Load', not 'Loads')",
           "D401: First line should be in imperative mood; try rephrasing (found 'Deprecated')",
           "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
-          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
           "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
           "D401: First line should be in imperative mood (perhaps 'Format', not 'Formats')",
           "D401: First line should be in imperative mood (perhaps 'Format', not 'Formats')",
@@ -2960,6 +2879,7 @@
     "quality": {
       "pydocstyle": {
         "issues": [
+          "D205: 1 blank line required between summary line and description (found 0)",
           "D205: 1 blank line required between summary line and description (found 0)",
           "D205: 1 blank line required between summary line and description (found 0)",
           "D205: 1 blank line required between summary line and description (found 0)",
@@ -3153,6 +3073,10 @@
     "quality": {
       "pydocstyle": {
         "issues": [
+          "D103: Missing docstring in public function",
+          "D103: Missing docstring in public function",
+          "D103: Missing docstring in public function",
+          "D103: Missing docstring in public function",
           "D103: Missing docstring in public function",
           "D103: Missing docstring in public function",
           "D103: Missing docstring in public function",

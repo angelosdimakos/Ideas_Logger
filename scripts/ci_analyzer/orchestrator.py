@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any, Dict
 from datetime import datetime
 import shutil
+import argparse
 
 from scripts.ci_analyzer.insights.overview import generate_overview_insights
 from scripts.ci_analyzer.insights.descriptive_insights import generate_complexity_insights, generate_diff_insights, generate_quality_insights, generate_testing_insights
@@ -60,10 +61,15 @@ def save_summary(markdown: str, out_path: str = "ci_summary.md") -> None:
 
 
 def main():
-    audit = load_audit()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--audit", default="refactor_audit.json", help="Path to audit JSON file")
+    parser.add_argument("--output", default="ci_summary.md", help="Path to markdown output")
+    args = parser.parse_args()
+
+    audit = load_audit(args.audit)
     summary = generate_ci_summary(audit)
-    save_summary(summary)
-    print("✅ CI Summary saved to ci_summary.md")
+    save_summary(summary, args.output)
+    print(f"✅ CI Summary saved to {args.output}")
 
 
 if __name__ == "__main__":
