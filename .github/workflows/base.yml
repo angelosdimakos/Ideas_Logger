@@ -209,12 +209,15 @@ jobs:
       - name: 📊 Compare Trends (Full Audit)
         run: |
           source .venv/bin/activate
-          python scripts/ci_analyzer/ci_trends.py --audit refactor_full_audit.json
+          python scripts/ci_analyzer/ci_trends.py \
+            --audit artifacts/refactor-full-audit/refactor_full_audit.json
 
       - name: 📊 Compare Trends (Diff Audit)
         run: |
           source .venv/bin/activate
-          python scripts/ci_analyzer/ci_trends.py --audit refactor_diff_audit.json
+          python scripts/ci_analyzer/ci_trends.py \
+            --audit artifacts/refactor-diff-audit/refactor_diff_audit.json
+      
 
       - name: 🧾 Upload CI Trend Deltas
         if: always()
