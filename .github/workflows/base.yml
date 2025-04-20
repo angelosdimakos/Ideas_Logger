@@ -132,20 +132,36 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: 🧠 Run RefactorGuard Audit
+      - name: 🧠 Run Full RefactorGuard Audit
         run: |
           source .venv/bin/activate
-          python scripts/refactor/refactor_guard_cli.py --refactored scripts --all --git-diff --missing-tests --json
+          python scripts/refactor/refactor_guard_cli.py \
+            --refactored scripts --all --missing-tests --json \
+            --output refactor_full_audit.json
 
-      - name: 📄 Upload Refactor Audit
+      - name: 📄 Upload Full Refactor Audit
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: refactor-audit
-          path: refactor_audit.json
+          name: refactor-full-audit
+          path: refactor_full_audit.json
+
+      - name: 🧠 Run Diff RefactorGuard Audit
+        run: |
+          source .venv/bin/activate
+          python scripts/refactor/refactor_guard_cli.py \
+            --refactored scripts --all --git-diff --missing-tests --json \
+            --output refactor_diff_audit.json
+
+      - name: 📄 Upload Diff Refactor Audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: refactor-diff-audit
+          path: refactor_diff_audit.json
 
   report:
-    needs: [ lint, test ]
+    needs: [lint, test]
     runs-on: ubuntu-latest
     if: always()
     env:
@@ -172,17 +188,25 @@ jobs:
           name: lint-reports
           path: ./lint-reports
 
-      - name: 📅 Download Refactor Audit
+      - name: 📅 Download Full Refactor Audit
         uses: actions/download-artifact@v4
         with:
-          name: refactor-audit
+          name: refactor-full-audit
           path: .
         continue-on-error: true
 
-      - name: 📋 Enrich Refactor Audit with Quality Data
+      - name: 📅 Download Diff Refactor Audit
+        uses: actions/download-artifact@v4
+        with:
+          name: refactor-diff-audit
+          path: .
+        continue-on-error: true
+
+      - name: 📋 Enrich Full Refactor Audit with Quality Data
         run: |
           source .venv/bin/activate
-          python scripts/utils/enrich_refactor.py --audit refactor_audit.json --reports lint-reports
+          python scripts/utils/enrich_refactor.py \
+            --audit refactor_full_audit.json --reports lint-reports
 
       - name: 📝 Generate CI Insight Report
         run: |
@@ -203,11 +227,19 @@ jobs:
 
       - name: 🗾️ Audit Summary Recap
         run: |
-          if [ -f refactor_audit.json ]; then
+          if [ -f refactor_full_audit.json ]; then
             source .venv/bin/activate
-            python -c "import json; f=open('refactor_audit.json', encoding='utf-8-sig'); data=json.load(f); method_count = sum(len(file.get('complexity', {})) for file in data.values()); file_count = len(data); print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')"
-          else
-            echo "⚠️ refactor_audit.json not found - skipping summary"
+            python - <<'PYCODE'
+            import json
+            with open('refactor_full_audit.json', encoding='utf-8-sig') as f:
+                data = json.load(f)
+            method_count = sum(len(file.get('complexity', {})) for file in data.values())
+            file_count = len(data)
+            print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')
+            PYCODE
+                  else
+                    echo "⚠️ refactor_full_audit.json not found - skipping summary"
+                  fi
 
       - name: 📝 Post CI Summary
         if: always()
