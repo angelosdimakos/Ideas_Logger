@@ -237,9 +237,9 @@ jobs:
             file_count = len(data)
             print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')
             PYCODE
-                  else
-                    echo "⚠️ refactor_full_audit.json not found - skipping summary"
-                  fi
+          else
+            echo "⚠️ refactor_full_audit.json not found - skipping summary"
+          fi
 
       - name: 📝 Post CI Summary
         if: always()
