@@ -1,5 +1,7 @@
 import sys
-import pytest
+import os
+import subprocess
+import tempfile
 from scripts.refactor import refactor_guard_cli
 
 
@@ -93,13 +95,20 @@ def test_refactor_cli_complexity(monkeypatch):
         pass
 
 
-def test_refactor_cli_invalid_path(monkeypatch):
-    monkeypatch.setattr(sys, "argv", [
-        "refactor_guard_cli.py",
-        "--refactored", "nonexistent_path",
-        "--all"
-    ])
-    try:
-        refactor_guard_cli.main()
-    except Exception:
-        pass
+def test_refactor_cli_invalid_path():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        result = subprocess.run(
+            [
+                "python",
+                "scripts/refactor/refactor_guard_cli.py",
+                "--original", "nonexistent.py",
+                "--refactored", "nonexistent.py",
+                "--json",
+                "--output", os.path.join(tmpdir, "refactor_audit.json")
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="ignore",
+        )
+        assert result.returncode != 0 or "Expected a file" in result.stderr or result.stdout

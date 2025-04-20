@@ -2,17 +2,39 @@
 import subprocess
 
 
-def get_changed_files(ref: str = "origin/main") -> list[str]:
-    """Returns a list of changed Python files compared to a Git reference (default: origin/main)."""
+def get_changed_files(base="origin/main"):
+    """
+    Return a list of .py files changed since `base`.
+    If git fails, return [].
+    """
+    cmd = ["git", "diff", "--name-only", base]
     try:
+        # Try modern subprocess.run with text, encoding, errors
         result = subprocess.run(
-            ["git", "diff", "--name-only", ref], capture_output=True, text=True, check=True
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            encoding="utf-8",
+            errors="ignore",
+            check=True
         )
-        return [line.strip() for line in result.stdout.splitlines() if line.strip().endswith(".py")]
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Git diff failed: {e}")
+        output = result.stdout
+    except subprocess.CalledProcessError:
+        # Git returned non-zero exit code
         return []
+    except TypeError:
+        # Older Python: fallback to universal_newlines
+        result = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            universal_newlines=True,
+            check=True
+        )
+        output = result.stdout
 
+    return [line for line in output.splitlines() if line.endswith(".py")]
 
 def interactive_commit_flow(default_branch="main"):
     import subprocess

@@ -6,14 +6,12 @@ from typing import Dict, Any, Sequence, Union
 import os
 import re
 
-# ---------------------- 🔐 Safe Print for Emoji ----------------------
 def safe_print(msg: str):
     try:
         print(msg)
     except UnicodeEncodeError:
         print(msg.encode("ascii", errors="ignore").decode())
 
-# Default report filenames
 DEFAULT_REPORT_PATHS = {
     "black": Path("black.txt"),
     "flake8": Path("flake8.txt"),
@@ -25,10 +23,14 @@ DEFAULT_REPORT_PATHS = {
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 def _normalize(path: str) -> str:
+    path_obj = Path(path).resolve()
     try:
-        return str(Path(path).resolve().relative_to(PROJECT_ROOT))
-    except Exception:
-        return str(Path(path).name)
+        rel = path_obj.relative_to(PROJECT_ROOT)
+        return str(rel)
+    except ValueError:
+        # Fallback: match based on filename only (last 2 parts to help avoid conflicts)
+        return str(Path(*path_obj.parts[-2:]))
+
 
 def run_command(cmd: Sequence[str], output_path: Union[str, os.PathLike]) -> int:
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -52,7 +54,13 @@ def run_coverage_xml() -> int:
     return run_command(["coverage", "xml"], DEFAULT_REPORT_PATHS["coverage"])
 
 def _read_report(path: Path) -> str:
-    return path.read_text(encoding="utf-8") if path.exists() else ""
+    if not path.exists():
+        return ""
+    try:
+        return path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        with path.open("rb") as f:
+            return f.read().decode("utf-8", errors="replace")
 
 def _add_flake8_quality(quality: Dict[str, Dict[str, Any]], report_paths) -> None:
     raw = _read_report(report_paths["flake8"])
@@ -129,12 +137,22 @@ def merge_into_refactor_guard(audit_path: str = "refactor_audit.json", report_pa
         return
 
     # 🧹 Normalize keys to match enrichment keys
-    audit = {
-        _normalize(k): v for k, v in raw_audit.items()
-    }
+    audit = { _normalize(k): v for k, v in raw_audit.items() }
 
     report_paths = report_paths or DEFAULT_REPORT_PATHS
     quality_by_file: Dict[str, Dict[str, Any]] = {}
+
+    def check_or_run(tool: str, func):
+        path = report_paths[tool]
+        if not path.exists() or not path.read_text(encoding="utf-8", errors="ignore").strip():
+            print(f"[~] Generating missing or empty report for: {tool}")
+            func()
+
+    check_or_run("flake8", run_flake8)
+    check_or_run("black", run_black)
+    check_or_run("mypy", run_mypy)
+    check_or_run("pydocstyle", run_pydocstyle)
+    check_or_run("coverage", run_coverage_xml)
 
     _add_flake8_quality(quality_by_file, report_paths)
     _add_black_quality(quality_by_file, report_paths)
@@ -147,3 +165,16 @@ def merge_into_refactor_guard(audit_path: str = "refactor_audit.json", report_pa
 
     audit_file.write_text(json.dumps(audit, indent=2), encoding="utf-8")
     print("[OK] RefactorGuard audit enriched with quality data.")
+
+def merge_reports(file_a: str, file_b: str) -> Dict:
+    """
+    Merge two refactor guard audit JSON files into a single report.
+    Later entries override earlier ones on key collisions.
+    """
+    with open(file_a, 'r', encoding='utf-8') as fa:
+        data_a = json.load(fa)
+    with open(file_b, 'r', encoding='utf-8') as fb:
+        data_b = json.load(fb)
+    # Simple merge: b overrides a
+    merged = {**data_a, **data_b}
+    return merged

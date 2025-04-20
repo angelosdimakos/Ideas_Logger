@@ -1,0 +1,11 @@
+would reformat C:\Users\Angelos Dimakos\PycharmProjects\Ideas_Logger\scripts\ci_analyzer\orchestrator.py
+would reformat C:\Users\Angelos Dimakos\PycharmProjects\Ideas_Logger\scripts\refactor\method_line_ranges.py
+would reformat C:\Users\Angelos Dimakos\PycharmProjects\Ideas_Logger\scripts\ci_analyzer\ci_trends.py
+would reformat C:\Users\Angelos Dimakos\PycharmProjects\Ideas_Logger\scripts\utils\enrich_refactor.py
+would reformat C:\Users\Angelos Dimakos\PycharmProjects\Ideas_Logger\scripts\ci_analyzer\insights\descriptive_insights.py
+would reformat C:\Users\Angelos Dimakos\PycharmProjects\Ideas_Logger\scripts\refactor\quality_checker.py
+would reformat C:\Users\Angelos Dimakos\PycharmProjects\Ideas_Logger\scripts\refactor\refactor_guard_cli.py
+would reformat C:\Users\Angelos Dimakos\PycharmProjects\Ideas_Logger\scripts\refactor\refactor_guard.py
+
+Oh no! \U0001f4a5 \U0001f494 \U0001f4a5
+8 files would be reformatted, 54 files would be left unchanged.

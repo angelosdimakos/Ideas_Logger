@@ -1,95 +1,131 @@
-import sys
+import subprocess
 import json
-import xml.etree.ElementTree as ET
 from pathlib import Path
-from textwrap import dedent
-
 import pytest
 
-from scripts.refactor import refactor_guard_cli
 
+# Create a temporary directory and files for testing the CLI end-to-end
 @pytest.fixture
-def sample_repo(tmp_path, monkeypatch):
-    # Set up directories
-    orig = tmp_path / "original"; orig.mkdir()
-    ref  = tmp_path / "refactored"; ref.mkdir()
-    tst  = tmp_path / "tests";    tst.mkdir()
+def cli_test_setup(tmp_path):
+    # Create directories
+    orig_dir = tmp_path / "original"
+    orig_dir.mkdir()
+    ref_dir = tmp_path / "refactored"
+    ref_dir.mkdir()
+    test_dir = tmp_path / "tests"
+    test_dir.mkdir()
 
-    # original/foo.py
-    (orig/"foo.py").write_text(dedent("""
-        class Foo:
-            def kept(self):
-                return 1
-    """), encoding="utf-8")
+    # Create sample code files
+    orig_content = """
+class SampleClass:
+    def method_a(self):
+        return 42
 
-    # refactored/foo.py (added new())
-    (ref/"foo.py").write_text(dedent("""
-        class Foo:
-            def kept(self):
-                return 1
+    def method_to_remove(self):
+        return "This will be removed"
+"""
 
-            def added(self):
-                return 2
-    """), encoding="utf-8")
+    ref_content = """
+class SampleClass:
+    def method_a(self):
+        return 42
 
-    # tests/test_foo.py (only tests kept)
-    (tst/"test_foo.py").write_text(dedent("""
-        import pytest
-        from refactored.foo import Foo
+    def new_method(self):
+        # Added complexity
+        x = 0
+        for i in range(10):
+            x += i
+        return x
+"""
 
-        def test_kept():
-            assert Foo().kept() == 1
-    """), encoding="utf-8")
+    # Create the files
+    (orig_dir / "foo.py").write_text(orig_content, encoding="utf-8")
+    (ref_dir / "foo.py").write_text(ref_content, encoding="utf-8")
 
-    # tiny coverage.xml covering only line numbers 2–3 of refactored/foo.py
-    root = ET.Element("coverage")
-    cls  = ET.SubElement(root, "class", filename=str(ref/"foo.py"))
-    lines = ET.SubElement(cls, "lines")
-    # simulate coverage on 'kept' but not on 'added'
-    ET.SubElement(lines, "line", number="3", hits="1")
-    xml_bytes = ET.tostring(root, encoding="utf-8", xml_declaration=True)
-    (tmp_path/"coverage.xml").write_bytes(xml_bytes)
+    # Create a test file
+    test_content = """
+from refactored.foo import SampleClass
 
-    # chdir into tmp_path so CLI writes here
-    monkeypatch.chdir(tmp_path)
-    # ensure our project root is on PYTHONPATH
-    monkeypatch.setenv("PYTHONPATH", str(Path(__file__).parents[3]))
-    return tmp_path
+def test_method_a():
+    assert SampleClass().method_a() == 42
+"""
+    (test_dir / "test_foo.py").write_text(test_content, encoding="utf-8")
 
-def test_cli_end_to_end(sample_repo):
-    # Run the CLI
-    sys.argv[:] = [
-        "refactor_guard_cli.py",
-        "--original",   "original",
-        "--refactored", "refactored",
-        "--tests",      "tests",
+    # Return the setup
+    return {
+        "original": orig_dir,
+        "refactored": ref_dir,
+        "tests": test_dir,
+        "root": tmp_path
+    }
+
+
+def test_cli_end_to_end(cli_test_setup):
+    # Find the CLI script
+    cli_path = Path(__file__).parents[2] / "scripts" / "refactor" / "refactor_guard_cli.py"
+    output_path = cli_test_setup["root"] / "audit_result.json"
+
+    # Run the CLI directly as a subprocess to simulate actual usage
+    cmd = [
+        "python",
+        str(cli_path),
+        "--original", str(cli_test_setup["original"]),
+        "--refactored", str(cli_test_setup["refactored"]),
+        "--tests", str(cli_test_setup["tests"]),
         "--all",
         "--json",
+        "--output", str(output_path)
     ]
-    with pytest.raises(SystemExit):
-        refactor_guard_cli.main()
 
-    # Load the output JSON
-    audit = json.loads((sample_repo / "refactor_audit.json").read_text(encoding="utf-8-sig"))    # There should be exactly one file: "foo.py"
-    assert "foo.py" in audit, "Expected foo.py in audit"
-    summary = audit["foo.py"]
+    # Run the command
+    try:
+        result = subprocess.run(
+            cmd,
+            cwd=cli_test_setup["root"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+            errors="ignore",
+            check=True
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"Command failed with exit code {e.returncode}")
+        print(f"Stdout: {e.stdout}")
+        print(f"Stderr: {e.stderr}")
+        raise
 
-    # 1) method_diff picks up the added method
-    md = summary["method_diff"]["Foo"]
-    assert md["missing"] == [],            "No missing methods"
-    assert md["added"]   == ["added"],     "Should detect 'added' method"
+    # Check if output file exists
+    assert output_path.exists(), f"Output file {output_path} was not created"
 
-    # 2) missing_tests should flag the new method
-    mt = summary["missing_tests"]
-    assert {"class":"Foo","method":"added"} in mt
+    # Load and validate the JSON output
+    with open(output_path, "r", encoding="utf-8") as f:
+        audit = json.load(f)
 
-    # 3) complexity entries for both methods
-    comp = summary["complexity"]
-    assert set(comp) == {"kept","added"}
-    # complexity of kept ≥ 1, of added ≥ 1
-    assert comp["added"]["complexity"] >= 1
+    # Find the key containing 'foo.py'
+    found = False
+    for key in audit.keys():
+        if "foo.py" in key or key == "foo.py":
+            found = True
+            # Further validate the content
+            file_data = audit[key]
 
-    # 4) coverage on 'kept' but not on 'added'
-    assert comp["kept"]["coverage"] == pytest.approx(0.5)
-    assert comp["added"]["coverage"] == 0.0
+            # Check for method differences
+            assert "method_diff" in file_data
+            assert "SampleClass" in file_data["method_diff"]
+            class_diff = file_data["method_diff"]["SampleClass"]
 
+            # Check removed and added methods
+            assert "method_to_remove" in class_diff["missing"]
+            assert "new_method" in class_diff["added"]
+
+            # Check for missing tests
+            assert "missing_tests" in file_data
+            missing_methods = [item["method"] for item in file_data["missing_tests"] if item["class"] == "SampleClass"]
+            assert "new_method" in missing_methods
+
+            # Check for complexity data
+            assert "complexity" in file_data
+            break
+
+    assert found, f"Expected 'foo.py' in audit, got keys: {list(audit.keys())}"

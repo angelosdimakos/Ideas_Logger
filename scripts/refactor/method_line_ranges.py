@@ -1,6 +1,6 @@
 import ast
 from typing import Dict, Tuple, Optional, Union
-
+import os
 
 class MethodRangeVisitor(ast.NodeVisitor):
     """
@@ -64,6 +64,9 @@ def extract_method_line_ranges(file_path: str) -> Dict[str, Tuple[int, int]]:
     Raises:
         FileNotFoundError, IOError, or SyntaxError if the file cannot be read or parsed.
     """
+    if os.path.isdir(file_path):
+        return {}
+
     # Let file I/O and syntax errors propagate to the caller
     with open(file_path, "r", encoding="utf-8") as f:
         source = f.read()

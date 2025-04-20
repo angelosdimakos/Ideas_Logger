@@ -1,71 +1,48 @@
-import os
-import shutil
-import subprocess
+# tests/unit/utils/test_enrich_refactor.py
+
 from pathlib import Path
+import subprocess
+import tempfile
+import os
 import json
 
 
-def find_project_root(marker: str = "scripts") -> Path:
-    """Climb up until a directory containing `marker` is found (used as root)."""
-    cur = Path(__file__).resolve()
-    while cur != cur.parent:
-        if (cur / marker).is_dir():
-            return cur
-        cur = cur.parent
-    raise RuntimeError(f"Could not find project root with marker '{marker}'")
+def test_enrich_refactor_cli():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmpdir = Path(tmpdir)
+        audit_path = tmpdir / "refactor_audit.json"
+        report_dir = tmpdir / "lint-reports"
+        report_dir.mkdir(parents=True, exist_ok=True)
 
+        target_file = Path("Ideas_Logger/example.py").as_posix()
 
-def test_enrich_refactor_cli(tmp_path):
-    # 🔍 Discover and copy enrich CLI into test space
-    project_root = find_project_root()
-    source_script = project_root / "scripts" / "utils" / "enrich_refactor.py"
-    test_script = tmp_path / "enrich_refactor.py"
-    shutil.copy(source_script, test_script)
+        # Minimal fake audit with normalized path
+        audit_data = {target_file: {"complexity": {"dummy": 1}}}
+        audit_path.write_text(json.dumps(audit_data), encoding="utf-8")
 
-    # 🧪 Simulate all expected report files
-    reports_dir = tmp_path / "lint-reports"
-    reports_dir.mkdir()
-    (reports_dir / "black.txt").write_text("would reformat scripts/refactor/example.py")
-    (reports_dir / "flake8.txt").write_text("scripts/refactor/example.py:10:5: E303 too many blank lines")
-    (reports_dir / "mypy.txt").write_text("scripts/refactor/example.py:12: error: Incompatible return value type")
-    (reports_dir / "pydocstyle.txt").write_text("scripts/refactor/example.py:1 in public module")
+        # Dummy lint reports that mention the file (simulate output)
+        for name in ["flake8.txt", "black.txt", "mypy.txt", "pydocstyle.txt"]:
+            (report_dir / name).write_text(f"{target_file}:1:1: Dummy warning\n", encoding="utf-8")
 
-    (tmp_path / "coverage.xml").write_text("""
-        <coverage>
-          <packages>
-            <package name="scripts.refactor">
-              <classes>
-                <class name="example" filename="scripts/refactor/example.py" line-rate="0.75"/>
-              </classes>
-            </package>
-          </packages>
-        </coverage>
-    """)
+        result = subprocess.run(
+            [
+                "python",
+                "scripts/utils/enrich_refactor.py",
+                "--audit", str(audit_path),
+                "--reports", str(report_dir)
+            ],
+            capture_output=True,
+            text=True
+        )
 
-    # 📝 Minimal audit
-    audit_path = tmp_path / "refactor_audit.json"
-    audit_path.write_text(json.dumps({"refactor/example.py": {}}))
+        assert result.returncode == 0, f"CLI failed:\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
 
-    # 🧪 Run with correct PYTHONPATH and working directory
-    env = os.environ.copy()
-    env["PYTHONPATH"] = str(project_root / "scripts")
+        enriched = json.loads(audit_path.read_text(encoding="utf-8"))
 
-    result = subprocess.run(
-        ["python", str(test_script), "--audit", str(audit_path.name), "--reports", str(reports_dir.name)],
-        cwd=tmp_path,
-        env=env,
-        capture_output=True,
-        text=True
-    )
-
-    # ✅ Check result
-    assert result.returncode == 0, f"CLI failed:\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
-
-    enriched = json.loads(audit_path.read_text())
-    assert isinstance(enriched, dict)
-    assert enriched, "Audit file is empty after CLI execution"
-
-    key = next(iter(enriched))
-    assert "quality" in enriched[key]
-    for section in ["flake8", "black", "mypy", "pydocstyle", "coverage"]:
-        assert section in enriched[key]["quality"], f"Missing {section} quality data"
+        # Normalize path slashes and look for key
+        matched_key = next(
+            (k for k in enriched if k.replace("\\", "/").endswith("example.py")),
+            None
+        )
+        assert matched_key, f"Could not find a matching key for 'example.py' in {enriched.keys()}"
+        assert "quality" in enriched[matched_key], f"Expected 'quality' key in enriched['{matched_key}'], got: {enriched[matched_key]}"

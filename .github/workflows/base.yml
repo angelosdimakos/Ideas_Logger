@@ -133,13 +133,6 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: 🧠 Run RefactorGuard Audit
-        if: github.event_name == 'push'
-        run: |
-          source .venv/bin/activate
-          python scripts/refactor/refactor_guard_cli.py --refactored scripts --all --missing-tests --json
-
-      - name: 🔍 Git Diff Audit (PRs only)
-        if: github.event_name == 'pull_request'
         run: |
           source .venv/bin/activate
           python scripts/refactor/refactor_guard_cli.py --refactored scripts --all --git-diff --missing-tests --json
@@ -215,7 +208,6 @@ jobs:
             python -c "import json; f=open('refactor_audit.json', encoding='utf-8-sig'); data=json.load(f); method_count = sum(len(file.get('complexity', {})) for file in data.values()); file_count = len(data); print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')"
           else
             echo "⚠️ refactor_audit.json not found - skipping summary"
-          fi
 
       - name: 📝 Post CI Summary
         if: always()

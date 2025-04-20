@@ -1,11 +1,11 @@
 import os
 import sys
 import argparse
+import subprocess
 from pathlib import Path
 
 
 def safe_print(msg: str):
-    """Print safely in environments that may not support Unicode emoji (e.g. Windows CP1252)."""
     try:
         print(msg)
     except UnicodeEncodeError:
@@ -13,27 +13,42 @@ def safe_print(msg: str):
 
 
 def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports"):
-    """Wrapper to ensure merge_into_refactor_guard runs from any context."""
-
-    # Resolve script location (real path for local, temp for pytest)
     script_path = Path(__file__).resolve()
-    if "tmp" in str(script_path).lower():
-        project_root = script_path.parents[2]
-    else:
-        project_root = script_path.parent.parent
+    project_root = script_path.parents[2]  # Up to repo root
+    refactor_path = project_root / "scripts"
 
-    sys.path.insert(0, str(project_root / "scripts"))
+    # Add scripts directory to sys.path
+    sys.path.insert(0, str(refactor_path))
 
     try:
         from refactor import quality_checker
     except ImportError as e:
         safe_print(f"[!] Failed to import quality checker: {e}")
+        safe_print(f"[i] Tried importing from: {refactor_path}")
         sys.exit(1)
 
     audit_file = os.path.abspath(audit_path)
     if not os.path.exists(audit_file):
         safe_print(f"[!] Audit file not found: {audit_file}")
         sys.exit(1)
+
+    # Ensure lint report folder exists
+    Path(reports_path).mkdir(parents=True, exist_ok=True)
+
+    # Auto-generate missing reports
+    required_reports = {
+        "black": ["black", "--check", "scripts"],
+        "flake8": ["flake8", "scripts"],
+        "mypy": ["mypy", "--strict", "--no-color-output", "scripts"],
+        "pydocstyle": ["pydocstyle", "scripts"],
+    }
+
+    for name, cmd in required_reports.items():
+        report_file = Path(reports_path) / f"{name}.txt"
+        if not report_file.exists():
+            safe_print(f"[~] Generating missing report: {report_file.name}")
+            result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            report_file.write_text(result.stdout)
 
     report_paths = {
         "black": Path(reports_path) / "black.txt",
