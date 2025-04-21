@@ -6,6 +6,12 @@ from pathlib import Path
 
 
 def safe_print(msg: str):
+    """
+    Prints a message safely, handling UnicodeEncodeError by removing non-ASCII characters if needed.
+
+    Args:
+        msg (str): The message to print.
+    """
     try:
         print(msg)
     except UnicodeEncodeError:
@@ -13,6 +19,15 @@ def safe_print(msg: str):
 
 
 def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports"):
+    """
+    Enriches a refactor audit file with linting and coverage data.
+
+    Generates missing lint reports if necessary, collects report paths, and merges them into the specified audit file using the internal quality checker module.
+
+    Args:
+        audit_path (str): Path to the audit JSON file.
+        reports_path (str, optional): Directory for lint report files. Defaults to "lint-reports".
+    """
     script_path = Path(__file__).resolve()
     project_root = script_path.parents[2]  # Up to repo root
     refactor_path = project_root / "scripts"

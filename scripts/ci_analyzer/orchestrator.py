@@ -13,7 +13,17 @@ from scripts.ci_analyzer.insights.prime_suspects import generate_prime_insights
 
 # Add this function to create a backup
 def backup_audit_file(path: str = "refactor_audit.json") -> None:
-    """Create a timestamped backup of the audit file."""
+    """
+    Creates a timestamped backup of the specified audit file in the 'audit_backups' directory.
+    Prints a warning if the file does not exist.
+
+    Args:
+        path (str): Path to the audit file to back up. Defaults to 'refactor_audit.json'.
+
+    Returns:
+        None
+    """
+
     audit_path = Path(path)
     if not audit_path.exists():
         print(f"Warning: Cannot backup {path} - file not found")
@@ -28,6 +38,15 @@ def backup_audit_file(path: str = "refactor_audit.json") -> None:
     print(f"✅ Audit backup created at {backup_path}")
 
 def load_audit(path: str = "refactor_audit.json") -> Dict[str, Any]:
+    """
+    Loads audit data from a JSON file after creating a timestamped backup.
+
+    Args:
+        path (str): Path to the audit JSON file. Defaults to 'refactor_audit.json'.
+
+    Returns:
+        Dict[str, Any]: Parsed audit data as a dictionary.
+    """
     # First create a backup before loading
     backup_audit_file(path)
     with open(path, encoding="utf-8-sig") as f:
@@ -35,6 +54,10 @@ def load_audit(path: str = "refactor_audit.json") -> Dict[str, Any]:
 
 
 def header_block() -> str:
+    """
+    Returns a formatted Markdown header block for the CI audit summary,
+    including metric summaries, emoji risk indicators, and visual bar indicators.
+    """
     return """
 ## 🔍 CI Audit Summary
 
@@ -46,6 +69,17 @@ Each section includes:
 
 
 def generate_ci_summary(audit: Dict[str, Any]) -> str:
+    """
+    Generate a comprehensive CI audit summary report as a Markdown-formatted string.
+
+    Aggregates insights from audit data, including overview, top issues, complexity, testing, quality, and diff coverage.
+
+    Args:
+        audit (Dict[str, Any]): Audit data for the codebase.
+
+    Returns:
+        str: Markdown-formatted CI summary report.
+    """
     parts = [header_block()]
     parts.extend(generate_overview_insights(audit))
     parts.extend(generate_prime_insights(audit))
@@ -57,10 +91,20 @@ def generate_ci_summary(audit: Dict[str, Any]) -> str:
 
 
 def save_summary(markdown: str, out_path: str = "ci_summary.md") -> None:
+    """
+    Saves the provided markdown string to a file at the specified path.
+
+    Args:
+        markdown (str): The markdown content to save.
+        out_path (str, optional): The output file path. Defaults to "ci_summary.md".
+    """
     Path(out_path).write_text(markdown, encoding="utf-8")
 
 
 def main():
+    """
+    Parses command-line arguments to load audit data, generate a CI summary report, and save it as a Markdown file.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--audit", default="refactor_audit.json", help="Path to audit JSON file")
     parser.add_argument("--output", default="ci_summary.md", help="Path to markdown output")

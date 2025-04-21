@@ -10,6 +10,15 @@ except Exception:
 
 
 def analyze_complexity(file_path="refactor_audit.json", max_complexity=10):
+    """
+    Analyzes code complexity from a JSON audit file and prints a summary.
+
+    Parameters:
+        file_path (str): Path to the audit JSON file. Defaults to "refactor_audit.json".
+        max_complexity (int): Maximum allowed complexity before issuing warnings. Defaults to 10.
+
+    Exits the process with an error message if the file is missing, empty, or contains invalid JSON.
+    """
     try:
         if not os.path.exists(file_path):
             print(f"❌ File not found: {file_path}")
@@ -36,6 +45,18 @@ def analyze_complexity(file_path="refactor_audit.json", max_complexity=10):
 
 
 def run_analysis(data, max_complexity, use_emoji=True):
+    """
+    Analyzes method complexity across files and prints a summary report.
+
+    Args:
+        data (dict): Mapping of file names to complexity information.
+        max_complexity (int or float): Threshold for complexity warnings.
+        use_emoji (bool, optional): If True, prints summary with emojis; otherwise, uses plain text.
+
+    Prints:
+        A summary of methods and files analyzed, and lists methods exceeding the complexity threshold.
+        Exits the process with an error code if warnings are found and use_emoji is False.
+    """
     total_methods = 0
     warnings = []
 

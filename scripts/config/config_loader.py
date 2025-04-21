@@ -6,9 +6,8 @@ from pathlib import Path
 
 def setup_logging():
     """
-    Configures logging for the entire application.
-    This function sets up a basic logging configuration that can be adjusted later based on config settings.
-    It will default to an INFO level, but this can be overridden later.
+    Configures centralized logging with a default INFO level and a standard log format.
+    Initializes a stream handler and logs a debug message to confirm setup.
     """
     # Default log level is INFO. This can be overridden later.
     level_str = "INFO"

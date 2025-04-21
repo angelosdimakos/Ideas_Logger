@@ -6,6 +6,12 @@ from tkinter import scrolledtext
 
 
 def validate_log_input(content):
+    """
+    Validates the log input content.
+
+    Displays a warning message if the input is empty or only whitespace.
+    Returns True if the input is valid, otherwise False.
+    """
     if not content.strip():
         messagebox.showwarning("Input Error", "Log entry cannot be empty.")
         return False
@@ -13,26 +19,69 @@ def validate_log_input(content):
 
 
 def get_current_date():
+    """
+    Returns the current date as a string in 'YYYY-MM-DD' format.
+
+    :return: Current date as a string.
+    :rtype: str
+    """
     return datetime.now().strftime("%Y-%m-%d")
 
 
 def get_current_timestamp():
+    """
+    Returns the current date and time as a formatted string (YYYY-MM-DD HH:MM:SS).
+    """
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def clear_text_input(entry_widget):
+    """
+    Clears all text from the given Tkinter text entry widget.
+
+    Args:
+        entry_widget: The Tkinter text widget to be cleared.
+    """
     entry_widget.delete("1.0", tk.END)
 
 
 def update_status_label(label, message, color="blue"):
+    """
+    Update the text and foreground color of a Tkinter label widget.
+
+    Args:
+        label (tk.Label): The label widget to update.
+        message (str): The text to display on the label.
+        color (str, optional): The text color. Defaults to "blue".
+    """
     label.config(text=message, fg=color)
 
 
 def get_selected_option(menu_var, default="General"):
+    """
+    Returns the currently selected option from a Tkinter menu variable, or a default value if none is selected.
+
+    Args:
+        menu_var: A Tkinter variable associated with a menu widget.
+        default (str, optional): The value to return if no option is selected. Defaults to "General".
+
+    Returns:
+        str: The selected option or the default value.
+    """
     return menu_var.get() or default
 
 
 def append_log_entry(log_file, date, category, subcategory, entry_text):
+    """
+    Appends a log entry with a timestamp and content to the specified log file, organizing entries by date, category, and subcategory.
+
+    Args:
+        log_file (str): Path to the JSON log file.
+        date (str): Date key for the log entry (YYYY-MM-DD).
+        category (str): Category under which to store the entry.
+        subcategory (str): Subcategory under the category.
+        entry_text (str): The content of the log entry.
+    """
     data = read_json(log_file)
     if date not in data:
         data[date] = {}
@@ -48,6 +97,15 @@ def append_log_entry(log_file, date, category, subcategory, entry_text):
 
 
 def get_category_options(categories_json_path):
+    """
+    Retrieves a list of category names from a JSON file at the given path.
+
+    Args:
+        categories_json_path (str): Path to the JSON file containing categories.
+
+    Returns:
+        list: List of category names, or an empty list if reading fails.
+    """
     try:
         categories_data = read_json(categories_json_path)
         return list(categories_data.get("categories", {}).keys())
@@ -56,12 +114,31 @@ def get_category_options(categories_json_path):
 
 
 def create_status_label(root, status_var):
+    """
+    Create and pack a status label widget in the given root window.
+
+    Args:
+        root: The parent Tkinter widget.
+        status_var: A Tkinter StringVar to display as the label's text.
+
+    Returns:
+        The created Label widget.
+    """
     label = tk.Label(root, textvariable=status_var, fg="green")
     label.pack(pady=2)
     return label
 
 
 def create_log_frame(root):
+    """
+    Creates and returns a disabled scrolled text widget within a frame for logging purposes in a Tkinter GUI.
+
+    Args:
+        root: The parent Tkinter widget.
+
+    Returns:
+        tuple: (log_text, log_frame) where log_text is the ScrolledText widget and log_frame is the containing Frame.
+    """
     log_frame = tk.Frame(root)
     log_frame.pack(padx=10, pady=5, fill=tk.X)
     log_text = scrolledtext.ScrolledText(log_frame, height=4, width=70, wrap=tk.WORD)
@@ -71,6 +148,13 @@ def create_log_frame(root):
 
 
 def log_message(log_text_widget, message):
+    """
+    Appends a timestamped message to the provided Tkinter text widget for logging purposes.
+
+    Args:
+        log_text_widget (tkinter.Text): The text widget where the log message will be displayed.
+        message (str): The message to log.
+    """
     timestamp = datetime.now().strftime("%H:%M:%S")
     log_text_widget.config(state=tk.NORMAL)
     log_text_widget.insert(tk.END, f"[{timestamp}] {message}\n")
@@ -79,6 +163,18 @@ def log_message(log_text_widget, message):
 
 
 def create_dropdown_menu(frame, label_text, variable, options):
+    """
+    Creates a labeled dropdown menu (OptionMenu) in the given Tkinter frame.
+
+    Args:
+        frame: The parent Tkinter frame to place the dropdown menu in.
+        label_text: The text to display as the label next to the dropdown.
+        variable: A Tkinter variable to store the selected option.
+        options: A list of options to display in the dropdown menu.
+
+    Returns:
+        The created Tkinter OptionMenu widget.
+    """
     label = tk.Label(frame, text=label_text)
     label.pack(side=tk.LEFT, padx=(0, 5))
     menu = tk.OptionMenu(frame, variable, *options)
@@ -87,10 +183,33 @@ def create_dropdown_menu(frame, label_text, variable, options):
 
 
 def create_button(frame, text, command, width=15, height=2, bg="#4CAF50", fg="white"):
+    """
+    Creates and returns a Tkinter Button widget with customizable text, command, size, and colors.
+
+    Args:
+        frame: The parent widget where the button will be placed.
+        text (str): The label displayed on the button.
+        command (callable): The function to be called when the button is clicked.
+        width (int, optional): The width of the button. Defaults to 15.
+        height (int, optional): The height of the button. Defaults to 2.
+        bg (str, optional): The background color of the button. Defaults to "#4CAF50".
+        fg (str, optional): The text color of the button. Defaults to "white".
+
+    Returns:
+        tk.Button: The configured Button widget.
+    """
     return tk.Button(frame, text=text, command=command, width=width, height=height, bg=bg, fg=fg)
 
 
 def show_messagebox(icon, title, message):
+    """
+    Displays a message box with the specified icon, title, and message using tkinter.
+
+    Args:
+        icon (str): Type of message box to display ('info', 'warning', or 'error').
+        title (str): The title of the message box window.
+        message (str): The message to display in the message box.
+    """
     if icon == "info":
         messagebox.showinfo(title, message)
     elif icon == "warning":
@@ -118,8 +237,17 @@ def create_text_entry(root, height=8, width=70):
 
 def format_summary_results(results):
     """
-    Formats FAISS search results for display in the GUI.
-    Supports tuples, lists, or dicts with 'score' and 'text' keys.
+    Formats a list of result items into a readable summary string.
+
+    Each result can be a dict with 'score' and 'text' keys, a tuple/list with score and text,
+    or any other type, which will be converted to string with a default score of 0.0.
+    Handles exceptions gracefully and includes error information in the output.
+
+    Args:
+        results (list): List of result items to format.
+
+    Returns:
+        str: Formatted summary string with scores and texts.
     """
     formatted = []
     for r in results:
@@ -139,8 +267,17 @@ def format_summary_results(results):
 
 def format_raw_results(results):
     """
-    Formats raw log search results for display in the GUI.
-    Handles string, tuple, or dict-based formats.
+    Formats a list of raw result items into a readable string.
+
+    Each result is processed based on its type (dict, list/tuple, or other),
+    and formatted with a '[RAW LOG MATCH]' prefix. Handles exceptions by
+    including error details in the output.
+
+    Args:
+        results (list): List of raw result items to format.
+
+    Returns:
+        str: Formatted string representation of all results.
     """
     formatted = []
     for r in results:

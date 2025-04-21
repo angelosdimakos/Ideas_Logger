@@ -7,11 +7,29 @@ import argparse
 
 
 def load_audit(path: str = "refactor_audit.json") -> Dict[str, Any]:
+    """
+    Loads and returns audit data from a JSON file.
+
+    Args:
+        path (str): Path to the audit JSON file. Defaults to "refactor_audit.json".
+
+    Returns:
+        Dict[str, Any]: Parsed JSON data as a dictionary.
+    """
     with open(path, encoding="utf-8-sig") as f:
         return json.load(f)
 
 
 def extract_metrics(audit: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Extracts summary metrics from an audit dictionary, including total files, methods, missing tests, and risky methods based on coverage and cyclomatic complexity.
+
+    Args:
+        audit (Dict[str, Any]): Audit data containing file-level complexity and test information.
+
+    Returns:
+        Dict[str, Any]: Dictionary with counts for files, methods, missing tests, and risky methods.
+    """
     total_files = len(audit)
     total_methods = sum(len(file.get("complexity", {})) for file in audit.values())
 
@@ -32,6 +50,16 @@ def extract_metrics(audit: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def compare_metrics(current: Dict[str, Any], previous: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Calculate the difference between corresponding metrics in two dictionaries.
+
+    Args:
+        current (Dict[str, Any]): Dictionary containing current metric values.
+        previous (Dict[str, Any]): Dictionary containing previous metric values.
+
+    Returns:
+        Dict[str, Any]: Dictionary with the difference for each metric key.
+    """
     delta = {}
     for key in current:
         prev = previous.get(key, 0)
@@ -40,12 +68,30 @@ def compare_metrics(current: Dict[str, Any], previous: Dict[str, Any]) -> Dict[s
 
 
 def save_metrics(metrics: Dict[str, Any], out_path: str = ".ci-history/last_metrics.json"):
+    """
+    Save the provided metrics dictionary as a JSON file to the specified output path.
+
+    Creates the output directory if it does not exist.
+
+    Args:
+        metrics (Dict[str, Any]): Metrics data to be saved.
+        out_path (str, optional): Path to the output JSON file. Defaults to ".ci-history/last_metrics.json".
+    """
     Path(".ci-history").mkdir(exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(metrics, f, indent=2)
 
 
 def load_previous_metrics(path: str = ".ci-history/last_metrics.json") -> Dict[str, Any]:
+    """
+    Loads previous metrics from a JSON file at the specified path.
+
+    Args:
+        path (str): Path to the metrics JSON file. Defaults to ".ci-history/last_metrics.json".
+
+    Returns:
+        Dict[str, Any]: Dictionary containing the loaded metrics, or an empty dictionary if the file does not exist.
+    """
     if not os.path.exists(path):
         return {}
     with open(path, "r", encoding="utf-8") as f:
@@ -53,6 +99,13 @@ def load_previous_metrics(path: str = ".ci-history/last_metrics.json") -> Dict[s
 
 
 def print_comparison(current: Dict[str, Any], delta: Dict[str, Any]):
+    """
+    Displays a comparison of CI metrics, indicating the change for each metric with an appropriate symbol.
+
+    Args:
+        current (Dict[str, Any]): Dictionary of current metric values.
+        delta (Dict[str, Any]): Dictionary of metric value changes.
+    """
     print("\n🔁 CI Metric Comparison:")
     for key in current:
         sign = "🔺" if delta[key] > 0 else "🔻" if delta[key] < 0 else "➡️"
@@ -60,6 +113,10 @@ def print_comparison(current: Dict[str, Any], delta: Dict[str, Any]):
 
 
 def main():
+    """
+    Parses command-line arguments to load audit data, extract and compare CI metrics with previous runs,
+    display the comparison, and save the current metrics for future reference.
+    """
     parser = argparse.ArgumentParser(description="Compare audit metrics with previous CI run.")
     parser.add_argument("--audit", type=str, default="refactor_audit.json", help="Path to audit JSON")
     args = parser.parse_args()

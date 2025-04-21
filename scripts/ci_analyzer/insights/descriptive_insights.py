@@ -6,8 +6,19 @@ from ..utils.visuals import render_bar, risk_emoji
 
 def generate_complexity_insights(audit: Dict[str, Any]) -> List[str]:
     """
-    Generate descriptive complexity insights with narrative and hotspots.
+    Generate a summary of code complexity insights from an audit report.
+
+    Analyzes method complexity data, identifies high-risk methods (complexity ≥10),
+    computes average complexity, highlights top complexity hotspots, and formats
+    the results as a list of summary strings with visual indicators.
+
+    Args:
+        audit (Dict[str, Any]): Audit data containing complexity metrics per file and method.
+
+    Returns:
+        List[str]: Formatted summary lines describing code complexity insights.
     """
+
     comp_methods: List[Tuple[str,str,int]] = []
     for fp, data in audit.items():
         for m, obj in data.get('complexity', {}).items():
@@ -38,7 +49,17 @@ def generate_complexity_insights(audit: Dict[str, Any]) -> List[str]:
 
 def generate_testing_insights(audit: Dict[str, Any]) -> List[str]:
     """
-    Generate descriptive testing insights with narrative.
+    Generate a list of formatted testing insights based on audit metadata.
+
+    Analyzes the provided audit dictionary to calculate the percentage of tested methods,
+    and returns a list of markdown-formatted strings summarizing testing coverage,
+    including visual indicators and actionable feedback.
+
+    Args:
+        audit (Dict[str, Any]): Audit data containing testing metadata for methods.
+
+    Returns:
+        List[str]: Markdown-formatted insight strings about testing coverage.
     """
     total = sum(len(d.get('testing',{})) for d in audit.values())
     missing = sum(1 for d in audit.values() for v in d.get('testing',{}).values() if v.get('tested') is False)
@@ -60,8 +81,19 @@ def generate_testing_insights(audit: Dict[str, Any]) -> List[str]:
 
 def generate_quality_insights(audit: Dict[str, Any]) -> List[str]:
     """
-    Generate descriptive quality insights with narrative and top errors.
+    Generate a summary of code quality insights from an audit report.
+
+    Analyzes linting, formatting, typing, docstring, and coverage results across files,
+    aggregates common issues, computes an average quality score, and returns a list of
+    insightful messages and actionable recommendations.
+
+    Args:
+        audit (Dict[str, Any]): Audit data containing quality check results for multiple files.
+
+    Returns:
+        List[str]: List of formatted insight and recommendation strings.
     """
+
     flake8 = Counter()
     pydoc = Counter()
     mypy = Counter()
@@ -105,8 +137,19 @@ def generate_quality_insights(audit: Dict[str, Any]) -> List[str]:
 
 def generate_diff_insights(audit: Dict[str, Any]) -> List[str]:
     """
-    Generate descriptive diff insights with narrative.
+    Generate a summary of code quality insights from an audit report.
+
+    Analyzes linting, formatting, typing, docstring, and coverage results across files,
+    aggregates common issues, computes an average quality score, and returns a list of
+    insightful messages and actionable recommendations.
+
+    Args:
+        audit (Dict[str, Any]): Audit data containing quality check results for multiple files.
+
+    Returns:
+        List[str]: List of formatted insight and recommendation strings.
     """
+
     diffs=[d for d in audit.values() if d.get('diff')]
     if not diffs:
         return ["### 🔍 Diff Coverage Insight", \

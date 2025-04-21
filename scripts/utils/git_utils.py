@@ -4,8 +4,16 @@ import subprocess
 
 def get_changed_files(base="origin/main"):
     """
-    Return a list of .py files changed since `base`.
-    If git fails, return [].
+    Returns a list of changed Python files compared to the specified Git base branch.
+
+    Runs 'git diff --name-only' to identify changed files and filters for those ending with '.py'.
+    Handles compatibility with different Python versions and returns an empty list if the Git command fails.
+
+    Args:
+        base (str): The Git base branch or commit to compare against. Defaults to 'origin/main'.
+
+    Returns:
+        list: A list of changed Python file paths.
     """
     cmd = ["git", "diff", "--name-only", base]
     try:
@@ -37,6 +45,14 @@ def get_changed_files(base="origin/main"):
     return [line for line in output.splitlines() if line.endswith(".py")]
 
 def interactive_commit_flow(default_branch="main"):
+    """
+    Guides the user through an interactive Git commit and push process.
+
+    Prompts to either push changes to the default branch or create and push to a new branch, handling all Git commands interactively.
+
+    Args:
+        default_branch (str): The branch to push to by default. Defaults to "main".
+    """
     import subprocess
 
     print("\n🧠 Commit Assistant:")
@@ -61,6 +77,11 @@ def interactive_commit_flow(default_branch="main"):
 
 
 def get_current_branch():
+    """
+    Returns the name of the current Git branch as a string.
+
+    Executes a Git command to determine the active branch in the local repository.
+    """
     import subprocess
 
     return subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).decode().strip()

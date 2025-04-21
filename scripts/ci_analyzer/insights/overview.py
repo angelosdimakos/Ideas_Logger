@@ -5,8 +5,15 @@ from typing import Any, Dict, List
 
 def generate_overview_insights(audit: Dict[str, Any]) -> List[str]:
     """
-    Generate high-level overview metrics from the CI audit JSON.
+    Generate a summary of audit insights, including test coverage, code complexity, and quality metrics.
+
+    Args:
+        audit (Dict[str, Any]): Audit data for multiple files.
+
+    Returns:
+        List[str]: Formatted overview lines with key statistics and metrics.
     """
+
     total_files = len(audit)
     # Missing tests
     files_with_missing_tests = sum(1 for data in audit.values() if data.get("missing_tests"))

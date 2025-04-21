@@ -32,8 +32,13 @@ def flatten_raw_entries(raw_logs, main_cat, subcat):
 
 def inject_entries_into_summaries():
     """
-    Inject the raw entry contents into each summary batch by using the batch label (global index range)
-    to select the corresponding entries from the flattened raw logs.
+    Injects corresponding raw log entries into each batch of correction summaries based on batch labels.
+
+    Loads configuration to determine file paths, reads raw logs and correction summaries, and for each batch in the summaries,
+    injects the relevant raw entries by extracting their content fields. Updates the summaries file in place.
+
+    Returns:
+        None
     """
     config = load_config()
 

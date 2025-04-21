@@ -7,7 +7,15 @@ from collections import Counter
 
 def generate_prime_insights(audit: Dict[str, Any]) -> List[str]:
     """
-    Identify the most frequent errors and highest complexity methods.
+    Analyzes audit data to extract and summarize the most frequent Flake8, Pydocstyle, and MyPy issues,
+    as well as the highest complexity methods. Returns a formatted list of insight strings highlighting
+    the top occurrences for each category.
+
+    Args:
+        audit (Dict[str, Any]): Dictionary containing code quality and complexity analysis results.
+
+    Returns:
+        List[str]: Formatted summary lines with the top issues and complexity findings.
     """
     flake8_codes: List[str] = []
     pydoc_issues: List[str] = []

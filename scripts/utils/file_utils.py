@@ -13,21 +13,33 @@ BACKUP_JSON_INDENT = 4
 
 def sanitize_filename(name):
     """
-    Remove invalid characters and trim length for safe file naming.
+    Sanitizes a filename by removing invalid characters and truncating it to 100 characters.
+
+    Args:
+        name (str): The original filename.
+
+    Returns:
+        str: The sanitized filename.
     """
     return re.sub(r"[^\w\-_. ]", "", name)[:100]
 
 
 def get_timestamp():
     """
-    Return current timestamp string.
+    Returns the current date and time as a formatted string in 'YYYY-MM-DD_HH-MM-SS' format.
     """
     return datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 
 def safe_path(path):
     """
-    Ensure the parent directory for a file path exists.
+    Ensures the parent directory of the given path exists, creating it if necessary.
+
+    Args:
+        path (str or Path): The file path whose parent directory should be created.
+
+    Returns:
+        str or Path: The original path.
     """
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     return path
@@ -35,8 +47,20 @@ def safe_path(path):
 
 def write_json(path, data):
     """
-    Safely write a Python object to a JSON file.
+    Writes data as JSON to the specified file path, ensuring the directory exists.
+    Handles and logs errors for missing directories, permission issues, non-serializable data, and OS-level failures.
+
+    Args:
+        path (str): Path to the JSON file to write.
+        data (dict): Data to serialize and write as JSON.
+
+    Raises:
+        FileNotFoundError: If the target directory does not exist.
+        PermissionError: If there are insufficient permissions to write the file.
+        TypeError: If the data contains non-serializable values.
+        OSError: For other OS-level write failures.
     """
+
     try:
         safe_path(path)
         with open(path, "w", encoding="utf-8") as f:
@@ -58,7 +82,14 @@ def write_json(path, data):
 
 def read_json(path):
     """
-    Safely read and return a log JSON object from a file.
+    Reads a JSON file from the given path and returns its contents as a dictionary.
+    Logs an error and returns an empty dictionary if reading or parsing fails.
+
+    Args:
+        path (str): Path to the JSON file.
+
+    Returns:
+        dict: Parsed JSON data, or an empty dictionary on failure.
     """
     try:
         with open(path, "r", encoding="utf-8") as f:
