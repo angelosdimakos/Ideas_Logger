@@ -108,10 +108,10 @@ def generate_overview_insights(audit: Dict[str, Any]) -> List[str]:
     if total_methods:
         parts.append(f"- **Testing Coverage:** `{testing_coverage:.1f}%`")
     else:
-        parts.append(f"- **Testing Coverage:** `N/A`")
+        parts.append("- **Testing Coverage:** `N/A`")
     if total_changed:
         parts.append(f"- **Diff Coverage:** `{diff_coverage:.1f}%`")
     else:
-        parts.append(f"- **Diff Coverage:** `N/A`")
+        parts.append("- **Diff Coverage:** `N/A`")
     parts.append("")  # padding newline
     return parts

@@ -86,7 +86,7 @@ def run_analysis(
                     warnings.append((file, method, score))
 
     if use_emoji:
-        print(f"\n📊 Summary:")
+        print("\n📊 Summary:")
         print(f"🧠 Methods analyzed: {total_methods}")
         print(f"🔧 Files analyzed: {len(data)}")
 

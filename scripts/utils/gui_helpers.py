@@ -19,19 +19,20 @@ from tkinter import messagebox
 from datetime import datetime
 from scripts.utils.file_utils import read_json, write_json
 from tkinter import scrolledtext
-
+import logging
+logger = logging.getLogger(__name__)
 
 def validate_log_input(content: str) -> bool:
     """
-    Validates the log input content.
-
-    Displays a warning message if the input is empty or only whitespace.
-    Returns True if the input is valid, otherwise False.
+    Returns False if the input is empty, None, or just whitespace.
+    Logs a warning if invalid.
     """
-    if not content.strip():
-        messagebox.showwarning("Input Error", "Log entry cannot be empty.")
+    if not isinstance(content, str) or not content.strip():
+        logger.warning("Validation failed: log input was empty or invalid.")
         return False
     return True
+
+
 
 
 def get_current_date():

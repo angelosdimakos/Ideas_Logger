@@ -77,3 +77,19 @@ def test_get_category_options(tmp_path):
     broken_file = tmp_path / "broken.json"
     broken_file.write_text("{ this is invalid json", encoding="utf-8")
     assert get_category_options(broken_file) == []
+
+def test_validate_log_input_none(monkeypatch):
+    monkeypatch.setattr(messagebox, "showwarning", dummy_showwarning)
+    assert validate_log_input(None) is False
+
+def test_append_log_entry_creates_nested_keys(tmp_path):
+    test_file = tmp_path / "log.json"
+    write_json(test_file, {})  # start with flat file
+    append_log_entry(test_file, "2025-03-22", "New", "Topic", "Log this entry")
+    data = read_json(test_file)
+    assert data["2025-03-22"]["New"]["Topic"][0]["content"] == "Log this entry"
+
+def test_get_category_options_missing_key(tmp_path):
+    file = tmp_path / "no_categories.json"
+    write_json(file, {"not_categories": {}})
+    assert get_category_options(file) == []

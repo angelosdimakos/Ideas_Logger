@@ -1,7 +1,6 @@
 import tkinter as tk
-from tkinter import simpledialog, scrolledtext, ttk, font
+from tkinter import scrolledtext, ttk, font
 import logging
-from tkinter import PhotoImage
 
 from scripts.config.config_loader import load_config, get_config_value
 from scripts.gui.gui_logging import GUILogHandler

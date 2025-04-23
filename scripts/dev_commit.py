@@ -107,7 +107,7 @@ def switch_to_new_branch():
         print(f"🌱 Created and switched to: {new_branch}")
 
         # ✅ Automatically push the new branch
-        print(f"📤 Pushing new branch to origin...")
+        print("📤 Pushing new branch to origin...")
         subprocess.run(["git", "push", "--set-upstream", "origin", new_branch], check=True)
     except subprocess.CalledProcessError as e:
         print(f"❌ Git error: {e}")

@@ -13,8 +13,9 @@ Core features include:
 Intended for use as a base class for specialized indexers in the Zephyrus project, enabling fast and flexible semantic search over structured logs and summaries.
 """
 
-from typing import List, Dict, Tuple, Any
-import os, pickle, faiss
+from typing import List, Dict, Any
+import pickle
+import faiss
 from sentence_transformers import SentenceTransformer
 from scripts.config.config_loader import get_config_value
 from scripts.config.config_manager import ConfigManager

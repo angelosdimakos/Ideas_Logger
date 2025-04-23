@@ -20,7 +20,6 @@ from scripts.config.config_loader import load_config, setup_logging
 from scripts.core.core import ZephyrusLoggerCore
 from scripts.gui.gui import ZephyrusLoggerGUI
 from scripts.gui.gui_controller import GUIController
-from scripts.gui.gui_logging import GUILogHandler
 
 
 def bootstrap(start_gui: bool = True) -> tuple[GUIController, ZephyrusLoggerGUI | None]:

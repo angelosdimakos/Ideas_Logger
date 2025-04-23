@@ -35,7 +35,7 @@ from typing import Union, List, Dict, Any
 
 from scripts.ai.ai_summarizer import AISummarizer
 from scripts.config.config_loader import get_config_value, get_effective_config
-from scripts.utils.file_utils import sanitize_filename, write_json, read_json, make_backup
+from scripts.utils.file_utils import sanitize_filename, write_json, read_json
 from scripts.core.summary_tracker import SummaryTracker
 from scripts.core.log_manager import LogManager
 from scripts.paths import ZephyrusPaths
