@@ -15,6 +15,7 @@ import sys
 import argparse
 import subprocess
 from pathlib import Path
+import json
 
 # allow importing from project root
 toplevel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -95,7 +96,9 @@ def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports") -
     docstring_path = Path("docstring_summary.json")
     if docstring_path.exists():
         safe_print(f"[+] Merging docstring data from {docstring_path}")
-        quality_checker.merge_docstrings_into_refactor_guard(audit_file, docstring_path)
+        with open(docstring_path, "r", encoding="utf-8") as f:
+            docstring_data = json.load(f)
+        quality_checker.merge_docstrings_into_refactor_guard(audit_file, docstring_data)
         safe_print("[✓] Docstring enrichment complete.")
     else:
         safe_print("[!] No docstring summary found. Skipping.")
