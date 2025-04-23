@@ -35,13 +35,14 @@ def safe_print(msg: str) -> None:
         print(msg.encode("ascii", errors="ignore").decode())
 
 
-def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports") -> None:
+def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports", docstring_path: str = "docstring_summary.json") -> None:
     """
     Enriches a refactor audit file with linting, coverage, and docstring data.
 
     Args:
         audit_path (str): Path to the audit JSON file.
         reports_path (str, optional): Directory for lint report files. Defaults to "lint-reports".
+        docstring_path (str, optional): Path to docstring summary JSON. Defaults to "docstring_summary.json".
     """
     script_path = Path(__file__).resolve()
     project_root = script_path.parents[2]
@@ -92,22 +93,28 @@ def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports") -
     quality_checker.merge_into_refactor_guard(audit_file, report_paths=report_paths)
     safe_print("[✓] Lint and coverage data merged.")
 
-    # Optional: merge docstring metadata
-    docstring_path = Path("docstring_summary.json")
-    if docstring_path.exists():
-        safe_print(f"[+] Merging docstring data from {docstring_path}")
-        with open(docstring_path, "r", encoding="utf-8") as f:
-            docstring_data = json.load(f)
-        quality_checker.merge_docstrings_into_refactor_guard(audit_file, docstring_data)
-        safe_print("[✓] Docstring enrichment complete.")
+    # Add this part to explicitly handle docstring enrichment
+    docstring_file = Path(docstring_path)
+    if docstring_file.exists():
+        safe_print(f"[+] Merging docstring data from {docstring_file}")
+        try:
+            with open(docstring_file, "r", encoding="utf-8") as f:
+                docstring_data = json.load(f)
+            quality_checker.merge_docstrings_into_refactor_guard(audit_file, docstring_data)
+            safe_print("[✓] Docstring enrichment complete.")
+        except json.JSONDecodeError as e:
+            safe_print(f"[!] Error parsing docstring data: {e}")
+        except Exception as e:
+            safe_print(f"[!] Error merging docstring data: {e}")
     else:
-        safe_print("[!] No docstring summary found. Skipping.")
+        safe_print(f"[!] Docstring summary not found at {docstring_file}. Skipping.")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Enrich refactor audit with quality data.")
     parser.add_argument("--audit", type=str, default="refactor_audit.json", help="Path to audit JSON file")
     parser.add_argument("--reports", type=str, default="lint-reports", help="Directory for lint report files")
+    parser.add_argument("--docstrings", type=str, default="docstring_summary.json", help="Path to docstring summary JSON")
     args = parser.parse_args()
 
-    enrich_refactor_audit(args.audit, args.reports)
+    enrich_refactor_audit(args.audit, args.reports, args.docstrings)

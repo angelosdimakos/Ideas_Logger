@@ -190,10 +190,12 @@ jobs:
           source .venv/bin/activate
           python scripts/refactor/enrich_refactor.py \
             --audit artifacts/refactor-full-audit/refactor_full_audit.json \
-            --reports artifacts/lint-reports
+            --reports artifacts/lint-reports \
+            --docstrings docstring_summary.json
           python scripts/refactor/enrich_refactor.py \
             --audit artifacts/refactor-diff-audit/refactor_diff_audit.json \
-            --reports artifacts/lint-reports
+            --reports artifacts/lint-reports \
+            --docstrings docstring_summary.json
 
       - name: 🔸 Generate CI Summaries
         run: |

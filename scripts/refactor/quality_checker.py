@@ -311,17 +311,43 @@ def merge_into_refactor_guard(
     audit_file.write_text(json.dumps(audit, indent=2), encoding="utf-8")
     print("[OK] RefactorGuard audit enriched with quality data.")
 
+
 def merge_docstrings_into_refactor_guard(audit_path: str, docstring_data: Dict[str, Any]) -> None:
+    """
+    Merge docstring data into a refactor audit file.
+
+    Args:
+        audit_path (str): Path to the audit JSON file.
+        docstring_data (Dict[str, Any]): Docstring data to merge.
+    """
     with open(audit_path, encoding="utf-8") as f:
         audit = json.load(f)
 
+    # Normalize docstring paths to match audit paths
+    normalized_docstring_data = {}
     for path, info in docstring_data.items():
+        normalized_path = _normalize(path)
+        normalized_docstring_data[normalized_path] = info
+
+    # Now merge with normalized paths
+    for path, info in normalized_docstring_data.items():
         if path not in audit:
-            continue
-        audit[path]["docstrings"] = info
+            # Try fallback path matching if exact match fails
+            matched = False
+            for audit_path in audit:
+                if audit_path.endswith(path.split('/')[-1]):
+                    audit[audit_path]["docstrings"] = info
+                    matched = True
+                    break
+            if not matched:
+                safe_print(f"[!] No matching audit entry for docstring path: {path}")
+        else:
+            audit[path]["docstrings"] = info
 
     with open(audit_path, "w", encoding="utf-8") as f:
         json.dump(audit, f, indent=2)
+
+    safe_print(f"[✓] Docstring data merged into audit file: {audit_path}")
 
 
 
