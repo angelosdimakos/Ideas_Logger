@@ -5,7 +5,7 @@ import logging
 from scripts.config.config_loader import load_config, get_config_value
 from scripts.gui.gui_logging import GUILogHandler
 from scripts.gui.gui_controller import GUIController
-import scripts.utils.gui_helpers as gui_helpers
+import scripts.gui.gui_helpers as gui_helpers
 
 
 class ZephyrusLoggerGUI:

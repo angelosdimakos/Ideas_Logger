@@ -1,16 +1,13 @@
+#!/usr/bin/env python3
 """
 enrich_refactor.py
 
-This module provides functionality for enriching a refactor audit file with linting and coverage data.
-It generates missing lint reports if necessary, collects report paths, and merges them into the specified audit file
-using the internal quality checker module.
+Enriches a RefactorGuard audit file with linting, coverage, and docstring analysis data.
 
-Dependencies:
-- os
-- sys
-- argparse
-- subprocess
-- pathlib
+Features:
+- Generates missing lint reports if absent
+- Collects paths to all quality-related reports
+- Merges all data into the audit file using quality_checker
 """
 
 import os
@@ -18,6 +15,10 @@ import sys
 import argparse
 import subprocess
 from pathlib import Path
+
+# allow importing from project root
+toplevel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.insert(0, toplevel)
 
 
 def safe_print(msg: str) -> None:
@@ -35,26 +36,22 @@ def safe_print(msg: str) -> None:
 
 def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports") -> None:
     """
-    Enriches a refactor audit file with linting and coverage data.
-
-    Generates missing lint reports if necessary, collects report paths, and merges them into the specified audit file
-    using the internal quality checker module.
+    Enriches a refactor audit file with linting, coverage, and docstring data.
 
     Args:
         audit_path (str): Path to the audit JSON file.
         reports_path (str, optional): Directory for lint report files. Defaults to "lint-reports".
     """
     script_path = Path(__file__).resolve()
-    project_root = script_path.parents[2]  # Up to repo root
+    project_root = script_path.parents[2]
     refactor_path = project_root / "scripts"
 
-    # Add scripts directory to sys.path
     sys.path.insert(0, str(refactor_path))
 
     try:
-        from refactor import quality_checker
+        from scripts.refactor import quality_checker
     except ImportError as e:
-        safe_print(f"[!] Failed to import quality checker: {e}")
+        safe_print(f"[!] Failed to import quality_checker: {e}")
         safe_print(f"[i] Tried importing from: {refactor_path}")
         sys.exit(1)
 
@@ -63,10 +60,9 @@ def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports") -
         safe_print(f"[!] Audit file not found: {audit_file}")
         sys.exit(1)
 
-    # Ensure lint report folder exists
     Path(reports_path).mkdir(parents=True, exist_ok=True)
 
-    # Auto-generate missing reports
+    # Run missing linters if needed
     required_reports = {
         "black": ["black", "--check", "scripts"],
         "flake8": ["flake8", "scripts"],
@@ -77,7 +73,7 @@ def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports") -
     for name, cmd in required_reports.items():
         report_file = Path(reports_path) / f"{name}.txt"
         if not report_file.exists():
-            safe_print(f"[~] Generating missing report: {report_file.name}")
+            safe_print(f"[~] Generating: {report_file.name}")
             result = subprocess.run(
                 cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
             )
@@ -93,17 +89,22 @@ def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports") -
 
     safe_print(f"[+] Enriching audit file: {audit_file}")
     quality_checker.merge_into_refactor_guard(audit_file, report_paths=report_paths)
-    safe_print("[✓] Audit enriched with lint + coverage data")
+    safe_print("[✓] Lint and coverage data merged.")
+
+    # Optional: merge docstring metadata
+    docstring_path = Path("docstring_summary.json")
+    if docstring_path.exists():
+        safe_print(f"[+] Merging docstring data from {docstring_path}")
+        quality_checker.merge_docstrings_into_refactor_guard(audit_file, docstring_path)
+        safe_print("[✓] Docstring enrichment complete.")
+    else:
+        safe_print("[!] No docstring summary found. Skipping.")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Enrich refactor audit with quality data.")
-    parser.add_argument(
-        "--audit", type=str, default="refactor_audit.json", help="Path to audit JSON file"
-    )
-    parser.add_argument(
-        "--reports", type=str, default="lint-reports", help="Directory containing lint report files"
-    )
+    parser.add_argument("--audit", type=str, default="refactor_audit.json", help="Path to audit JSON file")
+    parser.add_argument("--reports", type=str, default="lint-reports", help="Directory for lint report files")
     args = parser.parse_args()
 
     enrich_refactor_audit(args.audit, args.reports)

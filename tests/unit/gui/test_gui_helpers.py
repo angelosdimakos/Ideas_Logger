@@ -1,7 +1,7 @@
 import pytest
 import tkinter.messagebox as messagebox
 from scripts.utils.file_utils import read_json, write_json
-from scripts.utils.gui_helpers import (
+from scripts.gui.gui_helpers import (
     get_current_date,
     get_current_timestamp,
     get_selected_option,

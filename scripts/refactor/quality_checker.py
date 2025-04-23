@@ -311,6 +311,19 @@ def merge_into_refactor_guard(
     audit_file.write_text(json.dumps(audit, indent=2), encoding="utf-8")
     print("[OK] RefactorGuard audit enriched with quality data.")
 
+def merge_docstrings_into_refactor_guard(audit_path: str, docstring_data: Dict[str, Any]) -> None:
+    with open(audit_path, encoding="utf-8") as f:
+        audit = json.load(f)
+
+    for path, info in docstring_data.items():
+        if path not in audit:
+            continue
+        audit[path]["docstrings"] = info
+
+    with open(audit_path, "w", encoding="utf-8") as f:
+        json.dump(audit, f, indent=2)
+
+
 
 def merge_reports(file_a: str, file_b: str) -> Dict:
     """

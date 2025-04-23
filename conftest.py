@@ -1,3 +1,20 @@
+"""
+conftest.py
+
+This module contains configuration and fixtures for pytest testing.
+
+It includes:
+- Helper functions for managing Tkinter in headless environments.
+- Mocking utilities for various libraries and components used in tests.
+- Fixtures for creating temporary directories, files, and configurations.
+- Functions to ensure integrity and prevent unwanted writes during testing.
+
+Usage:
+- This module is automatically discovered by pytest and the defined fixtures will be available in tests.
+- Customization of fixtures can be done through monkeypatching as needed.
+
+Note: Ensure that all necessary dependencies are installed to use the mocking and fixture functionalities.
+"""
 import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch

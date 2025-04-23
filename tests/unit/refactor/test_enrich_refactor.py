@@ -30,7 +30,7 @@ def test_enrich_refactor_cli():
         result = subprocess.run(
             [
                 "python",
-                "scripts/utils/enrich_refactor.py",
+                "scripts/refactor/enrich_refactor.py",  # <-- fixed path
                 "--audit",
                 str(audit_path),
                 "--reports",
@@ -46,7 +46,6 @@ def test_enrich_refactor_cli():
 
         enriched = json.loads(audit_path.read_text(encoding="utf-8"))
 
-        # Normalize path slashes and look for key
         matched_key = next(
             (k for k in enriched if k.replace("\\", "/").endswith("example.py")), None
         )

@@ -179,13 +179,19 @@ jobs:
         with:
           path: ./artifacts
 
+      - name: 📋 Generate Docstring Summary
+        run: |
+          source .venv/bin/activate
+          python scripts/refactor/docstring_linter.py --json
+
+
       - name: 📄 Enrich Both Refactor Audits
         run: |
           source .venv/bin/activate
-          python scripts/utils/enrich_refactor.py \
+          python scripts/refactor/enrich_refactor.py \
             --audit artifacts/refactor-full-audit/refactor_full_audit.json \
             --reports artifacts/lint-reports
-          python scripts/utils/enrich_refactor.py \
+          python scripts/refactor/enrich_refactor.py \
             --audit artifacts/refactor-diff-audit/refactor_diff_audit.json \
             --reports artifacts/lint-reports
 
