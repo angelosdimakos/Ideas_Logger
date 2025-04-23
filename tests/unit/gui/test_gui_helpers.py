@@ -14,11 +14,13 @@ pytestmark = [pytest.mark.unit]
 
 # ------------------- Dummy Messagebox Patcher -------------------
 
+
 def dummy_showwarning(title, message, **kwargs):
     return None
 
 
 # ----------------------- Unit Tests -----------------------
+
 
 def test_validate_log_input(monkeypatch):
     monkeypatch.setattr(messagebox, "showwarning", dummy_showwarning)
@@ -40,8 +42,11 @@ def test_get_current_timestamp():
 
 def test_get_selected_option():
     class MockVar:
-        def __init__(self, value): self._value = value
-        def get(self): return self._value
+        def __init__(self, value):
+            self._value = value
+
+        def get(self):
+            return self._value
 
     assert get_selected_option(MockVar("Ideas")) == "Ideas"
     assert get_selected_option(MockVar("")) == "General"

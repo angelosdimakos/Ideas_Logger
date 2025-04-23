@@ -1,3 +1,18 @@
+"""
+orchestrator.py
+
+This module orchestrates the CI audit summary generation workflow.
+
+Core features include:
+- Loading audit data from a JSON file, with automatic timestamped backups for traceability.
+- Aggregating insights from multiple analysis modules (overview, complexity, testing, quality, diff coverage, and top issues).
+- Generating a comprehensive Markdown-formatted CI summary report with visual and emoji risk indicators.
+- Command-line interface for specifying input audit files and output summary paths.
+- Saving the generated summary to a file for reporting or further processing.
+
+Intended for use in CI pipelines to automate code quality and coverage reporting.
+"""
+
 import json
 from pathlib import Path
 from typing import Any, Dict
@@ -6,7 +21,12 @@ import shutil
 import argparse
 
 from scripts.ci_analyzer.insights.overview import generate_overview_insights
-from scripts.ci_analyzer.insights.descriptive_insights import generate_complexity_insights, generate_diff_insights, generate_quality_insights, generate_testing_insights
+from scripts.ci_analyzer.insights.descriptive_insights import (
+    generate_complexity_insights,
+    generate_diff_insights,
+    generate_quality_insights,
+    generate_testing_insights,
+)
 
 from scripts.ci_analyzer.insights.prime_suspects import generate_prime_insights
 
@@ -36,6 +56,7 @@ def backup_audit_file(path: str = "refactor_audit.json") -> None:
     backup_path = backup_dir / f"refactor_audit_{timestamp}.json"
     shutil.copy2(audit_path, backup_path)
     print(f"✅ Audit backup created at {backup_path}")
+
 
 def load_audit(path: str = "refactor_audit.json") -> Dict[str, Any]:
     """

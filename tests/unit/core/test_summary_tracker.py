@@ -14,7 +14,7 @@ def sample_logs(tmp_path):
             "TestCategory": {
                 "SubCategory": [
                     {"timestamp": "2025-03-29 12:00:00", "content": "Entry 1"},
-                    {"timestamp": "2025-03-29 12:05:00", "content": "Entry 2"}
+                    {"timestamp": "2025-03-29 12:05:00", "content": "Entry 2"},
                 ]
             }
         }
@@ -32,6 +32,15 @@ def tracker_file(tmp_path):
 
 
 def test_rebuild_summary_tracker(sample_logs, tmp_path):
+    """
+    Unit tests for the SummaryTracker class, verifying correct rebuild and update behavior.
+
+    Includes fixtures for creating sample log and tracker files, and tests that:
+    - Rebuilding the tracker correctly counts logged entries and initializes summarized totals.
+    - Updating the tracker correctly increments logged and summarized totals.
+
+    Uses ZephyrusPaths for path management and organization-specific file utilities.
+    """
     log_file, logs = sample_logs
     # Create a ZephyrusPaths instance using tmp_path as the base.
     paths = ZephyrusPaths.from_config(tmp_path)
@@ -47,7 +56,17 @@ def test_rebuild_summary_tracker(sample_logs, tmp_path):
 
 
 def test_update_summary_tracker(tracker_file, tmp_path):
+    """
+    Unit tests for the SummaryTracker class, ensuring correct rebuild and update functionality.
+
+    Includes fixtures for creating sample log and tracker files, and tests that:
+    - Rebuilding the tracker accurately counts logged entries and initializes summarized totals.
+    - Updating the tracker properly increments logged and summarized totals.
+
+    Utilizes ZephyrusPaths for path management and organization-specific file utilities.
+    """
     from pathlib import Path
+
     # Create a ZephyrusPaths instance from tmp_path.
     paths = ZephyrusPaths.from_config(tmp_path)
     # Override with our test tracker file and a dummy json_log_file.

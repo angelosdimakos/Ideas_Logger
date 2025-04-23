@@ -1,6 +1,16 @@
+"""
+ci_trends.py
+
+This module provides utilities for analyzing and tracking trends in continuous integration (CI) audit metrics.
+It loads audit data from JSON files, extracts summary metrics (such as file and method counts, missing tests, and risky methods),
+compares current metrics with those from previous CI runs, and displays the results with intuitive indicators.
+The module also saves the latest metrics for future comparisons, enabling teams to monitor code quality and test coverage trends over time.
+
+Typical usage involves running the script as part of a CI pipeline to provide visibility into changes in code complexity, test coverage, and potential risks.
+"""
+
 import json
 import os
-from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict
 import argparse
@@ -118,7 +128,9 @@ def main():
     display the comparison, and save the current metrics for future reference.
     """
     parser = argparse.ArgumentParser(description="Compare audit metrics with previous CI run.")
-    parser.add_argument("--audit", type=str, default="refactor_audit.json", help="Path to audit JSON")
+    parser.add_argument(
+        "--audit", type=str, default="refactor_audit.json", help="Path to audit JSON"
+    )
     args = parser.parse_args()
 
     audit = load_audit(args.audit)

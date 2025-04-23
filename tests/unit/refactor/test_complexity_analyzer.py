@@ -25,11 +25,19 @@ def _write_temp_file(code: str) -> str:
 
 
 def test_calculate_function_complexity_map_simple():
-    """A simple function with no decision points yields complexity 1."""
-    code = dedent("""
+    """
+    Unit tests for the complexity analyzer module.
+
+    Tests calculation of cyclomatic complexity for functions, methods, and modules,
+    including handling of nested functions, class methods, syntax errors, and
+    deprecation warnings.
+    """
+    code = dedent(
+        """
         def foo():
             return 42
-    """)
+    """
+    )
     path = _write_temp_file(code)
     try:
         scores = calculate_function_complexity_map(path)
@@ -42,15 +50,24 @@ def test_calculate_function_complexity_map_simple():
 
 
 def test_calculate_module_complexity_simple():
-    """Module complexity is sum of function scores plus overhead."""
-    code = dedent("""
+    """
+    Unit tests for the complexity analyzer module.
+
+    Covers calculation of cyclomatic complexity for functions, methods, and modules,
+    including handling of nested functions, class methods, syntax errors, and
+    deprecation warnings. Ensures correct labeling and complexity values, and verifies
+    behavior on parse errors.
+    """
+    code = dedent(
+        """
         def foo():
             return
 
         def bar():
             if True:
                 pass
-    """)
+    """
+    )
     path = _write_temp_file(code)
     try:
         # foo complexity = 1, bar complexity = 2 => sum = 3, plus overhead = 4
@@ -61,13 +78,20 @@ def test_calculate_module_complexity_simple():
 
 
 def test_calculate_cyclomatic_alias_emits_warning_and_matches():
-    """Alias emits DeprecationWarning and matches calculate_module_complexity."""
-    code = dedent("""
+    """
+    Unit tests for the complexity analyzer module.
+
+    Tests calculation and labeling of cyclomatic complexity for functions, methods, and modules,
+    including handling of nested functions, class methods, syntax errors, and deprecation warnings.
+    """
+    code = dedent(
+        """
         def foo():
             for i in range(3):
                 if i % 2 == 0:
                     pass
-    """)
+    """
+    )
     path = _write_temp_file(code)
     try:
         with pytest.warns(DeprecationWarning):
@@ -79,15 +103,23 @@ def test_calculate_cyclomatic_alias_emits_warning_and_matches():
 
 
 def test_nested_functions_are_ignored():
-    """Nested function definitions should not be counted or appear in scores."""
-    code = dedent("""
+    """
+    Unit tests for the complexity analyzer module.
+
+    Tests calculation and labeling of cyclomatic complexity for functions, methods, and modules,
+    including handling of nested functions, class methods, syntax errors, and deprecation warnings.
+    Ensures correct complexity values, proper labeling, and expected behavior on parse errors.
+    """
+    code = dedent(
+        """
         def outer():
             def inner():
                 if True:
                     pass
             if True:
                 pass
-    """)
+    """
+    )
     path = _write_temp_file(code)
     try:
         scores = calculate_function_complexity_map(path)
@@ -100,8 +132,16 @@ def test_nested_functions_are_ignored():
 
 
 def test_class_method_labels_and_complexity():
-    """Methods inside classes are labeled 'Class.method' with correct complexity."""
-    code = dedent("""
+    """
+    Unit tests for the complexity analyzer module.
+
+    Covers calculation of cyclomatic complexity for functions, methods, and modules,
+    including handling of nested functions, class methods, syntax errors, and
+    deprecation warnings. Ensures correct complexity values, labeling, and expected
+    behavior on parse errors.
+    """
+    code = dedent(
+        """
         class A:
             def m1(self):
                 if True:
@@ -110,7 +150,8 @@ def test_class_method_labels_and_complexity():
             async def m2(self):
                 for i in []:
                     pass
-    """)
+    """
+    )
     path = _write_temp_file(code)
     try:
         scores = calculate_function_complexity_map(path)
@@ -124,7 +165,14 @@ def test_class_method_labels_and_complexity():
 
 
 def test_syntax_error_returns_empty_and_module_negative_one(capsys):
-    """On syntax error, function map is empty and module complexity is -1."""
+    """
+    Unit tests for the complexity analyzer module.
+
+    Tests calculation of cyclomatic complexity for functions, methods, and modules,
+    including handling of nested functions, class methods, syntax errors, and
+    deprecation warnings. Ensures correct complexity values, labeling, and expected
+    behavior on parse errors.
+    """
     code = "def oops(:\n    pass"
     path = _write_temp_file(code)
     try:

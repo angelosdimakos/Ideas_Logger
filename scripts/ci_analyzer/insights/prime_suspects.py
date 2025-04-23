@@ -1,3 +1,16 @@
+"""
+prime_suspects.py
+
+This module provides functionality to identify and summarize the most frequent code quality and complexity issues found in CI audit reports.
+
+Core features include:
+- Extracting and ranking the most common Flake8, Pydocstyle, and MyPy issues across all analyzed files.
+- Identifying methods with the highest cyclomatic complexity.
+- Formatting the top issues and complexity findings as Markdown strings for inclusion in CI reports and dashboards.
+
+Intended for use in CI pipelines to help teams quickly pinpoint recurring code quality problems and complexity hotspots.
+"""
+
 # scripts/ci_analyzer/insights/prime_suspects.py
 
 import re

@@ -3,11 +3,14 @@
 from pathlib import Path
 import subprocess
 import tempfile
-import os
 import json
 
 
 def test_enrich_refactor_cli():
+    """
+    Tests the enrich_refactor CLI script by simulating an audit file and dummy lint reports,
+    running the CLI, and verifying that the audit file is enriched with quality data for the target file.
+    """
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir = Path(tmpdir)
         audit_path = tmpdir / "refactor_audit.json"
@@ -28,21 +31,26 @@ def test_enrich_refactor_cli():
             [
                 "python",
                 "scripts/utils/enrich_refactor.py",
-                "--audit", str(audit_path),
-                "--reports", str(report_dir)
+                "--audit",
+                str(audit_path),
+                "--reports",
+                str(report_dir),
             ],
             capture_output=True,
-            text=True
+            text=True,
         )
 
-        assert result.returncode == 0, f"CLI failed:\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
+        assert (
+            result.returncode == 0
+        ), f"CLI failed:\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
 
         enriched = json.loads(audit_path.read_text(encoding="utf-8"))
 
         # Normalize path slashes and look for key
         matched_key = next(
-            (k for k in enriched if k.replace("\\", "/").endswith("example.py")),
-            None
+            (k for k in enriched if k.replace("\\", "/").endswith("example.py")), None
         )
         assert matched_key, f"Could not find a matching key for 'example.py' in {enriched.keys()}"
-        assert "quality" in enriched[matched_key], f"Expected 'quality' key in enriched['{matched_key}'], got: {enriched[matched_key]}"
+        assert (
+            "quality" in enriched[matched_key]
+        ), f"Expected 'quality' key in enriched['{matched_key}'], got: {enriched[matched_key]}"

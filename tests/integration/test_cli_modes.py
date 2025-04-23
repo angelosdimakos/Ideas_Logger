@@ -12,43 +12,54 @@ from scripts.refactor import refactor_guard_cli
 @pytest.fixture
 def simple_repo(tmp_path, monkeypatch):
     # Create dirs
-    orig = tmp_path / "original";
+    orig = tmp_path / "original"
     orig.mkdir()
-    ref = tmp_path / "refactored";
+    ref = tmp_path / "refactored"
     ref.mkdir()
-    tests_dir = tmp_path / "tests";
+    tests_dir = tmp_path / "tests"
     tests_dir.mkdir()
 
     # Source code
-    (orig / "foo.py").write_text("""
+    (orig / "foo.py").write_text(
+        """
 class Foo:
     def bar(self):
         return 42
-""", encoding="utf-8")
+""",
+        encoding="utf-8",
+    )
 
-    (ref / "foo.py").write_text("""
+    (ref / "foo.py").write_text(
+        """
 class Foo:
     def bar(self):
         return 42
 
     def baz(self):
         return 99
-""", encoding="utf-8")
+""",
+        encoding="utf-8",
+    )
 
     # Minimal test
-    (tests_dir / "test_foo.py").write_text("""
+    (tests_dir / "test_foo.py").write_text(
+        """
 from refactored.foo import Foo
 
 def test_bar():
     assert Foo().bar() == 42
-""", encoding="utf-8")
+""",
+        encoding="utf-8",
+    )
 
     # Coverage XML
     root = ET.Element("coverage")
     cls = ET.SubElement(root, "class", filename=str(ref / "foo.py"))
     lines = ET.SubElement(cls, "lines")
     ET.SubElement(lines, "line", number="3", hits="1")
-    (tmp_path / "coverage.xml").write_bytes(ET.tostring(root, encoding="utf-8", xml_declaration=True))
+    (tmp_path / "coverage.xml").write_bytes(
+        ET.tostring(root, encoding="utf-8", xml_declaration=True)
+    )
 
     # Test env setup
     monkeypatch.chdir(tmp_path)
@@ -69,17 +80,14 @@ def run_cli(args, tmp_path):
         text=True,
         encoding="utf-8",
         errors="ignore",
-        check=True
+        check=True,
     )
 
     return json.loads(output_path.read_text(encoding="utf-8"))
 
 
 def test_diff_only_skips_complexity(simple_repo):
-    audit = run_cli([
-        "--refactored", "refactored",
-        "--all", "--json", "--diff-only"
-    ], simple_repo)
+    audit = run_cli(["--refactored", "refactored", "--all", "--json", "--diff-only"], simple_repo)
 
     # Fix: Check if any file entry exists in the audit before accessing complexity
     assert any(file_data.get("complexity", {}) == {} for file_data in audit.values())
@@ -88,11 +96,14 @@ def test_diff_only_skips_complexity(simple_repo):
 def test_missing_tests_human_output(simple_repo, capsys):
     sys.argv = [
         "refactor_guard_cli.py",
-        "--original", "original",
-        "--refactored", "refactored",
-        "--tests", "tests",
+        "--original",
+        "original",
+        "--refactored",
+        "refactored",
+        "--tests",
+        "tests",
         "--all",
-        "--missing-tests"
+        "--missing-tests",
     ]
     refactor_guard_cli.main()
     out = capsys.readouterr().out
@@ -104,10 +115,12 @@ def test_complexity_warnings_human_output(simple_repo, capsys, monkeypatch):
     monkeypatch.setenv("MAX_COMPLEXITY", "0")
     sys.argv = [
         "refactor_guard_cli.py",
-        "--original", "original",
-        "--refactored", "refactored",
+        "--original",
+        "original",
+        "--refactored",
+        "refactored",
         "--all",
-        "--complexity-warnings"
+        "--complexity-warnings",
     ]
     refactor_guard_cli.main()
     out = capsys.readouterr().out
@@ -119,32 +132,26 @@ def test_git_diff_json(simple_repo, monkeypatch):
     def mock_get_changed_files(_):
         return ["foo.py"]
 
-    monkeypatch.setattr(
-        "scripts.utils.git_utils.get_changed_files",
-        mock_get_changed_files
+    monkeypatch.setattr("scripts.utils.git_utils.get_changed_files", mock_get_changed_files)
+
+    audit = run_cli(
+        ["--original", "original", "--refactored", "refactored", "--all", "--git-diff", "--json"],
+        simple_repo,
     )
 
-    audit = run_cli([
-        "--original", "original",
-        "--refactored", "refactored",
-        "--all", "--git-diff", "--json"
-    ], simple_repo)
-
     # Fix: Check if any key in audit contains 'foo.py'
-    assert any('foo.py' in key for key in audit.keys())
+    assert any("foo.py" in key for key in audit.keys())
 
 
 def test_missing_coverage_json(simple_repo):
     (simple_repo / "coverage.xml").unlink()
-    audit = run_cli([
-        "--original", "original",
-        "--refactored", "refactored",
-        "--all", "--json"
-    ], simple_repo)
+    audit = run_cli(
+        ["--original", "original", "--refactored", "refactored", "--all", "--json"], simple_repo
+    )
 
     # Fix: Find the key containing foo.py
     for key, value in audit.items():
-        if 'foo.py' in key:
+        if "foo.py" in key:
             comp = value["complexity"]
             for stats in comp.values():
                 assert stats["coverage"] == "N/A"

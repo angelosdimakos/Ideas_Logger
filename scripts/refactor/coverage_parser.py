@@ -1,3 +1,17 @@
+"""
+coverage_parser.py
+
+This module provides utilities for parsing coverage XML reports and mapping line-level coverage data to method-level statistics for Python source files.
+
+Core features include:
+- Parsing coverage XML files (e.g., from coverage.py) to extract line coverage information.
+- Mapping covered lines to specific methods using provided method line ranges.
+- Calculating per-method coverage statistics, including coverage ratio, number of covered lines, and total lines per method.
+- Supporting matching by source file basename to handle different path representations in coverage reports.
+
+Intended for use in code quality analysis, test coverage reporting, and CI pipelines to provide detailed method-level coverage insights.
+"""
+
 import os
 import xml.etree.ElementTree as ET
 from typing import Dict, Tuple, Any, Set

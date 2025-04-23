@@ -9,13 +9,15 @@ from scripts.dev_commit import (
     get_modified_files,
     is_valid_branch_name,
     generate_suggested_branch_name,
-    switch_to_new_branch
+    switch_to_new_branch,
 )
 
 
 class TestDevCommit:
     """
-    Test suite for validating Git branch utilities in scripts.dev_commit, including branch name validation, suggested branch name generation, branch switching, and current branch retrieval. Covers both normal and edge cases using mocking and patching.
+    Test suite for the dev_commit module, covering branch name validation,
+    suggested branch name generation, branch switching logic, and Git branch/file handling.
+    Utilizes mocking to simulate user input, subprocess calls, and Git repository states.
     """
 
     # ────────────────────────────
@@ -32,11 +34,15 @@ class TestDevCommit:
     # ────────────────────────────
     # 🧠 Suggested Branch Name Logic
     # ────────────────────────────
-    @patch("scripts.dev_commit.get_modified_files", return_value=["core/core_utils.py", "refactor/audit.py"])
+    @patch(
+        "scripts.dev_commit.get_modified_files",
+        return_value=["core/core_utils.py", "refactor/audit.py"],
+    )
     @patch("scripts.dev_commit.datetime")
     def test_generate_suggested_branch_name(self, mock_datetime, mock_get_files):
         """
-        Tests that generate_suggested_branch_name returns a branch name starting with 'fix/' and ending with the mocked date, using mocked modified files and date.
+        Tests that generate_suggested_branch_name returns a branch name starting with 'fix/'
+        and ending with the mocked date, using mocked modified files and date.
         """
         mock_datetime.now.return_value.strftime.return_value = "2025-04-14"
         name = generate_suggested_branch_name()
@@ -74,22 +80,21 @@ class TestDevCommit:
     # ────────────────────────────
     def test_returns_correct_branch_name(self):
         """
-        Tests that get_current_branch returns the correct current Git branch name by comparing it to the output of a direct Git command.
+        Tests that get_current_branch returns the correct current Git branch name by comparing
+        it to the output of a direct Git command.
         """
         expected_branch = "main"
         actual_branch_process = subprocess.run(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            capture_output=True,
-            text=True
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True
         )
         actual_branch = actual_branch_process.stdout.strip()
 
         result = get_current_branch()
 
         assert result == actual_branch
-        assert result == expected_branch or actual_branch == result, (
-            f"Expected '{expected_branch}' or actual '{actual_branch}', but got '{result}'"
-        )
+        assert (
+            result == expected_branch or actual_branch == result
+        ), f"Expected '{expected_branch}' or actual '{actual_branch}', but got '{result}'"
 
     def test_handles_not_in_git_repository(self):
         """
@@ -109,20 +114,32 @@ class TestDevCommit:
                 os.rmdir(temp_dir)
 
     @patch("scripts.dev_commit.subprocess.run")
-    def test_get_modified_files_returns_files(self,mock_run):
+    def test_get_modified_files_returns_files(self, mock_run):
+        """
+        Tests that get_modified_files returns a list of modified file names when git diff outputs multiple files.
+        Mocks subprocess.run to simulate git output.
+        """
         # Simulate git diff output
         mock_run.return_value = MagicMock(stdout="file1.py\nfile2.py\n", returncode=0)
         files = get_modified_files()
         assert files == ["file1.py", "file2.py"]
 
     @patch("scripts.dev_commit.subprocess.run")
-    def test_get_modified_files_returns_empty_when_no_changes(self,mock_run):
+    def test_get_modified_files_returns_empty_when_no_changes(self, mock_run):
+        """
+        Tests that get_modified_files returns an empty list when there are no modified files.
+        Mocks subprocess.run to simulate no changes in the Git working directory.
+        """
         mock_run.return_value = MagicMock(stdout="", returncode=0)
         files = get_modified_files()
         assert files == []
 
     @patch("scripts.dev_commit.subprocess.run", side_effect=subprocess.CalledProcessError(1, "git"))
-    def test_get_modified_files_handles_subprocess_error(self,mock_run):
+    def test_get_modified_files_handles_subprocess_error(self, mock_run):
+        """
+        Tests that get_modified_files returns an empty list when a subprocess.CalledProcessError is raised,
+        simulating a Git command failure.
+        """
         files = get_modified_files()
         assert files == []
 
@@ -130,9 +147,18 @@ class TestDevCommit:
     @patch("scripts.dev_commit.generate_suggested_branch_name", return_value="test-branch")
     @patch("scripts.dev_commit.is_valid_branch_name", return_value=True)
     @patch("scripts.dev_commit.subprocess.run", side_effect=subprocess.CalledProcessError(1, "git"))
-    def test_switch_to_new_branch_handles_git_error(self,mock_run, mock_valid, mock_suggested, mock_input):
+    def test_switch_to_new_branch_handles_git_error(
+        self, mock_run, mock_valid, mock_suggested, mock_input
+    ):
+        """
+        Tests that switch_to_new_branch handles a Git subprocess error by exiting with code 1 and printing the
+        appropriate error message. Mocks user input, branch name validation, suggested branch name, and subprocess.run
+        to simulate a Git failure.
+        """
         with patch("builtins.print") as mock_print, patch("sys.exit") as mock_exit:
             switch_to_new_branch()
             mock_exit.assert_any_call(1)
             assert mock_exit.call_count == 1
-            mock_print.assert_any_call("❌ Git error: Command 'git' returned non-zero exit status 1.")
+            mock_print.assert_any_call(
+                "❌ Git error: Command 'git' returned non-zero exit status 1."
+            )

@@ -1,3 +1,8 @@
+"""
+gui_logging.py
+
+This module provides a logging handler that appends log messages to a Tkinter Text widget.
+"""
 import logging
 import tkinter as tk
 

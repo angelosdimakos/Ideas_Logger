@@ -3,8 +3,8 @@ import json
 import unittest
 from scripts.config.config_loader import load_config, get_config_value, get_absolute_path
 import pytest
-pytestmark = [pytest.mark.unit]
 
+pytestmark = [pytest.mark.unit]
 
 
 class TestConfigLoader(unittest.TestCase):
@@ -20,9 +20,9 @@ class TestConfigLoader(unittest.TestCase):
         - Overrides `BASE_DIR` and `CONFIG_DIR` for testing isolation.
         - Defines a local version of `get_absolute_path` for validation.
         """
-        self.mock_data_dir = os.path.join(os.path.dirname(__file__), 'mock_data')
-        self.mock_logs_dir = os.path.join(self.mock_data_dir, 'logs')
-        self.mock_exports_dir = os.path.join(self.mock_data_dir, 'exports')
+        self.mock_data_dir = os.path.join(os.path.dirname(__file__), "mock_data")
+        self.mock_logs_dir = os.path.join(self.mock_data_dir, "logs")
+        self.mock_exports_dir = os.path.join(self.mock_data_dir, "exports")
 
         # Create necessary directories
         os.makedirs(self.mock_logs_dir, exist_ok=True)
@@ -32,7 +32,7 @@ class TestConfigLoader(unittest.TestCase):
         sample_config = {
             "batch_size": 10,
             "correction_summaries_path": "logs/test_correction_summaries.json",
-            "test_mode": True
+            "test_mode": True,
         }
         with open(self.config_file, "w", encoding="utf-8") as f:
             json.dump(sample_config, f)
@@ -59,7 +59,7 @@ class TestConfigLoader(unittest.TestCase):
                     os.remove(os.path.join(root, name))  # Delete files inside the mock_data dir
         except Exception as e:
             print(f"[WARNING] Failed to clean up files: {e}")
-    
+
     # Optionally, you can add more logic to clean specific files or subdirectories if needed.
     def test_load_config_success(self):
         """
@@ -68,7 +68,9 @@ class TestConfigLoader(unittest.TestCase):
         config = load_config(self.config_file)
         self.assertIsInstance(config, dict)
         self.assertEqual(config.get("batch_size"), 10)
-        self.assertEqual(config.get("correction_summaries_path"), "logs/test_correction_summaries.json")
+        self.assertEqual(
+            config.get("correction_summaries_path"), "logs/test_correction_summaries.json"
+        )
 
     def test_get_config_value(self):
         """
@@ -102,13 +104,13 @@ class TestConfigLoader(unittest.TestCase):
         when `test_mode` is True.
         """
         from scripts.config.config_loader import get_effective_config
-        from tests.mocks.test_utils import assert_resolved_test_path
+        from tests.mocks.test_helpers import assert_resolved_test_path
 
         config_override = {
             "test_mode": True,
             "test_logs_dir": "tests/mock_data/logs",
             "test_export_dir": "tests/mock_data/exports",
-            "test_vector_store_dir": "tests/mock_data/vector_store"
+            "test_vector_store_dir": "tests/mock_data/vector_store",
         }
 
         with open(self.config_file, "w", encoding="utf-8") as f:

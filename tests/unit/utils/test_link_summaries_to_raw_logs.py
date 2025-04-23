@@ -6,7 +6,13 @@ from unittest.mock import patch
 # ✅ Correct absolute import based on project structure
 from scripts.utils.link_summaries_to_raw_logs import inject_entries_into_summaries
 
+
 def test_inject_entries_into_summaries(tmp_path, monkeypatch):
+    """
+    Tests the inject_entries_into_summaries function by creating temporary raw log and summary files,
+    mocking configuration and path resolution, and verifying that the correct raw log entries are injected
+    into the summary batches.
+    """
     # Create fake raw logs
     raw_log = {
         "2024-01-01": {
@@ -19,11 +25,7 @@ def test_inject_entries_into_summaries(tmp_path, monkeypatch):
         }
     }
 
-    summaries = {
-        "Test": {
-            "Flow": [{"batch": "1-2"}]
-        }
-    }
+    summaries = {"Test": {"Flow": [{"batch": "1-2"}]}}
 
     raw_path = tmp_path / "zephyrus_log.json"
     summaries_path = tmp_path / "correction_summaries.json"
@@ -32,8 +34,14 @@ def test_inject_entries_into_summaries(tmp_path, monkeypatch):
 
     # Monkeypatch config resolution
     monkeypatch.setattr("scripts.utils.link_summaries_to_raw_logs.load_config", lambda: {})
-    monkeypatch.setattr("scripts.utils.link_summaries_to_raw_logs.get_absolute_path", lambda path: str(raw_path if "zephyrus_log" in path else summaries_path))
-    monkeypatch.setattr("scripts.utils.link_summaries_to_raw_logs.get_config_value", lambda conf, key, default=None: str(raw_path if "raw_log" in key else summaries_path))
+    monkeypatch.setattr(
+        "scripts.utils.link_summaries_to_raw_logs.get_absolute_path",
+        lambda path: str(raw_path if "zephyrus_log" in path else summaries_path),
+    )
+    monkeypatch.setattr(
+        "scripts.utils.link_summaries_to_raw_logs.get_config_value",
+        lambda conf, key, default=None: str(raw_path if "raw_log" in key else summaries_path),
+    )
 
     inject_entries_into_summaries()
 

@@ -1,3 +1,13 @@
+"""
+main_tab.py
+
+This module defines the MainTab class, which is the primary tab for logging functionality in the application.
+
+Core features include:
+- Organizing child panels for logging, coverage, entry, and actions.
+- Refreshing child panels when the tab becomes active.
+"""
+
 import tkinter as tk
 from tkinter import ttk
 
@@ -12,9 +22,21 @@ class MainTab(BaseTab):
     """
     MainTab is the primary tab for logging functionality.
     It organizes child panels: LogPanel, CoveragePanel, EntryPanel, and ActionPanel.
+
+    Attributes:
+        log_panel (LogPanel): The panel for displaying logs.
+        coverage_panel (CoveragePanel): The panel for displaying coverage information.
+        entry_panel (EntryPanel): The panel for entering new log entries.
+        action_panel (ActionPanel): The panel for action buttons.
     """
 
-    def setup_tab(self):
+    def setup_tab(self) -> None:
+        """
+        Create a container frame to hold the child panels and pack them into the tab.
+
+        Returns:
+            None
+        """
         # Create a container frame to hold the child panels
         container = ttk.Frame(self)
         container.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
@@ -35,9 +57,12 @@ class MainTab(BaseTab):
         self.action_panel = ActionPanel(container, controller=self.controller)
         self.action_panel.pack(fill=tk.X, padx=5, pady=(2, 5))
 
-    def on_show(self):
+    def on_show(self) -> None:
         """
         Called when the MainTab becomes active. This refreshes all child panels.
+
+        Returns:
+            None
         """
         if hasattr(self, "log_panel"):
             self.log_panel.refresh()

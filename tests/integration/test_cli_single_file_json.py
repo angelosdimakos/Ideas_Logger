@@ -23,11 +23,7 @@ def single_file_setup(tmp_path):
     orig_file.write_text(orig_content, encoding="utf-8")
     ref_file.write_text(ref_content, encoding="utf-8")
 
-    return {
-        "original": orig_file,
-        "refactored": ref_file,
-        "root": tmp_path
-    }
+    return {"original": orig_file, "refactored": ref_file, "root": tmp_path}
 
 
 def test_single_file_json(single_file_setup):
@@ -39,20 +35,19 @@ def test_single_file_json(single_file_setup):
     cmd = [
         "python",
         str(cli_path),
-        "--original", str(single_file_setup["original"]),
-        "--refactored", str(single_file_setup["refactored"]),
+        "--original",
+        str(single_file_setup["original"]),
+        "--refactored",
+        str(single_file_setup["refactored"]),
         "--json",
-        "--output", str(output_path)
+        "--output",
+        str(output_path),
     ]
 
     # Run the command
     try:
         result = subprocess.run(
-            cmd,
-            cwd=single_file_setup["root"],
-            capture_output=True,
-            text=True,
-            check=True
+            cmd, cwd=single_file_setup["root"], capture_output=True, text=True, check=True
         )
     except subprocess.CalledProcessError as e:
         print(f"Command failed with exit code {e.returncode}")

@@ -1,3 +1,13 @@
+"""
+Module for processing raw logs and injecting entries into correction summaries.
+
+This module provides functionality to flatten raw log entries based on categories and inject those entries into correction summaries.
+
+Functions:
+- flatten_raw_entries: Flattens raw log entries for a specified category and subcategory.
+- inject_entries_into_summaries: Injects raw log entries into correction summaries based on batch labels.
+"""
+
 import json
 from scripts.config.config_loader import load_config, get_config_value, get_absolute_path
 import logging
@@ -5,7 +15,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def flatten_raw_entries(raw_logs, main_cat, subcat):
+def flatten_raw_entries(raw_logs: dict, main_cat: str, subcat: str) -> list:
     """
     Flatten raw log entries for a given main category and subcategory across all dates,
     sorted chronologically.
@@ -30,7 +40,7 @@ def flatten_raw_entries(raw_logs, main_cat, subcat):
     return entries
 
 
-def inject_entries_into_summaries():
+def inject_entries_into_summaries() -> None:
     """
     Injects corresponding raw log entries into each batch of correction summaries based on batch labels.
 

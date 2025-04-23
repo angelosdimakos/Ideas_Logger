@@ -24,15 +24,15 @@ def run_cli(args, tmp_path):
 
 @pytest.fixture
 def tmp_repo(tmp_path, monkeypatch):
-    orig = tmp_path / "original";
+    orig = tmp_path / "original"
     orig.mkdir()
-    ref = tmp_path / "refactored";
+    ref = tmp_path / "refactored"
     ref.mkdir()
-    tests = tmp_path / "tests";
+    tests = tmp_path / "tests"
     tests.mkdir()
 
     # Create a separate directory structure for quality reports
-    reports = tmp_path / "reports";
+    reports = tmp_path / "reports"
     reports.mkdir()
 
     monkeypatch.chdir(tmp_path)
@@ -51,7 +51,9 @@ def find_file_in_audit(audit, basename):
 
 def test_removed_method_detection(tmp_repo):
     orig, ref, _, root, _ = tmp_repo
-    (orig / "foo.py").write_text("class Foo:\n def old(self): return 1\n def kept(self): return 2", encoding="utf-8")
+    (orig / "foo.py").write_text(
+        "class Foo:\n def old(self): return 1\n def kept(self): return 2", encoding="utf-8"
+    )
     (ref / "foo.py").write_text("class Foo:\n def kept(self): return 2", encoding="utf-8")
 
     audit = run_cli(["--original", str(orig), "--refactored", str(ref), "--json"], root)
@@ -67,15 +69,15 @@ def test_test_file_fallback(tmp_repo):
     code = "class Foo:\n def keep(self): pass\n def miss(self): pass"
     (orig / "foo.py").write_text(code, encoding="utf-8")
     (ref / "foo.py").write_text(code, encoding="utf-8")
-    (tests_dir / "foo.py").write_text("from refactored.foo import Foo\n\ndef test_keep(): assert Foo().keep() is None",
-                                      encoding="utf-8")
+    (tests_dir / "foo.py").write_text(
+        "from refactored.foo import Foo\n\ndef test_keep(): assert Foo().keep() is None",
+        encoding="utf-8",
+    )
 
-    audit = run_cli([
-        "--original", str(orig),
-        "--refactored", str(ref),
-        "--tests", str(tests_dir),
-        "--json"
-    ], root)
+    audit = run_cli(
+        ["--original", str(orig), "--refactored", str(ref), "--tests", str(tests_dir), "--json"],
+        root,
+    )
 
     file_data = find_file_in_audit(audit, "foo.py")
     missing = file_data["missing_tests"]
@@ -109,13 +111,19 @@ def test_coverage_by_basename(tmp_repo):
     (root / "coverage.xml").write_text(coverage_xml, encoding="utf-8")
 
     # Add the --coverage-by-basename flag
-    audit = run_cli([
-        "--original", str(orig),
-        "--refactored", str(ref),
-        "--coverage-xml", str(root / "coverage.xml"),
-        "--coverage-by-basename",
-        "--json"
-    ], root)
+    audit = run_cli(
+        [
+            "--original",
+            str(orig),
+            "--refactored",
+            str(ref),
+            "--coverage-xml",
+            str(root / "coverage.xml"),
+            "--coverage-by-basename",
+            "--json",
+        ],
+        root,
+    )
 
     file_data = find_file_in_audit(audit, "foo.py")
     # There may not be exact coverage values, but at least check the method exists
@@ -128,14 +136,11 @@ def test_malformed_coverage_warning(tmp_repo, capsys):
     (ref / "foo.py").write_text("class Foo:\n def x(self): return 1", encoding="utf-8")
     (root / "coverage.xml").write_text("<coverage><class></coverage>", encoding="utf-8")
 
-    sys.argv = [
-        "refactor_guard_cli.py",
-        "--original", str(orig),
-        "--refactored", str(ref)
-    ]
+    sys.argv = ["refactor_guard_cli.py", "--original", str(orig), "--refactored", str(ref)]
 
     # Redirect stderr to capture warning messages
     import io
+
     stderr_backup = sys.stderr
     sys.stderr = io.StringIO()
 
@@ -203,15 +208,16 @@ def test_quality_merge_round_trip(tmp_repo):
 
 def test_missing_tests_json_flag(tmp_repo):
     orig, ref, _, root, _ = tmp_repo
-    (orig / "foo.py").write_text("class Foo:\n def a(self): pass\n def b(self): pass", encoding="utf-8")
-    (ref / "foo.py").write_text("class Foo:\n def a(self): pass\n def b(self): pass", encoding="utf-8")
+    (orig / "foo.py").write_text(
+        "class Foo:\n def a(self): pass\n def b(self): pass", encoding="utf-8"
+    )
+    (ref / "foo.py").write_text(
+        "class Foo:\n def a(self): pass\n def b(self): pass", encoding="utf-8"
+    )
 
-    audit = run_cli([
-        "--original", str(orig),
-        "--refactored", str(ref),
-        "--missing-tests",
-        "--json"
-    ], root)
+    audit = run_cli(
+        ["--original", str(orig), "--refactored", str(ref), "--missing-tests", "--json"], root
+    )
 
     file_data = find_file_in_audit(audit, "foo.py")
     mts = file_data["missing_tests"]
@@ -222,6 +228,7 @@ def test_missing_tests_json_flag(tmp_repo):
 
 def test_quality_merge_ci_structure(tmp_repo):
     import shutil
+
     _, ref, _, root, reports_dir = tmp_repo
     (ref / "foo.py").write_text("class Foo:\n def x(self): return 1", encoding="utf-8")
 
@@ -255,7 +262,7 @@ def test_quality_merge_ci_structure(tmp_repo):
         "black.txt": "would reformat scripts/foo.py",
         "flake8.txt": "foo.py:1:1: F401 unused import",
         "mypy.txt": "foo.py:1: error: Something wrong",
-        "pydocstyle.txt": "foo.py:1: D100: Missing docstring"
+        "pydocstyle.txt": "foo.py:1: D100: Missing docstring",
     }
 
     # Create report files in both locations

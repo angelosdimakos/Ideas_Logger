@@ -8,12 +8,15 @@ from textwrap import dedent
 from scripts.refactor.ast_extractor import (
     ClassMethodInfo,
     extract_class_methods,
-    compare_class_methods
+    compare_class_methods,
 )
 
 
 def test_extract_class_methods_no_classes(tmp_path):
-    """No classes in file → empty list."""
+    """
+    Unit tests for the ast_extractor module, covering extraction of class methods and their line ranges,
+    handling of files with no classes or semantic errors, and comparison of method sets between class versions.
+    """
     p = tmp_path / "noclass.py"
     p.write_text("print('hi')", encoding="utf-8")
 
@@ -23,8 +26,12 @@ def test_extract_class_methods_no_classes(tmp_path):
 
 
 def test_extract_class_methods_single_class(tmp_path):
-    """Extract one class with its methods and correct line ranges."""
-    code = dedent("""\
+    """
+    Unit tests for the ast_extractor module, verifying extraction of class methods and their line ranges,
+    handling of files with no classes or with semantic errors, and comparison of method sets between class versions.
+    """
+    code = dedent(
+        """\
         class Foo:
             def bar(self):
                 pass
@@ -34,7 +41,8 @@ def test_extract_class_methods_single_class(tmp_path):
 
             async def qux(self):
                 await something()
-    """)
+    """
+    )
     p = tmp_path / "foo.py"
     p.write_text(code, encoding="utf-8")
 
@@ -56,8 +64,8 @@ def test_extract_class_methods_single_class(tmp_path):
 
 def test_extract_class_methods_semantic_error(tmp_path):
     """
-    Even if the method body is semantically invalid (undefined names),
-    extract_class_methods should still parse and return the class/method.
+    Unit tests for the ast_extractor module, ensuring correct extraction of class methods and their line ranges,
+    handling of files with no classes or semantic errors, and accurate comparison of method sets between class versions.
     """
     p = tmp_path / "bad.py"
     # 'this is invalid' is valid syntax (a boolean expression), though 'this'/'invalid' are undefined at runtime
@@ -72,7 +80,11 @@ def test_extract_class_methods_semantic_error(tmp_path):
 
 
 def test_compare_class_methods():
-    """compare_class_methods correctly finds added/missing methods."""
+    """
+    Unit tests for the ast_extractor module, verifying extraction of class methods and comparison of method sets.
+    Tests include handling files with no classes, single classes with multiple methods, files with semantic errors,
+    and comparison of method differences between class versions.
+    """
     orig = ClassMethodInfo("Test")
     orig.add_method("a", (1, 2))
     orig.add_method("b", (3, 4))

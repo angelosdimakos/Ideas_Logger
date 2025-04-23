@@ -1,3 +1,16 @@
+"""
+raw_log_indexer.py
+
+This module defines the RawLogIndexer class for building and managing a FAISS vector index over raw log entries from zephyrus_log.json.
+
+Core features include:
+- Loading and parsing raw log entries organized by date, main category, and subcategory.
+- Extracting entry content and metadata for semantic indexing.
+- Building, saving, loading, and rebuilding a FAISS index for full-text vector search across all logged ideas.
+- Robust error handling and logging for file I/O and data processing.
+- Designed for use in the Zephyrus project to enable fast, flexible semantic search over all raw log data.
+"""
+
 import json
 import logging
 from typing import List, Dict, Tuple, Any
@@ -10,10 +23,21 @@ logger = logging.getLogger(__name__)
 class RawLogIndexer(BaseIndexer):
     """
     Builds a FAISS index from raw entries in zephyrus_log.json.
-    Used for full-text vector search across all logged ideas (not just summaries).
+
+    This class is used for full-text vector search across all logged ideas (not just summaries).
+
+    Attributes:
+        log_path (str): The path to the JSON log file.
     """
 
     def __init__(self, paths: ZephyrusPaths, autoload: bool = True) -> None:
+        """
+        Initializes the RawLogIndexer with the specified paths and optionally loads the index.
+
+        Args:
+            paths (ZephyrusPaths): The paths configuration for the indexer.
+            autoload (bool): Whether to automatically load the index on initialization. Defaults to True.
+        """
         super().__init__(paths=paths, index_name="raw")
         self.log_path = paths.json_log_file  # Explicit log file path for clarity
 
@@ -28,7 +52,7 @@ class RawLogIndexer(BaseIndexer):
         Loads raw entries from the zephyrus_log.json file.
 
         Returns:
-            Tuple[List[str], List[Dict[str, Any]]]: Raw entry texts and metadata.
+            Tuple[List[str], List[Dict[str, Any]]]: A tuple containing a list of entry contents and a list of metadata dictionaries.
         """
         try:
             with open(self.log_path, "r", encoding="utf-8") as f:
@@ -165,6 +189,9 @@ class RawLogIndexer(BaseIndexer):
     def build_index_from_logs(self) -> bool:
         """
         Loads entries from file and rebuilds FAISS index.
+
+        Returns:
+            bool: Whether the index was successfully rebuilt.
         """
         try:
             texts, meta = self.load_entries()
@@ -176,7 +203,12 @@ class RawLogIndexer(BaseIndexer):
             logger.error("Failed to build index from logs: %s", e, exc_info=True)
             return False
 
-    def rebuild(self):
+    def rebuild(self) -> None:
+        """
+        Rebuilds the raw log index from scratch.
+
+        This method loads entries from the log file, rebuilds the FAISS index, and saves the new index.
+        """
         logger.info("Rebuilding raw log index from scratch.")
         success = self.build_index_from_logs()
         if success:

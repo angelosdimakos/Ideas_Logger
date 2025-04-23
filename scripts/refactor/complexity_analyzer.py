@@ -1,5 +1,21 @@
 # complexity_analyzer.py
 
+"""
+complexity_analyzer.py
+
+This module provides utilities for analyzing the cyclomatic complexity of Python functions, methods, and modules using the AST (Abstract Syntax Tree).
+
+Core features include:
+- Computing cyclomatic complexity for each function and method in a Python file, including support for nested classes.
+- Summing per-function complexities to produce a module-level complexity score.
+- Supporting Python 3.10+ match/case syntax in complexity calculations.
+- Providing a ComplexityVisitor class for AST traversal and complexity computation.
+- Handling syntax and I/O errors gracefully with warnings.
+- Deprecated alias for backward compatibility.
+
+Intended for use in code quality analysis, refactoring tools, and CI pipelines to help maintain manageable code complexity.
+"""
+
 import ast
 import warnings
 from typing import Dict, Any, Tuple
@@ -39,34 +55,86 @@ class ComplexityVisitor(ast.NodeVisitor):
     """
 
     def __init__(self) -> None:
+        """
+        Initializes the ComplexityVisitor with an empty dictionary for function scores
+        and sets the current class name to an empty string.
+
+        Returns:
+            None
+        """
         self.function_scores: Dict[str, int] = {}
         self.current_class: str = ""
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
-        prev = self.current_class
+        """
+        Visits a class definition node and computes the complexity of its methods.
+
+        Args:
+            node (ast.ClassDef): The class definition node to visit.
+
+        Returns:
+            None
+        """
+        prev_class = self.current_class
         self.current_class = node.name
-        # Compute complexity for direct methods
+
+        # Visit methods in the class
         for item in node.body:
             if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 self.visit(item)
+
         # Recurse into nested classes
         for item in node.body:
             if isinstance(item, ast.ClassDef):
-                self.visit_ClassDef(item)
-        self.current_class = prev
+                self.visit(item)
+
+        self.current_class = prev_class
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+        """
+        Visits a function definition node and calculates its complexity.
+
+        Args:
+            node (ast.FunctionDef): The function definition node to visit.
+
+        Returns:
+            None
+        """
         self._compute_and_record(node)
 
     def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
-        self.visit_FunctionDef(node)
+        """
+        Visits an asynchronous function definition node and calculates its complexity.
+
+        Args:
+            node (ast.AsyncFunctionDef): The asynchronous function definition node to visit.
+
+        Returns:
+            None
+        """
+        self._compute_and_record(node)
 
     def _compute_and_record(self, node: ast.AST) -> None:
         """
         Calculate complexity for a function/method node and record it.
+
+        Args:
+            node (ast.AST): The function or method node to analyze.
+
+        Returns:
+            None
         """
 
         def count_nodes(n: ast.AST) -> int:
+            """
+            Recursively counts the number of decision nodes in the given AST node.
+
+            Args:
+                n (ast.AST): The AST node to count decision nodes in.
+
+            Returns:
+                int: The number of decision nodes in the given AST node.
+            """
             total = 0
             for child in ast.iter_child_nodes(n):
                 # Skip nested function definitions entirely
@@ -85,14 +153,23 @@ class ComplexityVisitor(ast.NodeVisitor):
     def get_scores(self) -> Dict[str, int]:
         """
         Return the computed complexity scores.
+
+        Returns:
+            Dict[str, int]: A dictionary mapping function/method names to their complexity scores.
         """
-        return dict(self.function_scores)
+        return self.function_scores
 
 
 def calculate_function_complexity_map(file_path: str) -> Dict[str, int]:
     """
-    Parse the given Python file and return a mapping from function/method
+    Parses the given Python file and returns a mapping from function/method
     full names to their cyclomatic complexity scores.
+
+    Args:
+        file_path (str): Path to the Python source file.
+
+    Returns:
+        Dict[str, int]: A mapping of function/method names to their complexity scores.
 
     On parse errors, prints a warning and returns an empty dict.
     """
@@ -113,7 +190,11 @@ def calculate_module_complexity(module_path: str) -> int:
     """
     Sum all function/method complexities in the module and add 1 overhead.
 
-    On parse errors (syntax or I/O), prints a warning and returns -1.
+    Args:
+        module_path (str): Path to the Python module.
+
+    Returns:
+        int: The total complexity score for the module, or -1 on error.
     """
     # First, check that the file parses
     try:
@@ -134,6 +215,12 @@ def calculate_cyclomatic_complexity_for_module(module_path: str) -> int:
     Deprecated alias for calculate_module_complexity.
 
     Issues a DeprecationWarning and delegates to calculate_module_complexity.
+
+    Args:
+        module_path (str): Path to the Python module.
+
+    Returns:
+        int: The total complexity score for the module, or -1 on error.
     """
     warnings.warn(
         "calculate_cyclomatic_complexity_for_module is deprecated; "

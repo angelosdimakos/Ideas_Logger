@@ -1,3 +1,16 @@
+"""
+summary_indexer.py
+
+This module defines the SummaryIndexer class for building and managing a FAISS vector index over summarized entries from correction_summaries.json.
+
+Core features include:
+- Loading and parsing summarized entries organized by date, main category, and subcategory.
+- Extracting summary texts and associated metadata for semantic indexing.
+- Building, saving, loading, and rebuilding a FAISS index for semantic search across all summarized corrections.
+- Robust error handling and logging for file I/O and data processing.
+- Designed for use in the Zephyrus project to enable fast, flexible semantic search over all summarized log data.
+"""
+
 import json
 import logging
 from pathlib import Path

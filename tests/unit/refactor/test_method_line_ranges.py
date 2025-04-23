@@ -8,7 +8,12 @@ from scripts.refactor.method_line_ranges import extract_method_line_ranges
 
 
 def test_no_functions(tmp_path):
-    """When no functions or methods exist, the result should be empty."""
+    """
+    Unit tests for the extract_method_line_ranges function, verifying correct extraction
+    of function and method line ranges from Python source files.
+    Covers top-level functions, class and async methods, nested classes, nested functions,
+    missing files, and syntax errors.
+    """
     code = "x = 1\nprint(x)\n"
     p = tmp_path / "nofunc.py"
     p.write_text(code, encoding="utf-8")
@@ -17,13 +22,19 @@ def test_no_functions(tmp_path):
 
 
 def test_top_level_function(tmp_path):
-    """A top-level function’s start and end lines are correctly recorded."""
-    code = dedent("""\
+    """
+    Unit tests for the extract_method_line_ranges function, ensuring correct extraction of function
+    and method line ranges from Python files. Tests cover top-level functions, class and async methods,
+    nested classes, nested functions, missing files, and syntax errors.
+    """
+    code = dedent(
+        """\
         def foo():
             a = 1
             b = 2
             return a + b
-    """)
+    """
+    )
     p = tmp_path / "foo.py"
     p.write_text(code, encoding="utf-8")
     result = extract_method_line_ranges(str(p))
@@ -38,8 +49,13 @@ def test_top_level_function(tmp_path):
 
 
 def test_class_methods_and_async(tmp_path):
-    """Sync and async methods inside a class are captured with correct ranges."""
-    code = dedent("""\
+    """
+    Unit tests for the extract_method_line_ranges function, verifying correct extraction of function
+    and method line ranges from Python source files. Tests cover scenarios including files with no functions,
+    top-level functions, class and async methods, nested classes, nested functions, missing files, and syntax errors.
+    """
+    code = dedent(
+        """\
         class A:
             def sync(self):
                 if True:
@@ -49,7 +65,8 @@ def test_class_methods_and_async(tmp_path):
             async def async_m(self):
                 await self.do()
                 await self.done()
-    """)
+    """
+    )
     p = tmp_path / "a.py"
     p.write_text(code, encoding="utf-8")
     result = extract_method_line_ranges(str(p))
@@ -70,14 +87,20 @@ def test_class_methods_and_async(tmp_path):
 
 
 def test_nested_function_definitions_ignored(tmp_path):
-    """Nested inner functions should not be recorded as top-level methods."""
-    code = dedent("""\
+    """
+    Unit tests for the extract_method_line_ranges function, ensuring correct extraction of function
+    and method line ranges from Python source files. Tests cover scenarios including files with no functions,
+    top-level functions, class and async methods, nested classes, nested functions, missing files, and syntax errors.
+    """
+    code = dedent(
+        """\
         def outer():
             x = 1
             def inner():
                 return x + 1
             return inner()
-    """)
+    """
+    )
     p = tmp_path / "nested.py"
     p.write_text(code, encoding="utf-8")
     result = extract_method_line_ranges(str(p))
@@ -90,14 +113,22 @@ def test_nested_function_definitions_ignored(tmp_path):
 
 
 def test_missing_file_raises(tmp_path):
-    """Nonexistent file should raise FileNotFoundError."""
+    """
+    Unit tests for the extract_method_line_ranges function, verifying correct extraction of function
+    and method line ranges from Python source files. Tests cover scenarios including files with no functions,
+    top-level functions, class and async methods, nested classes, nested functions, missing files, and syntax errors.
+    """
     missing = tmp_path / "does_not_exist.py"
     with pytest.raises(FileNotFoundError):
         extract_method_line_ranges(str(missing))
 
 
 def test_syntax_error_raises(tmp_path):
-    """Malformed Python should raise SyntaxError."""
+    """
+    Unit tests for the extract_method_line_ranges function, ensuring correct extraction of function
+    and method line ranges from Python source files. Tests cover scenarios including files with no functions,
+    top-level functions, class and async methods, nested classes, nested functions, missing files, and syntax errors.
+    """
     p = tmp_path / "bad.py"
     p.write_text("def bad(:\n    pass", encoding="utf-8")
     with pytest.raises(SyntaxError):
@@ -105,8 +136,14 @@ def test_syntax_error_raises(tmp_path):
 
 
 def test_nested_classes(tmp_path):
-    """Nested classes should both have their methods recorded."""
-    code = dedent("""\
+    """
+    Unit tests for the extract_method_line_ranges function, ensuring correct extraction of function
+    and method line ranges from Python source files.
+    Tests cover scenarios including files with no functions, top-level functions, class and async methods,
+    nested classes, nested functions, missing files, and syntax errors.
+    """
+    code = dedent(
+        """\
         class Outer:
             def foo(self):
                 return 1
@@ -114,7 +151,8 @@ def test_nested_classes(tmp_path):
             class Inner:
                 def bar(self):
                     return 2
-    """)
+    """
+    )
     p = tmp_path / "nestedclass.py"
     p.write_text(code, encoding="utf-8")
     result = extract_method_line_ranges(str(p))

@@ -1,3 +1,19 @@
+"""
+gui_helpers.py
+
+This module provides utility functions for building and customizing the
+Zephyrus Logger application's graphical user interface (GUI).
+
+Core features include:
+- Validating user input for logging and searching.
+- Creating and customizing Tkinter widgets (e.g. scrolled text, buttons).
+- Displaying alerts and messages using Tkinter's messagebox module.
+- Utility functions for reading and writing JSON files.
+
+Intended to provide a set of reusable functions for the GUI components of
+the Zephyrus Logger application.
+"""
+
 import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
@@ -5,7 +21,7 @@ from scripts.utils.file_utils import read_json, write_json
 from tkinter import scrolledtext
 
 
-def validate_log_input(content):
+def validate_log_input(content: str) -> bool:
     """
     Validates the log input content.
 

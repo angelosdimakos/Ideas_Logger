@@ -16,23 +16,34 @@ def _write_xml(tmp_path, root):
 
 
 def test_no_coverage_file_raises(tmp_path):
+    """
+    Unit tests for the parse_coverage_xml_to_method_hits function,
+    verifying correct handling of missing files, malformed XML, method-level coverage calculation,
+    and path normalization using sample XML coverage data.
+    """
     missing = tmp_path / "nope.xml"
     with pytest.raises(FileNotFoundError):
-        parse_coverage_xml_to_method_hits(
-            str(missing), {"m": (1,1)}, source_file_path="foo.py"
-        )
+        parse_coverage_xml_to_method_hits(str(missing), {"m": (1, 1)}, source_file_path="foo.py")
 
 
 def test_malformed_xml_raises(tmp_path):
+    """
+    Unit tests for the parse_coverage_xml_to_method_hits function,
+    ensuring correct behavior for missing files, malformed XML, method-level coverage computation,
+    and file path normalization using sample XML data.
+    """
     p = tmp_path / "coverage.xml"
     p.write_text("<coverage><class></coverage>", encoding="utf-8")
     with pytest.raises(ET.ParseError):
-        parse_coverage_xml_to_method_hits(
-            str(p), {"m": (1,1)}, source_file_path="foo.py"
-        )
+        parse_coverage_xml_to_method_hits(str(p), {"m": (1, 1)}, source_file_path="foo.py")
 
 
 def test_single_file_method_coverage(tmp_path):
+    """
+    Unit tests for the parse_coverage_xml_to_method_hits function, covering scenarios
+    such as missing coverage files, malformed XML, correct method-level coverage calculation,
+    and file path normalization using sample XML data.
+    """
     root = Element("coverage")
     cls = SubElement(root, "class", filename="foo.py")
     lines = SubElement(cls, "lines")
@@ -41,31 +52,32 @@ def test_single_file_method_coverage(tmp_path):
     SubElement(lines, "line", number="3", hits="0")
     xml_path = _write_xml(tmp_path, root)
 
-    method_ranges = {"m1": (1,2), "m2": (2,4)}
-    result = parse_coverage_xml_to_method_hits(
-        xml_path, method_ranges, source_file_path="foo.py"
-    )
+    method_ranges = {"m1": (1, 2), "m2": (2, 4)}
+    result = parse_coverage_xml_to_method_hits(xml_path, method_ranges, source_file_path="foo.py")
 
     assert result["m1"]["coverage"] == 1.0
     assert result["m1"]["hits"] == 2
     assert result["m1"]["lines"] == 2
 
-    assert pytest.approx(result["m2"]["coverage"], rel=1e-6) == 1/3
+    assert pytest.approx(result["m2"]["coverage"], rel=1e-6) == 1 / 3
     assert result["m2"]["hits"] == 1
     assert result["m2"]["lines"] == 3
 
 
 def test_path_normalization(tmp_path):
+    """
+    Unit tests for the parse_coverage_xml_to_method_hits function,
+    verifying correct handling of missing coverage files, malformed XML,
+    method-level coverage calculation, and file path normalization using sample XML data.
+    """
     root = Element("coverage")
     cls = SubElement(root, "class", filename="./bar.py")
     lines = SubElement(cls, "lines")
     SubElement(lines, "line", number="10", hits="1")
     xml_path = _write_xml(tmp_path, root)
 
-    method_ranges = {"a": (10,10)}
-    result = parse_coverage_xml_to_method_hits(
-        xml_path, method_ranges, source_file_path="bar.py"
-    )
+    method_ranges = {"a": (10, 10)}
+    result = parse_coverage_xml_to_method_hits(xml_path, method_ranges, source_file_path="bar.py")
 
     assert result["a"]["coverage"] == 1.0
     assert result["a"]["hits"] == 1

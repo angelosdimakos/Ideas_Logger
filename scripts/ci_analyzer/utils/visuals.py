@@ -1,3 +1,15 @@
+"""
+visuals.py
+
+This module provides utility functions for rendering visual indicators of code quality and risk scores.
+
+Core features include:
+- Rendering a colored bar representation of a score (0–100) using emoji blocks.
+- Returning an emoji that represents risk level based on a numeric score.
+
+Intended for use in CI reports and dashboards to provide intuitive, visual feedback on code metrics.
+"""
+
 # scripts/ci_analyzer/utils/visuals.py
 
 

@@ -1,3 +1,16 @@
+"""
+overview.py
+
+This module provides functions for generating a high-level overview of CI audit results.
+
+Core features include:
+- Aggregating key statistics from audit data, such as test coverage, code complexity, and code quality metrics.
+- Summarizing metrics including missing tests, method complexity, formatting and linting issues, type errors, documentation issues, and coverage percentages.
+- Formatting the overview as a list of Markdown strings for inclusion in CI reports and dashboards.
+
+Intended for use in CI pipelines to provide teams with a concise summary of code health and quality trends.
+"""
+
 # scripts/ci_analyzer/insights/overview.py
 
 from typing import Any, Dict, List

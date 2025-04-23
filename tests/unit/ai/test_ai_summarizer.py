@@ -2,9 +2,10 @@ import json
 import pytest
 from scripts.utils.file_utils import read_json
 from scripts.ai.ai_summarizer import AISummarizer
-from tests.mocks.test_utils import make_dummy_aisummarizer,make_fake_logs
+from tests.mocks.test_helpers import make_dummy_aisummarizer, make_fake_logs
 
 pytestmark = [pytest.mark.unit, pytest.mark.ai_mocked]
+
 
 class TestAISummarizer:
 
@@ -15,7 +16,10 @@ class TestAISummarizer:
         logs = {
             date_str: {
                 main_category: {
-                    subcategory: [{"timestamp": f"{date_str} 12:00:00", "content": f"entry {i}"} for i in range(5)]
+                    subcategory: [
+                        {"timestamp": f"{date_str} 12:00:00", "content": f"entry {i}"}
+                        for i in range(5)
+                    ]
                 }
             }
         }
@@ -31,14 +35,19 @@ class TestAISummarizer:
         class DummySummarizer:
             def summarize_entries_bulk(self, entries, subcategory=None):
                 raise Exception("Mock failure")
+
             def _fallback_summary(self, full_prompt):
                 return "This is a mocked summary."
+
         logger_core.ai_summarizer = DummySummarizer()
         date_str = "2025-03-22"
         logs = {
             date_str: {
                 "TestCat": {
-                    "SubCat": [{"timestamp": f"{date_str} 12:00:00", "content": f"entry {i}"} for i in range(5)]
+                    "SubCat": [
+                        {"timestamp": f"{date_str} 12:00:00", "content": f"entry {i}"}
+                        for i in range(5)
+                    ]
                 }
             }
         }
@@ -51,6 +60,7 @@ class TestAISummarizer:
             @staticmethod
             def generate(model, prompt):
                 return {"response": "[MOCKED] Summary"}
+
         monkeypatch.setattr("scripts.ai.ai_summarizer.ollama", MockOllama)
         summarizer = AISummarizer()
         result = summarizer.summarize_entry("This is a test log entry.")
@@ -66,31 +76,35 @@ class TestAISummarizer:
             @staticmethod
             def generate(model, prompt):
                 return {"response": f"Summary with subcategory context: {prompt}"}
+
         monkeypatch.setattr("scripts.ai.ai_summarizer.ollama", MockOllama)
         summarizer = AISummarizer()
         result = summarizer.summarize_entries_bulk(
-            ["First entry.", "Second entry."],
-            subcategory="Creative:Visual or Audio Prompt"
+            ["First entry.", "Second entry."], subcategory="Creative:Visual or Audio Prompt"
         )
         assert "subcategory context" in result
         assert result.startswith("Summary with subcategory context:")
 
     def test_bulk_summary_with_none_input(self, monkeypatch):
         summarizer = AISummarizer()
+
         class MockOllama:
             @staticmethod
             def generate(model, prompt):
                 return {"response": "Should not be called"}
+
         monkeypatch.setattr("scripts.ai.ai_summarizer.ollama", MockOllama)
         result = summarizer.summarize_entries_bulk(None)
         assert result == "No entries provided"
 
     def test_summarize_entry_returns_empty_string(self, monkeypatch):
         summarizer = AISummarizer()
+
         class MockOllama:
             @staticmethod
             def generate(model, prompt):
                 return {"response": ""}
+
         monkeypatch.setattr("scripts.ai.ai_summarizer.ollama", MockOllama)
         result = summarizer.summarize_entry("Some input")
         assert result == ""
@@ -98,6 +112,7 @@ class TestAISummarizer:
     def test_summarize_entry_returns_non_string(self, monkeypatch):
         # Use default summarizer, but override mock to return None
         from scripts.ai import ai_summarizer
+
         monkeypatch.setattr(ai_summarizer.ollama, "generate", lambda *a, **kw: {"response": None})
 
         summarizer = AISummarizer()
@@ -119,5 +134,3 @@ class TestAISummarizer:
         success = logger_core.generate_summary(date_str, "TestCat", "SubCat")
 
         assert not success
-
-

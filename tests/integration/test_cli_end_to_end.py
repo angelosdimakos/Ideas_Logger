@@ -52,12 +52,7 @@ def test_method_a():
     (test_dir / "test_foo.py").write_text(test_content, encoding="utf-8")
 
     # Return the setup
-    return {
-        "original": orig_dir,
-        "refactored": ref_dir,
-        "tests": test_dir,
-        "root": tmp_path
-    }
+    return {"original": orig_dir, "refactored": ref_dir, "tests": test_dir, "root": tmp_path}
 
 
 def test_cli_end_to_end(cli_test_setup):
@@ -69,12 +64,16 @@ def test_cli_end_to_end(cli_test_setup):
     cmd = [
         "python",
         str(cli_path),
-        "--original", str(cli_test_setup["original"]),
-        "--refactored", str(cli_test_setup["refactored"]),
-        "--tests", str(cli_test_setup["tests"]),
+        "--original",
+        str(cli_test_setup["original"]),
+        "--refactored",
+        str(cli_test_setup["refactored"]),
+        "--tests",
+        str(cli_test_setup["tests"]),
         "--all",
         "--json",
-        "--output", str(output_path)
+        "--output",
+        str(output_path),
     ]
 
     # Run the command
@@ -87,7 +86,7 @@ def test_cli_end_to_end(cli_test_setup):
             text=True,
             encoding="utf-8",
             errors="ignore",
-            check=True
+            check=True,
         )
     except subprocess.CalledProcessError as e:
         print(f"Command failed with exit code {e.returncode}")
@@ -121,7 +120,11 @@ def test_cli_end_to_end(cli_test_setup):
 
             # Check for missing tests
             assert "missing_tests" in file_data
-            missing_methods = [item["method"] for item in file_data["missing_tests"] if item["class"] == "SampleClass"]
+            missing_methods = [
+                item["method"]
+                for item in file_data["missing_tests"]
+                if item["class"] == "SampleClass"
+            ]
             assert "new_method" in missing_methods
 
             # Check for complexity data

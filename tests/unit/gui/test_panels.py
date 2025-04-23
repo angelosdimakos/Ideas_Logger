@@ -17,23 +17,28 @@ from scripts.gui.panels.coverage_panel import CoveragePanel
 from scripts.gui.panels.entry_panel import EntryPanel
 from scripts.gui.panels.log_panel import LogPanel
 
+
 # Dummy controllers
 class DummyActionController:
     def __init__(self):
         self.force_summarize_all = MagicMock(return_value="dummy_summary")
         self.rebuild_tracker = MagicMock(return_value=True)
 
+
 class DummyCoverageController:
     def get_coverage_data(self):
         return [{"Category": "TestCat", "Coverage": 80}]
+
 
 class DummyEntryController:
     def log_entry(self, main, sub, text):
         return f"Logged: {main}, {sub}, {text}"
 
+
 class DummyLogController:
     def get_logs(self):
         return "Test log line\nAnother log entry\n"
+
 
 @pytest.mark.skipif(not GUI_AVAILABLE, reason="🛑 Skipping GUI tests — Tkinter not available")
 class TestActionPanel(unittest.TestCase):
@@ -56,6 +61,7 @@ class TestActionPanel(unittest.TestCase):
         self.panel.on_rebuild()
         self.controller.rebuild_tracker.assert_called_once()
 
+
 @pytest.mark.skipif(not GUI_AVAILABLE, reason="🛑 Skipping GUI tests — Tkinter not available")
 class TestCoveragePanel(unittest.TestCase):
     def setUp(self):
@@ -77,6 +83,7 @@ class TestCoveragePanel(unittest.TestCase):
         self.assertEqual(first_item[0], "TestCat")
         self.assertEqual(first_item[1], "80%")
 
+
 @pytest.mark.skipif(not GUI_AVAILABLE, reason="🛑 Skipping GUI tests — Tkinter not available")
 class TestEntryPanel(unittest.TestCase):
     def setUp(self):
@@ -96,6 +103,7 @@ class TestEntryPanel(unittest.TestCase):
         self.panel.on_submit()
         current_text = self.panel.entry_text.get("1.0", tk.END).strip()
         self.assertEqual(current_text, "")
+
 
 @pytest.mark.skipif(not GUI_AVAILABLE, reason="🛑 Skipping GUI tests — Tkinter not available")
 class TestLogPanel(unittest.TestCase):

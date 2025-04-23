@@ -1,175 +1,162 @@
-import os
-import json
-import datetime
-import re
-import logging
-import zipfile
+from __future__ import annotations
+"""
+file_utils.py
+
+Utility helpers for robust file I/O across the project.
+All public helpers accept either ``str`` or ``pathlib.Path``; we coerce to
+``Path`` immediately so internal logic is consistent and safe.  
+
+Key helpers
+-----------
+- **sanitize_filename** – remove illegal chars, truncate to 100‑char max
+- **get_timestamp**     – ``YYYY‑MM‑DD_HH‑MM‑SS`` string
+- **safe_path**         – ensure parent dir exists, return ``Path``
+- **write_json / read_json / safe_read_json** – typed, UTF‑8 safe
+- **make_backup**       – timestamped ``_backup_YYYY‑MM‑DD_HH‑MM‑SS`` copy
+- **zip_python_files**  – zip only ``*.py`` files, skipping ``.venv``, ``__pycache__``…
+"""
+
 from pathlib import Path
+from typing import Union, Iterable, Optional
+import datetime as _dt
+import json
+import logging
+import os
+import re
+import zipfile
 
 logger = logging.getLogger(__name__)
 DEFAULT_JSON_INDENT = 2
 BACKUP_JSON_INDENT = 4
 
+# ---------------------------------------------------------------------------
+# 🌐  Generic helpers
+# ---------------------------------------------------------------------------
 
-def sanitize_filename(name):
-    """
-    Sanitizes a filename by removing invalid characters and truncating it to 100 characters.
-
-    Args:
-        name (str): The original filename.
-
-    Returns:
-        str: The sanitized filename.
-    """
+def sanitize_filename(name: str) -> str:
+    """Return *name* stripped of illegal chars and truncated to 100 chars."""
     return re.sub(r"[^\w\-_. ]", "", name)[:100]
 
 
-def get_timestamp():
-    """
-    Returns the current date and time as a formatted string in 'YYYY-MM-DD_HH-MM-SS' format.
-    """
-    return datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+def get_timestamp() -> str:
+    """Current time as ``YYYY‑MM‑DD_HH‑MM‑SS``."""
+    return _dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+# ---------------------------------------------------------------------------
+# 📂  Path safety & JSON helpers
+# ---------------------------------------------------------------------------
+
+def _to_path(p: Union[str, Path]) -> Path:
+    """Internal: coerce *p* to ``Path`` exactly once."""
+    return p if isinstance(p, Path) else Path(p)
 
 
-def safe_path(path):
-    """
-    Ensures the parent directory of the given path exists, creating it if necessary.
-
-    Args:
-        path (str or Path): The file path whose parent directory should be created.
-
-    Returns:
-        str or Path: The original path.
-    """
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
+def safe_path(path: Union[str, Path]) -> Path:
+    """Ensure ``path.parent`` exists; return ``Path``."""
+    path = _to_path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
     return path
 
 
-def write_json(path, data):
-    """
-    Writes data as JSON to the specified file path, ensuring the directory exists.
-    Handles and logs errors for missing directories, permission issues, non-serializable data, and OS-level failures.
-
-    Args:
-        path (str): Path to the JSON file to write.
-        data (dict): Data to serialize and write as JSON.
-
-    Raises:
-        FileNotFoundError: If the target directory does not exist.
-        PermissionError: If there are insufficient permissions to write the file.
-        TypeError: If the data contains non-serializable values.
-        OSError: For other OS-level write failures.
-    """
-
+def write_json(path: Union[str, Path], data: dict) -> None:
+    path = safe_path(path)
     try:
-        safe_path(path)
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=DEFAULT_JSON_INDENT, ensure_ascii=False)
-        logger.debug(f"Wrote JSON to: {path}")
-    except FileNotFoundError:
-        logger.error("Target directory does not exist: %s", path, exc_info=True)
-        raise
-    except PermissionError:
-        logger.error("Permission denied while writing JSON to %s", path, exc_info=True)
-        raise
-    except TypeError as e:
-        logger.error("Data contains non-serializable values: %s", e, exc_info=True)
-        raise
-    except OSError as e:
-        logger.error("OS-level failure while writing JSON: %s", e, exc_info=True)
+        with path.open("w", encoding="utf-8") as fp:
+            json.dump(data, fp, indent=DEFAULT_JSON_INDENT, ensure_ascii=False)
+    except Exception:
+        logger.exception("Failed to write JSON → %s", path)
         raise
 
 
-def read_json(path):
-    """
-    Reads a JSON file from the given path and returns its contents as a dictionary.
-    Logs an error and returns an empty dictionary if reading or parsing fails.
-
-    Args:
-        path (str): Path to the JSON file.
-
-    Returns:
-        dict: Parsed JSON data, or an empty dictionary on failure.
-    """
+def read_json(path: Union[str, Path]) -> dict:
+    path = _to_path(path)
     try:
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
+        with path.open("r", encoding="utf-8") as fp:
+            return json.load(fp)
     except Exception as e:
-        logger.error(f"Failed to read JSON from {path}: {e}")
+        logger.error("Failed to read JSON from %s: %s", path, e)
         return {}
 
 
-def safe_read_json(filepath: Path) -> dict:
-    """
-    Safely reads a config JSON file. Returns an empty dictionary if the file doesn't exist
-    or there is an error reading the file.
-
-    Args:
-        filepath (Path): Path to the JSON file to be read.
-
-    Returns:
-        dict: The contents of the JSON file, or an empty dictionary if an error occurs.
-    """
-    try:
-        if not filepath.exists():
-            logger.warning(f"File '{filepath}' not found. Returning empty dictionary.")
-            return {}
-
-        with open(filepath, "r", encoding="utf-8") as file:
-            return json.load(file)
-    except (json.JSONDecodeError, OSError) as e:
-        logger.error(f"Failed to read JSON from {filepath}: {e}")
+def safe_read_json(filepath: Union[str, Path]) -> dict:
+    path = _to_path(filepath)
+    if not path.exists():
+        logger.warning("%s not found – returning empty dict", path)
         return {}
+    return read_json(path)
 
+# ---------------------------------------------------------------------------
+# 🗄️  Backup helper
+# ---------------------------------------------------------------------------
 
-def make_backup(file_path: str) -> str:
-    """
-    Creates a timestamped backup of a given JSON file.
-
-    The backup file is saved in the same directory with the format:
-    <original_name>_backup_<timestamp>.json
-
-    Args:
-        file_path (str): Path to the original JSON file to back up.
-
-    Returns:
-        str: Path to the created backup file if successful, or None if the original file doesn't exist or an error occurs.
-    """
-    if not os.path.exists(file_path):
+def make_backup(file_path: Union[str, Path]) -> str | None:
+    src = _to_path(file_path)
+    if not src.exists():
         return None
 
-    base, ext = os.path.splitext(file_path)
-    timestamp = get_timestamp()
-    backup_path = f"{base}_backup_{timestamp}{ext}"
-
+    backup = src.with_name(f"{src.stem}_backup_{get_timestamp()}{src.suffix}")
     try:
-        data = read_json(file_path)
-        with open(backup_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=BACKUP_JSON_INDENT)
-        return backup_path
-    except Exception as e:
-        logger.warning(f"Error creating backup: {e}")
+        data = read_json(src)
+        with backup.open("w", encoding="utf-8") as fp:
+            json.dump(data, fp, indent=BACKUP_JSON_INDENT)
+        return str(backup)
+    except Exception:
+        logger.exception("Failed to create backup for %s", src)
         return None
 
+# ---------------------------------------------------------------------------
+# 📦  Zip helper
+# ---------------------------------------------------------------------------
 
-def zip_python_files(output_path: str, root_dir: str = ".", exclude_dirs=None):
+def zip_python_files(
+    output_path: Union[str, Path],
+    root_dir: Union[str, Path] = ".",
+    exclude_dirs: Optional[Iterable[str]] = None,
+) -> None:
     """
-    Zips all .py files in the project directory and its subdirectories,
-    excluding specified folders like `.venv` or `.git`.
+    Zip all ``.py`` files under *root_dir* (recursively), excluding any directory whose
+    name appears in *exclude_dirs* (case‑sensitive match against each path part).
+
+    If *exclude_dirs* is ``None`` we default to::{.python}
+
+        {".venv", "__pycache__", ".git", "node_modules"}
 
     Args:
-        output_path (str): Destination .zip file path.
-        root_dir (str): Root directory to start from.
-        exclude_dirs (list[str], optional): List of directory names to exclude.
+        output_path: Destination ``.zip`` path (created/overwritten).
+        root_dir:    Directory to start searching; ``'.'`` by default.
+        exclude_dirs: Folder names to skip entirely.
     """
-    exclude_dirs = set(exclude_dirs or [".venv", ".git", "__pycache__", "node_modules"])
+    output_path = _to_path(output_path)
+    root_dir = _to_path(root_dir)
+
+    # ----- Normalise exclusion list -----------------------------
+    default_excludes = {".venv", "__pycache__", ".git", "node_modules"}
+    exclude_dirs = set(exclude_dirs) if exclude_dirs else default_excludes
+
     with zipfile.ZipFile(output_path, "w", zipfile.ZIP_DEFLATED) as zipf:
-        for foldername, subfolders, filenames in os.walk(root_dir):
-            # Skip excluded directories
-            if any(excl in foldername for excl in exclude_dirs):
+        for dirpath, _, filenames in os.walk(root_dir):
+            # Skip if *any* component of dirpath is in exclude_dirs
+            if any(part in exclude_dirs for part in Path(dirpath).parts):
                 continue
             for filename in filenames:
                 if filename.endswith(".py"):
-                    file_path = os.path.join(foldername, filename)
-                    arcname = os.path.relpath(file_path, root_dir)  # keep relative structure
+                    file_path = Path(dirpath) / filename
+                    arcname = file_path.relative_to(root_dir)
                     zipf.write(file_path, arcname)
+
+    """Zip **only** ``*.py`` files under *root_dir*, skipping folders in *exclude_dirs*."""
+
+    output_path = _to_path(output_path)
+    root_dir = _to_path(root_dir)
+    exclude_dirs = set(exclude_dirs or {".venv", ".git", "__pycache__", "node_modules"})
+
+    with zipfile.ZipFile(output_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+        for folder, _sub, files in os.walk(root_dir):
+            if any(edir in Path(folder).parts for edir in exclude_dirs):
+                continue
+            for fname in files:
+                if not fname.endswith(".py"):
+                    continue  # 🔒 only .py – keeps test expectation true
+                fpath = Path(folder) / fname
+                arcname = fpath.relative_to(root_dir).as_posix()
+                zipf.write(str(fpath), arcname)

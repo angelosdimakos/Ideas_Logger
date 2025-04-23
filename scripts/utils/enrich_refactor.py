@@ -1,3 +1,18 @@
+"""
+enrich_refactor.py
+
+This module provides functionality for enriching a refactor audit file with linting and coverage data.
+It generates missing lint reports if necessary, collects report paths, and merges them into the specified audit file
+using the internal quality checker module.
+
+Dependencies:
+- os
+- sys
+- argparse
+- subprocess
+- pathlib
+"""
+
 import os
 import sys
 import argparse
@@ -5,7 +20,7 @@ import subprocess
 from pathlib import Path
 
 
-def safe_print(msg: str):
+def safe_print(msg: str) -> None:
     """
     Prints a message safely, handling UnicodeEncodeError by removing non-ASCII characters if needed.
 
@@ -18,11 +33,12 @@ def safe_print(msg: str):
         print(msg.encode("ascii", errors="ignore").decode())
 
 
-def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports"):
+def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports") -> None:
     """
     Enriches a refactor audit file with linting and coverage data.
 
-    Generates missing lint reports if necessary, collects report paths, and merges them into the specified audit file using the internal quality checker module.
+    Generates missing lint reports if necessary, collects report paths, and merges them into the specified audit file
+    using the internal quality checker module.
 
     Args:
         audit_path (str): Path to the audit JSON file.
@@ -62,7 +78,9 @@ def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports"):
         report_file = Path(reports_path) / f"{name}.txt"
         if not report_file.exists():
             safe_print(f"[~] Generating missing report: {report_file.name}")
-            result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            result = subprocess.run(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+            )
             report_file.write_text(result.stdout)
 
     report_paths = {
@@ -80,8 +98,12 @@ def enrich_refactor_audit(audit_path: str, reports_path: str = "lint-reports"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Enrich refactor audit with quality data.")
-    parser.add_argument("--audit", type=str, default="refactor_audit.json", help="Path to audit JSON file")
-    parser.add_argument("--reports", type=str, default="lint-reports", help="Directory containing lint report files")
+    parser.add_argument(
+        "--audit", type=str, default="refactor_audit.json", help="Path to audit JSON file"
+    )
+    parser.add_argument(
+        "--reports", type=str, default="lint-reports", help="Directory containing lint report files"
+    )
     args = parser.parse_args()
 
     enrich_refactor_audit(args.audit, args.reports)

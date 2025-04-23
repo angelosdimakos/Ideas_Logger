@@ -1,4 +1,19 @@
-import json
+"""
+config_loader.py
+
+This module provides centralized configuration and logging utilities for the application.
+
+Core features include:
+- Setting up consistent, centralized logging with configurable log levels.
+- Loading, validating, and caching application settings from JSON configuration files.
+- Providing utility functions to retrieve configuration values with defaults and warnings.
+- Supporting test mode by overriding key configuration paths with test-safe equivalents.
+- Resolving absolute paths relative to the project root for robust file management.
+- Example usage for loading configuration and retrieving key settings.
+
+Intended for use throughout the application to ensure robust, maintainable, and flexible configuration and logging management.
+"""
+
 import os
 import logging
 from pathlib import Path

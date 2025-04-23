@@ -11,6 +11,7 @@ class ZephyrusPaths:
     Provides methods to construct absolute paths for logs, exports, configuration, and vector store files,
     with support for test mode path overrides based on the loaded configuration.
     """
+
     log_dir: Path
     export_dir: Path
     json_log_file: Path

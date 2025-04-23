@@ -1,8 +1,8 @@
 from scripts.utils.file_utils import read_json
 from scripts.core.core import ZephyrusLoggerCore
 import pytest
-pytestmark = [pytest.mark.unit]
 
+pytestmark = [pytest.mark.unit]
 
 
 @pytest.fixture(scope="function")
@@ -13,12 +13,19 @@ def logger_core(temp_dir):
     """
     return ZephyrusLoggerCore(script_dir=temp_dir)
 
+
 @pytest.fixture
 def core_instance(logger_core):
     # Simply return the logger_core fixture (now a refactored core instance).
     return logger_core
 
+
 def test_save_entry(core_instance):
+    """
+    Unit tests for ZephyrusLoggerCore, verifying entry saving and global summary generation.
+    Includes fixtures for creating a temporary core instance and tests that ensure entries
+    are correctly logged to both JSON and Markdown, and that summaries are generated as expected.
+    """
     # Test that saving an entry updates both the JSON log and markdown export.
     result = core_instance.save_entry("TestCat", "TestSub", "Test entry content")
     assert result is True
@@ -30,7 +37,13 @@ def test_save_entry(core_instance):
     content = md_file.read_text(encoding="utf-8")
     assert "Test entry content" in content
 
+
 def test_generate_global_summary(core_instance):
+    """
+    Unit tests for ZephyrusLoggerCore, including fixtures for creating a temporary core instance.
+    Tests verify that entries are correctly saved to both JSON and Markdown, and that global summaries
+    are generated as expected when the batch size is reached.
+    """
     # Append enough entries to trigger summary generation.
     date_str = "2025-03-29"
     for _ in range(core_instance.BATCH_SIZE):

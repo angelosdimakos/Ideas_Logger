@@ -30,7 +30,7 @@ class DummyErrorController:
 
 @unittest.skipIf(
     not os.environ.get("DISPLAY") and os.name != "nt",
-    "🛑 Skipping GUI integration tests — no display available"
+    "🛑 Skipping GUI integration tests — no display available",
 )
 class TestMainTabCascade(unittest.TestCase):
     def setUp(self):
@@ -80,7 +80,7 @@ class TestMainTabCascade(unittest.TestCase):
 
 @unittest.skipIf(
     not os.environ.get("DISPLAY") and os.name != "nt",
-    "🛑 Skipping GUI integration tests — no display available"
+    "🛑 Skipping GUI integration tests — no display available",
 )
 class TestErrorHandling(unittest.TestCase):
     def setUp(self):
@@ -115,5 +115,5 @@ class TestErrorHandling(unittest.TestCase):
             self.fail(f"ActionPanel did not handle errors gracefully: {e}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

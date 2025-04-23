@@ -1,6 +1,20 @@
+"""
+complexity_summary.py
+
+This module provides functionality for analyzing code complexity from a JSON audit file.
+It reads the audit data, checks for complexity thresholds, and prints a summary report
+indicating any methods that exceed the specified complexity limits.
+
+Dependencies:
+- json
+- sys
+- os
+"""
+
 import json
 import sys
 import os
+from typing import Dict, Any, Union
 
 # Force stdout to UTF-8 where possible (Windows CI-safe)
 try:
@@ -9,7 +23,7 @@ except Exception:
     pass
 
 
-def analyze_complexity(file_path="refactor_audit.json", max_complexity=10):
+def analyze_complexity(file_path: str = "refactor_audit.json", max_complexity: int = 10) -> None:
     """
     Analyzes code complexity from a JSON audit file and prints a summary.
 
@@ -44,13 +58,15 @@ def analyze_complexity(file_path="refactor_audit.json", max_complexity=10):
         sys.exit(1)
 
 
-def run_analysis(data, max_complexity, use_emoji=True):
+def run_analysis(
+    data: Dict[str, Any], max_complexity: Union[int, float], use_emoji: bool = True
+) -> None:
     """
     Analyzes method complexity across files and prints a summary report.
 
     Args:
-        data (dict): Mapping of file names to complexity information.
-        max_complexity (int or float): Threshold for complexity warnings.
+        data (Dict[str, Any]): Mapping of file names to complexity information.
+        max_complexity (Union[int, float]): Threshold for complexity warnings.
         use_emoji (bool, optional): If True, prints summary with emojis; otherwise, uses plain text.
 
     Prints:
@@ -89,7 +105,7 @@ def run_analysis(data, max_complexity, use_emoji=True):
         if warnings:
             print(f"\n[COMPLEXITY WARNINGS] ({len(warnings)}):")
             for file, method, score in warnings:
-                print(f"[WARNING] {file} -> {method}: {score}")
+                print(f"[WARNING] {file} -\u003e {method}: {score}")
             sys.exit(1)
         else:
             print("No complexity warnings.")

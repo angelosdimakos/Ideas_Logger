@@ -1,3 +1,14 @@
+"""
+ai_summarizer.py
+
+This module provides the AISummarizer class for generating summaries of text entries using a configurable large language model (LLM).
+It supports both single-entry and bulk summarization, with the ability to use subcategory-specific prompts loaded from configuration.
+If the primary summarization method fails, the module falls back to the Ollama chat API to attempt summarization.
+Logging is integrated throughout for monitoring and debugging, and configuration is loaded at initialization for flexible model and prompt management.
+
+Typical use cases include automated summarization of logs, notes, or other textual data in workflows requiring concise, context-aware summaries.
+"""
+
 import ollama
 import logging
 from requests.exceptions import RequestException  # In case Ollama errors bubble up as HTTP issues

@@ -1,3 +1,20 @@
+"""
+refactor_guard.py
+
+This module provides the RefactorGuard class and related utilities for analyzing and validating Python code refactoring.
+
+Core features include:
+- Comparing original and refactored Python modules or directories to detect changes in class and method definitions
+- Analyzing cyclomatic complexity of functions and methods to ensure maintainability
+- Identifying missing or insufficient test coverage for public methods
+- Integrating with code coverage data to enrich analysis results
+- Supporting recursive directory analysis with configurable ignore patterns
+- Providing a human-readable CLI output for audit results, with filtering options for method diffs, complexity warnings, and missing tests
+
+Intended for use in code quality analysis, refactoring audits, and CI pipelines to help maintain code quality
+and test coverage during refactoring processes.
+"""
+
 import os
 import ast
 import fnmatch
@@ -13,11 +30,25 @@ logger = logging.getLogger(__name__)
 
 class AnalysisError(Exception):
     """Raised when an error occurs during analysis."""
+
     pass
 
 
 class RefactorGuard:
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    """
+    A class for analyzing and validating Python code refactoring.
+
+    Attributes:
+        config (Optional[Dict[str, Any]]): Configuration options for the analysis.
+    """
+
+    def __init__(self, config: Optional[Dict[str, Any]] = None) -> None:
+        """
+        Initializes the RefactorGuard with the given configuration.
+
+        Args:
+            config (Optional[Dict[str, Any]]): Configuration options for the analysis.
+        """
         self.config = config or {
             "max_complexity": 10,
             "ignore_files": [],
@@ -27,19 +58,29 @@ class RefactorGuard:
         self.coverage_hits: Dict[str, Any] = {}
 
     def attach_coverage_hits(self, coverage_data: Dict[str, Any]) -> None:
-        """Store coverage hits for later enrichment."""
+        """
+        Store coverage hits for later enrichment.
+
+        Args:
+            coverage_data (Dict[str, Any]): Coverage data to attach.
+        """
         if coverage_data:
             self.coverage_hits = coverage_data
 
     def analyze_tests(
-        self,
-        refactored_path: str,
-        test_file_path: Optional[str] = None
+        self, refactored_path: str, test_file_path: Optional[str] = None
     ) -> List[Dict[str, str]]:
         """
         Parse the test file’s AST to find which methods are exercised.
         Returns a list of {"class": class_name, "method": method_name}
         for any public method that is NOT called in the tests.
+
+        Args:
+            refactored_path (str): Path to the refactored module.
+            test_file_path (Optional[str]): Path to the test file.
+
+        Returns:
+            List[Dict[str, str]]: List of missing tests.
         """
         # If no test file provided or it doesn’t exist,
         # treat it as "no tests" (so all methods will be flagged).
@@ -73,16 +114,21 @@ class RefactorGuard:
         return missing
 
     def analyze_module(
-        self,
-        original_path: str,
-        refactored_path: str,
-        test_file_path: Optional[str] = None
+        self, original_path: str, refactored_path: str, test_file_path: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Compare original vs refactored:
           - method_diff: added/missing methods
           - missing_tests: public methods lacking test calls
           - complexity: cyclomatic complexity + potential coverage hits
+
+        Args:
+            original_path (str): Path to the original module.
+            refactored_path (str): Path to the refactored module.
+            test_file_path (Optional[str]): Path to the test file.
+
+        Returns:
+            Dict[str, Any]: Analysis results.
         """
         result: Dict[str, Any] = {
             "method_diff": {},
@@ -150,14 +196,19 @@ class RefactorGuard:
         return result
 
     def analyze_directory_recursive(
-        self,
-        original_dir: str,
-        refactored_dir: str,
-        test_dir: Optional[str] = None
+        self, original_dir: str, refactored_dir: str, test_dir: Optional[str] = None
     ) -> Dict[str, Dict[str, Any]]:
         """
         Walk original_dir for .py files (respecting ignore patterns),
         and analyze each pair under refactored_dir, optionally with tests.
+
+        Args:
+            original_dir (str): Path to the original directory.
+            refactored_dir (str): Path to the refactored directory.
+            test_dir (Optional[str]): Path to the test directory.
+
+        Returns:
+            Dict[str, Dict[str, Any]]: Analysis results for each file.
         """
         summary: Dict[str, Dict[str, Any]] = {}
         ignore_files = self.config.get("ignore_files", [])
@@ -201,12 +252,15 @@ class RefactorGuard:
 
 
 def print_human_readable(
-    audit: Dict[str, Any],
-    guard: RefactorGuard,
-    args: argparse.Namespace
+    audit: Dict[str, Any], guard: RefactorGuard, args: argparse.Namespace
 ) -> None:
     """
     Print human-readable audit, filtered by CLI flags in args.
+
+    Args:
+        audit (Dict[str, Any]): The audit results to print.
+        guard (RefactorGuard): The RefactorGuard instance used for the audit.
+        args (argparse.Namespace): Parsed command-line arguments.
     """
     for fname, data in audit.items():
         # 📂 File header
@@ -219,7 +273,7 @@ def print_human_readable(
                 print("Methods changes:")
                 for cls, changes in md.items():
                     miss = changes.get("missing", [])
-                    add  = changes.get("added", [])
+                    add = changes.get("added", [])
                     if miss:
                         print(f"  {cls}: missing {miss}")
                     if add:
@@ -230,7 +284,7 @@ def print_human_readable(
             print("Complexity:")
             for m, info in data["complexity"].items():
                 cplx = info.get("complexity")
-                cov  = info.get("coverage")
+                cov = info.get("coverage")
                 if args.complexity_warnings:
                     # hide ones ≤ max_complexity
                     if cplx <= guard.config.get("max_complexity", 0):
@@ -246,7 +300,7 @@ def print_human_readable(
             if missing:
                 print("🧪 Missing Tests:")
                 for item in missing:
-                    cls  = item["class"]
+                    cls = item["class"]
                     meth = item["method"]
                     print(f"  {cls} → {meth}")
 
