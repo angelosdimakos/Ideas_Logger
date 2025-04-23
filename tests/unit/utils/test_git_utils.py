@@ -1,6 +1,7 @@
 import subprocess
 from unittest.mock import patch
-from scripts.utils.git_utils import get_changed_files
+from scripts.utils.git_utils import get_changed_files, get_current_branch,interactive_commit_flow
+import pytest
 
 
 @patch("subprocess.run")
@@ -52,3 +53,43 @@ def test_get_changed_files_git_fails(mock_run):
     """
     result = get_changed_files()
     assert result == []
+
+def test_get_current_branch_success():
+    with patch("subprocess.check_output") as mock_output:
+        mock_output.return_value = b"feature/test-branch\n"
+        branch = get_current_branch()
+        assert branch == "feature/test-branch"
+
+
+def test_get_current_branch_failure(monkeypatch):
+    def mock_check_output(*args, **kwargs):
+        raise subprocess.CalledProcessError(1, "git")
+
+    monkeypatch.setattr(subprocess, "check_output", mock_check_output)
+    with pytest.raises(subprocess.CalledProcessError):
+        get_current_branch()
+
+
+def test_interactive_commit_flow_accept(monkeypatch):
+    inputs = iter(["main", "test message"])
+    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+
+    with patch("subprocess.run") as mock_run, patch("scripts.utils.git_utils.get_current_branch", return_value="feature/test-branch"):
+        interactive_commit_flow()
+        assert mock_run.call_count == 3
+        mock_run.assert_any_call(["git", "add", "."])
+        mock_run.assert_any_call(["git", "commit", "-m", "test message"])
+        mock_run.assert_any_call(["git", "push", "origin", "main"])
+
+
+def test_interactive_commit_flow_reject(monkeypatch):
+    inputs = iter(["new", "test-branch", "some message"])
+    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+
+    with patch("subprocess.run") as mock_run, patch("scripts.utils.git_utils.get_current_branch", return_value="feature/test-branch"):
+        interactive_commit_flow()
+        assert mock_run.call_count == 4
+        mock_run.assert_any_call(["git", "checkout", "-b", "test-branch"])
+        mock_run.assert_any_call(["git", "add", "."])
+        mock_run.assert_any_call(["git", "commit", "-m", "some message"])
+        mock_run.assert_any_call(["git", "push", "--set-upstream", "origin", "test-branch"])
