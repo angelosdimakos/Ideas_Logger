@@ -97,19 +97,31 @@ def test_make_backup_creates_timestamped_copy():
     assert os.path.basename(backup_path).startswith("test_file_backup_")
 
 
-def test_zip_python_files_excludes_unwanted_dirs():
-    """
-    Unit tests for file utility functions in scripts.utils.file_utils,
-    including filename sanitization, timestamp formatting, directory creation,
-    JSON read/write operations, backup creation, and zipping Python files.
-    Tests validate correct behavior, error handling, and file operations using mock data and temporary paths.
-    """
-    zip_python_files(output_path=MOCK_ZIP_PATH, root_dir="")
-    assert os.path.exists(MOCK_ZIP_PATH)
-    with zipfile.ZipFile(MOCK_ZIP_PATH, "r") as zipf:
-        files = zipf.namelist()
-        assert all(f.endswith(".py") for f in files)
-        assert all(".venv" not in f and "__pycache__" not in f for f in files)
+def test_zip_python_files_excludes_unwanted_dirs(tmp_path):
+    # Setup
+    root_dir = tmp_path / "zip_root"
+    include_dir = root_dir / "keep"
+    exclude_dir = root_dir / ".venv"
+    include_dir.mkdir(parents=True)
+    exclude_dir.mkdir(parents=True)
+
+    # Create files
+    (include_dir / "a.py").write_text("print('included')", encoding="utf-8")
+    (exclude_dir / "b.py").write_text("print('excluded')", encoding="utf-8")
+
+    # Define zip output
+    zip_path = tmp_path / "output.zip"
+
+    # Run function
+    zip_python_files(output_path=zip_path, root_dir=root_dir)
+
+    # Assertions
+    assert zip_path.exists()
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        files = zf.namelist()
+        assert "keep/a.py" in files
+        assert all(".venv" not in f for f in files)
+
 
 
 def test_read_json_missing_file(tmp_path):
