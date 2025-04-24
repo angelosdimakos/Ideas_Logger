@@ -17,6 +17,10 @@ import subprocess
 from pathlib import Path
 import json
 
+# allow importing from project root
+toplevel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.insert(0, toplevel)
+
 from scripts.refactor.enrich_refactor_pkg.helpers import safe_print
 import scripts.refactor.enrich_refactor_pkg.quality_checker as quality_checker
 from scripts.refactor.enrich_refactor_pkg.quality_checker import merge_reports
