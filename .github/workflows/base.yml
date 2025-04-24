@@ -194,12 +194,12 @@ jobs:
       - name: 📄 Enrich Both Refactor Audits
         run: |
           source .venv/bin/activate
-          python scripts/refactor/enrich_refactor.py \
+          python scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py \
             --audit artifacts/refactor-full-audit/refactor_full_audit.json \
             --reports artifacts/lint-reports \
             --docstrings artifacts/docstring-summary/docstring_summary.json
 
-          python scripts/refactor/enrich_refactor.py \
+          python scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py \
             --audit artifacts/refactor-diff-audit/refactor_diff_audit.json \
             --reports artifacts/lint-reports \
             --docstrings artifacts/docstring-summary/docstring_summary.json
