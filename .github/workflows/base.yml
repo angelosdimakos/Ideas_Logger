@@ -155,7 +155,9 @@ jobs:
       - name: 📋 Generate Docstring Summary
         run: |
           source .venv/bin/activate
+          export PYTHONPATH="$PYTHONPATH:$(pwd)"
           python scripts/refactor/parsers/docstring_parser.py --json
+      
 
       - name: 📄 Upload Docstring Summary
         if: always()

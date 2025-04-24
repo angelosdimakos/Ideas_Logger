@@ -11,6 +11,11 @@ import argparse
 import json
 from pathlib import Path
 from typing import List, Dict, Any, Optional
+import sys
+script_path = Path(__file__).resolve()
+project_root = script_path.parents[3]  # should point to your repo root
+sys.path.insert(0, str(project_root))
+
 from scripts.refactor.enrich_refactor_pkg.path_utils import norm
 
 DEFAULT_EXCLUDES = {".venv", "venv", "__pycache__", ".git", "build", "dist"}
@@ -127,7 +132,7 @@ class DocstringAnalyzer:
             if self.should_exclude(file) or file.name.startswith("test_"):
                 continue
 
-            rel_path = file.relative_to(root).as_posix()
+            rel_path = norm(file)
             results[rel_path] = self.extract_docstrings(file)
 
         return results
@@ -160,7 +165,7 @@ class DocstringAuditCLI:
         results = self.analyzer.analyze_directory(root)
 
         if self.args.json:
-            output_path = Path("docstring_summary.json")
+            output_path = Path.cwd() / "docstring_summary.json"
             output_path.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
             print(f"✅ JSON written to {output_path}")
 
