@@ -313,19 +313,20 @@ def merge_into_refactor_guard(
 
 
 def merge_docstrings_into_refactor_guard(audit_path: str, docstring_data: Dict[str, Any]) -> None:
-    from .quality_checker import _normalize  # <-- ensure it's in scope
-
     with open(audit_path, encoding="utf-8") as f:
         audit = json.load(f)
 
-    for raw_path, info in docstring_data.items():
-        path = _normalize(raw_path)  # <-- normalize incoming docstring paths
-        if path not in audit:
+    # Normalize both audit and incoming docstring paths
+    audit_normalized = {_normalize(k): v for k, v in audit.items()}
+    docstrings_normalized = {_normalize(k): v for k, v in docstring_data.items()}
+
+    for path, info in docstrings_normalized.items():
+        if path not in audit_normalized:
             continue
-        audit[path]["docstrings"] = info
+        audit_normalized[path]["docstrings"] = info
 
     with open(audit_path, "w", encoding="utf-8") as f:
-        json.dump(audit, f, indent=2)
+        json.dump(audit_normalized, f, indent=2)
 
 
 

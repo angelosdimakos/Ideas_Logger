@@ -120,15 +120,23 @@ class DocstringAnalyzer:
             root (Path): The path to the directory to analyze.
 
         Returns:
-            Dict[str, Dict[str, Any]]: A dictionary with relative paths as keys and
+            Dict[str, Dict[str, Any]]: A dictionary with normalized file paths as keys and
             dictionaries with docstring information as values.
         """
         results = {}
         for file in root.rglob("*.py"):
             if self.should_exclude(file) or file.name.startswith("test_"):
                 continue
-            rel_path = str(file.resolve().relative_to(PROJECT_ROOT))  # <-- match exactly
+
+            try:
+                # Try to normalize relative to the known project root
+                rel_path = str(file.resolve().relative_to(PROJECT_ROOT))
+            except ValueError:
+                # Fallback for test files outside project tree: just use filename
+                rel_path = file.name
+
             results[rel_path] = self.extract_docstrings(file)
+
         return results
 
 
