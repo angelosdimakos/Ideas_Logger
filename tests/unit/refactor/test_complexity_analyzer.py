@@ -4,9 +4,8 @@ import os
 import tempfile
 import pytest
 from textwrap import dedent
-import warnings
 
-from scripts.refactor.complexity_analyzer import (
+from scripts.refactor.complexity.complexity_analyzer import (
     calculate_function_complexity_map,
     calculate_module_complexity,
     calculate_cyclomatic_complexity_for_module,

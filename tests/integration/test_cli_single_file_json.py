@@ -47,7 +47,13 @@ def test_single_file_json(single_file_setup):
     # Run the command
     try:
         result = subprocess.run(
-            cmd, cwd=single_file_setup["root"], capture_output=True, text=True, check=True
+            cmd,
+            cwd=single_file_setup["root"],
+            capture_output=True,
+            text=True,
+            check=True,
+            encoding="utf-8",  # <- new
+
         )
     except subprocess.CalledProcessError as e:
         print(f"Command failed with exit code {e.returncode}")

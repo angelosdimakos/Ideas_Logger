@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-docstring_linter.py
+docstring_parser.py
 
 Scan a Python project directory for missing or partial docstrings.
 Outputs structured JSON and markdown-style reports with description, args, and return sections.
@@ -11,10 +11,9 @@ import argparse
 import json
 from pathlib import Path
 from typing import List, Dict, Any, Optional
-
+from scripts.refactor.enrich_refactor_pkg.path_utils import norm
 
 DEFAULT_EXCLUDES = {".venv", "venv", "__pycache__", ".git", "build", "dist"}
-PROJECT_ROOT = Path(__file__).resolve().parents[2]  # match quality_checker logic
 
 def split_docstring_sections(docstring: Optional[str]) -> Dict[str, Optional[str]]:
     """Split a docstring into its sections: description, args, and returns.
@@ -128,13 +127,7 @@ class DocstringAnalyzer:
             if self.should_exclude(file) or file.name.startswith("test_"):
                 continue
 
-            try:
-                # Try to normalize relative to the known project root
-                rel_path = str(file.resolve().relative_to(PROJECT_ROOT))
-            except ValueError:
-                # Fallback for test files outside project tree: just use filename
-                rel_path = file.name
-
+            rel_path = file.relative_to(root).as_posix()
             results[rel_path] = self.extract_docstrings(file)
 
         return results

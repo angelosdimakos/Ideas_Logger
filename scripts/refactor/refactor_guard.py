@@ -23,7 +23,7 @@ import argparse
 from typing import Optional, Dict, Any, List
 
 from scripts.refactor.ast_extractor import extract_class_methods, compare_class_methods
-from scripts.refactor.complexity_analyzer import calculate_function_complexity_map
+from scripts.refactor.complexity.complexity_analyzer import calculate_function_complexity_map
 
 logger = logging.getLogger(__name__)
 

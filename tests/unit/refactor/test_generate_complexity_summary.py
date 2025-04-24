@@ -1,5 +1,5 @@
 import json
-from scripts.refactor.complexity_summary import analyze_complexity
+from scripts.refactor.complexity.complexity_summary import analyze_complexity
 
 
 def test_generate_complexity_summary(tmp_path):

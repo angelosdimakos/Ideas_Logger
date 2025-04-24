@@ -10,7 +10,7 @@ import pytest
 import sys
 import json
 import tempfile
-from scripts.refactor.complexity_summary import run_analysis, analyze_complexity
+from scripts.refactor.complexity.complexity_summary import run_analysis, analyze_complexity
 
 # ────────────────────────────────
 # 🧪 run_analysis() — Core Logic

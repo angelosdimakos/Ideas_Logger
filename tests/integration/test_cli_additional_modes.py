@@ -1,11 +1,9 @@
 import sys
 import json
-import os
-import xml.etree.ElementTree as ET
 from pathlib import Path
 import pytest
 from scripts.refactor import refactor_guard_cli
-from scripts.refactor.quality_checker import merge_into_refactor_guard
+from scripts.refactor.enrich_refactor_pkg.quality_checker import merge_into_refactor_guard
 
 
 def run_cli(args, tmp_path):

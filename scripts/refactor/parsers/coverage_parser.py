@@ -15,7 +15,7 @@ Intended for use in code quality analysis, test coverage reporting, and CI pipel
 import os
 import xml.etree.ElementTree as ET
 from typing import Dict, Tuple, Any, Set
-
+from scripts.refactor.enrich_refactor_pkg.path_utils import norm as normalize_path
 
 def parse_coverage_xml_to_method_hits(
     xml_path: str,
@@ -31,13 +31,13 @@ def parse_coverage_xml_to_method_hits(
     tree = ET.parse(xml_path)
     root = tree.getroot()
 
-    # Build a map: normalized_xml_filename -> set(line_numbers_with_hits>0)
+    # Build a map: normalized_filename -> set(line_numbers_with_hits>0)
     hits_by_file: Dict[str, Set[int]] = {}
     for cls in root.findall(".//class"):
         fname = cls.get("filename")
         if not fname:
             continue
-        norm = os.path.normpath(fname)
+        norm = normalize_path(fname)
         file_hits: Set[int] = set()
         lines_elem = cls.find("lines")
         if lines_elem is None:
@@ -50,7 +50,7 @@ def parse_coverage_xml_to_method_hits(
         hits_by_file.setdefault(norm, set()).update(file_hits)
 
     # Pick out only the hits for our one source file
-    base = os.path.basename(os.path.normpath(source_file_path))
+    base = os.path.basename(normalize_path(source_file_path))
     file_hits: Set[int] = set()
     for path_key, lines in hits_by_file.items():
         if os.path.basename(path_key) == base:

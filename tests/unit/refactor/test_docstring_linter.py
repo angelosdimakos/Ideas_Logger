@@ -1,6 +1,5 @@
-import pytest
 from pathlib import Path
-from scripts.refactor.docstring_linter import (
+from scripts.refactor.parsers.docstring_parser import (
     split_docstring_sections,
     DocstringAnalyzer
 )

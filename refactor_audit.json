@@ -1,5 +1,362 @@
 {
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\ci_analyzer\\orchestrator.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\refactor\\method_line_ranges.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\ci_analyzer\\ci_trends.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\utils\\enrich_refactor.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\ci_analyzer\\insights\\descriptive_insights.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\refactor\\quality_checker.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\refactor\\refactor_guard_cli.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\refactor\\refactor_guard.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "dev_commit.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "main.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "paths.py": {
+    "quality": {
+      "coverage": {
+        "percent": 95.2
+      }
+    }
+  },
   "ai\\__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "ai\\ai_summarizer.py": {
+    "quality": {
+      "coverage": {
+        "percent": 78.3
+      }
+    }
+  },
+  "config\\__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "config\\config_loader.py": {
+    "quality": {
+      "coverage": {
+        "percent": 74.7
+      }
+    }
+  },
+  "config\\config_manager.py": {
+    "quality": {
+      "coverage": {
+        "percent": 90.4
+      }
+    }
+  },
+  "config\\constants.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "config\\logging_setup.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "core\\__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "core\\core.py": {
+    "quality": {
+      "coverage": {
+        "percent": 75.0
+      }
+    }
+  },
+  "core\\log_manager.py": {
+    "quality": {
+      "coverage": {
+        "percent": 87.8
+      }
+    }
+  },
+  "core\\summary_tracker.py": {
+    "quality": {
+      "coverage": {
+        "percent": 73.4
+      }
+    }
+  },
+  "gui\\__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "gui\\app.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "gui\\gui.py": {
+    "quality": {
+      "coverage": {
+        "percent": 9.5
+      }
+    }
+  },
+  "gui\\gui_controller.py": {
+    "quality": {
+      "coverage": {
+        "percent": 50.0
+      }
+    }
+  },
+  "gui\\gui_logging.py": {
+    "quality": {
+      "coverage": {
+        "percent": 27.3
+      }
+    }
+  },
+  "gui\\style_manager.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "gui\\widget_factory.py": {
+    "quality": {
+      "coverage": {
+        "percent": 77.8
+      }
+    }
+  },
+  "gui\\base\\base_panel.py": {
+    "quality": {
+      "coverage": {
+        "percent": 81.8
+      }
+    }
+  },
+  "gui\\base\\base_tab.py": {
+    "quality": {
+      "coverage": {
+        "percent": 81.8
+      }
+    }
+  },
+  "gui\\panels\\action_panel.py": {
+    "quality": {
+      "coverage": {
+        "percent": 91.7
+      }
+    }
+  },
+  "gui\\panels\\coverage_panel.py": {
+    "quality": {
+      "coverage": {
+        "percent": 93.8
+      }
+    }
+  },
+  "gui\\panels\\entry_panel.py": {
+    "quality": {
+      "coverage": {
+        "percent": 84.4
+      }
+    }
+  },
+  "gui\\panels\\log_panel.py": {
+    "quality": {
+      "coverage": {
+        "percent": 95.5
+      }
+    }
+  },
+  "gui\\tabs\\main_tab.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "indexers\\__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "indexers\\base_indexer.py": {
+    "quality": {
+      "coverage": {
+        "percent": 63.8
+      }
+    }
+  },
+  "indexers\\raw_log_indexer.py": {
+    "quality": {
+      "coverage": {
+        "percent": 59.7
+      }
+    }
+  },
+  "indexers\\summary_indexer.py": {
+    "quality": {
+      "coverage": {
+        "percent": 51.2
+      }
+    }
+  },
+  "refactor\\ast_extractor.py": {
+    "quality": {
+      "coverage": {
+        "percent": 96.2
+      }
+    }
+  },
+  "refactor\\complexity_analyzer.py": {
+    "quality": {
+      "coverage": {
+        "percent": 92.1
+      }
+    }
+  },
+  "refactor\\refactor_guard.py": {
+    "quality": {
+      "coverage": {
+        "percent": 41.7
+      }
+    }
+  },
+  "utils\\__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "utils\\complexity_summary.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "utils\\file_utils.py": {
+    "quality": {
+      "coverage": {
+        "percent": 67.1
+      }
+    }
+  },
+  "utils\\git_utils.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "utils\\gui_helpers.py": {
+    "quality": {
+      "coverage": {
+        "percent": 38.3
+      }
+    }
+  },
+  "utils\\link_summaries_to_raw_logs.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "utils\\zip_util.py": {
+    "quality": {
+      "coverage": {
+        "percent": 92.9
+      }
+    }
+  },
+  "scripts\\ai\\__init__.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -22,13 +379,10 @@
             "message": "line too long (153 > 100 characters)"
           }
         ]
-      },
-      "coverage": {
-        "percent": 100.0
       }
     }
   },
-  "ai\\ai_summarizer.py": {
+  "scripts\\ai\\ai_summarizer.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -122,13 +476,10 @@
           "scripts\\ai\\ai_summarizer.py:21 in public class `AISummarizer`:",
           "scripts\\ai\\ai_summarizer.py:26 in public method `__init__`:"
         ]
-      },
-      "coverage": {
-        "percent": 78.3
       }
     }
   },
-  "ci_analyzer\\ci_trends.py": {
+  "scripts\\ci_analyzer\\ci_trends.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -194,9 +545,6 @@
           }
         ]
       },
-      "black": {
-        "needs_formatting": true
-      },
       "mypy": {
         "errors": [
           "scripts\\ci_analyzer\\ci_trends.py:30: error: Returning Any from function declared to return \"dict[str, Any]\"  [no-any-return]",
@@ -221,7 +569,7 @@
       }
     }
   },
-  "ci_analyzer\\cli.py": {
+  "scripts\\ci_analyzer\\cli.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -240,7 +588,7 @@
       }
     }
   },
-  "ci_analyzer\\insights\\descriptive_insights.py": {
+  "scripts\\ci_analyzer\\insights\\descriptive_insights.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -288,7 +636,7 @@
       }
     }
   },
-  "ci_analyzer\\insights\\overview.py": {
+  "scripts\\ci_analyzer\\insights\\overview.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -338,7 +686,7 @@
       }
     }
   },
-  "ci_analyzer\\insights\\prime_suspects.py": {
+  "scripts\\ci_analyzer\\insights\\prime_suspects.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -389,7 +737,7 @@
       }
     }
   },
-  "ci_analyzer\\orchestrator.py": {
+  "scripts\\ci_analyzer\\orchestrator.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -419,9 +767,6 @@
           }
         ]
       },
-      "black": {
-        "needs_formatting": true
-      },
       "mypy": {
         "errors": [
           "scripts\\ci_analyzer\\orchestrator.py:74: error: Returning Any from function declared to return \"dict[str, Any]\"  [no-any-return]",
@@ -446,7 +791,7 @@
       }
     }
   },
-  "ci_analyzer\\utils\\visuals.py": {
+  "scripts\\ci_analyzer\\utils\\visuals.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -467,7 +812,7 @@
       }
     }
   },
-  "config\\__init__.py": {
+  "scripts\\config\\__init__.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -478,13 +823,10 @@
             "message": "line too long (108 > 100 characters)"
           }
         ]
-      },
-      "coverage": {
-        "percent": 100.0
       }
     }
   },
-  "config\\config_loader.py": {
+  "scripts\\config\\config_loader.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -552,13 +894,10 @@
           "scripts\\config\\config_loader.py:63 in public function `load_config`:",
           "scripts\\config\\config_loader.py:162 in public function `get_effective_config`:"
         ]
-      },
-      "coverage": {
-        "percent": 74.7
       }
     }
   },
-  "config\\config_manager.py": {
+  "scripts\\config\\config_manager.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -659,13 +998,10 @@
           "scripts\\config\\config_manager.py:75 in public nested class `Config`:",
           "scripts\\config\\config_manager.py:95 in public method `load_config`:"
         ]
-      },
-      "coverage": {
-        "percent": 90.4
       }
     }
   },
-  "config\\constants.py": {
+  "scripts\\config\\constants.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -681,13 +1017,10 @@
         "issues": [
           "scripts\\config\\constants.py:1 at module level:"
         ]
-      },
-      "coverage": {
-        "percent": 0.0
       }
     }
   },
-  "config\\logging_setup.py": {
+  "scripts\\config\\logging_setup.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -716,13 +1049,10 @@
           "scripts\\config\\logging_setup.py:1 at module level:",
           "scripts\\config\\logging_setup.py:19 in public function `setup_logging`:"
         ]
-      },
-      "coverage": {
-        "percent": 0.0
       }
     }
   },
-  "core\\core.py": {
+  "scripts\\core\\core.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -847,13 +1177,10 @@
           "scripts\\core\\core.py:390 in public method `search_raw_logs`:",
           "scripts\\core\\core.py:403 in public method `log_new_entry`:"
         ]
-      },
-      "coverage": {
-        "percent": 75.0
       }
     }
   },
-  "core\\log_manager.py": {
+  "scripts\\core\\log_manager.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -907,13 +1234,10 @@
           "scripts\\core\\log_manager.py:131 in public method `get_unsummarized_batch`:",
           "scripts\\core\\log_manager.py:158 in public method `update_correction_summaries`:"
         ]
-      },
-      "coverage": {
-        "percent": 87.8
       }
     }
   },
-  "core\\summary_tracker.py": {
+  "scripts\\core\\summary_tracker.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -988,13 +1312,10 @@
           "scripts\\core\\summary_tracker.py:181 in public method `validate`:",
           "scripts\\core\\summary_tracker.py:234 in public method `get_coverage_data`:"
         ]
-      },
-      "coverage": {
-        "percent": 73.4
       }
     }
   },
-  "dev_commit.py": {
+  "scripts\\dev_commit.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1039,7 +1360,7 @@
       }
     }
   },
-  "gui\\app.py": {
+  "scripts\\gui\\app.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1070,13 +1391,10 @@
           "scripts\\gui\\app.py:45 in private method `_create_status_bar`:",
           "scripts\\gui\\app.py:55 in public method `run`:"
         ]
-      },
-      "coverage": {
-        "percent": 0.0
       }
     }
   },
-  "gui\\base\\base_panel.py": {
+  "scripts\\gui\\base\\base_panel.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1104,7 +1422,7 @@
       }
     }
   },
-  "gui\\base\\base_tab.py": {
+  "scripts\\gui\\base\\base_tab.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1139,7 +1457,7 @@
       }
     }
   },
-  "gui\\gui.py": {
+  "scripts\\gui\\gui.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1221,13 +1539,10 @@
           "scripts\\gui\\gui.py:500 in private method `_format_json_for_display`:",
           "scripts\\gui\\gui.py:630 in public method `run`:"
         ]
-      },
-      "coverage": {
-        "percent": 9.5
       }
     }
   },
-  "gui\\gui_controller.py": {
+  "scripts\\gui\\gui_controller.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1261,13 +1576,10 @@
           "scripts\\gui\\gui_controller.py:131 in public method `get_logs`:",
           "scripts\\gui\\gui_controller.py:131 in public method `get_logs`:"
         ]
-      },
-      "coverage": {
-        "percent": 50.0
       }
     }
   },
-  "gui\\gui_logging.py": {
+  "scripts\\gui\\gui_logging.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1294,13 +1606,10 @@
           "scripts\\gui\\gui_logging.py:23 in public method `emit`:",
           "scripts\\gui\\gui_logging.py:36 in public method `append_message`:"
         ]
-      },
-      "coverage": {
-        "percent": 27.3
       }
     }
   },
-  "gui\\panels\\action_panel.py": {
+  "scripts\\gui\\panels\\action_panel.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1327,7 +1636,7 @@
       }
     }
   },
-  "gui\\panels\\coverage_panel.py": {
+  "scripts\\gui\\panels\\coverage_panel.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1357,7 +1666,7 @@
       }
     }
   },
-  "gui\\panels\\entry_panel.py": {
+  "scripts\\gui\\panels\\entry_panel.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1394,7 +1703,7 @@
       }
     }
   },
-  "gui\\panels\\log_panel.py": {
+  "scripts\\gui\\panels\\log_panel.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1423,7 +1732,7 @@
       }
     }
   },
-  "gui\\style_manager.py": {
+  "scripts\\gui\\style_manager.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1446,13 +1755,10 @@
           "scripts\\gui\\style_manager.py:28 in public method `__init__`:",
           "scripts\\gui\\style_manager.py:39 in public method `initialize_styles`:"
         ]
-      },
-      "coverage": {
-        "percent": 0.0
       }
     }
   },
-  "gui\\tabs\\main_tab.py": {
+  "scripts\\gui\\tabs\\main_tab.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1473,7 +1779,7 @@
       }
     }
   },
-  "gui\\widget_factory.py": {
+  "scripts\\gui\\widget_factory.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1512,13 +1818,10 @@
         "issues": [
           "scripts\\gui\\widget_factory.py:1 at module level:"
         ]
-      },
-      "coverage": {
-        "percent": 77.8
       }
     }
   },
-  "indexers\\__init__.py": {
+  "scripts\\indexers\\__init__.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1535,13 +1838,10 @@
             "message": "line too long (193 > 100 characters)"
           }
         ]
-      },
-      "coverage": {
-        "percent": 100.0
       }
     }
   },
-  "indexers\\base_indexer.py": {
+  "scripts\\indexers\\base_indexer.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1618,13 +1918,10 @@
           "scripts\\indexers\\base_indexer.py:112 in public method `build_index`:",
           "scripts\\indexers\\base_indexer.py:141 in public method `save_index`:"
         ]
-      },
-      "coverage": {
-        "percent": 63.8
       }
     }
   },
-  "indexers\\raw_log_indexer.py": {
+  "scripts\\indexers\\raw_log_indexer.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1708,13 +2005,10 @@
           "scripts\\indexers\\raw_log_indexer.py:146 in private method `_process_entries`:",
           "scripts\\indexers\\raw_log_indexer.py:190 in public method `build_index_from_logs`:"
         ]
-      },
-      "coverage": {
-        "percent": 59.7
       }
     }
   },
-  "indexers\\summary_indexer.py": {
+  "scripts\\indexers\\summary_indexer.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1770,13 +2064,10 @@
           "scripts\\indexers\\summary_indexer.py:199 in public method `build_index_from_logs`:",
           "scripts\\indexers\\summary_indexer.py:218 in public method `rebuild`:"
         ]
-      },
-      "coverage": {
-        "percent": 51.2
       }
     }
   },
-  "main.py": {
+  "scripts\\main.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1808,7 +2099,7 @@
       }
     }
   },
-  "paths.py": {
+  "scripts\\paths.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1850,7 +2141,7 @@
       }
     }
   },
-  "refactor\\__init__.py": {
+  "scripts\\refactor\\__init__.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1876,7 +2167,7 @@
       }
     }
   },
-  "refactor\\ast_extractor.py": {
+  "scripts\\refactor\\ast_extractor.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1938,13 +2229,10 @@
           "scripts\\refactor\\ast_extractor.py:59 in public function `extract_class_methods`:",
           "scripts\\refactor\\ast_extractor.py:59 in public function `extract_class_methods`:"
         ]
-      },
-      "coverage": {
-        "percent": 96.2
       }
     }
   },
-  "refactor\\complexity_analyzer.py": {
+  "scripts\\refactor\\complexity_analyzer.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -1981,13 +2269,10 @@
           "scripts\\refactor\\complexity_analyzer.py:164 in public function `calculate_function_complexity_map`:",
           "scripts\\refactor\\complexity_analyzer.py:214 in public function `calculate_cyclomatic_complexity_for_module`:"
         ]
-      },
-      "coverage": {
-        "percent": 92.1
       }
     }
   },
-  "refactor\\coverage_parser.py": {
+  "scripts\\refactor\\coverage_parser.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -2029,7 +2314,7 @@
       }
     }
   },
-  "refactor\\method_line_ranges.py": {
+  "scripts\\refactor\\method_line_ranges.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -2071,9 +2356,6 @@
           }
         ]
       },
-      "black": {
-        "needs_formatting": true
-      },
       "pydocstyle": {
         "issues": [
           "scripts\\refactor\\method_line_ranges.py:1 at module level:",
@@ -2090,7 +2372,7 @@
       }
     }
   },
-  "refactor\\quality_checker.py": {
+  "scripts\\refactor\\quality_checker.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -2126,9 +2408,6 @@
           }
         ]
       },
-      "black": {
-        "needs_formatting": true
-      },
       "mypy": {
         "errors": [
           "scripts\\refactor\\quality_checker.py:69: error: Missing type parameters for generic type \"PathLike\"  [type-arg]",
@@ -2160,7 +2439,7 @@
       }
     }
   },
-  "refactor\\refactor_guard.py": {
+  "scripts\\refactor\\refactor_guard.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -2190,9 +2469,6 @@
           }
         ]
       },
-      "black": {
-        "needs_formatting": true
-      },
       "pydocstyle": {
         "issues": [
           "scripts\\refactor\\refactor_guard.py:1 at module level:",
@@ -2203,13 +2479,10 @@
           "scripts\\refactor\\refactor_guard.py:201 in public method `analyze_directory_recursive`:",
           "scripts\\refactor\\refactor_guard.py:201 in public method `analyze_directory_recursive`:"
         ]
-      },
-      "coverage": {
-        "percent": 41.7
       }
     }
   },
-  "refactor\\refactor_guard_cli.py": {
+  "scripts\\refactor\\refactor_guard_cli.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -2317,9 +2590,6 @@
           }
         ]
       },
-      "black": {
-        "needs_formatting": true
-      },
       "mypy": {
         "errors": [
           "scripts\\refactor\\refactor_guard_cli.py:228: error: Argument 1 to \"int\" has incompatible type \"str | None\"; expected \"str | Buffer | SupportsInt | SupportsIndex | SupportsTrunc\"  [arg-type]"
@@ -2337,7 +2607,7 @@
       }
     }
   },
-  "utils\\complexity_summary.py": {
+  "scripts\\utils\\complexity_summary.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -2364,13 +2634,10 @@
         "issues": [
           "scripts\\utils\\complexity_summary.py:1 at module level:"
         ]
-      },
-      "coverage": {
-        "percent": 0.0
       }
     }
   },
-  "utils\\enrich_refactor.py": {
+  "scripts\\utils\\enrich_refactor.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -2394,9 +2661,6 @@
           }
         ]
       },
-      "black": {
-        "needs_formatting": true
-      },
       "pydocstyle": {
         "issues": [
           "scripts\\utils\\enrich_refactor.py:1 at module level:",
@@ -2405,7 +2669,7 @@
       }
     }
   },
-  "utils\\file_utils.py": {
+  "scripts\\utils\\file_utils.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -2454,13 +2718,10 @@
           "scripts\\utils\\file_utils.py:183 in public function `zip_python_files`:",
           "scripts\\utils\\file_utils.py:183 in public function `zip_python_files`:"
         ]
-      },
-      "coverage": {
-        "percent": 67.1
       }
     }
   },
-  "utils\\git_utils.py": {
+  "scripts\\utils\\git_utils.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -2489,13 +2750,10 @@
           "scripts\\utils\\git_utils.py:17 in public function `get_changed_files`:",
           "scripts\\utils\\git_utils.py:93 in public function `get_current_branch`:"
         ]
-      },
-      "coverage": {
-        "percent": 0.0
       }
     }
   },
-  "utils\\gui_helpers.py": {
+  "scripts\\utils\\gui_helpers.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -2586,13 +2844,10 @@
           "scripts\\utils\\gui_helpers.py:321 in public function `display_error`:",
           "scripts\\utils\\gui_helpers.py:328 in public function `format_coverage_data`:"
         ]
-      },
-      "coverage": {
-        "percent": 38.3
       }
     }
   },
-  "utils\\link_summaries_to_raw_logs.py": {
+  "scripts\\utils\\link_summaries_to_raw_logs.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -2650,13 +2905,10 @@
           "scripts\\utils\\link_summaries_to_raw_logs.py:19 in public function `flatten_raw_entries`:",
           "scripts\\utils\\link_summaries_to_raw_logs.py:19 in public function `flatten_raw_entries`:"
         ]
-      },
-      "coverage": {
-        "percent": 0.0
       }
     }
   },
-  "utils\\zip_util.py": {
+  "scripts\\utils\\zip_util.py": {
     "quality": {
       "flake8": {
         "issues": [
@@ -2680,20 +2932,10 @@
           "scripts\\utils\\zip_util.py:16 in public function `main`:",
           "scripts\\utils\\zip_util.py:16 in public function `main`:"
         ]
-      },
-      "coverage": {
-        "percent": 92.9
       }
     }
   },
-  "insights\\descriptive_insights.py": {
-    "quality": {
-      "black": {
-        "needs_formatting": true
-      }
-    }
-  },
-  "Ideas_Logger\\        D100": {
+  "        D100": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -2706,7 +2948,7 @@
       }
     }
   },
-  "Ideas_Logger\\        D401": {
+  "        D401": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -2860,7 +3102,7 @@
       }
     }
   },
-  "Ideas_Logger\\        D205": {
+  "        D205": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -2903,7 +3145,7 @@
       }
     }
   },
-  "Ideas_Logger\\        D400": {
+  "        D400": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -2971,7 +3213,7 @@
       }
     }
   },
-  "__init__.py": {
+  "scripts\\__init__.py": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -2980,7 +3222,7 @@
       }
     }
   },
-  "Ideas_Logger\\        D104": {
+  "        D104": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -2997,7 +3239,7 @@
       }
     }
   },
-  "Ideas_Logger\\        D200": {
+  "        D200": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -3026,7 +3268,7 @@
       }
     }
   },
-  "Ideas_Logger\\        D202": {
+  "        D202": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -3042,7 +3284,7 @@
       }
     }
   },
-  "ci_analyzer\\__init__.py": {
+  "scripts\\ci_analyzer\\__init__.py": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -3051,7 +3293,7 @@
       }
     }
   },
-  "ci_analyzer\\insights\\__init__.py": {
+  "scripts\\ci_analyzer\\insights\\__init__.py": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -3060,7 +3302,7 @@
       }
     }
   },
-  "ci_analyzer\\utils\\__ini__.py": {
+  "scripts\\ci_analyzer\\utils\\__ini__.py": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -3069,7 +3311,7 @@
       }
     }
   },
-  "Ideas_Logger\\        D106": {
+  "        D106": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -3078,7 +3320,7 @@
       }
     }
   },
-  "Ideas_Logger\\        D101": {
+  "        D101": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -3089,19 +3331,16 @@
       }
     }
   },
-  "core\\__init__.py": {
+  "scripts\\core\\__init__.py": {
     "quality": {
       "pydocstyle": {
         "issues": [
           "scripts\\core\\__init__.py:1 at module level:"
         ]
-      },
-      "coverage": {
-        "percent": 100.0
       }
     }
   },
-  "Ideas_Logger\\        D107": {
+  "        D107": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -3111,7 +3350,7 @@
       }
     }
   },
-  "Ideas_Logger\\        D102": {
+  "        D102": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -3121,19 +3360,16 @@
       }
     }
   },
-  "gui\\__init__.py": {
+  "scripts\\gui\\__init__.py": {
     "quality": {
       "pydocstyle": {
         "issues": [
           "scripts\\gui\\__init__.py:1 at module level:"
         ]
-      },
-      "coverage": {
-        "percent": 100.0
       }
     }
   },
-  "gui\\base\\__init__.py": {
+  "scripts\\gui\\base\\__init__.py": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -3142,7 +3378,7 @@
       }
     }
   },
-  "gui\\panels\\__init__.py": {
+  "scripts\\gui\\panels\\__init__.py": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -3151,7 +3387,7 @@
       }
     }
   },
-  "gui\\tabs\\__init__.py": {
+  "scripts\\gui\\tabs\\__init__.py": {
     "quality": {
       "pydocstyle": {
         "issues": [
@@ -3160,92 +3396,12 @@
       }
     }
   },
-  "utils\\__init__.py": {
+  "scripts\\utils\\__init__.py": {
     "quality": {
       "pydocstyle": {
         "issues": [
           "scripts\\utils\\__init__.py:1 at module level:"
         ]
-      },
-      "coverage": {
-        "percent": 100.0
-      }
-    }
-  },
-  "Ideas_Logger\\__init__.py": {
-    "quality": {
-      "coverage": {
-        "percent": 100.0
-      }
-    }
-  },
-  "Ideas_Logger\\dev_commit.py": {
-    "quality": {
-      "coverage": {
-        "percent": 0.0
-      }
-    }
-  },
-  "Ideas_Logger\\main.py": {
-    "quality": {
-      "coverage": {
-        "percent": 0.0
-      }
-    }
-  },
-  "Ideas_Logger\\paths.py": {
-    "quality": {
-      "coverage": {
-        "percent": 95.2
-      }
-    }
-  },
-  "base\\base_panel.py": {
-    "quality": {
-      "coverage": {
-        "percent": 81.8
-      }
-    }
-  },
-  "base\\base_tab.py": {
-    "quality": {
-      "coverage": {
-        "percent": 81.8
-      }
-    }
-  },
-  "panels\\action_panel.py": {
-    "quality": {
-      "coverage": {
-        "percent": 91.7
-      }
-    }
-  },
-  "panels\\coverage_panel.py": {
-    "quality": {
-      "coverage": {
-        "percent": 93.8
-      }
-    }
-  },
-  "panels\\entry_panel.py": {
-    "quality": {
-      "coverage": {
-        "percent": 84.4
-      }
-    }
-  },
-  "panels\\log_panel.py": {
-    "quality": {
-      "coverage": {
-        "percent": 95.5
-      }
-    }
-  },
-  "tabs\\main_tab.py": {
-    "quality": {
-      "coverage": {
-        "percent": 100.0
       }
     }
   }

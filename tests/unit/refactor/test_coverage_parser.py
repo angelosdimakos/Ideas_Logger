@@ -1,11 +1,10 @@
 # tests/unit/refactor/test_coverage_parser.py
 
-import os
 import pytest
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import Element, SubElement, tostring
 
-from scripts.refactor.coverage_parser import parse_coverage_xml_to_method_hits
+from scripts.refactor.parsers.coverage_parser import parse_coverage_xml_to_method_hits
 
 
 def _write_xml(tmp_path, root):

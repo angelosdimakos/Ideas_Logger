@@ -34,9 +34,9 @@ sys.path.insert(0, toplevel)
 
 from scripts.refactor.refactor_guard import RefactorGuard, print_human_readable
 from scripts.refactor.method_line_ranges import extract_method_line_ranges
-from scripts.refactor.coverage_parser import parse_coverage_xml_to_method_hits
+from scripts.refactor.parsers.coverage_parser import parse_coverage_xml_to_method_hits
 import scripts.utils.git_utils as git_utils  # <-- dynamic import
-from scripts.refactor.quality_checker import merge_reports, merge_into_refactor_guard
+from scripts.refactor.enrich_refactor_pkg.quality_checker import merge_reports, merge_into_refactor_guard
 
 # enforce UTF-8 stdout for CI environments
 try:

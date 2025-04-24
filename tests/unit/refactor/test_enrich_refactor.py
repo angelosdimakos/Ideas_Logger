@@ -8,7 +8,7 @@ import json
 
 def test_enrich_refactor_cli():
     """
-    Tests the enrich_refactor CLI script by simulating an audit file and dummy lint reports,
+    Tests the enrich_refactor_pkg CLI script by simulating an audit file and dummy lint reports,
     running the CLI, and verifying that the audit file is enriched with quality data for the target file.
     """
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -30,8 +30,7 @@ def test_enrich_refactor_cli():
         result = subprocess.run(
             [
                 "python",
-                "scripts/refactor/enrich_refactor.py",  # <-- fixed path
-                "--audit",
+                "scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py",                "--audit",
                 str(audit_path),
                 "--reports",
                 str(report_dir),
