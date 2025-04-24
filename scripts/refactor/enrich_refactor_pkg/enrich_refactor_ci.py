@@ -17,9 +17,9 @@ import subprocess
 from pathlib import Path
 import json
 
-# allow importing from project root
-toplevel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-sys.path.insert(0, toplevel)
+script_path = Path(__file__).resolve()
+project_root = script_path.parents[3]  # should point to your repo root
+sys.path.insert(0, str(project_root))
 
 from scripts.refactor.enrich_refactor_pkg.helpers import safe_print
 import scripts.refactor.enrich_refactor_pkg.quality_checker as quality_checker
