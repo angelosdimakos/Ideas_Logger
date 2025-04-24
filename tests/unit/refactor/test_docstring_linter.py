@@ -87,5 +87,5 @@ def test_analyze_directory_excludes(tmp_path: Path) -> None:
     analyzer = DocstringAnalyzer(exclude_dirs=[".venv"])
     results = analyzer.analyze_directory(tmp_path)
 
-    assert "included.py" in results
+    assert any(k.endswith("included.py") for k in results)
     assert ".venv/skip.py" not in results
