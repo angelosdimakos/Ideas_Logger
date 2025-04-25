@@ -1,10 +1,26 @@
+"""
+main.py
+
+This module provides the entrypoint for the Zephyrus Logger application.
+It initializes the logging system, loads the application configuration, and
+sets up the GUI or CLI depending on the mode specified in the configuration.
+
+Key features include:
+- Logging setup
+- Config loading
+- GUI or CLI setup
+- Controller and GUI instance initialization
+
+This is the main entrypoint for the Zephyrus Logger application.
+"""
+
 import os
 import logging
 from scripts.config.config_loader import load_config, setup_logging
 from scripts.core.core import ZephyrusLoggerCore
 from scripts.gui.gui import ZephyrusLoggerGUI
 from scripts.gui.gui_controller import GUIController
-from scripts.gui.gui_logging import GUILogHandler
+import tkinter as tk
 
 
 def bootstrap(start_gui: bool = True) -> tuple[GUIController, ZephyrusLoggerGUI | None]:
@@ -47,6 +63,7 @@ def bootstrap(start_gui: bool = True) -> tuple[GUIController, ZephyrusLoggerGUI 
         if start_gui and not HEADLESS_MODE:
             try:
                 import tkinter as tk
+
                 _root = tk.Tk()
                 _root.withdraw()
                 app = ZephyrusLoggerGUI(controller)

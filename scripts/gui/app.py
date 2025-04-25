@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 
 from scripts.gui.style_manager import StyleManager
-from scripts.gui.widget_factory import WidgetFactory
 from scripts.gui.gui_controller import GUIController  # Import your controller
 from scripts.gui.tabs.main_tab import MainTab  # Concrete implementation of MainTab
 

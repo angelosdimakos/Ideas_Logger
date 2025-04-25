@@ -1,5 +1,21 @@
-from typing import List, Dict, Tuple, Any
-import os, pickle, faiss
+"""
+base_indexer.py
+
+This module defines the BaseIndexer class, which provides core functionality for building, saving, loading, and searching FAISS vector indexes over log and summary data.
+
+Core features include:
+- Initializing index and metadata paths based on project configuration and index type (summary or raw).
+- Building a FAISS index from text data using SentenceTransformer embeddings.
+- Saving and loading both the FAISS index and associated metadata.
+- Performing semantic search over indexed data, returning the most relevant results with similarity scores.
+- Supporting flexible configuration and robust error handling for index operations.
+
+Intended for use as a base class for specialized indexers in the Zephyrus project, enabling fast and flexible semantic search over structured logs and summaries.
+"""
+
+from typing import List, Dict, Any
+import pickle
+import faiss
 from sentence_transformers import SentenceTransformer
 from scripts.config.config_loader import get_config_value
 from scripts.config.config_manager import ConfigManager

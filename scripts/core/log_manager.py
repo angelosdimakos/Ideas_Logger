@@ -1,3 +1,18 @@
+"""
+log_manager.py
+
+This module provides the LogManager class for managing log entries and correction summaries.
+It includes functionality for reading and writing log data in both JSON and plain text formats,
+as well as handling timestamps and content keys for structured logging. The LogManager is essential
+for the Zephyrus Logger application to maintain a reliable logging system.
+
+Dependencies:
+- pathlib
+- datetime
+- logging
+- scripts.utils.file_utils
+"""
+
 from pathlib import Path
 from datetime import datetime
 import logging

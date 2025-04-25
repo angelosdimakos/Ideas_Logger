@@ -1,11 +1,41 @@
+"""
+core.py
+
+This module provides the core functionality for the Zephyrus Logger application. It includes
+the [ZephyrusLoggerCore](cci:2://file:///C:/Users/Angelos%20Dimakos/PycharmProjects/Ideas_Logger/scripts/core/core.py:15:0-382:65) class, which manages logging, summarization, and search capabilities
+for categorized entries stored in JSON and Markdown files. The module handles the initialization
+of the environment, batch summarization using AI, and maintains tracking of summaries. It also
+offers search functionality across both summaries and raw logs, integrating with organization-specific
+modules for configuration, file management, and AI summarization.
+
+Key functionalities include:
+- Initialization of logging and summarization environments.
+- Batch processing of logs for summarization.
+- Search capabilities for retrieving categorized entries.
+- Integration with configuration and file management utilities.
+
+Dependencies:
+- pathlib
+- datetime
+- logging
+- re
+- scripts.ai.ai_summarizer
+- scripts.config.config_loader
+- scripts.utils.file_utils
+- scripts.core.summary_tracker
+- scripts.core.log_manager
+- scripts.paths.ZephyrusPaths
+"""
+
 from pathlib import Path
 from datetime import datetime
 import logging
 import re
+from typing import Union, List, Dict, Any
 
 from scripts.ai.ai_summarizer import AISummarizer
 from scripts.config.config_loader import get_config_value, get_effective_config
-from scripts.utils.file_utils import sanitize_filename, write_json, read_json, make_backup
+from scripts.utils.file_utils import sanitize_filename, write_json, read_json
 from scripts.core.summary_tracker import SummaryTracker
 from scripts.core.log_manager import LogManager
 from scripts.paths import ZephyrusPaths
@@ -17,6 +47,7 @@ class ZephyrusLoggerCore:
     """
     ZephyrusLoggerCore manages logging, summarization, and search for categorized entries using JSON and Markdown files. It initializes the environment, handles batch summarization with AI, maintains summary tracking, and provides search functionality across summaries and raw logs. Integrates with organization-specific modules for configuration, file management, and AI summarization.
     """
+
     TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
     DATE_FORMAT = "%Y-%m-%d"
     BATCH_KEY = "batch"
@@ -26,7 +57,7 @@ class ZephyrusLoggerCore:
     CONTENT_KEY = "content"
     TIMESTAMP_KEY = "timestamp"
 
-    def __init__(self, script_dir):
+    def __init__(self, script_dir: Union[str, Path]) -> None:
         """
         Initializes the ZephyrusLoggerCore instance by loading configuration, setting up paths, environment, AI summarizer, summary tracker, and log manager. Validates or rebuilds the summary tracker as needed, and configures batch size and logging behavior based on the current configuration.
 
@@ -72,7 +103,7 @@ class ZephyrusLoggerCore:
             self.TIMESTAMP_KEY,
         )
 
-    def _safe_read_json(self, filepath: Path) -> dict:
+    def _safe_read_json(self, filepath: Path) -> Dict[str, Any]:
         """
         Safely reads a JSON file and returns its contents as a dictionary.
 
@@ -80,7 +111,7 @@ class ZephyrusLoggerCore:
             filepath (Path): The path to the JSON file to be read.
 
         Returns:
-            dict: The contents of the JSON file. Returns an empty dictionary if an error occurs during reading.
+            Dict[str, Any]: The contents of the JSON file. Returns an empty dictionary if an error occurs during reading.
         """
         try:
             return read_json(filepath)
@@ -88,9 +119,7 @@ class ZephyrusLoggerCore:
             logger.error("Failed to read JSON from %s: %s", filepath, e, exc_info=True)
             return {}
 
-    def _initialize_environment(self):
-
-        # Ensure base directories exist
+    def _initialize_environment(self) -> None:
         """
         Ensures the environment is initialized by creating base directories, log files, and other necessary files.
 
@@ -139,12 +168,12 @@ class ZephyrusLoggerCore:
             self.paths.config_file.parent.mkdir(parents=True, exist_ok=True)
             write_json(self.paths.config_file, {"batch_size": 5})
 
-    def _get_summary_for_batch(self, batch_entries, subcategory: str) -> str:
+    def _get_summary_for_batch(self, batch_entries: List[Dict[str, Any]], subcategory: str) -> str:
         """
         Gets a summary for a batch of log entries.
 
         Args:
-            batch_entries (list[dict]): A list of log entries to summarize.
+            batch_entries (List[Dict[str, Any]]): A list of log entries to summarize.
             subcategory (str): The subcategory of the log entries.
 
         Returns:
@@ -165,7 +194,9 @@ class ZephyrusLoggerCore:
                 return None
         return summary.strip() if summary and summary.strip() else None
 
-    def log_to_json(self, timestamp, date_str, main_category, subcategory, entry) -> bool:
+    def log_to_json(
+        self, timestamp: str, date_str: str, main_category: str, subcategory: str, entry: str
+    ) -> bool:
         """
         Logs an entry to the JSON log file and updates the summary tracker.
 
@@ -261,7 +292,7 @@ class ZephyrusLoggerCore:
             logger.error("[ERROR] Failed to write global summary or tracker: %s", e, exc_info=True)
             return False
 
-    def generate_summary(self, date_str, main_category, subcategory):
+    def generate_summary(self, date_str: str, main_category: str, subcategory: str) -> bool:
         """
         Generates a summary for the given date, main category, and subcategory.
 
@@ -275,7 +306,9 @@ class ZephyrusLoggerCore:
         """
         return self.generate_global_summary(main_category, subcategory)
 
-    def log_to_markdown(self, date_str, main_category, subcategory, entry) -> bool:
+    def log_to_markdown(
+        self, date_str: str, main_category: str, subcategory: str, entry: str
+    ) -> bool:
         """
         Logs an entry to a Markdown file, organizing by date and subcategory.
 
@@ -313,7 +346,7 @@ class ZephyrusLoggerCore:
             logger.error("Error in log_to_markdown: %s", e, exc_info=True)
             return False
 
-    def force_summary_all(self):
+    def force_summary_all(self) -> None:
         """
         Forces summarization for all log entries across all dates, main categories, and subcategories.
         Iterates until no more unsummarized batches are available.
@@ -326,7 +359,7 @@ class ZephyrusLoggerCore:
                     while self.generate_global_summary(main_cat, sub_cat):
                         pass
 
-    def save_entry(self, main_category, subcategory, entry) -> bool:
+    def save_entry(self, main_category: str, subcategory: str, entry: str) -> bool:
         """
         Wrapper for log_to_json to support the GUI controller interface.
         """
@@ -339,7 +372,7 @@ class ZephyrusLoggerCore:
         md_success = self.log_to_markdown(date_str, main_category, subcategory, entry)
         return json_success and md_success
 
-    def search_summaries(self, query: str, top_k=5):
+    def search_summaries(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
         """
         Searches through all summaries (across all dates, main categories, and subcategories)
         and returns the top-k most relevant results based on the query.
@@ -353,7 +386,7 @@ class ZephyrusLoggerCore:
         """
         return self.summary_tracker.summary_indexer.search(query, top_k)
 
-    def search_raw_logs(self, query: str, top_k=5):
+    def search_raw_logs(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
         """
         Searches through the raw logs using the specified query and returns the top-k most relevant results.
 
@@ -366,7 +399,7 @@ class ZephyrusLoggerCore:
         """
         return self.summary_tracker.raw_indexer.search(query, top_k)
 
-    def log_new_entry(self, main_category, subcategory, entry):
+    def log_new_entry(self, main_category: str, subcategory: str, entry: str) -> bool:
         """
         Logs a new entry, saving it to both the JSON log and the Markdown file.
 

@@ -19,6 +19,13 @@ except Exception:
 
 @pytest.mark.skipif(not GUI_AVAILABLE, reason="🛑 Skipping GUI test — Tkinter not available")
 def test_bootstrap_runs_gui(monkeypatch):
+    """
+    Smoke tests for the Zephyrus Logger bootstrap process, including GUI and headless modes.
+
+    These tests verify that the bootstrap function initializes the controller correctly,
+    handles GUI availability, respects headless mode, manages summary tracker failures,
+    and returns expected types and configurations.
+    """
     # 🧪 Ensure GUI won't actually start in headless/CI
     os.environ["ZEPHYRUS_HEADLESS"] = "1"
 
@@ -40,24 +47,41 @@ def test_bootstrap_runs_gui(monkeypatch):
 
 
 def test_main_smoke_startup():
+    """
+    Smoke tests for the Zephyrus Logger application's bootstrap process, verifying correct initialization of the
+    controller, handling of GUI and headless modes, summary tracker error handling, and return types.
+    Ensures compatibility with environments lacking Tkinter support.
+    """
     controller, gui = bootstrap(start_gui=False)
     assert isinstance(controller, GUIController)
     assert gui is None
 
 
 def test_bootstrap_returns_controller():
+    """
+    Smoke tests for the Zephyrus Logger application's bootstrap process, verifying correct initialization of the
+    controller, handling of GUI and headless modes, summary tracker error handling, and return types.
+    Ensures compatibility with environments lacking Tkinter support and validates that the GUI is not
+    launched in headless mode.
+    """
     controller, gui = bootstrap(start_gui=False)
     assert hasattr(controller, "get_coverage_data")
     assert gui is None
 
 
 def test_bootstrap_invalid_summary_tracker(monkeypatch, temp_dir):
+    """
+    Smoke tests for the Zephyrus Logger application's bootstrap process, verifying correct
+    initialization of the controller, handling of GUI and headless modes, summary tracker error handling,
+    and return types. Ensures compatibility with environments lacking Tkinter support and validates
+    that the GUI is not launched in headless mode.
+    """
+
     def explode_loader(self):
         raise ValueError("🔥 Tracker load failed hard")
 
     monkeypatch.setattr(
-        "scripts.core.summary_tracker.SummaryTracker._safe_load_tracker",
-        explode_loader
+        "scripts.core.summary_tracker.SummaryTracker._safe_load_tracker", explode_loader
     )
 
     with pytest.raises(ValueError, match="🔥 Tracker load failed hard"):
@@ -65,11 +89,23 @@ def test_bootstrap_invalid_summary_tracker(monkeypatch, temp_dir):
 
 
 def test_bootstrap_test_and_prod_modes():
+    """
+    Smoke tests for the Zephyrus Logger application's bootstrap process, verifying initialization,
+    GUI/headless mode handling, summary tracker error handling, and return types.
+    Ensures compatibility with and without Tkinter, and validates correct controller
+    and GUI behavior in various environments.
+    """
     controller, gui = bootstrap(start_gui=False)
     assert controller.core.config.get("test_mode") is True
 
 
 def test_bootstrap_return_types():
+    """
+    Smoke tests for the Zephyrus Logger application's bootstrap process,
+    verifying correct initialization of the controller, handling of GUI and headless modes,
+    summary tracker error handling, and return types. Ensures compatibility with environments
+    lacking Tkinter support and validates that the GUI is not launched in headless mode.
+    """
     controller, gui = bootstrap(start_gui=False)
     assert controller.__class__.__name__.endswith("Controller")
     assert gui is None

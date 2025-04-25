@@ -1,4 +1,19 @@
-import json
+"""
+config_loader.py
+
+This module provides centralized configuration and logging utilities for the application.
+
+Core features include:
+- Setting up consistent, centralized logging with configurable log levels.
+- Loading, validating, and caching application settings from JSON configuration files.
+- Providing utility functions to retrieve configuration values with defaults and warnings.
+- Supporting test mode by overriding key configuration paths with test-safe equivalents.
+- Resolving absolute paths relative to the project root for robust file management.
+- Example usage for loading configuration and retrieving key settings.
+
+Intended for use throughout the application to ensure robust, maintainable, and flexible configuration and logging management.
+"""
+
 import os
 import logging
 from pathlib import Path
@@ -6,9 +21,8 @@ from pathlib import Path
 
 def setup_logging():
     """
-    Configures logging for the entire application.
-    This function sets up a basic logging configuration that can be adjusted later based on config settings.
-    It will default to an INFO level, but this can be overridden later.
+    Configures centralized logging with a default INFO level and a standard log format.
+    Initializes a stream handler and logs a debug message to confirm setup.
     """
     # Default log level is INFO. This can be overridden later.
     level_str = "INFO"

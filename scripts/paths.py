@@ -5,6 +5,13 @@ from scripts.config.config_loader import get_config_value, get_absolute_path, ge
 
 @dataclass
 class ZephyrusPaths:
+    """
+    Dataclass for managing and resolving all Zephyrus project file and directory paths.
+
+    Provides methods to construct absolute paths for logs, exports, configuration, and vector store files,
+    with support for test mode path overrides based on the loaded configuration.
+    """
+
     log_dir: Path
     export_dir: Path
     json_log_file: Path
@@ -21,10 +28,32 @@ class ZephyrusPaths:
 
     @staticmethod
     def _resolve_path(config, key, default) -> Path:
+        """
+        Resolve an absolute Path for a given config key, falling back to the provided default if the key is missing.
+
+        Args:
+            config (dict): The configuration dictionary.
+            key (str): The configuration key to look up.
+            default (Any): The default value to use if the key is not present.
+
+        Returns:
+            Path: The resolved absolute path.
+        """
         return Path(get_absolute_path(get_config_value(config, key, str(default))))
 
     @staticmethod
     def from_config(script_dir: Path) -> "ZephyrusPaths":
+        """
+        Constructs a ZephyrusPaths instance by resolving all required file and directory paths from the loaded configuration.
+
+        Automatically applies test mode path overrides if enabled.
+
+        Args:
+            script_dir (Path): The directory containing the current script.
+
+        Returns:
+            ZephyrusPaths: An instance with all paths resolved according to the configuration.
+        """
         config = get_effective_config()
         test_mode = config.get("test_mode", False)
 

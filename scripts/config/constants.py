@@ -1,3 +1,19 @@
+"""
+constants.py
+
+This module defines global constants used throughout the Zephyrus Logger application.
+
+Core features include:
+- Timestamp and date formatting strings for consistent time representation.
+- Standardized JSON keys for batch processing, summaries, and content tracking.
+- Keys for summary tracking and logging statistics.
+- Default configuration values for batch size, autosave interval, and log level.
+- Default file suffixes and extensions for summary and markdown files.
+- Centralized UI default settings, such as theme.
+
+Intended to provide a single source of truth for application-wide constants, improving maintainability and consistency.
+"""
+
 # === Zephyrus Logger: Global Constants ===
 
 # Timestamp formatting

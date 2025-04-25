@@ -1,14 +1,35 @@
+"""
+config_manager.py
+
+This module provides centralized management of application configuration using a Pydantic-based model.
+
+Core features include:
+- Defining a comprehensive AppConfig model for all configurable application parameters, including UI, logging, LLM, embedding, file paths, test mode, and plugins.
+- Loading, validating, and caching configuration from a JSON file, with robust error handling and fallback to default settings.
+- Utility methods for retrieving configuration values, resetting the config cache, and validating critical file and directory paths.
+- Integration with safe file reading utilities for resilience against missing or malformed config files.
+
+Intended for use throughout the application to ensure consistent, validated, and maintainable configuration management.
+"""
+
 import logging
 from pathlib import Path
 from typing import Any, Optional
 from pydantic import BaseModel, ValidationError
-import json
 from scripts.utils.file_utils import safe_read_json  # Importing the safe_read_json function
 
 logger = logging.getLogger(__name__)
 
 
 class AppConfig(BaseModel):
+    """
+    Configuration model for application settings.
+
+    Defines all configurable parameters for the application, including UI options, logging, LLM
+    and embedding model settings, file paths, test mode directories, and plugin management.
+    Ignores any extra fields not explicitly defined.
+    """
+
     mode: str
     use_gui: bool
     interface_theme: str
@@ -56,6 +77,14 @@ class AppConfig(BaseModel):
 
 
 class ConfigManager:
+    """
+    Manages application configuration loading, caching, and validation.
+
+    Provides methods to load configuration from a JSON file using the AppConfig model,
+    retrieve configuration values, reset the cached config, and validate critical config paths.
+    Handles missing or invalid config files by returning default settings and logs relevant events.
+    """
+
     _config: Optional[AppConfig] = None
     _config_timestamp: Optional[float] = None
 
@@ -63,6 +92,20 @@ class ConfigManager:
     def load_config(
         cls, config_path: str = "config/config.json", force_reload: bool = False
     ) -> AppConfig:
+        """
+        Loads the application configuration from a JSON file, with optional cache refresh.
+
+        If the config file is missing or invalid, returns a default AppConfig instance.
+        Caches the loaded config and reloads if the file changes or force_reload is True.
+        Logs relevant events and raises on validation errors.
+
+        Args:
+            config_path (str): Path to the configuration JSON file.
+            force_reload (bool): If True, forces reloading the config from disk.
+
+        Returns:
+            AppConfig: The loaded or default application configuration.
+        """
         path = Path(config_path)
 
         if (
@@ -143,17 +186,38 @@ class ConfigManager:
 
     @classmethod
     def get_value(cls, key: str, default: Any = None, force_reload: bool = False) -> Any:
+        """
+        Retrieve a configuration value by key from the loaded AppConfig.
+
+        Args:
+            key (str): The configuration attribute to retrieve.
+            default (Any, optional): Value to return if the key is not found. Defaults to None.
+            force_reload (bool, optional): If True, reloads the config from disk. Defaults to False.
+
+        Returns:
+            Any: The value of the requested configuration key, or the default if not found.
+        """
         config = cls.load_config(force_reload=force_reload)
         return getattr(config, key, default)
 
     @classmethod
     def reset(cls):
+        """
+        Reset the cached configuration and timestamp, forcing the next load to read from disk.
+
+        This method clears the in-memory config cache and logs the reset event.
+        """
         cls._config = None
         cls._config_timestamp = None
         logger.debug("Config cache reset.")
 
     @classmethod
     def validate_config_paths(cls):
+        """
+        Check if the parent directories of critical config paths exist.
+
+        Logs a warning for each missing directory. Returns True if all required directories exist, otherwise False.
+        """
         config = cls.load_config()
         critical_paths = [
             config.raw_log_path,

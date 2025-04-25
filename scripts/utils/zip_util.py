@@ -1,3 +1,10 @@
+"""
+zip_util.py
+
+This module provides the main entry point for the zip_util utility,
+which zips all .py files in a project, excluding specified directories.
+"""
+
 import argparse
 from scripts.utils.file_utils import zip_python_files
 import logging
@@ -6,6 +13,10 @@ logger = logging.getLogger(__name__)
 
 
 def main():
+    """
+    Parses command-line arguments to zip all .py files in a project, excluding specified directories.
+    Calls the internal utility to create the zip archive and logs the output path.
+    """
     parser = argparse.ArgumentParser(
         description="Zip all .py files in a project (excluding .venv, .git, etc.)"
     )

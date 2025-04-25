@@ -1,30 +1,115 @@
+"""
+conftest.py
+
+This module contains configuration and fixtures for pytest testing.
+
+It includes:
+- Helper functions for managing Tkinter in headless environments.
+- Mocking utilities for various libraries and components used in tests.
+- Fixtures for creating temporary directories, files, and configurations.
+- Functions to ensure integrity and prevent unwanted writes during testing.
+
+Usage:
+- This module is automatically discovered by pytest and the defined fixtures will be available in tests.
+- Customization of fixtures can be done through monkeypatching as needed.
+
+Note: Ensure that all necessary dependencies are installed to use the mocking and fixture functionalities.
+"""
+import contextlib
 import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 import numpy as np
 import pytest
-import tkinter
+import tkinter as _tk
+from typing import Any
+import sys
+import os
+from contextlib import contextmanager
+from typing import Iterator
+import locale
 
-@pytest.fixture(autouse=True, scope="session")
-def patch_tkinter_for_tests():
+# ── 1. force_headless_tk  ─────────────────────────────────────
+def _force_headless_tk() -> bool:
+    """
+    Ensure Tk works in headless CI.
+    • If $DISPLAY exists → no-op.
+    • If not, try xvfb :0; if that fails, monkey-patch tk.Tk with MagicMock.
+    Returns True if *real* GUI is available, False if mocked.
+    """
+    if sys.platform.startswith("linux") and "DISPLAY" not in os.environ:
+        os.environ["DISPLAY"] = ":0"          # let xvfb-run claim :0
     try:
-        root = tkinter.Tk()
-        root.destroy()
-    except tkinter.TclError:
-        tkinter.Tk = lambda *args, **kwargs: MagicMock()
+        _tk.Tk().destroy()
+        return True                           # real GUI
+    except Exception:
+        _tk.Tk = MagicMock()
+        return False                          # GUI mocked
+
+GUI_AVAILABLE = _force_headless_tk()
+
+# ── 2. Context helper for ad-hoc tests (optional use) ─────────
+@contextmanager
+def tk_safe():
+    """
+    Yields (root, gui_ok):
+        root   -> a Tk() instance (real or mocked)
+        gui_ok -> bool flag (True if real GUI)
+    """
+    root = _tk.Tk()
+    try:
+        yield root, GUI_AVAILABLE
+    finally:
+        try:
+            root.destroy()
+        except Exception:
+            pass
+
+# ── 3. Auto-fixture: flush Tk event-loop between tests ────────
+@pytest.fixture(autouse=True)
+def flush_tk_events():
+    yield
+    try:
+        if _tk._default_root:
+            _tk._default_root.update_idletasks()
+    except Exception:
+        pass
+
+# ── 4. Auto-fixture: stub blocking dialogs / file pickers ─────
+@pytest.fixture(autouse=True)
+def patch_blocking_dialogs(monkeypatch):
+    import tkinter.messagebox as mb
+    import tkinter.filedialog as fd
+    monkeypatch.setattr(mb, "showwarning", lambda *a, **k: None)
+    monkeypatch.setattr(fd, "askopenfilename",
+                        lambda *a, **k: "/tmp/dummy.txt")
+    yield
+# ──────────────────────────────────────────────────────────────
 
 # ===========================
 # 🔪 OLLAMA AI MOCKING
 # ===========================
 @pytest.fixture(autouse=True)
-def mock_ollama():
+def mock_ollama() -> None:
+    """
+    Mocks the ollama library functions for testing.
+    """
     with patch("ollama.generate") as mock_generate, patch("ollama.chat") as mock_chat:
         mock_generate.return_value = {"response": "Mock summary"}
         mock_chat.return_value = {"message": {"content": "Mock fallback summary"}}
         yield mock_generate, mock_chat
 
 @pytest.fixture
-def mock_raw_log_file(temp_dir):
+def mock_raw_log_file(temp_dir: Path) -> Path:
+    """
+    Mocks a raw log file for testing.
+
+    Args:
+        temp_dir (Path): The temporary directory for the mock file.
+
+    Returns:
+        Path: The path to the mock raw log file.
+    """
     path = temp_dir / "logs" / "zephyrus_log.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     content = {
@@ -40,9 +125,71 @@ def mock_raw_log_file(temp_dir):
     path.write_text(json.dumps(content), encoding="utf-8")
     return path
 
+@pytest.fixture
+def sample_lint_file(tmp_path: Path) -> str:
+    """
+    Provides a sample lint file for testing.
+
+    Args:
+        tmp_path (Path): The temporary path to create the sample file.
+
+    Returns:
+        str: The path to the sample lint file.
+    """
+    file = tmp_path / "flake8.txt"
+    file.write_text("scripts/core/core.py:10:1: F401 unused import\nscripts/main.py:5:5: E225 missing whitespace")
+    return str(file)
 
 @pytest.fixture
-def mock_correction_summaries_file(temp_dir):
+def sample_refactor_file(tmp_path: Path) -> str:
+    """
+    Provides a sample refactor file for testing.
+
+    Args:
+        tmp_path (Path): The temporary path to create the sample file.
+
+    Returns:
+        str: The path to the sample refactor file.
+    """
+    file = tmp_path / "refactor_audit.json"
+    data = {
+        "scripts/core/core.py": {
+            "complexity": {
+                "func_a": {"score": 5},
+                "func_b": {"score": 10}
+            }
+        },
+        "scripts/gui/gui.py": {
+            "complexity": {
+                "gui_main": {"score": 7}
+            }
+        }
+    }
+    file.write_text(json.dumps(data), encoding="utf-8-sig")
+    return str(file)
+
+@pytest.fixture
+def real_lint_artifact() -> str:
+    """
+    Provides a real lint artifact for testing.
+
+    Returns:
+        str: The real lint artifact.
+    """
+    return Path("tests/test_data/real_lint_output.txt").read_text()
+
+
+@pytest.fixture
+def mock_correction_summaries_file(temp_dir: Path) -> Path:
+    """
+    Mocks a correction summaries file for testing.
+
+    Args:
+        temp_dir (Path): The temporary directory for the mock file.
+
+    Returns:
+        Path: The path to the mock correction summaries file.
+    """
     content = {
         "global": {
             "Test": {
@@ -63,19 +210,46 @@ def mock_correction_summaries_file(temp_dir):
 # 📁 TEMP DIR + CONFIG FIXTURES
 # ===========================
 @pytest.fixture(scope="function")
-def temp_dir(tmp_path):
+def temp_dir(tmp_path: Path) -> Path:
+    """
+    Creates a temporary directory for testing.
+
+    Args:
+        tmp_path (Path): The temporary path to create the directory.
+
+    Returns:
+        Path: The path to the created temporary directory.
+    """
     paths = [tmp_path / "logs", tmp_path / "exports", tmp_path / "vector_store"]
     for path in paths:
         path.mkdir(parents=True, exist_ok=True)
     return tmp_path
 
 @pytest.fixture
-def temp_script_dir(temp_dir):
+def temp_script_dir(temp_dir: Path) -> str:
+    """
+    Creates a temporary script directory for testing.
+
+    Args:
+        temp_dir (Path): The temporary directory for the script.
+
+    Returns:
+        str: The path to the created temporary script directory.
+    """
     return str(temp_dir)  # Just returns the temp path as a string
 
 
-@pytest.fixture(scope="function")
-def temp_config_file(temp_dir):
+@pytest.fixture
+def temp_config_file(temp_dir: Path) -> Path:
+    """
+    Creates a temporary config file for testing.
+
+    Args:
+        temp_dir (Path): The temporary directory for the config file.
+
+    Returns:
+        Path: The path to the created temporary config file.
+    """
     config = build_test_config(temp_dir)
     config_path = temp_dir / "config.json"
     config_path.write_text(json.dumps(config), encoding="utf-8")
@@ -86,7 +260,14 @@ def temp_config_file(temp_dir):
 # 🦢 TEST CONFIG PATCHER
 # ===========================
 @pytest.fixture(scope="function", autouse=True)
-def patch_config_and_paths(monkeypatch, temp_dir):
+def patch_config_and_paths(monkeypatch: Any, temp_dir: Path) -> None:
+    """
+    Patches the configuration and paths for testing.
+
+    Args:
+        monkeypatch (Any): The monkeypatch object to use for patching.
+        temp_dir (Path): The temporary directory for the configuration.
+    """
     config = build_test_config(temp_dir)
     monkeypatch.setattr("scripts.config.config_loader.load_config", lambda config_path=None: config)
     monkeypatch.setattr("scripts.config.config_loader.get_absolute_path", lambda rel: str(Path(rel).resolve()))
@@ -96,7 +277,13 @@ def patch_config_and_paths(monkeypatch, temp_dir):
 # 🔒 MOCKED AI SUMMARIZER
 # ===========================
 @pytest.fixture(scope="function", autouse=True)
-def patch_aisummarizer(monkeypatch):
+def patch_aisummarizer(monkeypatch: Any) -> None:
+    """
+    Patches the AI summarizer for testing.
+
+    Args:
+        monkeypatch (Any): The monkeypatch object to use for patching.
+    """
     mock_ai = MagicMock()
     mock_ai.summarize_entries_bulk.return_value = "Mocked summary"
 
@@ -108,7 +295,16 @@ def patch_aisummarizer(monkeypatch):
 # 🧠 CORE LOGGER FIXTURE
 # ===========================
 @pytest.fixture
-def logger_core(temp_dir):
+def logger_core(temp_dir: Path) -> Any:
+    """
+    Creates a logger core for testing.
+
+    Args:
+        temp_dir (Path): The temporary directory for the logger core.
+
+    Returns:
+        Any: The logger core.
+    """
     from scripts.core.core import ZephyrusLoggerCore
     return ZephyrusLoggerCore(script_dir=temp_dir)  # ✅ correct usage
 
@@ -119,13 +315,22 @@ def logger_core(temp_dir):
 # 🔀 STATE CLEANUP FIXTURES
 # ===========================
 @pytest.fixture
-def clean_summary_tracker(logger_core):
+def clean_summary_tracker(logger_core: Any) -> None:
+    """
+    Cleans the summary tracker for testing.
+
+    Args:
+        logger_core (Any): The logger core to clean.
+    """
     logger_core.summary_tracker.tracker_file.write_text("{}", encoding="utf-8")
     yield
 
 
 @pytest.fixture(autouse=True)
-def reset_config_manager():
+def reset_config_manager() -> None:
+    """
+    Resets the configuration manager for testing.
+    """
     from scripts.config.config_manager import ConfigManager
     ConfigManager.reset()
     yield
@@ -136,7 +341,13 @@ def reset_config_manager():
 # 🧬 MOCK TRANSFORMERS
 # ===========================
 @pytest.fixture(autouse=True)
-def mock_sentence_transformer(monkeypatch):
+def mock_sentence_transformer(monkeypatch: Any) -> None:
+    """
+    Mocks the sentence transformer for testing.
+
+    Args:
+        monkeypatch (Any): The monkeypatch object to use for patching.
+    """
     mock_model = MagicMock()
     mock_model.encode.side_effect = lambda texts, **kwargs: np.array([[0.1] * 384 for _ in texts])
     monkeypatch.setattr("scripts.indexers.base_indexer.SentenceTransformer", lambda *a, **kw: mock_model)
@@ -149,7 +360,16 @@ def mock_sentence_transformer(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
-def stub_indexers(monkeypatch, mock_raw_log_file, mock_correction_summaries_file, temp_dir):
+def stub_indexers(monkeypatch: Any, mock_raw_log_file: Any, mock_correction_summaries_file: Any, temp_dir: Path) -> None:
+    """
+    Stubs indexers for testing.
+
+    Args:
+        monkeypatch (Any): The monkeypatch object to use for patching.
+        mock_raw_log_file (Any): The mocked raw log file.
+        mock_correction_summaries_file (Any): The mocked correction summaries file.
+        temp_dir (Path): The temporary directory for the indexers.
+    """
     class DummyEmbeddingModel:
         def encode(self, texts, convert_to_numpy=True):
             return np.array([[0.1] * 384 for _ in texts])
@@ -183,7 +403,16 @@ def stub_indexers(monkeypatch, mock_raw_log_file, mock_correction_summaries_file
 # ===========================
 # 🛡 CONFIG GENERATOR
 # ===========================
-def build_test_config(temp_dir):
+def build_test_config(temp_dir: Path) -> dict:
+    """
+    Builds a test configuration.
+
+    Args:
+        temp_dir (Path): The temporary directory for the configuration.
+
+    Returns:
+        dict: The test configuration.
+    """
     def safe_path(p):
         return str(temp_dir / p)
 
@@ -247,7 +476,10 @@ def build_test_config(temp_dir):
 # 🐧 CONFTEXT CANARY
 # ===========================
 @pytest.fixture(autouse=True, scope="session")
-def watch_conftest_integrity():
+def watch_conftest_integrity() -> None:
+    """
+    Watches the integrity of the conftest.py file.
+    """
     original_path = Path(__file__)
     if not original_path.exists():
         raise RuntimeError("🔥 CRITICAL: conftest.py is missing before test session starts!")
@@ -262,7 +494,13 @@ def watch_conftest_integrity():
 # 🫯 GUARDRAILS
 # ===========================
 @pytest.fixture(autouse=True)
-def prevent_production_path_writes(monkeypatch):
+def prevent_production_path_writes(monkeypatch: Any) -> None:
+    """
+    Prevents writes to production paths.
+
+    Args:
+        monkeypatch (Any): The monkeypatch object to use for patching.
+    """
     original_open = open
 
     def guarded_open(file, mode='r', *args, **kwargs):
@@ -281,7 +519,13 @@ SAFE_EXTS = {
 }
 
 @pytest.fixture(scope="session", autouse=True)
-def assert_all_output_in_temp(tmp_path_factory):
+def assert_all_output_in_temp(tmp_path_factory: Any) -> None:
+    """
+    Asserts all output is in the temporary directory.
+
+    Args:
+        tmp_path_factory (Any): The temporary path factory.
+    """
     tmp_root = tmp_path_factory.getbasetemp().resolve()
     root_dir = Path(".").resolve()
 
@@ -296,26 +540,83 @@ def assert_all_output_in_temp(tmp_path_factory):
 
     for path in new_files:
         relative = path.relative_to(root_dir)
+
         # ✅ Skip safe locations
         if (
-                any(part in SAFE_DIRS for part in relative.parts)
-                or path.suffix in SAFE_EXTS
-                or tmp_root in path.parents
-                or str(relative).startswith("tests/mock_data/")
+            any(part in SAFE_DIRS for part in relative.parts)
+            or path.suffix in SAFE_EXTS
+            or tmp_root in path.parents
+            or str(relative).startswith("tests/mock_data/")
+            or relative.name.startswith(".coverage.")  # ✅ Ignore xdist coverage fragments
         ):
             continue
 
         raise AssertionError(f"🚨 Test output leaked outside tmp dir: {relative}")
 
+
 @pytest.fixture
-def mock_failed_summarizer():
+def mock_failed_summarizer() -> Any:
+    """
+    Mocks a failed summarizer.
+
+    Returns:
+        Any: The mocked failed summarizer.
+    """
     class FailingSummarizer:
         def summarize_entries_bulk(self, entries, subcategory):
             raise Exception("Simulated failure")
 
     return FailingSummarizer()
 
+_UTF8_ENV = {
+    "PYTHONIOENCODING": "utf-8",
+    "LC_ALL": "C.UTF-8",
+    "LANG": "C.UTF-8",
+}
+
+@contextlib.contextmanager
+def _utf8_subprocess_env() -> Iterator[dict]:
+    """
+    Context-manager that injects UTF-8 friendly env-vars before a subprocess
+    starts and rolls them back afterwards.
+    """
+    original = {k: os.environ.get(k) for k in ("PYTHONIOENCODING", "LC_ALL", "LANG")}
+    try:
+        os.environ["PYTHONIOENCODING"] = "utf-8"
+        # On *nix these two control libc / locale:
+        os.environ["LC_ALL"] = "C.UTF-8"
+        os.environ["LANG"] = "C.UTF-8"
+        yield os.environ
+    finally:
+        for k, v in original.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
 
 
+# ----------  session-wide fixture applied to every test automatically  ---------
+
+import pytest
 
 
+@pytest.fixture(scope="session", autouse=True)
+def force_utf8_subprocesses() -> Iterator[None]:
+    """
+    Session-scoped, autouse – runs once before ANY test executes.
+
+    * sets environment so that every child-process sees UTF-8 encodings
+    * patches ``locale.getpreferredencoding`` so libraries that rely on it
+      (e.g. `subprocess._readerthread` inside pytest's capture layer) won’t
+      fall back to CP1252 on Windows.
+    """
+    # 1) Patch locale
+    _orig_getpref = locale.getpreferredencoding
+    locale.getpreferredencoding = lambda do_setlocale=True: "UTF-8"
+
+    # 2) Make sure *our* subprocess invocations inherit the UTF-8 env
+    with _utf8_subprocess_env():
+        yield
+
+    # ---- rollback ----
+    locale.getpreferredencoding = _orig_getpref   # restore environment after the entire test session

@@ -1,190 +1,257 @@
+#!/usr/bin/env python3
+"""
+refactor_guard_cli.py
+
+This module provides the command-line interface (CLI) for RefactorGuard, a tool for auditing Python code refactors.
+
+Core features include:
+- Parsing command-line arguments to configure audit behavior, including file/directory selection, coverage integration, and output options.
+- Supporting both single-file and recursive directory analysis modes.
+- Integrating with Git to restrict audits to changed files.
+- Merging and enriching audit reports with code quality and coverage data.
+- Outputting results in both JSON and human-readable formats, with filtering for diffs, missing tests, and complexity warnings.
+- Handling coverage XML parsing and per-method coverage enrichment.
+
+Intended for use as a standalone CLI tool or in CI pipelines to automate code quality and test coverage audits during refactoring.
+"""
+import sys
+
+# ─── Disable all .pyc / __pycache__ writes to avoid PermissionErrors ──────────
+sys.dont_write_bytecode = True
+
 import argparse
 import os
-import sys
-import json
-
-# 👇 Add parent of 'scripts' to sys.path to avoid import errors
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-
 import io
+import json
+import shutil
 import xml.etree.ElementTree as ET
+from pathlib import Path
+from typing import Dict, Any
 
-# Force UTF-8 stdout if possible (safe fallback for CI)
+# allow importing from project root
+toplevel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.insert(0, toplevel)
+
+from scripts.refactor.refactor_guard import RefactorGuard, print_human_readable
+from scripts.refactor.method_line_ranges import extract_method_line_ranges
+from scripts.refactor.parsers.coverage_parser import parse_coverage_xml_to_method_hits
+import scripts.utils.git_utils as git_utils  # <-- dynamic import
+from scripts.refactor.enrich_refactor_pkg.quality_checker import merge_reports, merge_into_refactor_guard
+
+# enforce UTF-8 stdout for CI environments
 try:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     else:
-        import io
-
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 except Exception:
-    pass  # Silently ignore for CI environments
-
-from scripts.utils.git_utils import get_changed_files
-from scripts.refactor.refactor_guard import RefactorGuard
-from scripts.refactor.coverage_parser import parse_coverage_xml_to_method_hits
-from scripts.refactor.method_line_ranges import extract_method_line_ranges
+    pass
 
 
-def safe_collect_method_ranges(path: str) -> dict:
-    method_ranges = {}
-    if os.path.isfile(path):
-        method_ranges = extract_method_line_ranges(path)
-    elif os.path.isdir(path):
-        for root, _, files in os.walk(path):
-            for f in files:
-                if f.endswith(".py"):
-                    full_path = os.path.join(root, f)
-                    try:
-                        method_ranges.update(extract_method_line_ranges(full_path))
-                    except Exception as e:
-                        print(f"⚠️ Failed to parse {full_path}: {e}")
-    return method_ranges
+def parse_args() -> argparse.Namespace:
+    """
+    Parses command-line arguments for the RefactorGuard CLI.
+
+    Returns:
+        argparse.Namespace: Parsed command-line arguments.
+    """
+    p = argparse.ArgumentParser(description="RefactorGuard CLI: Audit Python refactors.")
+    p.add_argument("--original", type=str, default="", help="Original file or directory")
+    p.add_argument("--refactored", type=str, required=True, help="Refactored file or directory")
+    p.add_argument("--coverage-xml", type=str, default="coverage.xml", help="Path to coverage.xml")
+    p.add_argument("--tests", type=str, default="", help="Test file or directory")
+    p.add_argument("--all", action="store_true", help="Scan entire directory recursively")
+    p.add_argument("--diff-only", action="store_true", help="Only method diffs")
+    p.add_argument("--missing-tests", action="store_true", help="Only missing tests")
+    p.add_argument("--complexity-warnings", action="store_true", help="Only complexity warnings")
+    p.add_argument(
+        "--coverage-by-basename",
+        action="store_true",
+        help="Use basename as key for coverage enrich",
+    )
+    p.add_argument(
+        "--merge",
+        nargs=3,
+        metavar=("SRC1", "SRC2", "DEST"),
+        help="Merge two audits (or enrich audit with reports)",
+    )
+    p.add_argument("--json", action="store_true", help="Output JSON")
+    p.add_argument("--git-diff", action="store_true", help="Restrict to git-changed files")
+    p.add_argument(
+        "-o", "--output", type=str, default="refactor_audit.json", help="JSON output path"
+    )
+    return p.parse_args()
 
 
-def handle_json_output(summary, output_name):
-    filename = f"{output_name}.json"
-    with open(filename, "w", encoding="utf-8-sig") as f:
-        json.dump(summary, f, indent=2)
-    print(f"\n📌 Saved audit report to {filename}")
+def handle_merge(args: argparse.Namespace) -> None:
+    """
+    Handles the merging of audit reports based on the provided arguments.
 
-    for method, data in summary.get("complexity", {}).items():
-        print(f"Method: {method}, Coverage: {data.get('coverage', 'N/A')}")
-
-    method_count = sum(len(v.get("complexity", {})) for v in summary.values())
-    print(f"🧠 Methods analyzed: {method_count}")
-    print(f"🔧 Files changed: {len(summary)}")
-
-
-def print_method_stats(method_complexities, guard):
-    if all(isinstance(v, dict) and "complexity" in v for v in method_complexities.values()):
-        total_complexity = sum(v["complexity"] for v in method_complexities.values())
+    Args:
+        args (argparse.Namespace): Parsed command-line arguments.
+    """
+    src1, src2, dest = args.merge
+    if os.path.isfile(src2) and src2.lower().endswith(".json"):
+        merged = merge_reports(src1, src2)
+        with open(dest, "w", encoding="utf-8") as f:
+            json.dump(merged, f, indent=2)
+    elif os.path.isdir(src2):
+        shutil.copy(src1, dest)
+        report_dir = Path(src2)
+        report_paths = {
+            "black": report_dir / "black.txt",
+            "flake8": report_dir / "flake8.txt",
+            "mypy": report_dir / "mypy.txt",
+            "pydocstyle": report_dir / "pydocstyle.txt",
+            "coverage": report_dir / "coverage.xml",
+        }
+        merge_into_refactor_guard(dest, report_paths=report_paths)
     else:
-        total_complexity = sum(method_complexities.values())
+        raise ValueError(f"Cannot merge from {src2}: not JSON or report dir")
 
-    print(f"📊 Total Complexity: {total_complexity}")
-    print("📊 Method Complexity & Coverage:")
-
-    for method, stats in method_complexities.items():
-        if isinstance(stats, dict):
-            emoji = "⚠️" if stats["complexity"] > guard.config.get("max_complexity", 10) else "✅"
-            coverage = stats.get("coverage")
-            coverage_str = f"{coverage * 100:.1f}%" if isinstance(coverage, float) else "N/A"
-            print(
-                f"  {emoji} {method} | Complexity: {stats['complexity']} | Coverage: {coverage_str} ({stats.get('hits', 'N/A')}/{stats.get('lines', 'N/A')})"
-            )
-        else:
-            emoji = "⚠️" if stats > guard.config.get("max_complexity", 10) else "✅"
-            print(f"  {emoji} {method}: {stats}")
+    print(f"[OK] Merged audits into {dest}")
+    sys.exit(0)
 
 
-def print_summary(summary, guard, args):
-    for file, result in summary.items():
-        print(f"\n📂 File: {file}")
-        if not args.diff_only:
-            method_complexities = result.get("complexity", {})
-            print_method_stats(method_complexities, guard)
+def handle_full_scan(args: argparse.Namespace, guard: RefactorGuard) -> Dict[str, Dict[str, Any]]:
+    """
+    Performs a full scan of the specified directories or files.
 
+    Args:
+        args (argparse.Namespace): Parsed command-line arguments.
+        guard (RefactorGuard): An instance of the RefactorGuard class for auditing.
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="RefactorGuard CLI: Audit Python refactors.")
-    parser.add_argument("--original", type=str, default="", help="Original file/dir")
-    parser.add_argument("--refactored", type=str, required=True, help="Refactored file/dir")
-    parser.add_argument(
-        "--tests", type=str, help="Optional test file to check for missing test coverage"
-    )
-    parser.add_argument("--all", action="store_true", help="Audit entire scripts dir")
-    parser.add_argument("--diff-only", action="store_true", help="Ignore complexity checks")
-    parser.add_argument("--missing-tests", action="store_true", help="List methods lacking tests")
-    parser.add_argument(
-        "--complexity-warnings", action="store_true", help="Show cyclomatic complexity warnings"
-    )
-    parser.add_argument("--json", action="store_true", help="Export result as structured JSON")
-    parser.add_argument(
-        "--git-diff", action="store_true", help="Only analyze Git-changed files vs origin/main"
-    )
-    return parser.parse_args()
+    Returns:
+        Dict[str, Dict[str, Any]]: A dictionary containing the audit results.
+    """
+    orig = args.original or "scripts"
+    ref = args.refactored
+    tests = args.tests or None
 
-
-def dispatch_mode(args, guard):
-    if args.all:
-        return handle_full_scan(args, guard)
-    else:
-        return handle_single_file(args, guard)
-
-
-def handle_full_scan(args, guard):
-    original = args.original or "scripts"
-    refactored = args.refactored or "scripts"
-    summary = {}
-
+    # 1) Gather changed files (or do a full recursive scan)
     if args.git_diff:
-        changed_files = get_changed_files("origin/main")
-        for file in changed_files:
-            orig = os.path.join(original, file)
-            refac = os.path.join(refactored, file)
-            if os.path.exists(refac):
-                summary[file] = guard.analyze_module(orig, refac)
+        raw: Dict[str, Dict[str, Any]] = {}
+        for rel in git_utils.get_changed_files("origin/main"):
+            if not rel.endswith(".py"):
+                continue
+            o = os.path.join(orig, rel)
+            r = os.path.join(ref, rel)
+            if os.path.exists(r):
+                raw[rel] = guard.analyze_module(o, r, test_file_path=None)
     else:
-        summary = guard.analyze_directory_recursive(original, refactored)
+        raw = guard.analyze_directory_recursive(orig, ref, test_dir=tests)
+
+    # 2) Normalize keys down to basenames
+    summary = {}
+    for path, info in raw.items():
+        basename = os.path.basename(path)
+        summary[basename] = info
+
+    # 3) Inject coverage per file (if coverage.xml exists)
+    if os.path.exists(args.coverage_xml):
+        for basename, data in summary.items():
+            src_path = os.path.join(ref, basename)
+            if not os.path.exists(src_path):
+                for root, _, files in os.walk(ref):
+                    if basename in files:
+                        src_path = os.path.join(root, basename)
+                        break
+            if not os.path.exists(src_path):
+                continue
+            try:
+                mr = extract_method_line_ranges(src_path)
+                ch = parse_coverage_xml_to_method_hits(
+                    args.coverage_xml, mr, source_file_path=src_path
+                )
+                if args.coverage_by_basename:
+                    ch = {os.path.basename(k): v for k, v in ch.items()}
+                for method_name, method_info in data.get("complexity", {}).items():
+                    cov = ch.get(method_name, {})
+                    method_info["coverage"] = cov.get("coverage", "N/A")
+                    method_info["hits"] = cov.get("hits", "N/A")
+                    method_info["lines"] = cov.get("lines", "N/A")
+            except (FileNotFoundError, ET.ParseError) as e:
+                print(f"⚠️  Coverage parsing failed for {basename}: {e}")
+                continue
 
     return summary
 
 
-def handle_single_file(args, guard):
-    if not os.path.isfile(args.original):
-        raise ValueError(f"[handle_single_file] Expected a file for --original, got: {args.original}")
-    if not os.path.isfile(args.refactored):
-        raise ValueError(f"[handle_single_file] Expected a file for --refactored, got: {args.refactored}")
+def handle_single_file(args: argparse.Namespace, guard: RefactorGuard) -> Dict[str, Dict[str, Any]]:
+    """
+    Handles the analysis of a single file for auditing.
 
-    result = guard.analyze_module(
-        original_path=args.original,
-        refactored_path=args.refactored,
-    )
-    return {"summary": result}
+    Args:
+        args (argparse.Namespace): Parsed command-line arguments.
+        guard (RefactorGuard): An instance of the RefactorGuard class for auditing.
+
+    Returns:
+        Dict[str, Dict[str, Any]]: A dictionary containing the audit results.
+    """
+    if args.original and not os.path.exists(args.original):
+        print(f"⚠️ Original file not found: {args.original}")
+        args.original = ""
+
+    if not os.path.exists(args.refactored):
+        raise ValueError(f"Expected file for --refactored, got: {args.refactored}")
+
+    try:
+        mr = extract_method_line_ranges(args.refactored)
+        ch = parse_coverage_xml_to_method_hits(
+            args.coverage_xml, mr, source_file_path=args.refactored
+        )
+        if args.coverage_by_basename:
+            ch = {os.path.basename(k): v for k, v in ch.items()}
+        guard.attach_coverage_hits(ch)
+    except (FileNotFoundError, ET.ParseError) as e:
+        print(f"⚠️  Coverage parsing failed, continuing without coverage: {e}")
+
+    tf = args.tests or None
+    res = guard.analyze_module(args.original, args.refactored, test_file_path=tf)
+    basename = os.path.basename(args.refactored)
+    return {basename: res}
 
 
+def main() -> None:
+    """
+    Main entry point for the RefactorGuard CLI.
 
-
-def handle_output(result, args, guard):
-    summary = result if args.all else result.get("summary", {})
-
-    if args.json:
-        handle_json_output(summary, "refactor_audit")
-    else:
-        print_summary(summary, guard, args)
-
-    if not args.diff_only and args.complexity_warnings and not args.all:
-        complexity = summary.get("complexity", {})
-        method_complexities = complexity.get("methods", {})
-        if method_complexities:
-            print("\n📊 Method Complexity:")
-            for method, score in method_complexities.items():
-                emoji = "⚠️" if score > guard.config.get("max_complexity", 10) else "✅"
-                print(f"  {emoji} {method}: {score}")
-
-
-def main():
+    This function orchestrates the command-line interface operations, including
+    parsing arguments and executing the appropriate audit functions.
+    """
     args = parse_args()
     guard = RefactorGuard()
 
-    method_ranges = safe_collect_method_ranges(args.refactored)
-    coverage_hits = parse_coverage_xml_to_method_hits("coverage.xml", method_ranges)
+    # Override max complexity from environment, if set
+    if os.getenv("MAX_COMPLEXITY"):
+        try:
+            guard.config["max_complexity"] = int(os.getenv("MAX_COMPLEXITY"))
+        except ValueError:
+            pass
 
-    if coverage_hits:
-        guard.coverage_hits = coverage_hits
+    # Handle merge mode first
+    if args.merge:
+        handle_merge(args)
 
-    result = dispatch_mode(args, guard)
-    handle_output(result, args, guard)
+    # Choose scan mode: full directory scan if --all or refactored is a directory,
+    # otherwise single‐file mode
+    if args.all or os.path.isdir(args.refactored):
+        audit = handle_full_scan(args, guard)
+    else:
+        audit = handle_single_file(args, guard)
 
-    if args.missing_tests and args.tests:
-        print("\n🧪 Missing Tests:")
-        missing = guard.analyze_tests(args.refactored, args.tests)
-        if missing["missing_tests"]:
-            for item in missing["missing_tests"]:
-                print(f"❌ {item['class']} → {item['method']}")
-        else:
-            print("✅ All public methods have tests!")
+    # JSON output mode
+    if args.json:
+        if args.diff_only:
+            for info in audit.values():
+                info["complexity"] = {}
+        with open(args.output, "w", encoding="utf-8") as out:
+            json.dump(audit, out, indent=2)
+        merge_into_refactor_guard(args.output)
+        sys.exit(0)
+
+    # Human‑readable output
+    print_human_readable(audit, guard, args)
 
 
 if __name__ == "__main__":

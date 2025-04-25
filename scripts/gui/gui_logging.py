@@ -1,3 +1,8 @@
+"""
+gui_logging.py
+
+This module provides a logging handler that appends log messages to a Tkinter Text widget.
+"""
 import logging
 import tkinter as tk
 
@@ -24,7 +29,7 @@ class GUILogHandler(logging.Handler):
             msg = self.format(record)
             # Schedule GUI update in the main thread
             self.text_widget.after(0, self.append_message, msg)
-        except (AttributeError, RuntimeError) as e:
+        except (AttributeError, RuntimeError):
             self.handleError(record)
 
     def append_message(self, msg):

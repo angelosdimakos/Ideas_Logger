@@ -1,8 +1,30 @@
+"""
+logging_setup.py
+
+This module provides centralized logging configuration for the application.
+
+Core features include:
+- Defining a `setup_logging` function to initialize the root logger with a specified log level.
+- Clearing existing handlers and adding a console handler with a standardized log message format.
+- Automatically configuring logging upon import for convenience and consistency across the application.
+
+Intended for use as the standard logging setup to ensure uniform log formatting and log level management.
+"""
+
 import logging
 import sys
 
 
 def setup_logging(log_level="INFO"):
+    """
+    Sets up application-wide logging configuration.
+
+    Initializes the root logger with the specified log level, clears existing handlers,
+    and adds a console handler with a standard log message format.
+
+    Args:
+        log_level (str): Logging level as a string (e.g., "INFO", "DEBUG"). Defaults to "INFO".
+    """
     """Configure logging for the application."""
     # Create a root logger
     logger = logging.getLogger()

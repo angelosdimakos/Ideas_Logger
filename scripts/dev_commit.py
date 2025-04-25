@@ -1,4 +1,3 @@
-
 import os
 import sys
 import subprocess
@@ -21,7 +20,7 @@ def get_current_branch():
         ["git", "rev-parse", "--abbrev-ref", "HEAD"],
         capture_output=True,
         text=True,
-        check=True  # <-- Add this line
+        check=True,  # <-- Add this line
     )
 
     return result.stdout.strip()
@@ -35,7 +34,9 @@ def get_modified_files():
         list[str]: List of modified file paths.
     """
     try:
-        result = subprocess.run(["git", "diff", "--name-only"], capture_output=True, text=True, check=True)
+        result = subprocess.run(
+            ["git", "diff", "--name-only"], capture_output=True, text=True, check=True
+        )
         return result.stdout.strip().splitlines()
     except subprocess.CalledProcessError:
         return []
@@ -81,7 +82,7 @@ def switch_to_new_branch():
     """
     Prompts the user to create and switch to a new Git branch.
     Suggests a branch name based on modified files and validates user input.
-    Exits the script if the branch name is invalid or if Git fails to create the branch.
+    Exits the script if the branch name is invalid or if Git fails to create or push the branch.
     """
     try:
         suggested = generate_suggested_branch_name()
@@ -98,15 +99,20 @@ def switch_to_new_branch():
             "❌ Invalid branch name. Use only letters, numbers, dashes, slashes, and underscores."
         )
         sys.exit(1)
-        return  # <- to stop execution in test context
+        return
 
     print(f"⏳ Running: git checkout -b {new_branch}")
     try:
         subprocess.run(["git", "checkout", "-b", new_branch], check=True)
         print(f"🌱 Created and switched to: {new_branch}")
+
+        # ✅ Automatically push the new branch
+        print("📤 Pushing new branch to origin...")
+        subprocess.run(["git", "push", "--set-upstream", "origin", new_branch], check=True)
     except subprocess.CalledProcessError as e:
         print(f"❌ Git error: {e}")
         sys.exit(1)
+        return
 
 
 if __name__ == "__main__":

@@ -1,1 +1,3408 @@
-﻿{}
+{
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\ci_analyzer\\orchestrator.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\refactor\\method_line_ranges.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\ci_analyzer\\ci_trends.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\utils\\enrich_refactor.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\ci_analyzer\\insights\\descriptive_insights.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\refactor\\quality_checker.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\refactor\\refactor_guard_cli.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "Dimakos\\PycharmProjects\\Ideas_Logger\\scripts\\refactor\\refactor_guard.py": {
+    "quality": {
+      "black": {
+        "needs_formatting": true
+      }
+    }
+  },
+  "__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "dev_commit.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "main.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "paths.py": {
+    "quality": {
+      "coverage": {
+        "percent": 95.2
+      }
+    }
+  },
+  "ai\\__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "ai\\ai_summarizer.py": {
+    "quality": {
+      "coverage": {
+        "percent": 78.3
+      }
+    }
+  },
+  "config\\__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "config\\config_loader.py": {
+    "quality": {
+      "coverage": {
+        "percent": 74.7
+      }
+    }
+  },
+  "config\\config_manager.py": {
+    "quality": {
+      "coverage": {
+        "percent": 90.4
+      }
+    }
+  },
+  "config\\constants.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "config\\logging_setup.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "core\\__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "core\\core.py": {
+    "quality": {
+      "coverage": {
+        "percent": 75.0
+      }
+    }
+  },
+  "core\\log_manager.py": {
+    "quality": {
+      "coverage": {
+        "percent": 87.8
+      }
+    }
+  },
+  "core\\summary_tracker.py": {
+    "quality": {
+      "coverage": {
+        "percent": 73.4
+      }
+    }
+  },
+  "gui\\__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "gui\\app.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "gui\\gui.py": {
+    "quality": {
+      "coverage": {
+        "percent": 9.5
+      }
+    }
+  },
+  "gui\\gui_controller.py": {
+    "quality": {
+      "coverage": {
+        "percent": 50.0
+      }
+    }
+  },
+  "gui\\gui_logging.py": {
+    "quality": {
+      "coverage": {
+        "percent": 27.3
+      }
+    }
+  },
+  "gui\\style_manager.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "gui\\widget_factory.py": {
+    "quality": {
+      "coverage": {
+        "percent": 77.8
+      }
+    }
+  },
+  "gui\\base\\base_panel.py": {
+    "quality": {
+      "coverage": {
+        "percent": 81.8
+      }
+    }
+  },
+  "gui\\base\\base_tab.py": {
+    "quality": {
+      "coverage": {
+        "percent": 81.8
+      }
+    }
+  },
+  "gui\\panels\\action_panel.py": {
+    "quality": {
+      "coverage": {
+        "percent": 91.7
+      }
+    }
+  },
+  "gui\\panels\\coverage_panel.py": {
+    "quality": {
+      "coverage": {
+        "percent": 93.8
+      }
+    }
+  },
+  "gui\\panels\\entry_panel.py": {
+    "quality": {
+      "coverage": {
+        "percent": 84.4
+      }
+    }
+  },
+  "gui\\panels\\log_panel.py": {
+    "quality": {
+      "coverage": {
+        "percent": 95.5
+      }
+    }
+  },
+  "gui\\tabs\\main_tab.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "indexers\\__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "indexers\\base_indexer.py": {
+    "quality": {
+      "coverage": {
+        "percent": 63.8
+      }
+    }
+  },
+  "indexers\\raw_log_indexer.py": {
+    "quality": {
+      "coverage": {
+        "percent": 59.7
+      }
+    }
+  },
+  "indexers\\summary_indexer.py": {
+    "quality": {
+      "coverage": {
+        "percent": 51.2
+      }
+    }
+  },
+  "refactor\\ast_extractor.py": {
+    "quality": {
+      "coverage": {
+        "percent": 96.2
+      }
+    }
+  },
+  "refactor\\complexity_analyzer.py": {
+    "quality": {
+      "coverage": {
+        "percent": 92.1
+      }
+    }
+  },
+  "refactor\\refactor_guard.py": {
+    "quality": {
+      "coverage": {
+        "percent": 41.7
+      }
+    }
+  },
+  "utils\\__init__.py": {
+    "quality": {
+      "coverage": {
+        "percent": 100.0
+      }
+    }
+  },
+  "utils\\complexity_summary.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "utils\\file_utils.py": {
+    "quality": {
+      "coverage": {
+        "percent": 67.1
+      }
+    }
+  },
+  "utils\\git_utils.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "utils\\gui_helpers.py": {
+    "quality": {
+      "coverage": {
+        "percent": 38.3
+      }
+    }
+  },
+  "utils\\link_summaries_to_raw_logs.py": {
+    "quality": {
+      "coverage": {
+        "percent": 0.0
+      }
+    }
+  },
+  "utils\\zip_util.py": {
+    "quality": {
+      "coverage": {
+        "percent": 92.9
+      }
+    }
+  },
+  "scripts\\ai\\__init__.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 2,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (112 > 100 characters)"
+          },
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (104 > 100 characters)"
+          },
+          {
+            "line": 11,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (153 > 100 characters)"
+          }
+        ]
+      }
+    }
+  },
+  "scripts\\ai\\ai_summarizer.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (133 > 100 characters)"
+          },
+          {
+            "line": 5,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (133 > 100 characters)"
+          },
+          {
+            "line": 6,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (113 > 100 characters)"
+          },
+          {
+            "line": 7,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (150 > 100 characters)"
+          },
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (144 > 100 characters)"
+          },
+          {
+            "line": 22,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (283 > 100 characters)"
+          },
+          {
+            "line": 27,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (118 > 100 characters)"
+          },
+          {
+            "line": 36,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (111 > 100 characters)"
+          },
+          {
+            "line": 42,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (101 > 100 characters)"
+          },
+          {
+            "line": 59,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (126 > 100 characters)"
+          },
+          {
+            "line": 86,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (118 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\ai\\ai_summarizer.py:14: error: Library stubs not installed for \"requests.exceptions\"  [import-untyped]",
+          "scripts\\ai\\ai_summarizer.py:25: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\ai\\ai_summarizer.py:29: error: Call to untyped function \"load_config\" in typed context  [no-untyped-call]",
+          "scripts\\ai\\ai_summarizer.py:30: error: Call to untyped function \"get_config_value\" in typed context  [no-untyped-call]",
+          "scripts\\ai\\ai_summarizer.py:31: error: Call to untyped function \"get_config_value\" in typed context  [no-untyped-call]",
+          "scripts\\ai\\ai_summarizer.py:34: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\ai\\ai_summarizer.py:57: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\ai\\ai_summarizer.py:78: error: Call to untyped function \"_fallback_summary\" in typed context  [no-untyped-call]",
+          "scripts\\ai\\ai_summarizer.py:82: error: Call to untyped function \"_fallback_summary\" in typed context  [no-untyped-call]",
+          "scripts\\ai\\ai_summarizer.py:84: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\ai\\ai_summarizer.py:109: error: Call to untyped function \"_fallback_summary\" in typed context  [no-untyped-call]",
+          "scripts\\ai\\ai_summarizer.py:113: error: Call to untyped function \"_fallback_summary\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\ai\\ai_summarizer.py:1 at module level:",
+          "scripts\\ai\\ai_summarizer.py:21 in public class `AISummarizer`:",
+          "scripts\\ai\\ai_summarizer.py:26 in public method `__init__`:"
+        ]
+      }
+    }
+  },
+  "scripts\\ci_analyzer\\ci_trends.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (110 > 100 characters)"
+          },
+          {
+            "line": 5,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (129 > 100 characters)"
+          },
+          {
+            "line": 6,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (110 > 100 characters)"
+          },
+          {
+            "line": 7,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (139 > 100 characters)"
+          },
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (157 > 100 characters)"
+          },
+          {
+            "line": 35,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (164 > 100 characters)"
+          },
+          {
+            "line": 88,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (108 > 100 characters)"
+          },
+          {
+            "line": 103,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (116 > 100 characters)"
+          },
+          {
+            "line": 113,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (106 > 100 characters)"
+          },
+          {
+            "line": 127,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (104 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\ci_analyzer\\ci_trends.py:30: error: Returning Any from function declared to return \"dict[str, Any]\"  [no-any-return]",
+          "scripts\\ci_analyzer\\ci_trends.py:80: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\ci_analyzer\\ci_trends.py:108: error: Returning Any from function declared to return \"dict[str, Any]\"  [no-any-return]",
+          "scripts\\ci_analyzer\\ci_trends.py:111: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\ci_analyzer\\ci_trends.py:125: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\ci_analyzer\\ci_trends.py:146: error: Call to untyped function \"main\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\ci_analyzer\\ci_trends.py:1 at module level:",
+          "scripts\\ci_analyzer\\ci_trends.py:20 in public function `load_audit`:",
+          "scripts\\ci_analyzer\\ci_trends.py:34 in public function `extract_metrics`:",
+          "scripts\\ci_analyzer\\ci_trends.py:96 in public function `load_previous_metrics`:",
+          "scripts\\ci_analyzer\\ci_trends.py:112 in public function `print_comparison`:",
+          "scripts\\ci_analyzer\\ci_trends.py:126 in public function `main`:",
+          "scripts\\ci_analyzer\\ci_trends.py:126 in public function `main`:",
+          "scripts\\ci_analyzer\\ci_trends.py:126 in public function `main`:"
+        ]
+      }
+    }
+  },
+  "scripts\\ci_analyzer\\cli.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 18,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          }
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\ci_analyzer\\cli.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "scripts\\ci_analyzer\\insights\\descriptive_insights.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (125 > 100 characters)"
+          },
+          {
+            "line": 12,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (199 > 100 characters)"
+          },
+          {
+            "line": 50,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (184 > 100 characters)"
+          },
+          {
+            "line": 164,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (116 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\ci_analyzer\\insights\\descriptive_insights.py:121: error: Need type annotation for \"flake8\"  [var-annotated]",
+          "scripts\\ci_analyzer\\insights\\descriptive_insights.py:122: error: Need type annotation for \"pydoc\"  [var-annotated]",
+          "scripts\\ci_analyzer\\insights\\descriptive_insights.py:123: error: Need type annotation for \"mypy\"  [var-annotated]",
+          "scripts\\ci_analyzer\\insights\\descriptive_insights.py:158: error: Incompatible types in assignment (expression has type \"float | int\", variable has type \"int\")  [assignment]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\ci_analyzer\\insights\\descriptive_insights.py:1 at module level:",
+          "scripts\\ci_analyzer\\insights\\descriptive_insights.py:23 in public function `generate_complexity_insights`:",
+          "scripts\\ci_analyzer\\insights\\descriptive_insights.py:107 in public function `generate_quality_insights`:",
+          "scripts\\ci_analyzer\\insights\\descriptive_insights.py:186 in public function `generate_diff_insights`:"
+        ]
+      }
+    }
+  },
+  "scripts\\ci_analyzer\\insights\\overview.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 7,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (111 > 100 characters)"
+          },
+          {
+            "line": 8,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (157 > 100 characters)"
+          },
+          {
+            "line": 11,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (107 > 100 characters)"
+          },
+          {
+            "line": 21,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (104 > 100 characters)"
+          },
+          {
+            "line": 111,
+            "column": 22,
+            "code": "F541",
+            "message": "f-string is missing placeholders"
+          },
+          {
+            "line": 115,
+            "column": 22,
+            "code": "F541",
+            "message": "f-string is missing placeholders"
+          }
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\ci_analyzer\\insights\\overview.py:1 at module level:",
+          "scripts\\ci_analyzer\\insights\\overview.py:20 in public function `generate_overview_insights`:"
+        ]
+      }
+    }
+  },
+  "scripts\\ci_analyzer\\insights\\prime_suspects.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (140 > 100 characters)"
+          },
+          {
+            "line": 7,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (103 > 100 characters)"
+          },
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (115 > 100 characters)"
+          },
+          {
+            "line": 11,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (120 > 100 characters)"
+          },
+          {
+            "line": 23,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (103 > 100 characters)"
+          },
+          {
+            "line": 24,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (103 > 100 characters)"
+          }
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\ci_analyzer\\insights\\prime_suspects.py:1 at module level:",
+          "scripts\\ci_analyzer\\insights\\prime_suspects.py:22 in public function `generate_prime_insights`:",
+          "scripts\\ci_analyzer\\insights\\prime_suspects.py:22 in public function `generate_prime_insights`:"
+        ]
+      }
+    }
+  },
+  "scripts\\ci_analyzer\\orchestrator.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 8,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (126 > 100 characters)"
+          },
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (104 > 100 characters)"
+          },
+          {
+            "line": 96,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (121 > 100 characters)"
+          },
+          {
+            "line": 127,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (115 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\ci_analyzer\\orchestrator.py:74: error: Returning Any from function declared to return \"dict[str, Any]\"  [no-any-return]",
+          "scripts\\ci_analyzer\\orchestrator.py:125: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\ci_analyzer\\orchestrator.py:141: error: Call to untyped function \"main\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\ci_analyzer\\orchestrator.py:1 at module level:",
+          "scripts\\ci_analyzer\\orchestrator.py:36 in public function `backup_audit_file`:",
+          "scripts\\ci_analyzer\\orchestrator.py:36 in public function `backup_audit_file`:",
+          "scripts\\ci_analyzer\\orchestrator.py:36 in public function `backup_audit_file`:",
+          "scripts\\ci_analyzer\\orchestrator.py:62 in public function `load_audit`:",
+          "scripts\\ci_analyzer\\orchestrator.py:78 in public function `header_block`:",
+          "scripts\\ci_analyzer\\orchestrator.py:78 in public function `header_block`:",
+          "scripts\\ci_analyzer\\orchestrator.py:78 in public function `header_block`:",
+          "scripts\\ci_analyzer\\orchestrator.py:115 in public function `save_summary`:",
+          "scripts\\ci_analyzer\\orchestrator.py:126 in public function `main`:",
+          "scripts\\ci_analyzer\\orchestrator.py:126 in public function `main`:"
+        ]
+      }
+    }
+  },
+  "scripts\\ci_analyzer\\utils\\visuals.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (103 > 100 characters)"
+          }
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\ci_analyzer\\utils\\visuals.py:1 at module level:",
+          "scripts\\ci_analyzer\\utils\\visuals.py:17 in public function `render_bar`:",
+          "scripts\\ci_analyzer\\utils\\visuals.py:27 in public function `risk_emoji`:"
+        ]
+      }
+    }
+  },
+  "scripts\\config\\__init__.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 11,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (108 > 100 characters)"
+          }
+        ]
+      }
+    }
+  },
+  "scripts\\config\\config_loader.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 14,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (126 > 100 characters)"
+          },
+          {
+            "line": 52,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 53,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 54,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 163,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (118 > 100 characters)"
+          },
+          {
+            "line": 174,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (110 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\config\\config_loader.py:22: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\config\\config_loader.py:41: error: Call to untyped function \"setup_logging\" in typed context  [no-untyped-call]",
+          "scripts\\config\\config_loader.py:59: error: Incompatible types in assignment (expression has type \"str\", variable has type \"Path\")  [assignment]",
+          "scripts\\config\\config_loader.py:62: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\config\\config_loader.py:104: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\config\\config_loader.py:125: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\config\\config_loader.py:142: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\config\\config_loader.py:157: error: Call to untyped function \"load_config\" in typed context  [no-untyped-call]",
+          "scripts\\config\\config_loader.py:161: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\config\\config_loader.py:176: error: Call to untyped function \"load_config\" in typed context  [no-untyped-call]",
+          "scripts\\config\\config_loader.py:200: error: Call to untyped function \"load_config\" in typed context  [no-untyped-call]",
+          "scripts\\config\\config_loader.py:201: error: Call to untyped function \"get_config_value\" in typed context  [no-untyped-call]",
+          "scripts\\config\\config_loader.py:202: error: Call to untyped function \"get_absolute_path\" in typed context  [no-untyped-call]",
+          "scripts\\config\\config_loader.py:203: error: Call to untyped function \"get_config_value\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\config\\config_loader.py:1 at module level:",
+          "scripts\\config\\config_loader.py:23 in public function `setup_logging`:",
+          "scripts\\config\\config_loader.py:23 in public function `setup_logging`:",
+          "scripts\\config\\config_loader.py:63 in public function `load_config`:",
+          "scripts\\config\\config_loader.py:162 in public function `get_effective_config`:"
+        ]
+      }
+    }
+  },
+  "scripts\\config\\config_manager.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (102 > 100 characters)"
+          },
+          {
+            "line": 7,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (162 > 100 characters)"
+          },
+          {
+            "line": 8,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (127 > 100 characters)"
+          },
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (132 > 100 characters)"
+          },
+          {
+            "line": 10,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (104 > 100 characters)"
+          },
+          {
+            "line": 12,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (119 > 100 characters)"
+          },
+          {
+            "line": 219,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (115 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"mode\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"use_gui\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"interface_theme\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"batch_size\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"autosave_interval\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"log_level\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"summarization\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"llm_provider\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"llm_model\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"openai_model\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"api_keys\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"embedding_model\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"faiss_top_k\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"force_summary_tracker_rebuild\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"vector_store_dir\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"faiss_index_path\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"faiss_metadata_path\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"logs_dir\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"export_dir\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"correction_summaries_path\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"raw_log_path\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"raw_log_index_path\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"raw_log_metadata_path\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"log_format\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"markdown_export\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"default_tags\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"use_templates\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"persona\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"category_structure\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"prompts_by_subcategory\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"test_mode\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"test_logs_dir\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"test_vector_store_dir\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"test_export_dir\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"test_correction_summaries_path\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"test_raw_log_path\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"test_summary_tracker_path\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"remote_sync\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"plugin_dir\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"enable_debug_logging\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:171: error: Missing named argument \"strict_offline_mode\" for \"AppConfig\"  [call-arg]",
+          "scripts\\config\\config_manager.py:204: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\config\\config_manager.py:215: error: Function is missing a return type annotation  [no-untyped-def]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\config\\config_manager.py:1 at module level:",
+          "scripts\\config\\config_manager.py:75 in public nested class `Config`:",
+          "scripts\\config\\config_manager.py:95 in public method `load_config`:"
+        ]
+      }
+    }
+  },
+  "scripts\\config\\constants.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 14,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (119 > 100 characters)"
+          }
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\config\\constants.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "scripts\\config\\logging_setup.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (103 > 100 characters)"
+          },
+          {
+            "line": 11,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (105 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\config\\logging_setup.py:18: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\config\\logging_setup.py:46: error: Call to untyped function \"setup_logging\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\config\\logging_setup.py:1 at module level:",
+          "scripts\\config\\logging_setup.py:19 in public function `setup_logging`:"
+        ]
+      }
+    }
+  },
+  "scripts\\core\\core.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 5,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (199 > 100 characters)"
+          },
+          {
+            "line": 8,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (102 > 100 characters)"
+          },
+          {
+            "line": 38,
+            "column": 1,
+            "code": "F401",
+            "message": "'scripts.utils.file_utils.make_backup' imported but unused"
+          },
+          {
+            "line": 48,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (386 > 100 characters)"
+          },
+          {
+            "line": 62,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (293 > 100 characters)"
+          },
+          {
+            "line": 65,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (115 > 100 characters)"
+          },
+          {
+            "line": 114,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (121 > 100 characters)"
+          },
+          {
+            "line": 124,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (114 > 100 characters)"
+          },
+          {
+            "line": 126,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (136 > 100 characters)"
+          },
+          {
+            "line": 135,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (190 > 100 characters)"
+          },
+          {
+            "line": 137,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (110 > 100 characters)"
+          },
+          {
+            "line": 351,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (102 > 100 characters)"
+          },
+          {
+            "line": 358,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (111 > 100 characters)"
+          },
+          {
+            "line": 391,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (108 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\core\\core.py:68: error: Call to untyped function \"get_effective_config\" in typed context  [no-untyped-call]",
+          "scripts\\core\\core.py:76: error: Call to untyped function \"AISummarizer\" in typed context  [no-untyped-call]",
+          "scripts\\core\\core.py:79: error: Call to untyped function \"get_config_value\" in typed context  [no-untyped-call]",
+          "scripts\\core\\core.py:95: error: Call to untyped function \"get_config_value\" in typed context  [no-untyped-call]",
+          "scripts\\core\\core.py:183: error: Call to untyped function \"summarize_entries_bulk\" in typed context  [no-untyped-call]",
+          "scripts\\core\\core.py:189: error: Call to untyped function \"_fallback_summary\" in typed context  [no-untyped-call]",
+          "scripts\\core\\core.py:194: error: Incompatible return value type (got \"None\", expected \"str\")  [return-value]",
+          "scripts\\core\\core.py:195: error: Incompatible return value type (got \"Any | None\", expected \"str\")  [return-value]",
+          "scripts\\core\\core.py:387: error: Item \"None\" of \"SummaryIndexer | None\" has no attribute \"search\"  [union-attr]",
+          "scripts\\core\\core.py:400: error: Item \"None\" of \"RawLogIndexer | None\" has no attribute \"search\"  [union-attr]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\core\\core.py:1 at module level:",
+          "scripts\\core\\core.py:47 in public class `ZephyrusLoggerCore`:",
+          "scripts\\core\\core.py:61 in public method `__init__`:",
+          "scripts\\core\\core.py:123 in private method `_initialize_environment`:",
+          "scripts\\core\\core.py:172 in private method `_get_summary_for_batch`:",
+          "scripts\\core\\core.py:200 in public method `log_to_json`:",
+          "scripts\\core\\core.py:241 in public method `generate_global_summary`:",
+          "scripts\\core\\core.py:296 in public method `generate_summary`:",
+          "scripts\\core\\core.py:312 in public method `log_to_markdown`:",
+          "scripts\\core\\core.py:350 in public method `force_summary_all`:",
+          "scripts\\core\\core.py:350 in public method `force_summary_all`:",
+          "scripts\\core\\core.py:363 in public method `save_entry`:",
+          "scripts\\core\\core.py:363 in public method `save_entry`:",
+          "scripts\\core\\core.py:376 in public method `search_summaries`:",
+          "scripts\\core\\core.py:376 in public method `search_summaries`:",
+          "scripts\\core\\core.py:376 in public method `search_summaries`:",
+          "scripts\\core\\core.py:390 in public method `search_raw_logs`:",
+          "scripts\\core\\core.py:403 in public method `log_new_entry`:"
+        ]
+      }
+    }
+  },
+  "scripts\\core\\log_manager.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 40,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (101 > 100 characters)"
+          },
+          {
+            "line": 77,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (121 > 100 characters)"
+          },
+          {
+            "line": 137,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (102 > 100 characters)"
+          },
+          {
+            "line": 141,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (110 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\core\\log_manager.py:52: error: Missing type parameters for generic type \"dict\"  [type-arg]",
+          "scripts\\core\\log_manager.py:75: error: Missing type parameters for generic type \"dict\"  [type-arg]",
+          "scripts\\core\\log_manager.py:85: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]",
+          "scripts\\core\\log_manager.py:110: error: Missing type parameters for generic type \"dict\"  [type-arg]",
+          "scripts\\core\\log_manager.py:130: error: Missing type parameters for generic type \"list\"  [type-arg]",
+          "scripts\\core\\log_manager.py:156: error: Missing type parameters for generic type \"dict\"  [type-arg]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\core\\log_manager.py:1 at module level:",
+          "scripts\\core\\log_manager.py:24 in public class `LogManager`:",
+          "scripts\\core\\log_manager.py:34 in public method `__init__`:",
+          "scripts\\core\\log_manager.py:53 in private method `_safe_read_or_create_json`:",
+          "scripts\\core\\log_manager.py:76 in public method `read_logs`:",
+          "scripts\\core\\log_manager.py:76 in public method `read_logs`:",
+          "scripts\\core\\log_manager.py:86 in public method `update_logs`:",
+          "scripts\\core\\log_manager.py:100 in public method `append_entry`:",
+          "scripts\\core\\log_manager.py:111 in private nested function `updater`:",
+          "scripts\\core\\log_manager.py:131 in public method `get_unsummarized_batch`:",
+          "scripts\\core\\log_manager.py:158 in public method `update_correction_summaries`:"
+        ]
+      }
+    }
+  },
+  "scripts\\core\\summary_tracker.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 20,
+            "column": 1,
+            "code": "F401",
+            "message": "'json' imported but unused"
+          },
+          {
+            "line": 22,
+            "column": 1,
+            "code": "F401",
+            "message": "'pathlib.Path' imported but unused"
+          },
+          {
+            "line": 64,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (104 > 100 characters)"
+          },
+          {
+            "line": 80,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (102 > 100 characters)"
+          },
+          {
+            "line": 127,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (102 > 100 characters)"
+          },
+          {
+            "line": 147,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (108 > 100 characters)"
+          },
+          {
+            "line": 182,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (116 > 100 characters)"
+          },
+          {
+            "line": 185,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (129 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\core\\summary_tracker.py:112: error: Returning Any from function declared to return \"int\"  [no-any-return]",
+          "scripts\\core\\summary_tracker.py:176: error: Call to untyped function \"rebuild\" in typed context  [no-untyped-call]",
+          "scripts\\core\\summary_tracker.py:233: error: Missing type parameters for generic type \"dict\"  [type-arg]",
+          "scripts\\core\\summary_tracker.py:246: error: Call to untyped function \"get_effective_config\" in typed context  [no-untyped-call]",
+          "scripts\\core\\summary_tracker.py:247: error: Call to untyped function \"get_config_value\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\core\\summary_tracker.py:1 at module level:",
+          "scripts\\core\\summary_tracker.py:47 in public method `__init__`:",
+          "scripts\\core\\summary_tracker.py:102 in public method `get_summarized_count`:",
+          "scripts\\core\\summary_tracker.py:117 in public method `update`:",
+          "scripts\\core\\summary_tracker.py:137 in private method `_save`:",
+          "scripts\\core\\summary_tracker.py:137 in private method `_save`:",
+          "scripts\\core\\summary_tracker.py:146 in public method `rebuild`:",
+          "scripts\\core\\summary_tracker.py:181 in public method `validate`:",
+          "scripts\\core\\summary_tracker.py:234 in public method `get_coverage_data`:"
+        ]
+      }
+    }
+  },
+  "scripts\\dev_commit.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 9,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 110,
+            "column": 15,
+            "code": "F541",
+            "message": "f-string is missing placeholders"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\dev_commit.py:12: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\dev_commit.py:29: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\dev_commit.py:45: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\dev_commit.py:58: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\dev_commit.py:65: error: Call to untyped function \"get_modified_files\" in typed context  [no-untyped-call]",
+          "scripts\\dev_commit.py:81: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\dev_commit.py:88: error: Call to untyped function \"generate_suggested_branch_name\" in typed context  [no-untyped-call]",
+          "scripts\\dev_commit.py:97: error: Call to untyped function \"is_valid_branch_name\" in typed context  [no-untyped-call]",
+          "scripts\\dev_commit.py:127: error: Call to untyped function \"get_current_branch\" in typed context  [no-untyped-call]",
+          "scripts\\dev_commit.py:134: error: Call to untyped function \"switch_to_new_branch\" in typed context  [no-untyped-call]",
+          "scripts\\dev_commit.py:135: error: Call to untyped function \"get_current_branch\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\dev_commit.py:1 at module level:",
+          "scripts\\dev_commit.py:13 in public function `get_current_branch`:",
+          "scripts\\dev_commit.py:30 in public function `get_modified_files`:",
+          "scripts\\dev_commit.py:46 in public function `is_valid_branch_name`:",
+          "scripts\\dev_commit.py:59 in public function `generate_suggested_branch_name`:",
+          "scripts\\dev_commit.py:82 in public function `switch_to_new_branch`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\app.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 5,
+            "column": 1,
+            "code": "F401",
+            "message": "'scripts.gui.widget_factory.WidgetFactory' imported but unused"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\gui\\app.py:17: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\gui\\app.py:42: error: Call to untyped function \"_create_status_bar\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\app.py:44: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\app.py:54: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\app.py:62: error: Call to untyped function \"ZephyrusLoggerApp\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\app.py:63: error: Call to untyped function \"run\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\app.py:1 at module level:",
+          "scripts\\gui\\app.py:11 in public class `ZephyrusLoggerApp`:",
+          "scripts\\gui\\app.py:11 in public class `ZephyrusLoggerApp`:",
+          "scripts\\gui\\app.py:17 in public method `__init__`:",
+          "scripts\\gui\\app.py:45 in private method `_create_status_bar`:",
+          "scripts\\gui\\app.py:55 in public method `run`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\base\\base_panel.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 31,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (103 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\gui\\base\\base_panel.py:25: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\base\\base_panel.py:1 at module level:",
+          "scripts\\gui\\base\\base_panel.py:17 in public class `BasePanel`:",
+          "scripts\\gui\\base\\base_panel.py:26 in public method `__init__`:",
+          "scripts\\gui\\base\\base_panel.py:38 in public method `initialize_ui`:",
+          "scripts\\gui\\base\\base_panel.py:48 in public method `refresh`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\base\\base_tab.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (107 > 100 characters)"
+          },
+          {
+            "line": 31,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (101 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\gui\\base\\base_tab.py:25: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\base\\base_tab.py:1 at module level:",
+          "scripts\\gui\\base\\base_tab.py:17 in public class `BaseTab`:",
+          "scripts\\gui\\base\\base_tab.py:26 in public method `__init__`:",
+          "scripts\\gui\\base\\base_tab.py:38 in public method `setup_tab`:",
+          "scripts\\gui\\base\\base_tab.py:48 in public method `on_show`:",
+          "scripts\\gui\\base\\base_tab.py:48 in public method `on_show`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\gui.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 2,
+            "column": 1,
+            "code": "F401",
+            "message": "'tkinter.simpledialog' imported but unused"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "code": "F401",
+            "message": "'tkinter.PhotoImage' imported but unused"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\gui\\gui.py:18: error: Call to untyped function \"load_config\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:19: error: Call to untyped function \"get_config_value\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:90: error: Call to untyped function \"_build_main_tab\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:91: error: Call to untyped function \"_build_search_tab\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:92: error: Call to untyped function \"_build_analytics_tab\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:94: error: Call to untyped function \"_setup_gui_logging\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:95: error: Call to untyped function \"_update_coverage_display\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:98: error: Call to untyped function \"_create_status_bar\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:100: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:101: error: Call to untyped function \"GUILogHandler\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:107: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:204: error: Call to untyped function \"_update_main_category\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:221: error: Call to untyped function \"_populate_category_dropdown\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:257: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:275: error: Call to untyped function \"_build_summary_search\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:276: error: Call to untyped function \"_build_raw_search\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:277: error: Call to untyped function \"_build_advanced_search\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:279: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:321: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:364: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:373: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:395: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:410: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:417: error: Call to untyped function \"_update_main_category\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:421: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:432: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:471: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:476: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:481: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:490: error: Call to untyped function \"display_message\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:492: error: Call to untyped function \"_on_entry_focus_out\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:493: error: Call to untyped function \"_update_coverage_display\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:495: error: Call to untyped function \"display_error\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:497: error: Call to untyped function \"display_error\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:499: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:558: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:565: error: Call to untyped function \"_format_json_for_display\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:576: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:586: error: Call to untyped function \"_format_json_for_display\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:596: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:601: error: Call to untyped function \"display_message\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:602: error: Call to untyped function \"_update_coverage_display\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:604: error: Call to untyped function \"display_error\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:606: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:617: error: Call to untyped function \"display_message\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:618: error: Call to untyped function \"_update_coverage_display\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:620: error: Call to untyped function \"display_error\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:622: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui.py:626: error: Call to untyped function \"display_message\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:628: error: Call to untyped function \"display_error\" in typed context  [no-untyped-call]",
+          "scripts\\gui\\gui.py:630: error: Function is missing a return type annotation  [no-untyped-def]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\gui.py:1 at module level:",
+          "scripts\\gui\\gui.py:12 in public class `ZephyrusLoggerGUI`:",
+          "scripts\\gui\\gui.py:13 in public method `__init__`:",
+          "scripts\\gui\\gui.py:500 in private method `_format_json_for_display`:",
+          "scripts\\gui\\gui.py:500 in private method `_format_json_for_display`:",
+          "scripts\\gui\\gui.py:630 in public method `run`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\gui_controller.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 37,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (122 > 100 characters)"
+          },
+          {
+            "line": 38,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (111 > 100 characters)"
+          }
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\gui_controller.py:1 at module level:",
+          "scripts\\gui\\gui_controller.py:33 in public method `__init__`:",
+          "scripts\\gui\\gui_controller.py:51 in public method `log_entry`:",
+          "scripts\\gui\\gui_controller.py:68 in public method `force_summarize_all`:",
+          "scripts\\gui\\gui_controller.py:80 in public method `search_summaries`:",
+          "scripts\\gui\\gui_controller.py:95 in public method `search_raw_logs`:",
+          "scripts\\gui\\gui_controller.py:110 in public method `rebuild_tracker`:",
+          "scripts\\gui\\gui_controller.py:118 in public method `get_tracker_status`:",
+          "scripts\\gui\\gui_controller.py:118 in public method `get_tracker_status`:",
+          "scripts\\gui\\gui_controller.py:125 in public method `get_coverage_data`:",
+          "scripts\\gui\\gui_controller.py:125 in public method `get_coverage_data`:",
+          "scripts\\gui\\gui_controller.py:131 in public method `get_logs`:",
+          "scripts\\gui\\gui_controller.py:131 in public method `get_logs`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\gui_logging.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 32,
+            "column": 9,
+            "code": "F841",
+            "message": "local variable 'e' is assigned to but never used"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\gui\\gui_logging.py:15: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui_logging.py:22: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\gui\\gui_logging.py:35: error: Function is missing a type annotation  [no-untyped-def]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\gui_logging.py:1 at module level:",
+          "scripts\\gui\\gui_logging.py:11 in public class `GUILogHandler`:",
+          "scripts\\gui\\gui_logging.py:16 in public method `__init__`:",
+          "scripts\\gui\\gui_logging.py:23 in public method `emit`:",
+          "scripts\\gui\\gui_logging.py:36 in public method `append_message`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\panels\\action_panel.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (109 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\gui\\panels\\action_panel.py:29: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\panels\\action_panel.py:1 at module level:",
+          "scripts\\gui\\panels\\action_panel.py:30 in public method `__init__`:",
+          "scripts\\gui\\panels\\action_panel.py:44 in public method `initialize_ui`:",
+          "scripts\\gui\\panels\\action_panel.py:99 in public method `refresh`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\panels\\coverage_panel.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 33,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (103 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\gui\\panels\\coverage_panel.py:27: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]",
+          "scripts\\gui\\panels\\coverage_panel.py:68: error: Item \"None\" of \"Treeview | None\" has no attribute \"get_children\"  [union-attr]",
+          "scripts\\gui\\panels\\coverage_panel.py:69: error: Item \"None\" of \"Treeview | None\" has no attribute \"delete\"  [union-attr]",
+          "scripts\\gui\\panels\\coverage_panel.py:80: error: Item \"None\" of \"Treeview | None\" has no attribute \"insert\"  [union-attr]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\panels\\coverage_panel.py:1 at module level:",
+          "scripts\\gui\\panels\\coverage_panel.py:28 in public method `__init__`:",
+          "scripts\\gui\\panels\\coverage_panel.py:41 in public method `initialize_ui`:",
+          "scripts\\gui\\panels\\coverage_panel.py:61 in public method `refresh`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\panels\\entry_panel.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 35,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (105 > 100 characters)"
+          },
+          {
+            "line": 79,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (101 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\gui\\panels\\entry_panel.py:29: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]",
+          "scripts\\gui\\panels\\entry_panel.py:74: error: Item \"None\" of \"Text | None\" has no attribute \"get\"  [union-attr]",
+          "scripts\\gui\\panels\\entry_panel.py:83: error: Item \"None\" of \"Text | None\" has no attribute \"delete\"  [union-attr]",
+          "scripts\\gui\\panels\\entry_panel.py:99: error: Item \"None\" of \"Text | None\" has no attribute \"delete\"  [union-attr]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\panels\\entry_panel.py:1 at module level:",
+          "scripts\\gui\\panels\\entry_panel.py:30 in public method `__init__`:",
+          "scripts\\gui\\panels\\entry_panel.py:44 in public method `initialize_ui`:",
+          "scripts\\gui\\panels\\entry_panel.py:65 in public method `on_submit`:",
+          "scripts\\gui\\panels\\entry_panel.py:92 in public method `refresh`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\panels\\log_panel.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 16,
+            "column": 1,
+            "code": "E302",
+            "message": "expected 2 blank lines, found 1"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\gui\\panels\\log_panel.py:25: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]",
+          "scripts\\gui\\panels\\log_panel.py:34: error: Incompatible types in assignment (expression has type \"None\", variable has type \"Labelframe\")  [assignment]",
+          "scripts\\gui\\panels\\log_panel.py:35: error: Incompatible types in assignment (expression has type \"None\", variable has type \"ScrolledText\")  [assignment]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\panels\\log_panel.py:1 at module level:",
+          "scripts\\gui\\panels\\log_panel.py:26 in public method `__init__`:",
+          "scripts\\gui\\panels\\log_panel.py:39 in public method `initialize_ui`:",
+          "scripts\\gui\\panels\\log_panel.py:54 in public method `refresh`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\style_manager.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 16,
+            "column": 1,
+            "code": "E302",
+            "message": "expected 2 blank lines, found 1"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\gui\\style_manager.py:27: error: Name \"ttk.Tk\" is not defined  [name-defined]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\style_manager.py:1 at module level:",
+          "scripts\\gui\\style_manager.py:28 in public method `__init__`:",
+          "scripts\\gui\\style_manager.py:39 in public method `initialize_styles`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\tabs\\main_tab.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (109 > 100 characters)"
+          }
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\tabs\\main_tab.py:1 at module level:",
+          "scripts\\gui\\tabs\\main_tab.py:22 in public class `MainTab`:",
+          "scripts\\gui\\tabs\\main_tab.py:61 in public method `on_show`:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\widget_factory.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 13,
+            "column": 1,
+            "code": "F401",
+            "message": "'typing.Dict' imported but unused"
+          },
+          {
+            "line": 20,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (120 > 100 characters)"
+          },
+          {
+            "line": 24,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (125 > 100 characters)"
+          },
+          {
+            "line": 41,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (103 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\gui\\widget_factory.py:24: error: Function \"builtins.callable\" is not valid as a type  [valid-type]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\widget_factory.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "scripts\\indexers\\__init__.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 2,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (132 > 100 characters)"
+          },
+          {
+            "line": 10,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (193 > 100 characters)"
+          }
+        ]
+      }
+    }
+  },
+  "scripts\\indexers\\base_indexer.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (169 > 100 characters)"
+          },
+          {
+            "line": 7,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (103 > 100 characters)"
+          },
+          {
+            "line": 10,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (107 > 100 characters)"
+          },
+          {
+            "line": 13,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (161 > 100 characters)"
+          },
+          {
+            "line": 16,
+            "column": 1,
+            "code": "F401",
+            "message": "'typing.Tuple' imported but unused"
+          },
+          {
+            "line": 17,
+            "column": 1,
+            "code": "F401",
+            "message": "'os' imported but unused"
+          },
+          {
+            "line": 17,
+            "column": 10,
+            "code": "E401",
+            "message": "multiple imports on one line"
+          },
+          {
+            "line": 81,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (116 > 100 characters)"
+          },
+          {
+            "line": 96,
+            "column": 16,
+            "code": "E741",
+            "message": "ambiguous variable name 'I'"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\indexers\\base_indexer.py:43: error: Call to untyped function \"get_config_value\" in typed context  [no-untyped-call]",
+          "scripts\\indexers\\base_indexer.py:132: error: \"None\" has no attribute \"add\"  [attr-defined]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\indexers\\base_indexer.py:1 at module level:",
+          "scripts\\indexers\\base_indexer.py:27 in public class `BaseIndexer`:",
+          "scripts\\indexers\\base_indexer.py:29 in public method `__init__`:",
+          "scripts\\indexers\\base_indexer.py:29 in public method `__init__`:",
+          "scripts\\indexers\\base_indexer.py:51 in public method `load_index`:",
+          "scripts\\indexers\\base_indexer.py:73 in public method `search`:",
+          "scripts\\indexers\\base_indexer.py:112 in public method `build_index`:",
+          "scripts\\indexers\\base_indexer.py:141 in public method `save_index`:"
+        ]
+      }
+    }
+  },
+  "scripts\\indexers\\raw_log_indexer.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (135 > 100 characters)"
+          },
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (110 > 100 characters)"
+          },
+          {
+            "line": 11,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (106 > 100 characters)"
+          },
+          {
+            "line": 39,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (105 > 100 characters)"
+          },
+          {
+            "line": 55,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (132 > 100 characters)"
+          },
+          {
+            "line": 92,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (111 > 100 characters)"
+          },
+          {
+            "line": 121,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (108 > 100 characters)"
+          },
+          {
+            "line": 153,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (101 > 100 characters)"
+          },
+          {
+            "line": 158,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (108 > 100 characters)"
+          },
+          {
+            "line": 210,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (103 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\indexers\\raw_log_indexer.py:70: error: Need type annotation for \"texts\" (hint: \"texts: list[<type>] = ...\")  [var-annotated]",
+          "scripts\\indexers\\raw_log_indexer.py:70: error: Need type annotation for \"meta\" (hint: \"meta: list[<type>] = ...\")  [var-annotated]",
+          "scripts\\indexers\\raw_log_indexer.py:80: error: Missing type parameters for generic type \"dict\"  [type-arg]",
+          "scripts\\indexers\\raw_log_indexer.py:108: error: Missing type parameters for generic type \"dict\"  [type-arg]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\indexers\\raw_log_indexer.py:1 at module level:",
+          "scripts\\indexers\\raw_log_indexer.py:34 in public method `__init__`:",
+          "scripts\\indexers\\raw_log_indexer.py:51 in public method `load_entries`:",
+          "scripts\\indexers\\raw_log_indexer.py:82 in private method `_process_categories`:",
+          "scripts\\indexers\\raw_log_indexer.py:110 in private method `_process_subcategories`:",
+          "scripts\\indexers\\raw_log_indexer.py:146 in private method `_process_entries`:",
+          "scripts\\indexers\\raw_log_indexer.py:190 in public method `build_index_from_logs`:"
+        ]
+      }
+    }
+  },
+  "scripts\\indexers\\summary_indexer.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (147 > 100 characters)"
+          },
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (112 > 100 characters)"
+          },
+          {
+            "line": 11,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (113 > 100 characters)"
+          },
+          {
+            "line": 16,
+            "column": 1,
+            "code": "F401",
+            "message": "'pathlib.Path' imported but unused"
+          },
+          {
+            "line": 116,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (102 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\indexers\\summary_indexer.py:73: error: Need type annotation for \"texts\" (hint: \"texts: list[<type>] = ...\")  [var-annotated]",
+          "scripts\\indexers\\summary_indexer.py:73: error: Need type annotation for \"meta\" (hint: \"meta: list[<type>] = ...\")  [var-annotated]",
+          "scripts\\indexers\\summary_indexer.py:83: error: Missing type parameters for generic type \"dict\"  [type-arg]",
+          "scripts\\indexers\\summary_indexer.py:111: error: Missing type parameters for generic type \"dict\"  [type-arg]",
+          "scripts\\indexers\\summary_indexer.py:149: error: Missing type parameters for generic type \"list\"  [type-arg]",
+          "scripts\\indexers\\summary_indexer.py:218: error: Function is missing a return type annotation  [no-untyped-def]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\indexers\\summary_indexer.py:1 at module level:",
+          "scripts\\indexers\\summary_indexer.py:26 in public class `SummaryIndexer`:",
+          "scripts\\indexers\\summary_indexer.py:31 in public method `__init__`:",
+          "scripts\\indexers\\summary_indexer.py:54 in public method `load_entries`:",
+          "scripts\\indexers\\summary_indexer.py:199 in public method `build_index_from_logs`:",
+          "scripts\\indexers\\summary_indexer.py:199 in public method `build_index_from_logs`:",
+          "scripts\\indexers\\summary_indexer.py:218 in public method `rebuild`:"
+        ]
+      }
+    }
+  },
+  "scripts\\main.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 23,
+            "column": 1,
+            "code": "F401",
+            "message": "'scripts.gui.gui_logging.GUILogHandler' imported but unused"
+          },
+          {
+            "line": 34,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (107 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\main.py:40: error: Call to untyped function \"setup_logging\" in typed context  [no-untyped-call]",
+          "scripts\\main.py:43: error: Call to untyped function \"load_config\" in typed context  [no-untyped-call]",
+          "scripts\\main.py:71: error: Call to untyped function \"run\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\main.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "scripts\\paths.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 11,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (106 > 100 characters)"
+          },
+          {
+            "line": 32,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (116 > 100 characters)"
+          },
+          {
+            "line": 47,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (125 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\paths.py:30: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]",
+          "scripts\\paths.py:42: error: Call to untyped function \"get_absolute_path\" in typed context  [no-untyped-call]",
+          "scripts\\paths.py:42: error: Call to untyped function \"get_config_value\" in typed context  [no-untyped-call]",
+          "scripts\\paths.py:57: error: Call to untyped function \"get_effective_config\" in typed context  [no-untyped-call]",
+          "scripts\\paths.py:64: error: Call to untyped function \"get_absolute_path\" in typed context  [no-untyped-call]",
+          "scripts\\paths.py:65: error: Call to untyped function \"get_absolute_path\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\paths.py:1 at module level:",
+          "scripts\\paths.py:46 in public method `from_config`:"
+        ]
+      }
+    }
+  },
+  "scripts\\refactor\\__init__.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 2,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (102 > 100 characters)"
+          },
+          {
+            "line": 5,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (116 > 100 characters)"
+          },
+          {
+            "line": 11,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (122 > 100 characters)"
+          }
+        ]
+      }
+    }
+  },
+  "scripts\\refactor\\ast_extractor.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (142 > 100 characters)"
+          },
+          {
+            "line": 7,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (107 > 100 characters)"
+          },
+          {
+            "line": 25,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (112 > 100 characters)"
+          },
+          {
+            "line": 44,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (103 > 100 characters)"
+          },
+          {
+            "line": 60,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (107 > 100 characters)"
+          },
+          {
+            "line": 110,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (129 > 100 characters)"
+          },
+          {
+            "line": 117,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (122 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\refactor\\ast_extractor.py:75: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\refactor\\ast_extractor.py:101: error: Call to untyped function \"ClassMethodExtractor\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\refactor\\ast_extractor.py:1 at module level:",
+          "scripts\\refactor\\ast_extractor.py:29 in public method `__init__`:",
+          "scripts\\refactor\\ast_extractor.py:49 in public method `__repr__`:",
+          "scripts\\refactor\\ast_extractor.py:59 in public function `extract_class_methods`:",
+          "scripts\\refactor\\ast_extractor.py:59 in public function `extract_class_methods`:"
+        ]
+      }
+    }
+  },
+  "scripts\\refactor\\complexity_analyzer.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 6,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (150 > 100 characters)"
+          },
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (118 > 100 characters)"
+          },
+          {
+            "line": 16,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (123 > 100 characters)"
+          }
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\refactor\\complexity_analyzer.py:3 at module level:",
+          "scripts\\refactor\\complexity_analyzer.py:51 in public class `ComplexityVisitor`:",
+          "scripts\\refactor\\complexity_analyzer.py:51 in public class `ComplexityVisitor`:",
+          "scripts\\refactor\\complexity_analyzer.py:58 in public method `__init__`:",
+          "scripts\\refactor\\complexity_analyzer.py:58 in public method `__init__`:",
+          "scripts\\refactor\\complexity_analyzer.py:58 in public method `__init__`:",
+          "scripts\\refactor\\complexity_analyzer.py:164 in public function `calculate_function_complexity_map`:",
+          "scripts\\refactor\\complexity_analyzer.py:164 in public function `calculate_function_complexity_map`:",
+          "scripts\\refactor\\complexity_analyzer.py:164 in public function `calculate_function_complexity_map`:",
+          "scripts\\refactor\\complexity_analyzer.py:214 in public function `calculate_cyclomatic_complexity_for_module`:"
+        ]
+      }
+    }
+  },
+  "scripts\\refactor\\coverage_parser.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (152 > 100 characters)"
+          },
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (124 > 100 characters)"
+          },
+          {
+            "line": 10,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (107 > 100 characters)"
+          },
+          {
+            "line": 12,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (136 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\refactor\\coverage_parser.py:54: error: Name \"file_hits\" already defined on line 41  [no-redef]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\refactor\\coverage_parser.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "scripts\\refactor\\method_line_ranges.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (167 > 100 characters)"
+          },
+          {
+            "line": 7,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (149 > 100 characters)"
+          },
+          {
+            "line": 8,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (201 > 100 characters)"
+          },
+          {
+            "line": 9,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (125 > 100 characters)"
+          },
+          {
+            "line": 27,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (108 > 100 characters)"
+          },
+          {
+            "line": 84,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (118 > 100 characters)"
+          }
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\refactor\\method_line_ranges.py:1 at module level:",
+          "scripts\\refactor\\method_line_ranges.py:21 in public class `MethodRangeVisitor`:",
+          "scripts\\refactor\\method_line_ranges.py:21 in public class `MethodRangeVisitor`:",
+          "scripts\\refactor\\method_line_ranges.py:32 in public method `__init__`:",
+          "scripts\\refactor\\method_line_ranges.py:32 in public method `__init__`:",
+          "scripts\\refactor\\method_line_ranges.py:32 in public method `__init__`:",
+          "scripts\\refactor\\method_line_ranges.py:80 in private method `_record_range`:",
+          "scripts\\refactor\\method_line_ranges.py:101 in public function `extract_method_line_ranges`:",
+          "scripts\\refactor\\method_line_ranges.py:101 in public function `extract_method_line_ranges`:",
+          "scripts\\refactor\\method_line_ranges.py:101 in public function `extract_method_line_ranges`:"
+        ]
+      }
+    }
+  },
+  "scripts\\refactor\\quality_checker.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (154 > 100 characters)"
+          },
+          {
+            "line": 8,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (112 > 100 characters)"
+          },
+          {
+            "line": 14,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (145 > 100 characters)"
+          },
+          {
+            "line": 206,
+            "column": 9,
+            "code": "E741",
+            "message": "ambiguous variable name 'l'"
+          },
+          {
+            "line": 260,
+            "column": 9,
+            "code": "F841",
+            "message": "local variable 'entry' is assigned to but never used"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\refactor\\quality_checker.py:69: error: Missing type parameters for generic type \"PathLike\"  [type-arg]",
+          "scripts\\refactor\\quality_checker.py:264: error: Incompatible default for argument \"report_paths\" (default has type \"None\", argument has type \"dict[str, Path]\")  [assignment]",
+          "scripts\\refactor\\quality_checker.py:290: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\refactor\\quality_checker.py:290: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]",
+          "scripts\\refactor\\quality_checker.py:315: error: Missing type parameters for generic type \"Dict\"  [type-arg]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\refactor\\quality_checker.py:1 at module level:",
+          "scripts\\refactor\\quality_checker.py:51 in private function `_normalize`:",
+          "scripts\\refactor\\quality_checker.py:70 in public function `run_command`:",
+          "scripts\\refactor\\quality_checker.py:87 in public function `run_black`:",
+          "scripts\\refactor\\quality_checker.py:97 in public function `run_flake8`:",
+          "scripts\\refactor\\quality_checker.py:107 in public function `run_mypy`:",
+          "scripts\\refactor\\quality_checker.py:119 in public function `run_pydocstyle`:",
+          "scripts\\refactor\\quality_checker.py:129 in public function `run_coverage_xml`:",
+          "scripts\\refactor\\quality_checker.py:139 in private function `_read_report`:",
+          "scripts\\refactor\\quality_checker.py:158 in private function `_add_flake8_quality`:",
+          "scripts\\refactor\\quality_checker.py:180 in private function `_add_black_quality`:",
+          "scripts\\refactor\\quality_checker.py:198 in private function `_add_mypy_quality`:",
+          "scripts\\refactor\\quality_checker.py:217 in private function `_add_pydocstyle_quality`:",
+          "scripts\\refactor\\quality_checker.py:237 in private function `_add_coverage_quality`:",
+          "scripts\\refactor\\quality_checker.py:266 in public function `merge_into_refactor_guard`:",
+          "scripts\\refactor\\quality_checker.py:316 in public function `merge_reports`:"
+        ]
+      }
+    }
+  },
+  "scripts\\refactor\\refactor_guard.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (120 > 100 characters)"
+          },
+          {
+            "line": 7,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (115 > 100 characters)"
+          },
+          {
+            "line": 12,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (138 > 100 characters)"
+          },
+          {
+            "line": 14,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (109 > 100 characters)"
+          }
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\refactor\\refactor_guard.py:1 at module level:",
+          "scripts\\refactor\\refactor_guard.py:46 in public method `__init__`:",
+          "scripts\\refactor\\refactor_guard.py:73 in public method `analyze_tests`:",
+          "scripts\\refactor\\refactor_guard.py:119 in public method `analyze_module`:",
+          "scripts\\refactor\\refactor_guard.py:119 in public method `analyze_module`:",
+          "scripts\\refactor\\refactor_guard.py:201 in public method `analyze_directory_recursive`:",
+          "scripts\\refactor\\refactor_guard.py:201 in public method `analyze_directory_recursive`:"
+        ]
+      }
+    }
+  },
+  "scripts\\refactor\\refactor_guard_cli.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 5,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (115 > 100 characters)"
+          },
+          {
+            "line": 8,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (139 > 100 characters)"
+          },
+          {
+            "line": 12,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (127 > 100 characters)"
+          },
+          {
+            "line": 15,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (130 > 100 characters)"
+          },
+          {
+            "line": 22,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 23,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 24,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 25,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 26,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 27,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 28,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 29,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 35,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 36,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 37,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 38,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          },
+          {
+            "line": 39,
+            "column": 1,
+            "code": "E402",
+            "message": "module level import not at top of file"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\refactor\\refactor_guard_cli.py:228: error: Argument 1 to \"int\" has incompatible type \"str | None\"; expected \"str | Buffer | SupportsInt | SupportsIndex | SupportsTrunc\"  [arg-type]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\refactor\\refactor_guard_cli.py:2 at module level:",
+          "scripts\\refactor\\refactor_guard_cli.py:52 in public function `parse_args`:",
+          "scripts\\refactor\\refactor_guard_cli.py:87 in public function `handle_merge`:",
+          "scripts\\refactor\\refactor_guard_cli.py:117 in public function `handle_full_scan`:",
+          "scripts\\refactor\\refactor_guard_cli.py:181 in public function `handle_single_file`:",
+          "scripts\\refactor\\refactor_guard_cli.py:216 in public function `main`:"
+        ]
+      }
+    }
+  },
+  "scripts\\utils\\complexity_summary.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 73,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (102 > 100 characters)"
+          },
+          {
+            "line": 89,
+            "column": 15,
+            "code": "F541",
+            "message": "f-string is missing placeholders"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\utils\\complexity_summary.py:21: error: Item \"TextIO\" of \"TextIO | Any\" has no attribute \"reconfigure\"  [union-attr]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\utils\\complexity_summary.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "scripts\\utils\\enrich_refactor.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (102 > 100 characters)"
+          },
+          {
+            "line": 5,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (116 > 100 characters)"
+          },
+          {
+            "line": 40,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (117 > 100 characters)"
+          }
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\utils\\enrich_refactor.py:1 at module level:",
+          "scripts\\utils\\enrich_refactor.py:24 in public function `safe_print`:"
+        ]
+      }
+    }
+  },
+  "scripts\\utils\\file_utils.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 78,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (117 > 100 characters)"
+          },
+          {
+            "line": 163,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (122 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\utils\\file_utils.py:75: error: Missing type parameters for generic type \"dict\"  [type-arg]",
+          "scripts\\utils\\file_utils.py:110: error: Missing type parameters for generic type \"dict\"  [type-arg]",
+          "scripts\\utils\\file_utils.py:123: error: Returning Any from function declared to return \"dict[Any, Any]\"  [no-any-return]",
+          "scripts\\utils\\file_utils.py:129: error: Missing type parameters for generic type \"dict\"  [type-arg]",
+          "scripts\\utils\\file_utils.py:146: error: Returning Any from function declared to return \"dict[Any, Any]\"  [no-any-return]",
+          "scripts\\utils\\file_utils.py:166: error: Incompatible return value type (got \"None\", expected \"str\")  [return-value]",
+          "scripts\\utils\\file_utils.py:173: error: Argument 1 to \"read_json\" has incompatible type \"str\"; expected \"Path\"  [arg-type]",
+          "scripts\\utils\\file_utils.py:179: error: Incompatible return value type (got \"None\", expected \"str\")  [return-value]",
+          "scripts\\utils\\file_utils.py:182: error: Incompatible default for argument \"exclude_dirs\" (default has type \"None\", argument has type \"list[str]\")  [assignment]",
+          "scripts\\utils\\file_utils.py:192: error: Incompatible types in assignment (expression has type \"set[str]\", variable has type \"list[str]\")  [assignment]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\utils\\file_utils.py:1 at module level:",
+          "scripts\\utils\\file_utils.py:55 in public function `get_timestamp`:",
+          "scripts\\utils\\file_utils.py:55 in public function `get_timestamp`:",
+          "scripts\\utils\\file_utils.py:62 in public function `safe_path`:",
+          "scripts\\utils\\file_utils.py:76 in public function `write_json`:",
+          "scripts\\utils\\file_utils.py:76 in public function `write_json`:",
+          "scripts\\utils\\file_utils.py:76 in public function `write_json`:",
+          "scripts\\utils\\file_utils.py:111 in public function `read_json`:",
+          "scripts\\utils\\file_utils.py:111 in public function `read_json`:",
+          "scripts\\utils\\file_utils.py:130 in public function `safe_read_json`:",
+          "scripts\\utils\\file_utils.py:130 in public function `safe_read_json`:",
+          "scripts\\utils\\file_utils.py:153 in public function `make_backup`:",
+          "scripts\\utils\\file_utils.py:183 in public function `zip_python_files`:",
+          "scripts\\utils\\file_utils.py:183 in public function `zip_python_files`:"
+        ]
+      }
+    }
+  },
+  "scripts\\utils\\git_utils.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 21,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (108 > 100 characters)"
+          },
+          {
+            "line": 63,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (133 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\utils\\git_utils.py:59: error: Function is missing a return type annotation  [no-untyped-def]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\utils\\git_utils.py:2 at module level:",
+          "scripts\\utils\\git_utils.py:17 in public function `get_changed_files`:",
+          "scripts\\utils\\git_utils.py:93 in public function `get_current_branch`:"
+        ]
+      }
+    }
+  },
+  "scripts\\utils\\gui_helpers.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 78,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (111 > 100 characters)"
+          },
+          {
+            "line": 82,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (101 > 100 characters)"
+          },
+          {
+            "line": 92,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (134 > 100 characters)"
+          },
+          {
+            "line": 150,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (109 > 100 characters)"
+          },
+          {
+            "line": 156,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (117 > 100 characters)"
+          },
+          {
+            "line": 349,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (102 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\utils\\gui_helpers.py:37: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:47: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:54: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:64: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:76: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:90: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:110: error: Call to untyped function \"get_current_timestamp\" in typed context  [no-untyped-call]",
+          "scripts\\utils\\gui_helpers.py:115: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:132: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:148: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:166: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:181: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:201: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:220: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:237: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:254: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:284: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:313: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:320: error: Function is missing a type annotation  [no-untyped-def]",
+          "scripts\\utils\\gui_helpers.py:327: error: Missing type parameters for generic type \"dict\"  [type-arg]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\utils\\gui_helpers.py:1 at module level:",
+          "scripts\\utils\\gui_helpers.py:25 in public function `validate_log_input`:",
+          "scripts\\utils\\gui_helpers.py:38 in public function `get_current_date`:",
+          "scripts\\utils\\gui_helpers.py:48 in public function `get_current_timestamp`:",
+          "scripts\\utils\\gui_helpers.py:48 in public function `get_current_timestamp`:",
+          "scripts\\utils\\gui_helpers.py:55 in public function `clear_text_input`:",
+          "scripts\\utils\\gui_helpers.py:77 in public function `get_selected_option`:",
+          "scripts\\utils\\gui_helpers.py:91 in public function `append_log_entry`:",
+          "scripts\\utils\\gui_helpers.py:116 in public function `get_category_options`:",
+          "scripts\\utils\\gui_helpers.py:149 in public function `create_log_frame`:",
+          "scripts\\utils\\gui_helpers.py:167 in public function `log_message`:",
+          "scripts\\utils\\gui_helpers.py:182 in public function `create_dropdown_menu`:",
+          "scripts\\utils\\gui_helpers.py:202 in public function `create_button`:",
+          "scripts\\utils\\gui_helpers.py:221 in public function `show_messagebox`:",
+          "scripts\\utils\\gui_helpers.py:238 in public function `create_text_entry`:",
+          "scripts\\utils\\gui_helpers.py:255 in public function `format_summary_results`:",
+          "scripts\\utils\\gui_helpers.py:285 in public function `format_raw_results`:",
+          "scripts\\utils\\gui_helpers.py:314 in public function `display_message`:",
+          "scripts\\utils\\gui_helpers.py:314 in public function `display_message`:",
+          "scripts\\utils\\gui_helpers.py:321 in public function `display_error`:",
+          "scripts\\utils\\gui_helpers.py:321 in public function `display_error`:",
+          "scripts\\utils\\gui_helpers.py:328 in public function `format_coverage_data`:"
+        ]
+      }
+    }
+  },
+  "scripts\\utils\\link_summaries_to_raw_logs.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 4,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (133 > 100 characters)"
+          },
+          {
+            "line": 8,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (105 > 100 characters)"
+          },
+          {
+            "line": 29,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (107 > 100 characters)"
+          },
+          {
+            "line": 45,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (104 > 100 characters)"
+          },
+          {
+            "line": 47,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (126 > 100 characters)"
+          },
+          {
+            "line": 48,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (109 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\utils\\link_summaries_to_raw_logs.py:18: error: Missing type parameters for generic type \"dict\"  [type-arg]",
+          "scripts\\utils\\link_summaries_to_raw_logs.py:18: error: Missing type parameters for generic type \"list\"  [type-arg]",
+          "scripts\\utils\\link_summaries_to_raw_logs.py:53: error: Call to untyped function \"load_config\" in typed context  [no-untyped-call]",
+          "scripts\\utils\\link_summaries_to_raw_logs.py:56: error: Call to untyped function \"get_absolute_path\" in typed context  [no-untyped-call]",
+          "scripts\\utils\\link_summaries_to_raw_logs.py:56: error: Call to untyped function \"get_config_value\" in typed context  [no-untyped-call]",
+          "scripts\\utils\\link_summaries_to_raw_logs.py:57: error: Call to untyped function \"get_absolute_path\" in typed context  [no-untyped-call]",
+          "scripts\\utils\\link_summaries_to_raw_logs.py:58: error: Call to untyped function \"get_config_value\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\utils\\link_summaries_to_raw_logs.py:19 in public function `flatten_raw_entries`:",
+          "scripts\\utils\\link_summaries_to_raw_logs.py:19 in public function `flatten_raw_entries`:"
+        ]
+      }
+    }
+  },
+  "scripts\\utils\\zip_util.py": {
+    "quality": {
+      "flake8": {
+        "issues": [
+          {
+            "line": 17,
+            "column": 101,
+            "code": "E501",
+            "message": "line too long (101 > 100 characters)"
+          }
+        ]
+      },
+      "mypy": {
+        "errors": [
+          "scripts\\utils\\zip_util.py:15: error: Function is missing a return type annotation  [no-untyped-def]",
+          "scripts\\utils\\zip_util.py:51: error: Call to untyped function \"main\" in typed context  [no-untyped-call]"
+        ]
+      },
+      "pydocstyle": {
+        "issues": [
+          "scripts\\utils\\zip_util.py:1 at module level:",
+          "scripts\\utils\\zip_util.py:16 in public function `main`:",
+          "scripts\\utils\\zip_util.py:16 in public function `main`:"
+        ]
+      }
+    }
+  },
+  "        D100": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "D100: Missing docstring in public module",
+          "D100: Missing docstring in public module",
+          "D100: Missing docstring in public module",
+          "D100: Missing docstring in public module",
+          "D100: Missing docstring in public module"
+        ]
+      }
+    }
+  },
+  "        D401": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
+          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
+          "D401: First line should be in imperative mood (perhaps 'Check', not 'Checks')",
+          "D401: First line should be in imperative mood (perhaps 'Generate', not 'Generates')",
+          "D401: First line should be in imperative mood (perhaps 'Construct', not 'Constructs')",
+          "D401: First line should be in imperative mood (perhaps 'Load', not 'Loads')",
+          "D401: First line should be in imperative mood (perhaps 'Extract', not 'Extracts')",
+          "D401: First line should be in imperative mood (perhaps 'Load', not 'Loads')",
+          "D401: First line should be in imperative mood (perhaps 'Display', not 'Displays')",
+          "D401: First line should be in imperative mood (perhaps 'Parse', not 'Parses')",
+          "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
+          "D401: First line should be in imperative mood (perhaps 'Load', not 'Loads')",
+          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
+          "D401: First line should be in imperative mood (perhaps 'Save', not 'Saves')",
+          "D401: First line should be in imperative mood (perhaps 'Parse', not 'Parses')",
+          "D401: First line should be in imperative mood (perhaps 'Configure', not 'Configures')",
+          "D401: First line should be in imperative mood (perhaps 'Load', not 'Loads')",
+          "D401: First line should be in imperative mood (perhaps 'Load', not 'Loads')",
+          "D401: First line should be in imperative mood (perhaps 'Set', not 'Sets')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Ensure', not 'Ensures')",
+          "D401: First line should be in imperative mood (perhaps 'Get', not 'Gets')",
+          "D401: First line should be in imperative mood (perhaps 'Log', not 'Logs')",
+          "D401: First line should be in imperative mood (perhaps 'Generate', not 'Generates')",
+          "D401: First line should be in imperative mood (perhaps 'Generate', not 'Generates')",
+          "D401: First line should be in imperative mood (perhaps 'Log', not 'Logs')",
+          "D401: First line should be in imperative mood (perhaps 'Force', not 'Forces')",
+          "D401: First line should be in imperative mood; try rephrasing (found 'Wrapper')",
+          "D401: First line should be in imperative mood (perhaps 'Search', not 'Searches')",
+          "D401: First line should be in imperative mood (perhaps 'Search', not 'Searches')",
+          "D401: First line should be in imperative mood (perhaps 'Log', not 'Logs')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Read', not 'Reads')",
+          "D401: First line should be in imperative mood (perhaps 'Update', not 'Updates')",
+          "D401: First line should be in imperative mood (perhaps 'Append', not 'Appends')",
+          "D401: First line should be in imperative mood (perhaps 'Update', not 'Updates')",
+          "D401: First line should be in imperative mood (perhaps 'Retrieve', not 'Retrieves')",
+          "D401: First line should be in imperative mood (perhaps 'Update', not 'Updates')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Retrieve', not 'Retrieves')",
+          "D401: First line should be in imperative mood (perhaps 'Update', not 'Updates')",
+          "D401: First line should be in imperative mood (perhaps 'Save', not 'Saves')",
+          "D401: First line should be in imperative mood (perhaps 'Validate', not 'Validates')",
+          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
+          "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
+          "D401: First line should be in imperative mood (perhaps 'Start', not 'Starts')",
+          "D401: First line should be in imperative mood; try rephrasing (found 'Helper')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Log', not 'Logs')",
+          "D401: First line should be in imperative mood (perhaps 'Force', not 'Forces')",
+          "D401: First line should be in imperative mood (perhaps 'Search', not 'Searches')",
+          "D401: First line should be in imperative mood (perhaps 'Search', not 'Searches')",
+          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
+          "D401: First line should be in imperative mood (perhaps 'Retrieve', not 'Retrieves')",
+          "D401: First line should be in imperative mood (perhaps 'Retrieve', not 'Retrieves')",
+          "D401: First line should be in imperative mood (perhaps 'Emit', not 'Emits')",
+          "D401: First line should be in imperative mood (perhaps 'Append', not 'Appends')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Define', not 'Defines')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Call', not 'Called')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
+          "D401: First line should be in imperative mood; try rephrasing (found 'Action')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
+          "D401: First line should be in imperative mood (perhaps 'Refresh', not 'Refreshes')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
+          "D401: First line should be in imperative mood (perhaps 'Handle', not 'Handles')",
+          "D401: First line should be in imperative mood (perhaps 'Clear', not 'Clears')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
+          "D401: First line should be in imperative mood (perhaps 'Refresh', not 'Refreshes')",
+          "D401: First line should be in imperative mood (perhaps 'Call', not 'Called')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Load', not 'Loads')",
+          "D401: First line should be in imperative mood (perhaps 'Search', not 'Searches')",
+          "D401: First line should be in imperative mood (perhaps 'Build', not 'Builds')",
+          "D401: First line should be in imperative mood (perhaps 'Save', not 'Saves')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Load', not 'Loads')",
+          "D401: First line should be in imperative mood (perhaps 'Process', not 'Processes')",
+          "D401: First line should be in imperative mood (perhaps 'Process', not 'Processes')",
+          "D401: First line should be in imperative mood (perhaps 'Process', not 'Processes')",
+          "D401: First line should be in imperative mood (perhaps 'Load', not 'Loads')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Load', not 'Loads')",
+          "D401: First line should be in imperative mood (perhaps 'Load', not 'Loads')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
+          "D401: First line should be in imperative mood (perhaps 'Extract', not 'Extracts')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Parse', not 'Parses')",
+          "D401: First line should be in imperative mood; try rephrasing (found 'Deprecated')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Record', not 'Records')",
+          "D401: First line should be in imperative mood (perhaps 'Parse', not 'Parses')",
+          "D401: First line should be in imperative mood (perhaps 'Normalize', not 'Normalizes')",
+          "D401: First line should be in imperative mood (perhaps 'Execute', not 'Executes')",
+          "D401: First line should be in imperative mood (perhaps 'Run', not 'Runs')",
+          "D401: First line should be in imperative mood (perhaps 'Run', not 'Runs')",
+          "D401: First line should be in imperative mood (perhaps 'Run', not 'Runs')",
+          "D401: First line should be in imperative mood (perhaps 'Run', not 'Runs')",
+          "D401: First line should be in imperative mood (perhaps 'Run', not 'Runs')",
+          "D401: First line should be in imperative mood (perhaps 'Read', not 'Reads')",
+          "D401: First line should be in imperative mood (perhaps 'Add', not 'Adds')",
+          "D401: First line should be in imperative mood (perhaps 'Add', not 'Adds')",
+          "D401: First line should be in imperative mood (perhaps 'Add', not 'Adds')",
+          "D401: First line should be in imperative mood (perhaps 'Add', not 'Adds')",
+          "D401: First line should be in imperative mood (perhaps 'Add', not 'Adds')",
+          "D401: First line should be in imperative mood (perhaps 'Merge', not 'Merges')",
+          "D401: First line should be in imperative mood (perhaps 'Initialize', not 'Initializes')",
+          "D401: First line should be in imperative mood (perhaps 'Parse', not 'Parses')",
+          "D401: First line should be in imperative mood (perhaps 'Handle', not 'Handles')",
+          "D401: First line should be in imperative mood (perhaps 'Perform', not 'Performs')",
+          "D401: First line should be in imperative mood (perhaps 'Handle', not 'Handles')",
+          "D401: First line should be in imperative mood; try rephrasing (found 'Main')",
+          "D401: First line should be in imperative mood (perhaps 'Print', not 'Prints')",
+          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
+          "D401: First line should be in imperative mood (perhaps 'Ensure', not 'Ensures')",
+          "D401: First line should be in imperative mood (perhaps 'Write', not 'Writes')",
+          "D401: First line should be in imperative mood (perhaps 'Read', not 'Reads')",
+          "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
+          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
+          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
+          "D401: First line should be in imperative mood (perhaps 'Validate', not 'Validates')",
+          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
+          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
+          "D401: First line should be in imperative mood (perhaps 'Clear', not 'Clears')",
+          "D401: First line should be in imperative mood (perhaps 'Return', not 'Returns')",
+          "D401: First line should be in imperative mood (perhaps 'Append', not 'Appends')",
+          "D401: First line should be in imperative mood (perhaps 'Retrieve', not 'Retrieves')",
+          "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
+          "D401: First line should be in imperative mood (perhaps 'Append', not 'Appends')",
+          "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
+          "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
+          "D401: First line should be in imperative mood (perhaps 'Display', not 'Displays')",
+          "D401: First line should be in imperative mood (perhaps 'Create', not 'Creates')",
+          "D401: First line should be in imperative mood (perhaps 'Format', not 'Formats')",
+          "D401: First line should be in imperative mood (perhaps 'Format', not 'Formats')",
+          "D401: First line should be in imperative mood (perhaps 'Display', not 'Displays')",
+          "D401: First line should be in imperative mood (perhaps 'Display', not 'Displays')",
+          "D401: First line should be in imperative mood (perhaps 'Format', not 'Formats')",
+          "D401: First line should be in imperative mood (perhaps 'Parse', not 'Parses')"
+        ]
+      }
+    }
+  },
+  "        D205": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)",
+          "D205: 1 blank line required between summary line and description (found 0)"
+        ]
+      }
+    }
+  },
+  "        D400": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not ',')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not ',')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not ',')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not ')')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not ',')",
+          "D400: First line should end with a period (not 'g')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 's')",
+          "D400: First line should end with a period (not 's')",
+          "D400: First line should end with a period (not 'd')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not ',')",
+          "D400: First line should end with a period (not 's')",
+          "D400: First line should end with a period (not 'd')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not ':')",
+          "D400: First line should end with a period (not ',')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 't')",
+          "D400: First line should end with a period (not ',')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not 'y')",
+          "D400: First line should end with a period (not ',')",
+          "D400: First line should end with a period (not 'y')"
+        ]
+      }
+    }
+  },
+  "scripts\\__init__.py": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "scripts\\__init__.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "        D104": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "D104: Missing docstring in public package",
+          "D104: Missing docstring in public package",
+          "D104: Missing docstring in public package",
+          "D104: Missing docstring in public package",
+          "D104: Missing docstring in public package",
+          "D104: Missing docstring in public package",
+          "D104: Missing docstring in public package",
+          "D104: Missing docstring in public package",
+          "D104: Missing docstring in public package"
+        ]
+      }
+    }
+  },
+  "        D200": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)",
+          "D200: One-line docstring should fit on one line with quotes (found 3)"
+        ]
+      }
+    }
+  },
+  "        D202": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "D202: No blank lines allowed after function docstring (found 1)",
+          "D202: No blank lines allowed after function docstring (found 1)",
+          "D202: No blank lines allowed after function docstring (found 1)",
+          "D202: No blank lines allowed after function docstring (found 1)",
+          "D202: No blank lines allowed after function docstring (found 1)",
+          "D202: No blank lines allowed after function docstring (found 1)",
+          "D202: No blank lines allowed after function docstring (found 1)",
+          "D202: No blank lines allowed after function docstring (found 1)"
+        ]
+      }
+    }
+  },
+  "scripts\\ci_analyzer\\__init__.py": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "scripts\\ci_analyzer\\__init__.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "scripts\\ci_analyzer\\insights\\__init__.py": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "scripts\\ci_analyzer\\insights\\__init__.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "scripts\\ci_analyzer\\utils\\__ini__.py": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "scripts\\ci_analyzer\\utils\\__ini__.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "        D106": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "D106: Missing docstring in public nested class"
+        ]
+      }
+    }
+  },
+  "        D101": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "D101: Missing docstring in public class",
+          "D101: Missing docstring in public class",
+          "D101: Missing docstring in public class"
+        ]
+      }
+    }
+  },
+  "scripts\\core\\__init__.py": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "scripts\\core\\__init__.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "        D107": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "D107: Missing docstring in __init__",
+          "D107: Missing docstring in __init__"
+        ]
+      }
+    }
+  },
+  "        D102": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "D102: Missing docstring in public method",
+          "D102: Missing docstring in public method"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\__init__.py": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\__init__.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\base\\__init__.py": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\base\\__init__.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\panels\\__init__.py": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\panels\\__init__.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "scripts\\gui\\tabs\\__init__.py": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "scripts\\gui\\tabs\\__init__.py:1 at module level:"
+        ]
+      }
+    }
+  },
+  "scripts\\utils\\__init__.py": {
+    "quality": {
+      "pydocstyle": {
+        "issues": [
+          "scripts\\utils\\__init__.py:1 at module level:"
+        ]
+      }
+    }
+  }
+}

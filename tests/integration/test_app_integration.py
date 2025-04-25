@@ -29,7 +29,7 @@ class DummyIntegrationController:
 
 @unittest.skipIf(
     not os.environ.get("DISPLAY") and os.name != "nt",
-    "🛑 Skipping GUI integration tests — no display available"
+    "🛑 Skipping GUI integration tests — no display available",
 )
 class TestMainTabIntegration(unittest.TestCase):
     def setUp(self):
@@ -71,5 +71,5 @@ class TestMainTabIntegration(unittest.TestCase):
             self.fail(f"ActionPanel integration raised an exception: {e}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
