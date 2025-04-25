@@ -1,10 +1,9 @@
 # 🚀 Ideas Logger – CI-Tested AI-Augmented GUI for Structured Thought
 
-[![Run Tests](https://github.com/angelosdimakos/Ideas_Logger/actions/workflows/pytest.yml/badge.svg)](https://github.com/angelosdimakos/Ideas_Logger/actions/workflows/pytest.yml)
 [![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/graph/badge.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)
-![Lint](https://img.shields.io/badge/lint-pass-brightgreen)
-![Docs](https://img.shields.io/badge/doc--coverage-85%25-yellowgreen)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/graphs/sunburst.svg?token=C49N6JTFXY)](...)
+
 
 > `python` • `tkinter` • `ollama` • `faiss` • `gui-app` • `llm` • `summarization` • `productivity`
 
