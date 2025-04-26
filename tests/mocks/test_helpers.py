@@ -181,13 +181,16 @@ def assert_resolved_test_path(config: dict, key: str, expected_suffix: str):
     """
     value = config.get(key)
     assert value is not None, f"Missing key: {key}"
-    assert expected_suffix in value.replace(
-        "\\", "/"
-    ), f"{key} should include {expected_suffix}, got: {value}"
-    assert (
-        "pytest" in value or "tmp" in value.lower()
-    ), f"{key} should point to test path, got: {value}"
 
+    # Ensure value is a string for path operations
+    if isinstance(value, Path):
+        value = str(value)
+
+    normalized_value = value.replace("\\", "/")
+    assert expected_suffix in normalized_value, f"{key} should include {expected_suffix}, got: {value}"
+    assert (
+        "pytest" in normalized_value or "tmp" in normalized_value.lower()
+    ), f"{key} should point to test path, got: {value}"
 
 def make_fake_paths(temp_dir: Path) -> ZephyrusPaths:
     """

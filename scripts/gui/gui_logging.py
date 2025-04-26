@@ -3,6 +3,7 @@ gui_logging.py
 
 This module provides a logging handler that appends log messages to a Tkinter Text widget.
 """
+
 import logging
 import tkinter as tk
 
@@ -12,14 +13,14 @@ class GUILogHandler(logging.Handler):
     A logging handler that appends log messages to a Tkinter Text widget.
     """
 
-    def __init__(self, text_widget):
+    def __init__(self, text_widget: tk.Text) -> None:
         """
         :param text_widget: The Text widget where log messages should be appended.
         """
         super().__init__()
         self.text_widget = text_widget
 
-    def emit(self, record):
+    def emit(self, record: logging.LogRecord) -> None:
         """
         Emits a log message to the associated Text widget.
 
@@ -32,7 +33,7 @@ class GUILogHandler(logging.Handler):
         except (AttributeError, RuntimeError):
             self.handleError(record)
 
-    def append_message(self, msg):
+    def append_message(self, msg: str) -> None:
         """
         Appends a log message to the associated Text widget.
 

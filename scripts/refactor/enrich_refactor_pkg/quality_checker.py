@@ -16,6 +16,7 @@ from typing import Dict, Any, Set
 from scripts.refactor.enrich_refactor_pkg.path_utils import norm
 from scripts.refactor.enrich_refactor_pkg.helpers import safe_print
 from scripts.refactor.enrich_refactor_pkg.core import all_plugins
+
 # auto-import plugin modules so they register
 import scripts.refactor.enrich_refactor_pkg.plugins  # noqa: F401
 
@@ -46,7 +47,9 @@ def merge_into_refactor_guard(audit_path: str = "refactor_audit.json") -> None:
         plugin.default_report = report_path
 
         # decide if we need to run the tool
-        existing = report_path.read_text(encoding=ENC, errors="ignore") if report_path.exists() else ""
+        existing = (
+            report_path.read_text(encoding=ENC, errors="ignore") if report_path.exists() else ""
+        )
         if not existing.strip():
             safe_print(f"[~] Generating report for {plugin.name}")
             plugin.run()

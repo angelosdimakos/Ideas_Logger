@@ -20,7 +20,9 @@ from datetime import datetime
 from scripts.utils.file_utils import read_json, write_json
 from tkinter import scrolledtext
 import logging
+
 logger = logging.getLogger(__name__)
+
 
 def validate_log_input(content: str) -> bool:
     """
@@ -33,9 +35,7 @@ def validate_log_input(content: str) -> bool:
     return True
 
 
-
-
-def get_current_date():
+def get_current_date() -> str:
     """
     Returns the current date as a string in 'YYYY-MM-DD' format.
 
@@ -45,14 +45,14 @@ def get_current_date():
     return datetime.now().strftime("%Y-%m-%d")
 
 
-def get_current_timestamp():
+def get_current_timestamp() -> str:
     """
     Returns the current date and time as a formatted string (YYYY-MM-DD HH:MM:SS).
     """
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-def clear_text_input(entry_widget):
+def clear_text_input(entry_widget: tk.Text) -> None:
     """
     Clears all text from the given Tkinter text entry widget.
 
@@ -62,7 +62,7 @@ def clear_text_input(entry_widget):
     entry_widget.delete("1.0", tk.END)
 
 
-def update_status_label(label, message, color="blue"):
+def update_status_label(label: tk.Label, message: str, color: str = "blue") -> None:
     """
     Update the text and foreground color of a Tkinter label widget.
 
@@ -74,7 +74,7 @@ def update_status_label(label, message, color="blue"):
     label.config(text=message, fg=color)
 
 
-def get_selected_option(menu_var, default="General"):
+def get_selected_option(menu_var: tk.Variable, default: str = "General") -> str:
     """
     Returns the currently selected option from a Tkinter menu variable, or a default value if none is selected.
 
@@ -88,7 +88,7 @@ def get_selected_option(menu_var, default="General"):
     return menu_var.get() or default
 
 
-def append_log_entry(log_file, date, category, subcategory, entry_text):
+def append_log_entry(log_file: str, date: str, category: str, subcategory: str, entry_text: str) -> None:
     """
     Appends a log entry with a timestamp and content to the specified log file, organizing entries by date, category, and subcategory.
 
@@ -113,7 +113,7 @@ def append_log_entry(log_file, date, category, subcategory, entry_text):
     write_json(log_file, data)
 
 
-def get_category_options(categories_json_path):
+def get_category_options(categories_json_path: str) -> list:
     """
     Retrieves a list of category names from a JSON file at the given path.
 
@@ -130,7 +130,7 @@ def get_category_options(categories_json_path):
         return []
 
 
-def create_status_label(root, status_var):
+def create_status_label(root: tk.Tk, status_var: tk.StringVar) -> tk.Label:
     """
     Create and pack a status label widget in the given root window.
 
@@ -146,7 +146,7 @@ def create_status_label(root, status_var):
     return label
 
 
-def create_log_frame(root):
+def create_log_frame(root: tk.Tk) -> tuple:
     """
     Creates and returns a disabled scrolled text widget within a frame for logging purposes in a Tkinter GUI.
 
@@ -164,7 +164,7 @@ def create_log_frame(root):
     return log_text, log_frame
 
 
-def log_message(log_text_widget, message):
+def log_message(log_text_widget: tk.Text, message: str) -> None:
     """
     Appends a timestamped message to the provided Tkinter text widget for logging purposes.
 
@@ -179,7 +179,7 @@ def log_message(log_text_widget, message):
     log_text_widget.config(state=tk.DISABLED)
 
 
-def create_dropdown_menu(frame, label_text, variable, options):
+def create_dropdown_menu(frame: tk.Frame, label_text: str, variable: tk.Variable, options: list) -> tk.OptionMenu:
     """
     Creates a labeled dropdown menu (OptionMenu) in the given Tkinter frame.
 
@@ -199,7 +199,7 @@ def create_dropdown_menu(frame, label_text, variable, options):
     return menu
 
 
-def create_button(frame, text, command, width=15, height=2, bg="#4CAF50", fg="white"):
+def create_button(frame: tk.Widget, text: str, command: callable, width: int = 15, height: int = 2, bg: str = "#4CAF50", fg: str = "white") -> tk.Button:
     """
     Creates and returns a Tkinter Button widget with customizable text, command, size, and colors.
 
@@ -218,7 +218,7 @@ def create_button(frame, text, command, width=15, height=2, bg="#4CAF50", fg="wh
     return tk.Button(frame, text=text, command=command, width=width, height=height, bg=bg, fg=fg)
 
 
-def show_messagebox(icon, title, message):
+def show_messagebox(icon: str, title: str, message: str) -> None:
     """
     Displays a message box with the specified icon, title, and message using tkinter.
 
@@ -235,7 +235,7 @@ def show_messagebox(icon, title, message):
         messagebox.showerror(title, message)
 
 
-def create_text_entry(root, height=8, width=70):
+def create_text_entry(root: tk.Widget, height: int = 8, width: int = 70) -> tk.Text:
     """
     Creates a text entry widget for user input.
 
@@ -252,7 +252,7 @@ def create_text_entry(root, height=8, width=70):
     return text_entry
 
 
-def format_summary_results(results):
+def format_summary_results(results: list) -> str:
     """
     Formats a list of result items into a readable summary string.
 
@@ -282,7 +282,7 @@ def format_summary_results(results):
     return "\n\n".join(formatted)
 
 
-def format_raw_results(results):
+def format_raw_results(results: list) -> str:
     """
     Formats a list of raw result items into a readable string.
 
@@ -311,14 +311,14 @@ def format_raw_results(results):
     return "\n\n".join(formatted)
 
 
-def display_message(title, message):
+def display_message(title: str, message: str) -> None:
     """
     Displays an informational message box.
     """
     messagebox.showinfo(title, message)
 
 
-def display_error(title, message):
+def display_error(title: str, message: str) -> None:
     """
     Displays an error message box.
     """
@@ -343,7 +343,7 @@ def format_coverage_data(data: list[dict]) -> str:
 
     lines = []
     for main_cat, entries in grouped.items():
-        lines.append(f"📘 {main_cat}")
+        lines.append(f" {main_cat}")
         for e in entries:
             summarized = e.get("estimated_summarized_entries", e.get("summarized_total", 0))
             lines.append(

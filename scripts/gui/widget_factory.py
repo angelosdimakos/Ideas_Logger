@@ -21,7 +21,9 @@ class WidgetFactory:
     """
 
     @staticmethod
-    def create_button(parent: tk.Widget, text: str, command: callable, style: str = "TButton", **options: Any) -> ttk.Button:
+    def create_button(
+        parent: tk.Widget, text: str, command: callable, style: str = "TButton", **options: Any
+    ) -> ttk.Button:
         """
         Create and return a styled ttk Button.
 
@@ -38,7 +40,9 @@ class WidgetFactory:
         return ttk.Button(parent, text=text, command=command, style=style, **options)
 
     @staticmethod
-    def create_label(parent: tk.Widget, text: str, style: str = "TLabel", **options: Any) -> ttk.Label:
+    def create_label(
+        parent: tk.Widget, text: str, style: str = "TLabel", **options: Any
+    ) -> ttk.Label:
         """
         Create and return a styled ttk Label.
 

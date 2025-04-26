@@ -1,18 +1,15 @@
 """
-descriptive_insights.py
-
 This module provides functions for generating descriptive insights from CI audit reports.
 
-Core features include:
-- Summarizing code complexity, highlighting high-risk methods and complexity hotspots.
-- Reporting on testing coverage, including actionable feedback and visual indicators.
-- Aggregating code quality metrics from linting, formatting, typing, and documentation checks, and identifying common issues.
-- Analyzing diff coverage to assess test coverage of new or changed code.
+Core features:
+- Summarize code complexity, highlighting high-risk methods and complexity hotspots.
+- Report on testing coverage, including actionable feedback and visual indicators.
+- Aggregate code quality metrics from linting, formatting, typing, and documentation checks.
+- Analyze diff coverage to assess test coverage of new or changed code.
 
-Each function returns formatted summary strings with visual and emoji indicators, designed for inclusion in CI reports and dashboards to help teams monitor and improve code quality and test coverage.
+Each function returns formatted summary strings with visual and emoji indicators.
 """
 
-# scripts/ci_analyzer/insights/descriptive_insights.py
 from typing import Any, Dict, List, Tuple
 import re
 from collections import Counter
@@ -23,9 +20,8 @@ def generate_complexity_insights(audit: Dict[str, Any]) -> List[str]:
     """
     Generate a summary of code complexity insights from an audit report.
 
-    Analyzes method complexity data, identifies high-risk methods (complexity ≥10),
-    computes average complexity, highlights top complexity hotspots, and formats
-    the results as a list of summary strings with visual indicators.
+    Analyzes method complexity data, identifies high-risk methods, computes average complexity,
+    and highlights top complexity hotspots.
 
     Args:
         audit (Dict[str, Any]): Audit data containing complexity metrics per file and method.
@@ -69,9 +65,7 @@ def generate_testing_insights(audit: Dict[str, Any]) -> List[str]:
     """
     Generate a list of formatted testing insights based on audit metadata.
 
-    Analyzes the provided audit dictionary to calculate the percentage of tested methods,
-    and returns a list of markdown-formatted strings summarizing testing coverage,
-    including visual indicators and actionable feedback.
+    Analyzes the provided audit dictionary to calculate the percentage of tested methods.
 
     Args:
         audit (Dict[str, Any]): Audit data containing testing metadata for methods.
@@ -107,9 +101,7 @@ def generate_quality_insights(audit: Dict[str, Any]) -> List[str]:
     """
     Generate a summary of code quality insights from an audit report.
 
-    Analyzes linting, formatting, typing, docstring, and coverage results across files,
-    aggregates common issues, computes an average quality score, and returns a list of
-    insightful messages and actionable recommendations.
+    Analyzes linting, formatting, typing, docstring, and coverage results across files.
 
     Args:
         audit (Dict[str, Any]): Audit data containing quality check results for multiple files.
@@ -185,11 +177,9 @@ def generate_quality_insights(audit: Dict[str, Any]) -> List[str]:
 
 def generate_diff_insights(audit: Dict[str, Any]) -> List[str]:
     """
-    Generate a summary of code quality insights from an audit report.
+    Generate a summary of diff coverage insights from an audit report.
 
-    Analyzes linting, formatting, typing, docstring, and coverage results across files,
-    aggregates common issues, computes an average quality score, and returns a list of
-    insightful messages and actionable recommendations.
+    Analyzes diff coverage to assess test coverage of new or changed code.
 
     Args:
         audit (Dict[str, Any]): Audit data containing quality check results for multiple files.

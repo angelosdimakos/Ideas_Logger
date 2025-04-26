@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from scripts.utils.git_utils import interactive_commit_flow
 
 
-def get_current_branch():
+def get_current_branch() -> str:
     """
     Returns the name of the current Git branch.
 
@@ -26,7 +26,7 @@ def get_current_branch():
     return result.stdout.strip()
 
 
-def get_modified_files():
+def get_modified_files() -> list[str]:
     """
     Returns a list of files modified (but not yet committed) in the current Git working directory.
 
@@ -42,7 +42,7 @@ def get_modified_files():
         return []
 
 
-def is_valid_branch_name(name):
+def is_valid_branch_name(name: str) -> bool:
     """
     Checks if the provided branch name is valid according to Git naming conventions.
 
@@ -55,7 +55,7 @@ def is_valid_branch_name(name):
     return bool(re.match(r"^[\w\-/]+$", name))  # Alphanumeric, underscore, dash, slash
 
 
-def generate_suggested_branch_name():
+def generate_suggested_branch_name() -> str:
     """
     Generates a suggested branch name based on modified files and the current date.
 
@@ -78,7 +78,7 @@ def generate_suggested_branch_name():
     return f"fix/{base}-{date}"
 
 
-def switch_to_new_branch():
+def switch_to_new_branch() -> None:
     """
     Prompts the user to create and switch to a new Git branch.
     Suggests a branch name based on modified files and validates user input.

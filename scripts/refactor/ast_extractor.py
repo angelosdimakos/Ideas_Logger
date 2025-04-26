@@ -75,7 +75,7 @@ def extract_class_methods(file_path: str) -> List[ClassMethodInfo]:
         def __init__(self):
             self.classes: List[ClassMethodInfo] = []
 
-        def visit_ClassDef(self, node: ast.ClassDef) -> None:
+        def visit_ClassDef(self, node: ast.AST) -> None:
             info = ClassMethodInfo(node.name)
             for item in node.body:
                 if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -88,7 +88,7 @@ def extract_class_methods(file_path: str) -> List[ClassMethodInfo]:
 
             # Also process nested classes
             for item in node.body:
-                if isinstance(item, ast.ClassDef):
+                if isinstance(item, ast.AST):
                     self.visit(item)
 
             # Continue generic visits for other nested structures

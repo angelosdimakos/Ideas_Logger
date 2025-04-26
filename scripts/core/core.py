@@ -1,14 +1,13 @@
 """
-core.py
+This module provides core functionality for the Zephyrus Logger application.
+It includes the ZephyrusLoggerCore class, which manages logging, summarization,
+and search capabilities for categorized entries stored in JSON and Markdown files.
+The module handles the initialization of the environment, batch summarization using AI,
+and maintains tracking of summaries. It also offers search functionality across both
+summaries and raw logs, integrating with organization-specific modules for configuration,
+file management, and AI summarization.
 
-This module provides the core functionality for the Zephyrus Logger application. It includes
-the [ZephyrusLoggerCore](cci:2://file:///C:/Users/Angelos%20Dimakos/PycharmProjects/Ideas_Logger/scripts/core/core.py:15:0-382:65) class, which manages logging, summarization, and search capabilities
-for categorized entries stored in JSON and Markdown files. The module handles the initialization
-of the environment, batch summarization using AI, and maintains tracking of summaries. It also
-offers search functionality across both summaries and raw logs, integrating with organization-specific
-modules for configuration, file management, and AI summarization.
-
-Key functionalities include:
+Key functionalities:
 - Initialization of logging and summarization environments.
 - Batch processing of logs for summarization.
 - Search capabilities for retrieving categorized entries.
@@ -42,10 +41,13 @@ from scripts.paths import ZephyrusPaths
 
 logger = logging.getLogger(__name__)
 
-
 class ZephyrusLoggerCore:
     """
-    ZephyrusLoggerCore manages logging, summarization, and search for categorized entries using JSON and Markdown files. It initializes the environment, handles batch summarization with AI, maintains summary tracking, and provides search functionality across summaries and raw logs. Integrates with organization-specific modules for configuration, file management, and AI summarization.
+    Manages logging, summarization, and search for categorized entries using JSON and Markdown files.
+    Initializes the environment, handles batch summarization with AI, maintains summary tracking,
+    and provides search functionality across summaries and raw logs.
+    Integrates with organization-specific modules for configuration, file management,
+    and AI summarization.
     """
 
     TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
@@ -59,10 +61,13 @@ class ZephyrusLoggerCore:
 
     def __init__(self, script_dir: Union[str, Path]) -> None:
         """
-        Initializes the ZephyrusLoggerCore instance by loading configuration, setting up paths, environment, AI summarizer, summary tracker, and log manager. Validates or rebuilds the summary tracker as needed, and configures batch size and logging behavior based on the current configuration.
+        Initializes the ZephyrusLoggerCore instance by loading configuration, setting up paths,
+        environment, AI summarizer, summary tracker, and log manager. Validates or rebuilds the
+        summary tracker as needed, and configures batch size and logging behavior based on the
+        current configuration.
 
         Args:
-            script_dir (str or Path): The directory containing the script, used to resolve paths and configuration.
+            script_dir (str or Path): The directory containing the script, used to resolve paths.
         """
         self.script_dir = Path(script_dir)
         self.config = get_effective_config()

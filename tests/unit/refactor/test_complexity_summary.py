@@ -16,6 +16,7 @@ from scripts.refactor.complexity.complexity_summary import run_analysis, analyze
 # 🧪 run_analysis() — Core Logic
 # ────────────────────────────────
 
+
 def test_run_analysis_no_violations(capfd) -> None:
     """
     Test case for `run_analysis` with no complexity violations.
@@ -25,10 +26,7 @@ def test_run_analysis_no_violations(capfd) -> None:
     """
     data = {
         "core.py": {
-            "complexity": {
-                "clean_function": {"complexity": 3},
-                "safe_function": {"complexity": 6}
-            }
+            "complexity": {"clean_function": {"complexity": 3}, "safe_function": {"complexity": 6}}
         }
     }
     run_analysis(data, max_complexity=10, use_emoji=False)
@@ -64,13 +62,7 @@ def test_run_analysis_with_violations_emoji(capfd) -> None:
     This test verifies that when the complexity of a function exceeds the threshold,
     a SystemExit is raised and the appropriate warning message with emoji is output.
     """
-    data = {
-        "core.py": {
-            "complexity": {
-                "bad": {"complexity": 15}
-            }
-        }
-    }
+    data = {"core.py": {"complexity": {"bad": {"complexity": 15}}}}
     run_analysis(data, max_complexity=10, use_emoji=True)
     out = capfd.readouterr().out
     assert "🚨 Complexity Warnings" in out
@@ -82,6 +74,7 @@ def test_run_analysis_with_violations_emoji(capfd) -> None:
 # 🧪 analyze_complexity() — Full CLI
 # ────────────────────────────────
 
+
 def test_analyze_complexity_valid_json(monkeypatch, capfd) -> None:
     """
     Test case for `analyze_complexity` with valid JSON input.
@@ -89,9 +82,7 @@ def test_analyze_complexity_valid_json(monkeypatch, capfd) -> None:
     This test verifies that the function processes valid JSON correctly and outputs
     the expected results.
     """
-    content = {
-        "file.py": {"complexity": {"foo": {"complexity": 4}}}
-    }
+    content = {"file.py": {"complexity": {"foo": {"complexity": 4}}}}
     with tempfile.NamedTemporaryFile("w+", delete=False) as tmp:
         json.dump(content, tmp)
         tmp.flush()

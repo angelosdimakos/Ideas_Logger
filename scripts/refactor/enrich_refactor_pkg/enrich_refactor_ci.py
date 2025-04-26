@@ -27,6 +27,7 @@ from scripts.refactor.enrich_refactor_pkg.quality_checker import merge_reports
 
 ENC = "utf-8"
 
+
 def enrich_refactor_audit(
     audit_path: str,
     reports_path: str,
@@ -67,7 +68,9 @@ def enrich_refactor_audit(
             report_file = Path.cwd() / "coverage.xml"
         if not report_file.exists():
             safe_print(f"[~] Generating: {report_file.name}")
-            result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            result = subprocess.run(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+            )
             report_file.write_text(result.stdout if name != "coverage" else "", encoding=ENC)
 
     # 2) Build a map of tool-name → Path
@@ -97,6 +100,7 @@ def enrich_refactor_audit(
         safe_print(f"[+] Merging docstring data from {docstring_file}")
         try:
             from scripts.refactor.parsers.docstring_parser import DocstringAnalyzer
+
             doc_data = json.loads(docstring_file.read_text(encoding=ENC))
             # merge doc_data into audit_file here...
         except Exception as e:
@@ -107,9 +111,18 @@ def enrich_refactor_audit(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Enrich refactor audit with quality data.")
-    parser.add_argument("--audit", type=str, default="refactor_audit.json", help="Path to audit JSON file")
-    parser.add_argument("--reports", type=str, default="lint-reports", help="Directory for lint report files")
-    parser.add_argument("--docstrings", type=str, default="docstring_summary.json", help="Path to docstring summary JSON")
+    parser.add_argument(
+        "--audit", type=str, default="refactor_audit.json", help="Path to audit JSON file"
+    )
+    parser.add_argument(
+        "--reports", type=str, default="lint-reports", help="Directory for lint report files"
+    )
+    parser.add_argument(
+        "--docstrings",
+        type=str,
+        default="docstring_summary.json",
+        help="Path to docstring summary JSON",
+    )
     args = parser.parse_args()
 
     enrich_refactor_audit(args.audit, args.reports, args.docstrings)

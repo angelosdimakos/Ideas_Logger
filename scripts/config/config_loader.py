@@ -1,30 +1,24 @@
-"""
-config_loader.py
-
-This module provides centralized configuration and logging utilities for the application.
-
-Core features include:
-- Setting up consistent, centralized logging with configurable log levels.
-- Loading, validating, and caching application settings from JSON configuration files.
-- Providing utility functions to retrieve configuration values with defaults and warnings.
-- Supporting test mode by overriding key configuration paths with test-safe equivalents.
-- Resolving absolute paths relative to the project root for robust file management.
-- Example usage for loading configuration and retrieving key settings.
-
-Intended for use throughout the application to ensure robust, maintainable, and flexible configuration and logging management.
-"""
-
 import os
+import json
 import logging
 from pathlib import Path
+from typing import Dict, Any, Optional
 
+# Setup centralized logging immediately
+logger = logging.getLogger(__name__)
 
-def setup_logging():
+def setup_logging() -> None:
     """
-    Configures centralized logging with a default INFO level and a standard log format.
-    Initializes a stream handler and logs a debug message to confirm setup.
+    Configure centralized logging.
+
+    This function sets up the logging level, format, and handlers for the application.
+
+    Returns:
+        None
+
+    Raises:
+        None
     """
-    # Default log level is INFO. This can be overridden later.
     level_str = "INFO"
     numeric_level = getattr(logging, level_str.upper(), logging.INFO)
     logging.basicConfig(
@@ -32,56 +26,41 @@ def setup_logging():
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         handlers=[logging.StreamHandler()],
     )
-    # Log a debug message to confirm that logging is configured.
-    logger = logging.getLogger(__name__)
     logger.debug("Centralized logging configured at level %s", level_str)
 
-
-# Set up logging as early as possible.
 setup_logging()
 
-# Configure the module logger.
-logger = logging.getLogger(__name__)
+# Base directory setup
+BASE_DIR: Path = Path(__file__).resolve().parents[2]
+CONFIG_DIR: Path = BASE_DIR / "config"
+CONFIG_FILE_PATH: Path = CONFIG_DIR / "config.json"
 
-# Compute project base directory.
-BASE_DIR = Path(__file__).resolve().parents[2]  # ← resolves to project root (Zephyrus root folder)
-# Define the directory where configuration files are stored.
-CONFIG_DIR = os.path.join(BASE_DIR, "config")
-CONFIG_FILE_PATH = Path(__file__).resolve().parent / "config.json"
-
-import json
-import logging
-import os
-
-logger = logging.getLogger(__name__)
-
-# Default config file path
-CONFIG_FILE_PATH = "config/config.json"
-
-
-def load_config(config_path=CONFIG_FILE_PATH):
+def load_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]:
     """
-    Safely load the config file from the config folder.
-    If it doesn't exist or has errors, return an empty dict.
+    Safely load the configuration file from the specified path.
+
+    If the config file does not exist or has errors, return an empty dictionary.
 
     Args:
-        config_path (str): The path to the config file. Defaults to CONFIG_FILE_PATH.
+        config_path (Optional[Path]): The path to the config file. If None, defaults to CONFIG_FILE_PATH.
 
     Returns:
-        dict: The loaded config dictionary.
+        Dict[str, Any]: The loaded configuration dictionary, or an empty dictionary if loading fails.
+
+    Raises:
+        FileNotFoundError: If the configuration file cannot be found.
+        JSONDecodeError: If the configuration file contains invalid JSON.
     """
-    if not os.path.exists(config_path):
+    if not config_path.exists():
         logger.warning(f"Config file '{config_path}' not found. Using defaults.")
         return {}
 
     try:
-        # Attempt to read the config file
-        with open(config_path, "r", encoding="utf-8") as f:
+        with config_path.open("r", encoding="utf-8") as f:
             data = json.load(f)
         logger.debug(f"Successfully loaded config from '{config_path}'. Keys: {list(data.keys())}")
         logger.debug("Full config dump:\n" + json.dumps(data, indent=2))
 
-        # Adjust logging level based on 'test_mode' value in the config
         if data.get("test_mode", False):
             logger.setLevel(logging.DEBUG)
             logger.debug("Test mode enabled: setting logger level to DEBUG.")
@@ -91,111 +70,103 @@ def load_config(config_path=CONFIG_FILE_PATH):
         return data
 
     except json.JSONDecodeError as e:
-        # If JSON is invalid, log an error and return an empty dict
         logger.error(f"Failed to parse config file '{config_path}': {e}. Using defaults.")
         return {}
-
     except OSError as e:
-        # Handle I/O errors (file permission issues, etc.)
         logger.error(f"I/O error while loading config file '{config_path}': {e}. Using defaults.")
         return {}
 
-
-def get_config_value(config, key, default):
+def get_config_value(config: Dict[str, Any], key: str, default: Any) -> Any:
     """
-    Retrieve a configuration value by key.
+    Retrieve a configuration value by its key from the provided config dictionary.
+
+    If the key is not found in the config, a warning is logged and the default value is returned.
 
     Args:
-        config (dict): The configuration dictionary.
+        config (Dict[str, Any]): The configuration dictionary.
         key (str): The key of the value to retrieve.
-        default (Any): The default value if key is not present.
+        default (Any): The default value to return if the key is not found.
 
     Returns:
-        Any: The retrieved value, or the default if key is not present.
+        Any: The retrieved configuration value or the default value.
 
-    Warning:
-        Logs a warning if key is missing.
+    Raises:
+        KeyError: If the key is not found and no default is provided.
     """
     if key not in config:
         logger.warning(f"Missing key '{key}' in config. Using default value: {default}")
         return default
     return config[key]
 
-
-def get_absolute_path(relative_path):
+def get_absolute_path(relative_path: str) -> Path:
     """
     Build an absolute path from a project-root-relative path.
 
     Args:
-        relative_path (str): The path relative to the project root.
+        relative_path (str): The relative path to convert.
 
     Returns:
-        str: The absolute path, or None if the path can't be resolved.
+        Path: The absolute path derived from the project root.
+
+    Raises:
+        ValueError: If the relative path is invalid.
     """
     try:
-        return str(Path(BASE_DIR) / relative_path)
+        return BASE_DIR / relative_path
     except (TypeError, ValueError, OSError) as e:
         logger.error(f"Failed to resolve absolute path for '{relative_path}': {e}")
-        return None
+        raise
 
-
-def is_test_mode(config=None):
+def is_test_mode(config: Optional[Dict[str, Any]] = None) -> bool:
     """
     Check if 'test_mode' is enabled in the configuration.
 
-    This function verifies whether the application is running in test mode
-    by checking the 'test_mode' flag in the provided configuration dictionary.
-
     Args:
-        config (dict, optional): The configuration dictionary. If not provided,
-                                 the configuration is loaded using `load_config()`.
+        config (Optional[Dict[str, Any]]): The configuration dictionary. If None, defaults to loading the config.
 
     Returns:
-        bool: True if 'test_mode' is enabled in the config, False otherwise.
+        bool: True if 'test_mode' is enabled, False otherwise.
+
+    Raises:
+        RuntimeError: If the configuration cannot be loaded.
     """
     if config is None:
         config = load_config()
-        return config.get("test_mode", False)
+    return config.get("test_mode", False)
 
-
-def get_effective_config(config_path=CONFIG_FILE_PATH):
+def get_effective_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]:
     """
-    Loads the configuration from the specified path and overrides paths with test-safe ones if 'test_mode' is enabled.
+    Load the configuration from the specified path and override paths with test-safe ones if 'test_mode' is enabled.
 
-    If 'test_mode' is enabled, the following configuration values are overridden:
+    This function first attempts to load the configuration from the given path. If 'test_mode' is active, it modifies certain paths in the configuration to point to test-safe equivalents, ensuring that tests do not interfere with production data.
 
-        - 'logs_dir'
-        - 'vector_store_dir'
-        - 'export_dir'
-        - 'raw_log_path'
-        - 'correction_summaries_path'
-        - 'summary_tracker_path'
+    Args:
+        config_path (Optional[Path]): The path to the config file. If None, defaults to CONFIG_FILE_PATH.
 
-    The overridden values are computed by joining the overridden directory paths with the original file names.
+    Returns:
+        Dict[str, Any]: The effective configuration dictionary, with test-safe paths if applicable.
+
+    Raises:
+        FileNotFoundError: If the configuration file cannot be found.
+        JSONDecodeError: If the configuration file contains invalid JSON.
     """
     config = load_config(config_path)
     try:
         if config.get("test_mode", False):
-            logger.warning("⚠️ Test mode is active. Overriding config paths with test equivalents.")
+            logger.warning("\u26a0\ufe0f Test mode is active. Overriding config paths with test equivalents.")
 
-            config["logs_dir"] = config.get("test_logs_dir", "tests/mock_data/logs")
-            config["vector_store_dir"] = config.get(
-                "test_vector_store_dir", "tests/mock_data/vector_store"
-            )
-            config["export_dir"] = config.get("test_export_dir", "tests/mock_data/exports")
+            config["logs_dir"] = Path(config.get("test_logs_dir", "tests/mock_data/logs"))
+            config["vector_store_dir"] = Path(config.get("test_vector_store_dir", "tests/mock_data/vector_store"))
+            config["export_dir"] = Path(config.get("test_export_dir", "tests/mock_data/exports"))
 
-            # Override all path-specific keys using those dirs
-            config["raw_log_path"] = str(Path(config["logs_dir"]) / "zephyrus_log.json")
-            config["correction_summaries_path"] = str(
-                Path(config["logs_dir"]) / "correction_summaries.json"
-            )
-            config["summary_tracker_path"] = str(Path(config["logs_dir"]) / "summary_tracker.json")
+            config["raw_log_path"] = config["logs_dir"] / "zephyrus_log.json"
+            config["correction_summaries_path"] = config["logs_dir"] / "correction_summaries.json"
+            config["summary_tracker_path"] = config["logs_dir"] / "summary_tracker.json"
     except TypeError as e:
         logger.error("Invalid directory paths in test config override: %s", e)
+
     return config
 
-
-# Example usage:
 if __name__ == "__main__":
     config = load_config()
     batch_size = get_config_value(config, "batch_size", 5)

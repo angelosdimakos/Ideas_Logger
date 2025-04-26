@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Dict, Any, List
 
+
 # ── 1. Plugin base class ───────────────────────────────────────────────────
 class ToolPlugin(ABC):
     """
@@ -32,10 +33,11 @@ class ToolPlugin(ABC):
         """Read `default_report` and merge quality findings into `dst`."""
         ...
 
+
 # ── 2. Plugin discovery ───────────────────────────────────────────────────────
 from scripts.refactor.enrich_refactor_pkg.plugins import PLUGINS as _PLUGINS
+
 
 def all_plugins() -> List[ToolPlugin]:
     """Return the list of ToolPlugin instances auto-registered via plugins package."""
     return _PLUGINS
-

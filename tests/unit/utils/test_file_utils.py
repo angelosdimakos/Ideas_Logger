@@ -123,7 +123,6 @@ def test_zip_python_files_excludes_unwanted_dirs(tmp_path):
         assert all(".venv" not in f for f in files)
 
 
-
 def test_read_json_missing_file(tmp_path):
     """
     Unit tests for file utility functions in scripts.utils.file_utils,

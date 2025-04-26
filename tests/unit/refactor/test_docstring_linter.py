@@ -1,8 +1,5 @@
 from pathlib import Path
-from scripts.refactor.parsers.docstring_parser import (
-    split_docstring_sections,
-    DocstringAnalyzer
-)
+from scripts.refactor.parsers.docstring_parser import split_docstring_sections, DocstringAnalyzer
 
 
 def test_split_docstring_sections_all_parts() -> None:
@@ -36,11 +33,7 @@ def test_split_docstring_sections_partial() -> None:
 
 def test_split_docstring_sections_none() -> None:
     """Test the split_docstring_sections function with None input."""
-    assert split_docstring_sections(None) == {
-        "description": None,
-        "args": None,
-        "returns": None
-    }
+    assert split_docstring_sections(None) == {"description": None, "args": None, "returns": None}
 
 
 def test_extract_docstrings(tmp_path: Path) -> None:

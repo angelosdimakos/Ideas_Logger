@@ -6,8 +6,9 @@ from ..core import ToolPlugin
 from ..helpers import run_cmd, read_report
 from ..path_utils import norm
 
+
 class BlackPlugin(ToolPlugin):
-    name           = "black"
+    name = "black"
     default_report = Path("black.txt")
 
     def run(self) -> int:

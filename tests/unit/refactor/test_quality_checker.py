@@ -8,11 +8,11 @@ from scripts.refactor.enrich_refactor_pkg.plugins.pydocstyle import PydocstylePl
 from scripts.refactor.enrich_refactor_pkg.plugins.coverage import CoveragePlugin
 
 # local constants
-BLACK_REPORT      = Path("black.txt")
-FLAKE8_REPORT     = Path("flake8.txt")
-MYPY_REPORT       = Path("mypy.txt")
+BLACK_REPORT = Path("black.txt")
+FLAKE8_REPORT = Path("flake8.txt")
+MYPY_REPORT = Path("mypy.txt")
 PYDOCSTYLE_REPORT = Path("pydocstyle.txt")
-COVERAGE_XML      = Path("coverage.xml")
+COVERAGE_XML = Path("coverage.xml")
 
 
 def test_black_report_parsing(tmp_path):
@@ -47,9 +47,7 @@ def test_flake8_report_parsing(tmp_path):
 
 def test_mypy_report_parsing(tmp_path):
     report = tmp_path / MYPY_REPORT
-    report.write_text(
-        "scripts/refactor/example.py:12: error: Incompatible return value type"
-    )
+    report.write_text("scripts/refactor/example.py:12: error: Incompatible return value type")
 
     plugin = MypyPlugin()
     plugin.default_report = report

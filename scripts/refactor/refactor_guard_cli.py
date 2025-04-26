@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-refactor_guard_cli.py
-
-This module provides the command-line interface (CLI) for RefactorGuard, a tool for auditing Python code refactors.
+This module provides the command-line interface (CLI) for RefactorGuard, a tool
+for auditing Python code refactors.
 
 Core features include:
-- Parsing command-line arguments to configure audit behavior, including file/directory selection, coverage integration, and output options.
+- Parsing command-line arguments to configure audit behavior.
 - Supporting both single-file and recursive directory analysis modes.
 - Integrating with Git to restrict audits to changed files.
 - Merging and enriching audit reports with code quality and coverage data.
-- Outputting results in both JSON and human-readable formats, with filtering for diffs, missing tests, and complexity warnings.
-- Handling coverage XML parsing and per-method coverage enrichment.
+- Outputting results in both JSON and human-readable formats.
 
-Intended for use as a standalone CLI tool or in CI pipelines to automate code quality and test coverage audits during refactoring.
+Intended for use as a standalone CLI tool or in CI pipelines to automate code
+quality and test coverage audits during refactoring.
 """
+
 import sys
 
 # ─── Disable all .pyc / __pycache__ writes to avoid PermissionErrors ──────────
@@ -36,7 +36,10 @@ from scripts.refactor.refactor_guard import RefactorGuard, print_human_readable
 from scripts.refactor.method_line_ranges import extract_method_line_ranges
 from scripts.refactor.parsers.coverage_parser import parse_coverage_xml_to_method_hits
 import scripts.utils.git_utils as git_utils  # <-- dynamic import
-from scripts.refactor.enrich_refactor_pkg.quality_checker import merge_reports, merge_into_refactor_guard
+from scripts.refactor.enrich_refactor_pkg.quality_checker import (
+    merge_reports,
+    merge_into_refactor_guard,
+)
 
 # enforce UTF-8 stdout for CI environments
 try:
@@ -73,7 +76,7 @@ def parse_args() -> argparse.Namespace:
         "--merge",
         nargs=3,
         metavar=("SRC1", "SRC2", "DEST"),
-        help="Merge two audits (or enrich audit with reports)",
+        help="Merge reports from SRC1 and SRC2 into DEST",
     )
     p.add_argument("--json", action="store_true", help="Output JSON")
     p.add_argument("--git-diff", action="store_true", help="Restrict to git-changed files")

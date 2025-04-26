@@ -8,8 +8,9 @@ from ..path_utils import norm
 
 _RGX = re.compile(r"([^:]+):(\d+):(\d+):\s*([A-Z]\d+)\s*(.*)")
 
+
 class Flake8Plugin(ToolPlugin):
-    name           = "flake8"
+    name = "flake8"
     default_report = Path("flake8.txt")
 
     def run(self) -> int:
@@ -22,6 +23,4 @@ class Flake8Plugin(ToolPlugin):
             fp, ln, col, code, msg = m.groups()
             key = norm(fp)
             issues = dst.setdefault(key, {}).setdefault("flake8", {"issues": []})["issues"]
-            issues.append(
-                {"line": int(ln), "column": int(col), "code": code, "message": msg}
-            )
+            issues.append({"line": int(ln), "column": int(col), "code": code, "message": msg})

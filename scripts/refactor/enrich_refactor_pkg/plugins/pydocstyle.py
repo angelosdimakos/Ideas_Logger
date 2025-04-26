@@ -5,6 +5,7 @@ This module provides the PydocstylePlugin class, which integrates the pydocstyle
 for checking compliance with Python docstring conventions. It runs the tool and parses
 its output for reporting issues.
 """
+
 from pathlib import Path
 from typing import Dict, Any
 
@@ -12,15 +13,16 @@ from ..core import ToolPlugin
 from ..helpers import run_cmd, read_report
 from ..path_utils import norm
 
+
 class PydocstylePlugin(ToolPlugin):
     """
-       A plugin for running the pydocstyle tool.
+    A plugin for running the pydocstyle tool.
 
-       This class is responsible for executing the pydocstyle command and parsing its
-       output to identify any docstring issues in the specified scripts.
-       """
+    This class is responsible for executing the pydocstyle command and parsing its
+    output to identify any docstring issues in the specified scripts.
+    """
 
-    name           = "pydocstyle"
+    name = "pydocstyle"
     default_report = Path("pydocstyle.txt")
 
     def run(self) -> int:

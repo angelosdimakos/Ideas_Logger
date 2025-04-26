@@ -27,8 +27,24 @@ logger = logging.getLogger(__name__)
 
 class BaseIndexer:
     def __init__(self, paths: ZephyrusPaths, index_name: str) -> None:
+
         """
-        Initializes the BaseIndexer using ZephyrusPaths.
+        Initializes the BaseIndexer object.
+
+        Sets the paths to the summaries file, FAISS index file, and metadata file based on the
+        provided `index_name` and the `ZephyrusPaths` object.  If `index_name` is "summary",
+        the paths are set to the correction summaries file, FAISS index file, and metadata file.
+        If `index_name` is "raw", the paths are set to the JSON log file, raw log index file,
+        and raw log metadata file.  In all other cases, a ValueError is raised.
+
+        Also, loads the SentenceTransformer model specified by the "embedding_model"
+        configuration key, or defaults to "all-MiniLM-L6-v2" if the key is missing.
+
+        Args:
+            paths (ZephyrusPaths): The paths configuration for the indexer.
+            index_name (str): The name of the index to create, either "summary" or "raw".
+        Raises:
+            ValueError: If `index_name` is not "summary" or "raw".
         """
         if index_name == "summary":
             self.summaries_path = paths.correction_summaries_file

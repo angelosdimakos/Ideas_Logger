@@ -1,14 +1,13 @@
 """
-raw_log_indexer.py
+This module defines the RawLogIndexer class for building and managing a FAISS vector index
+over raw log entries from zephyrus_log.json.
 
-This module defines the RawLogIndexer class for building and managing a FAISS vector index over raw log entries from zephyrus_log.json.
-
-Core features include:
-- Loading and parsing raw log entries organized by date, main category, and subcategory.
+Core features:
+- Loading and parsing raw log entries by date, main category, and subcategory.
 - Extracting entry content and metadata for semantic indexing.
-- Building, saving, loading, and rebuilding a FAISS index for full-text vector search across all logged ideas.
+- Building, saving, loading, and rebuilding a FAISS index for full-text vector search.
 - Robust error handling and logging for file I/O and data processing.
-- Designed for use in the Zephyrus project to enable fast, flexible semantic search over all raw log data.
+- Designed for use in the Zephyrus project to enable fast, flexible semantic search.
 """
 
 import json
@@ -24,7 +23,7 @@ class RawLogIndexer(BaseIndexer):
     """
     Builds a FAISS index from raw entries in zephyrus_log.json.
 
-    This class is used for full-text vector search across all logged ideas (not just summaries).
+    Used for full-text vector search across all logged ideas (not just summaries).
 
     Attributes:
         log_path (str): The path to the JSON log file.
@@ -36,10 +35,14 @@ class RawLogIndexer(BaseIndexer):
 
         Args:
             paths (ZephyrusPaths): The paths configuration for the indexer.
-            autoload (bool): Whether to automatically load the index on initialization. Defaults to True.
+            autoload (bool): Whether to automatically load the index on initialization.
+            Defaults to True.
+
+        Raises:
+            FileNotFoundError: If the index files are not found during autoload.
         """
         super().__init__(paths=paths, index_name="raw")
-        self.log_path = paths.json_log_file  # Explicit log file path for clarity
+        self.log_path: str = paths.json_log_file  # Explicit log file path for clarity
 
         if autoload:
             try:
@@ -52,11 +55,16 @@ class RawLogIndexer(BaseIndexer):
         Loads raw entries from the zephyrus_log.json file.
 
         Returns:
-            Tuple[List[str], List[Dict[str, Any]]]: A tuple containing a list of entry contents and a list of metadata dictionaries.
+            Tuple[List[str], List[Dict[str, Any]]]: A tuple containing a list of entry contents
+            and a list of metadata dictionaries.
+
+        Raises:
+            FileNotFoundError: If the log file does not exist.
+            json.JSONDecodeError: If the JSON file is malformed.
         """
         try:
             with open(self.log_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
+                data: Dict[str, Any] = json.load(f)
         except FileNotFoundError:
             logger.error("Raw log file not found at %s", self.log_path)
             return [], []
@@ -67,7 +75,8 @@ class RawLogIndexer(BaseIndexer):
             logger.error("Unexpected error while reading raw log file: %s", e, exc_info=True)
             return [], []
 
-        texts, meta = [], []
+        texts: List[str] = []
+        meta: List[Dict[str, Any]] = []
         try:
             for date, categories in data.items():
                 texts, meta = self._process_categories(date, categories, texts, meta)
@@ -77,19 +86,19 @@ class RawLogIndexer(BaseIndexer):
         return texts, meta
 
     def _process_categories(
-        self, date: str, categories: dict, texts: List[str], meta: List[Dict[str, Any]]
+        self, date: str, categories: Dict[str, Any], texts: List[str], meta: List[Dict[str, Any]]
     ) -> Tuple[List[str], List[Dict[str, Any]]]:
         """
         Processes categories for a given date, updating the texts and metadata.
 
         Args:
             date (str): The date of the entries being processed.
-            categories (dict): A dictionary of main categories, each containing subcategories.
+            categories (Dict[str, Any]): A dictionary of main categories.
             texts (List[str]): The list to append entry contents to.
             meta (List[Dict[str, Any]]): The list to append entry metadata to.
 
         Returns:
-            Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists with processed categories.
+            Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists.
         """
         for main_cat, subcats in categories.items():
             try:
@@ -105,7 +114,7 @@ class RawLogIndexer(BaseIndexer):
         return texts, meta
 
     def _process_subcategories(
-        self, date: str, main_cat: str, subcats: dict, texts: List[str], meta: List[Dict[str, Any]]
+        self, date: str, main_cat: str, subcats: Dict[str, Any], texts: List[str], meta: List[Dict[str, Any]]
     ) -> Tuple[List[str], List[Dict[str, Any]]]:
         """
         Processes subcategories within a main category for a given date.
@@ -113,12 +122,12 @@ class RawLogIndexer(BaseIndexer):
         Args:
             date (str): The date of the entries being processed.
             main_cat (str): The main category of the entries.
-            subcats (dict): A dictionary of subcategories, each with their list of entries.
+            subcats (Dict[str, Any]): A dictionary of subcategories.
             texts (List[str]): The list to append entry contents to.
             meta (List[Dict[str, Any]]): The list to append entry metadata to.
 
         Returns:
-            Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists with processed entries.
+            Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists.
         """
         for subcat, entries in subcats.items():
             try:
@@ -150,12 +159,12 @@ class RawLogIndexer(BaseIndexer):
             date (str): The date of the entries being processed.
             main_cat (str): The main category of the entries.
             subcat (str): The subcategory of the entries.
-            entries (List[Any]): A list of entries to process, each containing content and timestamp.
+            entries (List[Any]): A list of entries to process.
             texts (List[str]): The list to append entry contents to.
             meta (List[Dict[str, Any]]): The list to append entry metadata to.
 
         Returns:
-            Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists with processed entries.
+            Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists.
         """
         for entry in entries:
             try:
@@ -192,6 +201,9 @@ class RawLogIndexer(BaseIndexer):
 
         Returns:
             bool: Whether the index was successfully rebuilt.
+
+        Raises:
+            Exception: If an error occurs while building the index.
         """
         try:
             texts, meta = self.load_entries()
@@ -208,6 +220,9 @@ class RawLogIndexer(BaseIndexer):
         Rebuilds the raw log index from scratch.
 
         This method loads entries from the log file, rebuilds the FAISS index, and saves the new index.
+
+        Raises:
+            Exception: If an error occurs while rebuilding the index.
         """
         logger.info("Rebuilding raw log index from scratch.")
         success = self.build_index_from_logs()

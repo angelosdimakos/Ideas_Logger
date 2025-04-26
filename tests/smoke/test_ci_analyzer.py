@@ -21,18 +21,17 @@ def sample_audit() -> dict:
     # 2) Fallback: minimal audit
     return {
         "example.py": {
-            "flake8":     {"issues": []},
-            "black":      {"needs_formatting": False},
-            "mypy":       {"errors": []},
+            "flake8": {"issues": []},
+            "black": {"needs_formatting": False},
+            "mypy": {"errors": []},
             "pydocstyle": {"issues": []},
-            "coverage":   {"percent": 0.0},
-            "testing":    {},
-            "diff":       {"changed": 0, "covered": 0},
+            "coverage": {"percent": 0.0},
+            "testing": {},
+            "diff": {"changed": 0, "covered": 0},
             "complexity": {},
-            "quality":    {},
+            "quality": {},
         }
     }
-
 
 
 def test_overview_insights_generate(sample_audit):
@@ -44,7 +43,6 @@ def test_overview_insights_generate(sample_audit):
     """
     lines = generate_overview_insights(sample_audit)
     assert any("Total Files Audited" in line for line in lines)
-
 
 
 def test_prime_suspects_generate(sample_audit):
@@ -61,7 +59,6 @@ def test_prime_suspects_generate(sample_audit):
     assert lines[0].startswith("### 🎯 Prime Suspects")
 
 
-
 def test_complexity_insights_generate(sample_audit):
     """
     Smoke tests for CI analyzer insight generators.
@@ -72,7 +69,6 @@ def test_complexity_insights_generate(sample_audit):
     lines = generate_complexity_insights(sample_audit)
     assert "### 🧠 Code Complexity Summary" in lines[0]
     assert any("complexity" in line.lower() for line in lines)
-
 
 
 def test_testing_insights_generate(sample_audit):
@@ -86,7 +82,6 @@ def test_testing_insights_generate(sample_audit):
     assert any("Testing" in line for line in lines)
 
 
-
 def test_quality_insights_generate(sample_audit):
     """
     Smoke tests for CI analyzer insight generators.
@@ -96,7 +91,6 @@ def test_quality_insights_generate(sample_audit):
     """
     lines = generate_quality_insights(sample_audit)
     assert any("Quality Score" in line for line in lines)
-
 
 
 def test_diff_insights_generate(sample_audit):
