@@ -15,6 +15,7 @@ Usage:
 
 Note: Ensure that all necessary dependencies are installed to use the mocking and fixture functionalities.
 """
+
 import contextlib
 import json
 from pathlib import Path
@@ -29,6 +30,7 @@ from contextlib import contextmanager
 from typing import Iterator
 import locale
 
+
 # ── 1. force_headless_tk  ─────────────────────────────────────
 def _force_headless_tk() -> bool:
     """
@@ -38,15 +40,17 @@ def _force_headless_tk() -> bool:
     Returns True if *real* GUI is available, False if mocked.
     """
     if sys.platform.startswith("linux") and "DISPLAY" not in os.environ:
-        os.environ["DISPLAY"] = ":0"          # let xvfb-run claim :0
+        os.environ["DISPLAY"] = ":0"  # let xvfb-run claim :0
     try:
         _tk.Tk().destroy()
-        return True                           # real GUI
+        return True  # real GUI
     except Exception:
         _tk.Tk = MagicMock()
-        return False                          # GUI mocked
+        return False  # GUI mocked
+
 
 GUI_AVAILABLE = _force_headless_tk()
+
 
 # ── 2. Context helper for ad-hoc tests (optional use) ─────────
 @contextmanager
@@ -65,6 +69,7 @@ def tk_safe():
         except Exception:
             pass
 
+
 # ── 3. Auto-fixture: flush Tk event-loop between tests ────────
 @pytest.fixture(autouse=True)
 def flush_tk_events():
@@ -75,16 +80,20 @@ def flush_tk_events():
     except Exception:
         pass
 
+
 # ── 4. Auto-fixture: stub blocking dialogs / file pickers ─────
 @pytest.fixture(autouse=True)
 def patch_blocking_dialogs(monkeypatch):
     import tkinter.messagebox as mb
     import tkinter.filedialog as fd
+
     monkeypatch.setattr(mb, "showwarning", lambda *a, **k: None)
-    monkeypatch.setattr(fd, "askopenfilename",
-                        lambda *a, **k: "/tmp/dummy.txt")
+    monkeypatch.setattr(fd, "askopenfilename", lambda *a, **k: "/tmp/dummy.txt")
     yield
+
+
 # ──────────────────────────────────────────────────────────────
+
 
 # ===========================
 # 🔪 OLLAMA AI MOCKING
@@ -98,6 +107,7 @@ def mock_ollama() -> None:
         mock_generate.return_value = {"response": "Mock summary"}
         mock_chat.return_value = {"message": {"content": "Mock fallback summary"}}
         yield mock_generate, mock_chat
+
 
 @pytest.fixture
 def mock_raw_log_file(temp_dir: Path) -> Path:
@@ -125,6 +135,7 @@ def mock_raw_log_file(temp_dir: Path) -> Path:
     path.write_text(json.dumps(content), encoding="utf-8")
     return path
 
+
 @pytest.fixture
 def sample_lint_file(tmp_path: Path) -> str:
     """
@@ -137,8 +148,11 @@ def sample_lint_file(tmp_path: Path) -> str:
         str: The path to the sample lint file.
     """
     file = tmp_path / "flake8.txt"
-    file.write_text("scripts/core/core.py:10:1: F401 unused import\nscripts/main.py:5:5: E225 missing whitespace")
+    file.write_text(
+        "scripts/core/core.py:10:1: F401 unused import\nscripts/main.py:5:5: E225 missing whitespace"
+    )
     return str(file)
+
 
 @pytest.fixture
 def sample_refactor_file(tmp_path: Path) -> str:
@@ -153,20 +167,12 @@ def sample_refactor_file(tmp_path: Path) -> str:
     """
     file = tmp_path / "refactor_audit.json"
     data = {
-        "scripts/core/core.py": {
-            "complexity": {
-                "func_a": {"score": 5},
-                "func_b": {"score": 10}
-            }
-        },
-        "scripts/gui/gui.py": {
-            "complexity": {
-                "gui_main": {"score": 7}
-            }
-        }
+        "scripts/core/core.py": {"complexity": {"func_a": {"score": 5}, "func_b": {"score": 10}}},
+        "scripts/gui/gui.py": {"complexity": {"gui_main": {"score": 7}}},
     }
     file.write_text(json.dumps(data), encoding="utf-8-sig")
     return str(file)
+
 
 @pytest.fixture
 def real_lint_artifact() -> str:
@@ -195,7 +201,7 @@ def mock_correction_summaries_file(temp_dir: Path) -> Path:
             "Test": {
                 "Subtest": [
                     {"corrected_summary": "Test summary A"},
-                    {"original_summary": "Test summary B"}
+                    {"original_summary": "Test summary B"},
                 ]
             }
         }
@@ -203,7 +209,6 @@ def mock_correction_summaries_file(temp_dir: Path) -> Path:
     path = temp_dir / "logs" / "correction_summaries.json"
     path.write_text(json.dumps(content), encoding="utf-8")
     return path
-
 
 
 # ===========================
@@ -224,6 +229,7 @@ def temp_dir(tmp_path: Path) -> Path:
     for path in paths:
         path.mkdir(parents=True, exist_ok=True)
     return tmp_path
+
 
 @pytest.fixture
 def temp_script_dir(temp_dir: Path) -> str:
@@ -270,7 +276,9 @@ def patch_config_and_paths(monkeypatch: Any, temp_dir: Path) -> None:
     """
     config = build_test_config(temp_dir)
     monkeypatch.setattr("scripts.config.config_loader.load_config", lambda config_path=None: config)
-    monkeypatch.setattr("scripts.config.config_loader.get_absolute_path", lambda rel: str(Path(rel).resolve()))
+    monkeypatch.setattr(
+        "scripts.config.config_loader.get_absolute_path", lambda rel: str(Path(rel).resolve())
+    )
 
 
 # ===========================
@@ -306,9 +314,8 @@ def logger_core(temp_dir: Path) -> Any:
         Any: The logger core.
     """
     from scripts.core.core import ZephyrusLoggerCore
+
     return ZephyrusLoggerCore(script_dir=temp_dir)  # ✅ correct usage
-
-
 
 
 # ===========================
@@ -332,6 +339,7 @@ def reset_config_manager() -> None:
     Resets the configuration manager for testing.
     """
     from scripts.config.config_manager import ConfigManager
+
     ConfigManager.reset()
     yield
     ConfigManager.reset()
@@ -350,7 +358,9 @@ def mock_sentence_transformer(monkeypatch: Any) -> None:
     """
     mock_model = MagicMock()
     mock_model.encode.side_effect = lambda texts, **kwargs: np.array([[0.1] * 384 for _ in texts])
-    monkeypatch.setattr("scripts.indexers.base_indexer.SentenceTransformer", lambda *a, **kw: mock_model)
+    monkeypatch.setattr(
+        "scripts.indexers.base_indexer.SentenceTransformer", lambda *a, **kw: mock_model
+    )
 
 
 # ===========================
@@ -358,9 +368,10 @@ def mock_sentence_transformer(monkeypatch: Any) -> None:
 # ===========================
 
 
-
 @pytest.fixture(autouse=True)
-def stub_indexers(monkeypatch: Any, mock_raw_log_file: Any, mock_correction_summaries_file: Any, temp_dir: Path) -> None:
+def stub_indexers(
+    monkeypatch: Any, mock_raw_log_file: Any, mock_correction_summaries_file: Any, temp_dir: Path
+) -> None:
     """
     Stubs indexers for testing.
 
@@ -370,6 +381,7 @@ def stub_indexers(monkeypatch: Any, mock_raw_log_file: Any, mock_correction_summ
         mock_correction_summaries_file (Any): The mocked correction summaries file.
         temp_dir (Path): The temporary directory for the indexers.
     """
+
     class DummyEmbeddingModel:
         def encode(self, texts, convert_to_numpy=True):
             return np.array([[0.1] * 384 for _ in texts])
@@ -392,12 +404,10 @@ def stub_indexers(monkeypatch: Any, mock_raw_log_file: Any, mock_correction_summ
         self.index_path = temp_dir / "vector_store" / "raw_index.faiss"
         self.metadata_path = temp_dir / "vector_store" / "raw_metadata.pkl"
 
-    monkeypatch.setattr("scripts.indexers.summary_indexer.SummaryIndexer.__init__", mock_init_summary)
+    monkeypatch.setattr(
+        "scripts.indexers.summary_indexer.SummaryIndexer.__init__", mock_init_summary
+    )
     monkeypatch.setattr("scripts.indexers.raw_log_indexer.RawLogIndexer.__init__", mock_init_raw)
-
-
-
-
 
 
 # ===========================
@@ -413,6 +423,7 @@ def build_test_config(temp_dir: Path) -> dict:
     Returns:
         dict: The test configuration.
     """
+
     def safe_path(p):
         return str(temp_dir / p)
 
@@ -441,13 +452,13 @@ def build_test_config(temp_dir: Path) -> dict:
             "SequentialTest": ["Flow"],
             "FallbackTest": ["Flow"],
             "IntegrationTest": ["Workflow"],
-            "FAISS": ["Check"]
+            "FAISS": ["Check"],
         },
         "prompts_by_subcategory": {
             "Subtest": "Test prompt",
             "Flow": "Summarize the flow of events.",
             "Workflow": "Summarize the integration workflow.",
-            "Check": "Summarize log behavior for index check."
+            "Check": "Summarize log behavior for index check.",
         },
         "test_mode": True,
         "logs_dir": safe_path("logs"),
@@ -503,20 +514,45 @@ def prevent_production_path_writes(monkeypatch: Any) -> None:
     """
     original_open = open
 
-    def guarded_open(file, mode='r', *args, **kwargs):
+    def guarded_open(file, mode="r", *args, **kwargs):
         file_path = str(file)
-        if ("zephyrus_log.json" in file_path or "correction_summaries.json" in file_path) and "test" not in file_path:
+        if (
+            "zephyrus_log.json" in file_path or "correction_summaries.json" in file_path
+        ) and "test" not in file_path:
             raise PermissionError(f"❌ Blocked access to production file during test: {file_path}")
         return original_open(file, mode, *args, **kwargs)
 
     monkeypatch.setattr("builtins.open", guarded_open)
 
 
-SAFE_DIRS = {".git", ".venv", ".pytest_cache", "htmlcov", "__pycache__", "site-packages", ".mypy_cache", ".vscode"}
-SAFE_EXTS = {
-    ".py", ".pyc", ".pyo", ".ini", ".toml", ".md", ".zip", ".exe", ".html",
-    ".json", ".coverage", ".coveragerc", ".txt", ".spec", ".log"
+SAFE_DIRS = {
+    ".git",
+    ".venv",
+    ".pytest_cache",
+    "htmlcov",
+    "__pycache__",
+    "site-packages",
+    ".mypy_cache",
+    ".vscode",
 }
+SAFE_EXTS = {
+    ".py",
+    ".pyc",
+    ".pyo",
+    ".ini",
+    ".toml",
+    ".md",
+    ".zip",
+    ".exe",
+    ".html",
+    ".json",
+    ".coverage",
+    ".coveragerc",
+    ".txt",
+    ".spec",
+    ".log",
+}
+
 
 @pytest.fixture(scope="session", autouse=True)
 def assert_all_output_in_temp(tmp_path_factory: Any) -> None:
@@ -562,17 +598,20 @@ def mock_failed_summarizer() -> Any:
     Returns:
         Any: The mocked failed summarizer.
     """
+
     class FailingSummarizer:
         def summarize_entries_bulk(self, entries, subcategory):
             raise Exception("Simulated failure")
 
     return FailingSummarizer()
 
+
 _UTF8_ENV = {
     "PYTHONIOENCODING": "utf-8",
     "LC_ALL": "C.UTF-8",
     "LANG": "C.UTF-8",
 }
+
 
 @contextlib.contextmanager
 def _utf8_subprocess_env() -> Iterator[dict]:
@@ -619,4 +658,4 @@ def force_utf8_subprocesses() -> Iterator[None]:
         yield
 
     # ---- rollback ----
-    locale.getpreferredencoding = _orig_getpref   # restore environment after the entire test session
+    locale.getpreferredencoding = _orig_getpref  # restore environment after the entire test session

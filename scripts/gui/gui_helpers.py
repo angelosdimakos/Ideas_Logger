@@ -88,7 +88,9 @@ def get_selected_option(menu_var: tk.Variable, default: str = "General") -> str:
     return menu_var.get() or default
 
 
-def append_log_entry(log_file: str, date: str, category: str, subcategory: str, entry_text: str) -> None:
+def append_log_entry(
+    log_file: str, date: str, category: str, subcategory: str, entry_text: str
+) -> None:
     """
     Appends a log entry with a timestamp and content to the specified log file, organizing entries by date, category, and subcategory.
 
@@ -179,7 +181,9 @@ def log_message(log_text_widget: tk.Text, message: str) -> None:
     log_text_widget.config(state=tk.DISABLED)
 
 
-def create_dropdown_menu(frame: tk.Frame, label_text: str, variable: tk.Variable, options: list) -> tk.OptionMenu:
+def create_dropdown_menu(
+    frame: tk.Frame, label_text: str, variable: tk.Variable, options: list
+) -> tk.OptionMenu:
     """
     Creates a labeled dropdown menu (OptionMenu) in the given Tkinter frame.
 
@@ -199,7 +203,15 @@ def create_dropdown_menu(frame: tk.Frame, label_text: str, variable: tk.Variable
     return menu
 
 
-def create_button(frame: tk.Widget, text: str, command: callable, width: int = 15, height: int = 2, bg: str = "#4CAF50", fg: str = "white") -> tk.Button:
+def create_button(
+    frame: tk.Widget,
+    text: str,
+    command: callable,
+    width: int = 15,
+    height: int = 2,
+    bg: str = "#4CAF50",
+    fg: str = "white",
+) -> tk.Button:
     """
     Creates and returns a Tkinter Button widget with customizable text, command, size, and colors.
 

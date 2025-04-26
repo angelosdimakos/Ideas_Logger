@@ -1,7 +1,6 @@
 import unittest
 import tkinter as tk
 import os
-from unittest.mock import MagicMock
 from scripts.gui.tabs.main_tab import MainTab
 
 

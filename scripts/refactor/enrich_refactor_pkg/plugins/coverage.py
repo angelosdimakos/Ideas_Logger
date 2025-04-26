@@ -3,7 +3,7 @@ from typing import Dict, Any
 import xml.etree.ElementTree as ET
 
 from ..core import ToolPlugin
-from ..helpers import run_cmd, read_report, safe_print
+from ..helpers import run_cmd, safe_print
 from ..path_utils import norm
 
 

@@ -2,7 +2,6 @@ import pytest
 import tkinter as tk
 from unittest.mock import MagicMock
 from scripts.main import bootstrap
-from scripts.gui.gui import ZephyrusLoggerGUI
 from scripts.gui.gui_controller import GUIController
 from scripts.core.core import ZephyrusLoggerCore
 import os

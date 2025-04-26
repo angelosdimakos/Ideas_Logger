@@ -2,7 +2,6 @@
 
 import pytest
 from textwrap import dedent
-import os
 
 from scripts.refactor.method_line_ranges import extract_method_line_ranges
 

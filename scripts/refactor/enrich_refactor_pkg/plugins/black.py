@@ -1,6 +1,5 @@
 from pathlib import Path
 from typing import Dict, Any
-import re
 
 from ..core import ToolPlugin
 from ..helpers import run_cmd, read_report

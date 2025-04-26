@@ -7,7 +7,7 @@ user interactions, and integrates logging functionality.
 """
 
 import tkinter as tk
-from tkinter import simpledialog, scrolledtext, ttk
+from tkinter import simpledialog, scrolledtext
 import logging
 
 from scripts.config.config_loader import load_config, get_config_value

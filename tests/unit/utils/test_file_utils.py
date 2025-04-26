@@ -11,7 +11,6 @@ from scripts.utils.file_utils import (
     make_backup,
     zip_python_files,
 )
-import pytest
 
 pytestmark = [pytest.mark.unit, pytest.mark.file_ops]
 

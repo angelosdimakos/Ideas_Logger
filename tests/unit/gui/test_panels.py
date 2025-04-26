@@ -76,6 +76,7 @@ class TestActionPanel(unittest.TestCase):
     This class contains tests to validate the functionality of the ActionPanel,
     ensuring it interacts correctly with the controller and updates the GUI as expected.
     """
+
     def setUp(self) -> None:
         """
         Set up the test environment for ActionPanel tests.
@@ -124,6 +125,7 @@ class TestCoveragePanel(unittest.TestCase):
     This class contains tests to validate the functionality of the CoveragePanel,
     ensuring it correctly populates the tree with coverage data.
     """
+
     def setUp(self) -> None:
         """
         Set up the test environment for CoveragePanel tests.
@@ -167,6 +169,7 @@ class TestEntryPanel(unittest.TestCase):
     This class contains tests to validate the functionality of the EntryPanel,
     ensuring it correctly logs entries and updates the GUI as expected.
     """
+
     def setUp(self) -> None:
         """
         Set up the test environment for EntryPanel tests.
@@ -209,6 +212,7 @@ class TestLogPanel(unittest.TestCase):
     This class contains tests to validate the functionality of the LogPanel,
     ensuring it correctly displays logs and updates the GUI as expected.
     """
+
     def setUp(self) -> None:
         """
         Set up the test environment for LogPanel tests.

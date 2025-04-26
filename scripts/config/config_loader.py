@@ -1,4 +1,3 @@
-import os
 import json
 import logging
 from pathlib import Path
@@ -6,6 +5,7 @@ from typing import Dict, Any, Optional
 
 # Setup centralized logging immediately
 logger = logging.getLogger(__name__)
+
 
 def setup_logging() -> None:
     """
@@ -28,12 +28,14 @@ def setup_logging() -> None:
     )
     logger.debug("Centralized logging configured at level %s", level_str)
 
+
 setup_logging()
 
 # Base directory setup
 BASE_DIR: Path = Path(__file__).resolve().parents[2]
 CONFIG_DIR: Path = BASE_DIR / "config"
 CONFIG_FILE_PATH: Path = CONFIG_DIR / "config.json"
+
 
 def load_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]:
     """
@@ -76,6 +78,7 @@ def load_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]:
         logger.error(f"I/O error while loading config file '{config_path}': {e}. Using defaults.")
         return {}
 
+
 def get_config_value(config: Dict[str, Any], key: str, default: Any) -> Any:
     """
     Retrieve a configuration value by its key from the provided config dictionary.
@@ -98,6 +101,7 @@ def get_config_value(config: Dict[str, Any], key: str, default: Any) -> Any:
         return default
     return config[key]
 
+
 def get_absolute_path(relative_path: str) -> Path:
     """
     Build an absolute path from a project-root-relative path.
@@ -117,6 +121,7 @@ def get_absolute_path(relative_path: str) -> Path:
         logger.error(f"Failed to resolve absolute path for '{relative_path}': {e}")
         raise
 
+
 def is_test_mode(config: Optional[Dict[str, Any]] = None) -> bool:
     """
     Check if 'test_mode' is enabled in the configuration.
@@ -133,6 +138,7 @@ def is_test_mode(config: Optional[Dict[str, Any]] = None) -> bool:
     if config is None:
         config = load_config()
     return config.get("test_mode", False)
+
 
 def get_effective_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]:
     """
@@ -153,10 +159,14 @@ def get_effective_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]
     config = load_config(config_path)
     try:
         if config.get("test_mode", False):
-            logger.warning("\u26a0\ufe0f Test mode is active. Overriding config paths with test equivalents.")
+            logger.warning(
+                "\u26a0\ufe0f Test mode is active. Overriding config paths with test equivalents."
+            )
 
             config["logs_dir"] = Path(config.get("test_logs_dir", "tests/mock_data/logs"))
-            config["vector_store_dir"] = Path(config.get("test_vector_store_dir", "tests/mock_data/vector_store"))
+            config["vector_store_dir"] = Path(
+                config.get("test_vector_store_dir", "tests/mock_data/vector_store")
+            )
             config["export_dir"] = Path(config.get("test_export_dir", "tests/mock_data/exports"))
 
             config["raw_log_path"] = config["logs_dir"] / "zephyrus_log.json"
@@ -166,6 +176,7 @@ def get_effective_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]
         logger.error("Invalid directory paths in test config override: %s", e)
 
     return config
+
 
 if __name__ == "__main__":
     config = load_config()

@@ -84,6 +84,7 @@ def test_get_selected_option():
     Returns:
         None
     """
+
     class MockVar:
         def __init__(self, value):
             self._value = value

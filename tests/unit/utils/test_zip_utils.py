@@ -1,6 +1,5 @@
 import pytest
 import sys
-from unittest import mock
 from scripts.utils import zip_util
 
 pytestmark = [pytest.mark.unit]

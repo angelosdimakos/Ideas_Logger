@@ -1,4 +1,4 @@
-from unittest.mock import patch, mock_open
+from unittest.mock import patch
 from scripts.ci_analyzer import orchestrator
 import argparse
 

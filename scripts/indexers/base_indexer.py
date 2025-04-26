@@ -27,7 +27,6 @@ logger = logging.getLogger(__name__)
 
 class BaseIndexer:
     def __init__(self, paths: ZephyrusPaths, index_name: str) -> None:
-
         """
         Initializes the BaseIndexer object.
 

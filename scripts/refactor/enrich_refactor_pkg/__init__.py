@@ -9,7 +9,8 @@ from importlib import import_module
 from pathlib import Path
 from typing import Type, Callable, Dict
 
-_PLUGIN_REGISTRY: Dict[str, 'ToolPlugin'] = {}  # str → ToolPlugin
+_PLUGIN_REGISTRY: Dict[str, "ToolPlugin"] = {}  # str → ToolPlugin
+
 
 def register(name: str) -> Callable[[Type], Type]:
     """
@@ -28,6 +29,7 @@ def register(name: str) -> Callable[[Type], Type]:
 
     return _inner
 
+
 def _discover_plugins() -> None:
     """
     Discovers and imports all plugin modules in the 'plugins' directory.
@@ -40,6 +42,7 @@ def _discover_plugins() -> None:
         if f.name.startswith("_"):
             continue
         import_module(f"scripts.refactor.enrich_refactor_pkg.plugins.{f.stem}")
+
 
 _discover_plugins()
 

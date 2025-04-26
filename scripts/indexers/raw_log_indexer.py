@@ -114,7 +114,12 @@ class RawLogIndexer(BaseIndexer):
         return texts, meta
 
     def _process_subcategories(
-        self, date: str, main_cat: str, subcats: Dict[str, Any], texts: List[str], meta: List[Dict[str, Any]]
+        self,
+        date: str,
+        main_cat: str,
+        subcats: Dict[str, Any],
+        texts: List[str],
+        meta: List[Dict[str, Any]],
     ) -> Tuple[List[str], List[Dict[str, Any]]]:
         """
         Processes subcategories within a main category for a given date.

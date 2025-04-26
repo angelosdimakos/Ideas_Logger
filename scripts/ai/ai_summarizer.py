@@ -20,6 +20,7 @@ from typing import Dict, Any, List, Optional
 
 logger = logging.getLogger(__name__)
 
+
 class AISummarizer:
     """
     AISummarizer provides methods to generate summaries for single or multiple text entries
@@ -54,13 +55,11 @@ class AISummarizer:
         logger.info("[AI] Attempting fallback approach (chat)")
         try:
             response = ollama.chat(
-                model=self.model,
-                messages=[{"role": "user", "content": full_prompt}]
+                model=self.model, messages=[{"role": "user", "content": full_prompt}]
             )
             content = response.get("message", {}).get("content", "")
             return (
-                content.strip() if isinstance(content, str)
-                else "Fallback failed: Invalid format"
+                content.strip() if isinstance(content, str) else "Fallback failed: Invalid format"
             )
         except (KeyError, TypeError, RequestException) as e:
             logger.error("[FallbackError] Ollama fallback failed: %s", e, exc_info=True)
@@ -79,8 +78,7 @@ class AISummarizer:
             str: The generated summary or a fallback message if summarization fails.
         """
         prompt: str = self.prompts_by_subcategory.get(
-            subcategory,
-            self.prompts_by_subcategory.get("_default", "Summarize this:")
+            subcategory, self.prompts_by_subcategory.get("_default", "Summarize this:")
         ).strip()
         full_prompt: str = f"{prompt}\n\n{entry_text}"
 
@@ -89,8 +87,7 @@ class AISummarizer:
             response = ollama.generate(model=self.model, prompt=full_prompt)
             result: str = response.get("response")
             return (
-                result.strip() if isinstance(result, str)
-                else self._fallback_summary(full_prompt)
+                result.strip() if isinstance(result, str) else self._fallback_summary(full_prompt)
             )
         except Exception as e:
             logger.warning("summarize_entry failed: %s", e, exc_info=True)
@@ -113,8 +110,7 @@ class AISummarizer:
             return "No entries provided"
 
         prompt_intro: str = self.prompts_by_subcategory.get(
-            subcategory,
-            self.prompts_by_subcategory.get("_default", "Summarize these points:")
+            subcategory, self.prompts_by_subcategory.get("_default", "Summarize these points:")
         ).strip()
         combined_text: str = "\n".join(f"- {entry}" for entry in entries)
         full_prompt: str = f"{prompt_intro}\n\n{combined_text}"
@@ -123,8 +119,7 @@ class AISummarizer:
             response = ollama.generate(model=self.model, prompt=full_prompt)
             result: str = response.get("response")
             return (
-                result.strip() if isinstance(result, str)
-                else self._fallback_summary(full_prompt)
+                result.strip() if isinstance(result, str) else self._fallback_summary(full_prompt)
             )
         except Exception as e:
             logger.warning("summarize_entries_bulk failed: %s", e, exc_info=True)

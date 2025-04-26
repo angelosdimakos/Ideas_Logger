@@ -41,6 +41,7 @@ from scripts.paths import ZephyrusPaths
 
 logger = logging.getLogger(__name__)
 
+
 class ZephyrusLoggerCore:
     """
     Manages logging, summarization, and search for categorized entries using JSON and Markdown files.

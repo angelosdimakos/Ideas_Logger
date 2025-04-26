@@ -92,7 +92,12 @@ class SummaryIndexer(BaseIndexer):
         return texts, meta
 
     def _process_subcategories(
-        self, date: str, main_cat: str, subcats: Dict[str, Any], texts: List[str], meta: List[Dict[str, Any]]
+        self,
+        date: str,
+        main_cat: str,
+        subcats: Dict[str, Any],
+        texts: List[str],
+        meta: List[Dict[str, Any]],
     ) -> Tuple[List[str], List[Dict[str, Any]]]:
         for subcat, batches in subcats.items():
             try:

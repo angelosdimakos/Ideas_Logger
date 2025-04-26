@@ -52,11 +52,10 @@ def split_docstring_sections(docstring: Optional[str]) -> Dict[str, Optional[str
             collected[current_section].append(stripped)
 
     sections["description"] = "\n".join(collected["description"]) or None
-    sections["args"]        = "\n".join(collected["args"])        or None
-    sections["returns"]     = "\n".join(collected["returns"])     or None
+    sections["args"] = "\n".join(collected["args"]) or None
+    sections["returns"] = "\n".join(collected["returns"]) or None
 
     return sections
-
 
 
 class DocstringAnalyzer:
@@ -110,20 +109,24 @@ class DocstringAnalyzer:
         for node in ast.iter_child_nodes(tree):
             if isinstance(node, ast.ClassDef):
                 doc = split_docstring_sections(ast.get_docstring(node))
-                result["classes"].append({
-                    "name": node.name,
-                    "description": doc["description"],
-                    "args": doc["args"],
-                    "returns": doc["returns"],
-                })
+                result["classes"].append(
+                    {
+                        "name": node.name,
+                        "description": doc["description"],
+                        "args": doc["args"],
+                        "returns": doc["returns"],
+                    }
+                )
             elif isinstance(node, ast.FunctionDef):
                 doc = split_docstring_sections(ast.get_docstring(node))
-                result["functions"].append({
-                    "name": node.name,
-                    "description": doc["description"],
-                    "args": doc["args"],
-                    "returns": doc["returns"],
-                })
+                result["functions"].append(
+                    {
+                        "name": node.name,
+                        "description": doc["description"],
+                        "args": doc["args"],
+                        "returns": doc["returns"],
+                    }
+                )
 
         return result
 

@@ -1,8 +1,5 @@
 # tests/unit/refactor/test_refactor_guard.py
 
-import pytest
-import tempfile
-import os
 import logging
 from textwrap import dedent
 

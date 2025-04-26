@@ -1,8 +1,5 @@
 # tests/unit/refactor/test_ast_extractor.py
 
-import pytest
-import tempfile
-import os
 from textwrap import dedent
 
 from scripts.refactor.ast_extractor import (

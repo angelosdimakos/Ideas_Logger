@@ -10,7 +10,6 @@ Features:
 - Merges all data into the audit file using quality_checker
 """
 
-import os
 import sys
 import argparse
 import subprocess
@@ -23,7 +22,6 @@ sys.path.insert(0, str(project_root))
 
 from scripts.refactor.enrich_refactor_pkg.helpers import safe_print
 import scripts.refactor.enrich_refactor_pkg.quality_checker as quality_checker
-from scripts.refactor.enrich_refactor_pkg.quality_checker import merge_reports
 
 ENC = "utf-8"
 
@@ -99,7 +97,6 @@ def enrich_refactor_audit(
     if docstring_file.exists():
         safe_print(f"[+] Merging docstring data from {docstring_file}")
         try:
-            from scripts.refactor.parsers.docstring_parser import DocstringAnalyzer
 
             doc_data = json.loads(docstring_file.read_text(encoding=ENC))
             # merge doc_data into audit_file here...

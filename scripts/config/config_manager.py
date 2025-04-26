@@ -30,6 +30,7 @@ class AppConfig(BaseModel):
     logging, LLM and embedding model settings, file paths, test mode,
     and plugin management. Ignores any extra fields not explicitly defined.
     """
+
     mode: str
     use_gui: bool
     interface_theme: str
@@ -84,6 +85,7 @@ class ConfigManager:
     retrieve configuration values, reset the cached config, and validate critical config paths.
     Handles missing or invalid config files by returning default settings and logs relevant events.
     """
+
     _config: Optional[AppConfig] = None
     _config_timestamp: Optional[float] = None
 
@@ -181,7 +183,6 @@ class ConfigManager:
                 if not raw_config:
                     logger.warning("Config is empty—falling back to defaults.")
                     return cls._default_config()
-
 
                 cls._config = AppConfig(**raw_config)
                 cls._config_timestamp = path.stat().st_mtime
