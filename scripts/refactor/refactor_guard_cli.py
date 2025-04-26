@@ -254,6 +254,11 @@ def main() -> None:
 
     # Human‑readable output
     print_human_readable(audit, guard, args)
+    try:
+        if os.path.exists(args.coverage_xml):
+            os.remove(args.coverage_xml)
+    except PermissionError:
+        pass
 
 
 if __name__ == "__main__":
