@@ -32,6 +32,21 @@ def enrich_refactor_audit(
     reports_path: str,
     docstring_path: str = "docstring_summary.json",
 ) -> None:
+    """
+    Enriches a refactor audit file with linting, coverage, and docstring analysis data.
+
+    This function ensures the existence of all required lint and coverage reports,
+    generates any missing reports, and merges the collected data into the specified
+    audit JSON file. Optionally, it can also merge docstring analysis data if available.
+
+    Args:
+        audit_path (str): Path to the audit JSON file to be enriched.
+        reports_path (str): Directory path where lint and coverage reports are stored.
+        docstring_path (str, optional): Path to the docstring summary JSON file. Defaults to "docstring_summary.json".
+
+    Raises:
+        SystemExit: Exits if the audit file does not exist.
+    """
     audit_file = Path(audit_path)
     if not audit_file.exists():
         safe_print(f"[!] Audit file not found: {audit_file}")

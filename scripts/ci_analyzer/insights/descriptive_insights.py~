@@ -135,7 +135,7 @@ def generate_quality_insights(audit: Dict[str, Any]) -> List[str]:
             flake8[issue.get("code")] += 1
         for msg in q.get("pydocstyle", {}).get("issues", []):
             key = msg if isinstance(msg, str) else str(msg)
-            pydoc[key] += 1
+            pydoc[msg] += 1
         for err in q.get("mypy", {}).get("errors", []):
             m = re.search(r"\[([^]]+)\]", err)
             if m:

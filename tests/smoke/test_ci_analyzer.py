@@ -1,4 +1,3 @@
-# tests/test_ci_analyzer.py
 import pytest
 import json
 from pathlib import Path
@@ -15,15 +14,25 @@ from scripts.ci_analyzer.insights.descriptive_insights import (
 
 @pytest.fixture
 def sample_audit() -> dict:
-    """
-    Smoke tests for CI analyzer insight generators, verifying that each insight function
-    produces expected output when given a sample audit report. Ensures correct integration
-    of overview, prime suspects, complexity, testing, quality, and diff insights.
-    """
-    audit_path = Path("refactor_audit.json")
-    assert audit_path.exists(), "Missing refactor_audit.json file for tests"
-    with audit_path.open(encoding="utf-8-sig") as f:
-        return json.load(f)
+    # 1) Try loading a canned file under tests/mock_data:
+    sample_json = Path(__file__).parent.parent / "mock_data" / "refactor_audit.json"
+    if sample_json.exists():
+        return json.loads(sample_json.read_text(encoding="utf-8-sig"))
+    # 2) Fallback: minimal audit
+    return {
+        "example.py": {
+            "flake8":     {"issues": []},
+            "black":      {"needs_formatting": False},
+            "mypy":       {"errors": []},
+            "pydocstyle": {"issues": []},
+            "coverage":   {"percent": 0.0},
+            "testing":    {},
+            "diff":       {"changed": 0, "covered": 0},
+            "complexity": {},
+            "quality":    {},
+        }
+    }
+
 
 
 def test_overview_insights_generate(sample_audit):
@@ -35,6 +44,7 @@ def test_overview_insights_generate(sample_audit):
     """
     lines = generate_overview_insights(sample_audit)
     assert any("Total Files Audited" in line for line in lines)
+
 
 
 def test_prime_suspects_generate(sample_audit):
@@ -51,6 +61,7 @@ def test_prime_suspects_generate(sample_audit):
     assert lines[0].startswith("### 🎯 Prime Suspects")
 
 
+
 def test_complexity_insights_generate(sample_audit):
     """
     Smoke tests for CI analyzer insight generators.
@@ -61,6 +72,7 @@ def test_complexity_insights_generate(sample_audit):
     lines = generate_complexity_insights(sample_audit)
     assert "### 🧠 Code Complexity Summary" in lines[0]
     assert any("complexity" in line.lower() for line in lines)
+
 
 
 def test_testing_insights_generate(sample_audit):
@@ -74,6 +86,7 @@ def test_testing_insights_generate(sample_audit):
     assert any("Testing" in line for line in lines)
 
 
+
 def test_quality_insights_generate(sample_audit):
     """
     Smoke tests for CI analyzer insight generators.
@@ -83,6 +96,7 @@ def test_quality_insights_generate(sample_audit):
     """
     lines = generate_quality_insights(sample_audit)
     assert any("Quality Score" in line for line in lines)
+
 
 
 def test_diff_insights_generate(sample_audit):

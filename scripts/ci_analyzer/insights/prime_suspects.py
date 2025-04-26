@@ -43,7 +43,8 @@ def generate_prime_insights(audit: Dict[str, Any]) -> List[str]:
                 flake8_codes.append(code)
         # Pydocstyle messages
         for msg in data.get("quality", {}).get("pydocstyle", {}).get("issues", []):
-            pydoc_issues.append(msg)
+            key = msg if isinstance(msg, str) else str(msg)
+            pydoc_issues.append(key)
         # MyPy error codes
         for err in data.get("quality", {}).get("mypy", {}).get("errors", []):
             match = re.search(r"\[([^\]]+)\]", err)

@@ -128,6 +128,8 @@ def handle_full_scan(args: argparse.Namespace, guard: RefactorGuard) -> Dict[str
     ref = args.refactored
     tests = args.tests or None
 
+    if not os.path.isdir(orig) and os.path.isdir(ref):
+        orig = ref
     # 1) Gather changed files (or do a full recursive scan)
     if args.git_diff:
         raw: Dict[str, Dict[str, Any]] = {}
