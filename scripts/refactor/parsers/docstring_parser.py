@@ -79,7 +79,8 @@ class DocstringAnalyzer:
         Returns:
             bool: True if the path should be excluded, False otherwise.
         """
-        return any(path.match(f"{exclude}/*") for exclude in self.exclude_dirs)
+        parts = set(path.parts)
+        return bool(parts & self.exclude_dirs)
 
     def extract_docstrings(self, file_path: Path) -> Dict[str, Any]:
         """
@@ -97,7 +98,10 @@ class DocstringAnalyzer:
         except (SyntaxError, UnicodeDecodeError):
             return {}
 
-        result = {
+        if tree is None:
+            return {}
+
+        result: Dict[str, Any] = {
             "module_doc": split_docstring_sections(ast.get_docstring(tree)),
             "classes": [],
             "functions": [],
@@ -106,24 +110,20 @@ class DocstringAnalyzer:
         for node in ast.iter_child_nodes(tree):
             if isinstance(node, ast.ClassDef):
                 doc = split_docstring_sections(ast.get_docstring(node))
-                result["classes"].append(
-                    {
-                        "name": node.name,
-                        "description": doc["description"],
-                        "args": doc["args"],
-                        "returns": doc["returns"],
-                    }
-                )
+                result["classes"].append({
+                    "name": node.name,
+                    "description": doc["description"],
+                    "args": doc["args"],
+                    "returns": doc["returns"],
+                })
             elif isinstance(node, ast.FunctionDef):
                 doc = split_docstring_sections(ast.get_docstring(node))
-                result["functions"].append(
-                    {
-                        "name": node.name,
-                        "description": doc["description"],
-                        "args": doc["args"],
-                        "returns": doc["returns"],
-                    }
-                )
+                result["functions"].append({
+                    "name": node.name,
+                    "description": doc["description"],
+                    "args": doc["args"],
+                    "returns": doc["returns"],
+                })
 
         return result
 
@@ -141,6 +141,8 @@ class DocstringAnalyzer:
         results = {}
         for file in root.rglob("*.py"):
             if self.should_exclude(file) or file.name.startswith("test_"):
+                continue
+            if any(exclude in file.parts for exclude in self.exclude_dirs):
                 continue
 
             rel_path = norm(file)
