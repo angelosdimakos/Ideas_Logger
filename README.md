@@ -103,7 +103,7 @@ All extensions follow the core test-mock-verify philosophy.
 ## 🚀 Quickstart
 
 ```bash
-git clone https://github.com/The-Mechid-Archivist-69/Ideas_Logger.git
+git clone https://github.com/angelosdimakos/Ideas_Logger.git
 cd Ideas_Logger
 pip install -r requirements.txt
 python scripts/main.py
