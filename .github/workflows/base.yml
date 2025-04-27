@@ -130,6 +130,7 @@ jobs:
           fail_ci_if_error: false
           verbose: true  # Get more output to diagnose
           token: ${{ secrets.CODECOV_TOKEN }}
+          slug: angelosdimakos/Ideas_Logger
 
       - name: 🧠 Run Full RefactorGuard Audit
         run: |
