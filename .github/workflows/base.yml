@@ -129,6 +129,7 @@ jobs:
           files: ./coverage.xml
           fail_ci_if_error: false
           verbose: true  # Get more output to diagnose
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: 🧠 Run Full RefactorGuard Audit
         run: |
