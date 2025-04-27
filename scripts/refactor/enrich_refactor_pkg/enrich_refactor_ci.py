@@ -10,7 +10,6 @@ Features:
 - Merges all data into the audit file using quality_checker
 """
 
-import os
 import sys
 import argparse
 import subprocess
@@ -23,15 +22,30 @@ sys.path.insert(0, str(project_root))
 
 from scripts.refactor.enrich_refactor_pkg.helpers import safe_print
 import scripts.refactor.enrich_refactor_pkg.quality_checker as quality_checker
-from scripts.refactor.enrich_refactor_pkg.quality_checker import merge_reports
 
 ENC = "utf-8"
+
 
 def enrich_refactor_audit(
     audit_path: str,
     reports_path: str,
     docstring_path: str = "docstring_summary.json",
 ) -> None:
+    """
+    Enriches a refactor audit file with linting, coverage, and docstring analysis data.
+
+    This function ensures the existence of all required lint and coverage reports,
+    generates any missing reports, and merges the collected data into the specified
+    audit JSON file. Optionally, it can also merge docstring analysis data if available.
+
+    Args:
+        audit_path (str): Path to the audit JSON file to be enriched.
+        reports_path (str): Directory path where lint and coverage reports are stored.
+        docstring_path (str, optional): Path to the docstring summary JSON file. Defaults to "docstring_summary.json".
+
+    Raises:
+        SystemExit: Exits if the audit file does not exist.
+    """
     audit_file = Path(audit_path)
     if not audit_file.exists():
         safe_print(f"[!] Audit file not found: {audit_file}")
@@ -52,7 +66,9 @@ def enrich_refactor_audit(
             report_file = Path.cwd() / "coverage.xml"
         if not report_file.exists():
             safe_print(f"[~] Generating: {report_file.name}")
-            result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            result = subprocess.run(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+            )
             report_file.write_text(result.stdout if name != "coverage" else "", encoding=ENC)
 
     # 2) Build a map of tool-name → Path
@@ -81,7 +97,7 @@ def enrich_refactor_audit(
     if docstring_file.exists():
         safe_print(f"[+] Merging docstring data from {docstring_file}")
         try:
-            from scripts.refactor.parsers.docstring_parser import DocstringAnalyzer
+
             doc_data = json.loads(docstring_file.read_text(encoding=ENC))
             # merge doc_data into audit_file here...
         except Exception as e:
@@ -92,9 +108,18 @@ def enrich_refactor_audit(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Enrich refactor audit with quality data.")
-    parser.add_argument("--audit", type=str, default="refactor_audit.json", help="Path to audit JSON file")
-    parser.add_argument("--reports", type=str, default="lint-reports", help="Directory for lint report files")
-    parser.add_argument("--docstrings", type=str, default="docstring_summary.json", help="Path to docstring summary JSON")
+    parser.add_argument(
+        "--audit", type=str, default="refactor_audit.json", help="Path to audit JSON file"
+    )
+    parser.add_argument(
+        "--reports", type=str, default="lint-reports", help="Directory for lint report files"
+    )
+    parser.add_argument(
+        "--docstrings",
+        type=str,
+        default="docstring_summary.json",
+        help="Path to docstring summary JSON",
+    )
     args = parser.parse_args()
 
     enrich_refactor_audit(args.audit, args.reports, args.docstrings)

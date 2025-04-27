@@ -1,4 +1,3 @@
-import os
 import json
 import subprocess
 from pathlib import Path
@@ -53,7 +52,6 @@ def test_single_file_json(single_file_setup):
             text=True,
             check=True,
             encoding="utf-8",  # <- new
-
         )
     except subprocess.CalledProcessError as e:
         print(f"Command failed with exit code {e.returncode}")

@@ -9,13 +9,13 @@ quality_checker – public API.
 
 from __future__ import annotations
 import json
-import os
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Set
 
 from scripts.refactor.enrich_refactor_pkg.path_utils import norm
 from scripts.refactor.enrich_refactor_pkg.helpers import safe_print
 from scripts.refactor.enrich_refactor_pkg.core import all_plugins
+
 # auto-import plugin modules so they register
 import scripts.refactor.enrich_refactor_pkg.plugins  # noqa: F401
 
@@ -35,22 +35,47 @@ def merge_into_refactor_guard(audit_path: str = "refactor_audit.json") -> None:
         safe_print(f"[!] Corrupt audit JSON: {err}")
         return
 
-    # 1) Have each plugin generate & parse its report
+    # 1) Generate and parse plugin reports
+    base_dir = audit_file.parent
     q_by_file: Dict[str, Dict[str, Any]] = {}
+    generated: Set[str] = set()
+
     for plugin in all_plugins():
-        rpt = plugin.default_report
-        if not rpt.exists() or not rpt.read_text(errors="ignore").strip():
+        # point report into audit directory
+        report_path = base_dir / plugin.default_report.name
+        plugin.default_report = report_path
+
+        # decide if we need to run the tool
+        existing = (
+            report_path.read_text(encoding=ENC, errors="ignore") if report_path.exists() else ""
+        )
+        if not existing.strip():
             safe_print(f"[~] Generating report for {plugin.name}")
             plugin.run()
+            generated.add(plugin.default_report.name)
+
+        # parse the report into q_by_file
         plugin.parse(q_by_file)
 
-    # 2) Merge quality data into audit (normalize keys once)
+    # 2) Merge quality data into audit
     audit_norm = {norm(k): v for k, v in audit_raw.items()}
     for file_key, qdata in q_by_file.items():
         audit_norm.setdefault(file_key, {}).setdefault("quality", {}).update(qdata)
 
+    # Ensure every file has a quality key
+    for fk in list(audit_norm.keys()):
+        audit_norm[fk].setdefault("quality", {})
+
+    # Write enriched audit JSON
     audit_file.write_text(json.dumps(audit_norm, indent=2), encoding=ENC)
     safe_print("[OK] RefactorGuard audit enriched with quality data.")
+
+    # 3) Clean up only the reports we generated
+    for name in generated:
+        try:
+            (base_dir / name).unlink()
+        except FileNotFoundError:
+            pass
 
 
 def merge_reports(file_a: str, file_b: str) -> Dict[str, Any]:

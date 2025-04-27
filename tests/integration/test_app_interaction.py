@@ -17,6 +17,7 @@ class DummyErrorController:
     """
     Simulates a controller that raises errors for testing error handling.
     """
+
     def __init__(self) -> None:
         self.logs = "Initial logs\n"
 
@@ -60,6 +61,7 @@ class TestMainTabCascade(unittest.TestCase):
     """
     Tests the MainTab functionality in the GUI application.
     """
+
     def setUp(self) -> None:
         self.root = tk.Tk()
         self.root.withdraw()
@@ -68,6 +70,7 @@ class TestMainTabCascade(unittest.TestCase):
             """
             Simulates a controller for the MainTab during testing.
             """
+
             def __init__(self) -> None:
                 self.logs = "Initial logs\n"
 
@@ -134,6 +137,7 @@ class TestErrorHandling(unittest.TestCase):
     """
     Tests error handling in the MainTab functionality.
     """
+
     def setUp(self) -> None:
         self.root = tk.Tk()
         self.root.withdraw()

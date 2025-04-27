@@ -65,7 +65,6 @@ def test_update_summary_tracker(tracker_file, tmp_path):
 
     Utilizes ZephyrusPaths for path management and organization-specific file utilities.
     """
-    from pathlib import Path
 
     # Create a ZephyrusPaths instance from tmp_path.
     paths = ZephyrusPaths.from_config(tmp_path)

@@ -1,7 +1,6 @@
 import pytest
 from pathlib import Path
 from scripts.paths import ZephyrusPaths
-import pytest
 
 pytestmark = [pytest.mark.unit]
 

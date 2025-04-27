@@ -16,7 +16,7 @@ for file in _PLUGIN_DIR.glob("*.py"):
     mod: ModuleType = import_module(f"{__name__}.{file.stem}")
     for obj in vars(mod).values():
         if isinstance(obj, type) and issubclass(obj, ToolPlugin) and obj is not ToolPlugin:
-            _PLUGINS.append(obj())             # instantiate
+            _PLUGINS.append(obj())  # instantiate
 
 # re-export
 PLUGINS = _PLUGINS

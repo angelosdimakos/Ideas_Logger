@@ -13,6 +13,7 @@ Core features include:
 from tkinter import ttk
 from typing import Dict, Any
 
+
 class StyleManager:
     """
     Manages application-wide styles for tkinter and ttk.

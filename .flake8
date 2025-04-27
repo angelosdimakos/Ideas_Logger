@@ -1,4 +1,15 @@
+# .flake8
 [flake8]
 max-line-length = 100
-exclude = .git,__pycache__,.venv,build,dist
-ignore = E203, W503
+ignore =
+    E501,   # Line too long
+    E402,   # Import not at top of file
+    W503,   # Line break before binary operator (Black formatting)
+    W504    # Line break after binary operator (same reason)
+exclude =
+    .venv,
+    venv,
+    __pycache__,
+    .git,
+    build,
+    dist

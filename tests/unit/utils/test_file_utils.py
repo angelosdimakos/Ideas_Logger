@@ -11,7 +11,6 @@ from scripts.utils.file_utils import (
     make_backup,
     zip_python_files,
 )
-import pytest
 
 pytestmark = [pytest.mark.unit, pytest.mark.file_ops]
 
@@ -121,7 +120,6 @@ def test_zip_python_files_excludes_unwanted_dirs(tmp_path):
         files = zf.namelist()
         assert "keep/a.py" in files
         assert all(".venv" not in f for f in files)
-
 
 
 def test_read_json_missing_file(tmp_path):

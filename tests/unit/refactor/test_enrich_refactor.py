@@ -30,7 +30,8 @@ def test_enrich_refactor_cli():
         result = subprocess.run(
             [
                 "python",
-                "scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py",                "--audit",
+                "scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py",
+                "--audit",
                 str(audit_path),
                 "--reports",
                 str(report_dir),

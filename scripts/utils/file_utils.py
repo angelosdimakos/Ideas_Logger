@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 file_utils.py
 
@@ -33,6 +34,7 @@ BACKUP_JSON_INDENT = 4
 # 🌐  Generic helpers
 # ---------------------------------------------------------------------------
 
+
 def sanitize_filename(name: str) -> str:
     """Return *name* stripped of illegal chars and truncated to 100 chars."""
     return re.sub(r"[^\w\-_. ]", "", name)[:100]
@@ -42,9 +44,11 @@ def get_timestamp() -> str:
     """Current time as ``YYYY‑MM‑DD_HH‑MM‑SS``."""
     return _dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
+
 # ---------------------------------------------------------------------------
 # 📂  Path safety & JSON helpers
 # ---------------------------------------------------------------------------
+
 
 def _to_path(p: Union[str, Path]) -> Path:
     """Internal: coerce *p* to ``Path`` exactly once."""
@@ -85,9 +89,11 @@ def safe_read_json(filepath: Union[str, Path]) -> dict:
         return {}
     return read_json(path)
 
+
 # ---------------------------------------------------------------------------
 # 🗄️  Backup helper
 # ---------------------------------------------------------------------------
+
 
 def make_backup(file_path: Union[str, Path]) -> str | None:
     src = _to_path(file_path)
@@ -104,9 +110,11 @@ def make_backup(file_path: Union[str, Path]) -> str | None:
         logger.exception("Failed to create backup for %s", src)
         return None
 
+
 # ---------------------------------------------------------------------------
 # 📦  Zip helper
 # ---------------------------------------------------------------------------
+
 
 def zip_python_files(
     output_path: Union[str, Path],

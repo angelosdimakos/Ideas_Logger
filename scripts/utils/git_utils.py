@@ -56,14 +56,17 @@ def get_changed_files(base: str = "origin/main") -> List[str]:
     return [line for line in output.splitlines() if line.endswith(".py")]
 
 
-def interactive_commit_flow(default_branch: str = "main"):
+def interactive_commit_flow(default_branch: str = "main") -> None:
     """
     Guides the user through an interactive Git commit and push process.
 
-    Prompts to either push changes to the default branch or create and push to a new branch, handling all Git commands interactively.
+    Prompts the user to either push changes to the default branch or create and push to a new branch, handling all Git commands interactively.
 
     Args:
         default_branch (str): The branch to push to by default. Defaults to "main".
+
+    Returns:
+        None
     """
     import subprocess
 

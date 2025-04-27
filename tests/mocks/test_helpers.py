@@ -1,7 +1,7 @@
 import numpy as np
 from unittest.mock import patch
 from pathlib import Path
-from scripts.config.config_loader import get_effective_config, get_config_value
+from scripts.config.config_loader import get_effective_config
 from scripts.indexers.base_indexer import BaseIndexer
 from scripts.indexers.summary_indexer import SummaryIndexer
 from scripts.indexers.raw_log_indexer import RawLogIndexer
@@ -181,11 +181,17 @@ def assert_resolved_test_path(config: dict, key: str, expected_suffix: str):
     """
     value = config.get(key)
     assert value is not None, f"Missing key: {key}"
-    assert expected_suffix in value.replace(
-        "\\", "/"
+
+    # Ensure value is a string for path operations
+    if isinstance(value, Path):
+        value = str(value)
+
+    normalized_value = value.replace("\\", "/")
+    assert (
+        expected_suffix in normalized_value
     ), f"{key} should include {expected_suffix}, got: {value}"
     assert (
-        "pytest" in value or "tmp" in value.lower()
+        "pytest" in normalized_value or "tmp" in normalized_value.lower()
     ), f"{key} should point to test path, got: {value}"
 
 

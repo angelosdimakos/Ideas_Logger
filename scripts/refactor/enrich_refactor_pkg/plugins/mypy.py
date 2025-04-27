@@ -5,8 +5,9 @@ from ..core import ToolPlugin
 from ..helpers import run_cmd, read_report
 from ..path_utils import norm
 
+
 class MypyPlugin(ToolPlugin):
-    name           = "mypy"
+    name = "mypy"
     default_report = Path("mypy.txt")
 
     def run(self) -> int:

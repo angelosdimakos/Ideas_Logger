@@ -4,19 +4,20 @@ config_manager.py
 This module provides centralized management of application configuration using a Pydantic-based model.
 
 Core features include:
-- Defining a comprehensive AppConfig model for all configurable application parameters, including UI, logging, LLM, embedding, file paths, test mode, and plugins.
-- Loading, validating, and caching configuration from a JSON file, with robust error handling and fallback to default settings.
-- Utility methods for retrieving configuration values, resetting the config cache, and validating critical file and directory paths.
+- Defining a comprehensive AppConfig model for all configurable application parameters.
+- Loading, validating, and caching configuration from a JSON file.
+- Utility methods for retrieving configuration values, resetting the config cache, and validating critical config paths.
 - Integration with safe file reading utilities for resilience against missing or malformed config files.
 
-Intended for use throughout the application to ensure consistent, validated, and maintainable configuration management.
+Intended for use throughout the application to ensure consistent, validated configuration management.
 """
 
 import logging
+import json
 from pathlib import Path
 from typing import Any, Optional
 from pydantic import BaseModel, ValidationError
-from scripts.utils.file_utils import safe_read_json  # Importing the safe_read_json function
+from scripts.utils.file_utils import safe_read_json
 
 logger = logging.getLogger(__name__)
 
@@ -25,9 +26,9 @@ class AppConfig(BaseModel):
     """
     Configuration model for application settings.
 
-    Defines all configurable parameters for the application, including UI options, logging, LLM
-    and embedding model settings, file paths, test mode directories, and plugin management.
-    Ignores any extra fields not explicitly defined.
+    Defines all configurable parameters for the application, including UI,
+    logging, LLM and embedding model settings, file paths, test mode,
+    and plugin management. Ignores any extra fields not explicitly defined.
     """
 
     mode: str
@@ -88,6 +89,59 @@ class ConfigManager:
     _config: Optional[AppConfig] = None
     _config_timestamp: Optional[float] = None
 
+    # Default values for standalone AppConfig
+    _DEFAULTS = {
+        "mode": "test",
+        "use_gui": False,
+        "interface_theme": "dark",
+        "batch_size": 5,
+        "autosave_interval": 10,
+        "log_level": "DEBUG",
+        "summarization": True,
+        "llm_provider": "ollama",
+        "llm_model": "mistral",
+        "openai_model": "gpt-4",
+        "api_keys": {"openai": "test-key"},
+        "embedding_model": "all-MiniLM-L6-v2",
+        "faiss_top_k": 5,
+        "force_summary_tracker_rebuild": True,
+        "vector_store_dir": "test_vector_store_dir",
+        "faiss_index_path": "test_faiss_index_path",
+        "faiss_metadata_path": "test_faiss_metadata_path",
+        "logs_dir": "test_logs_dir",
+        "export_dir": "test_export_dir",
+        "correction_summaries_path": "test_correction_summaries_path",
+        "raw_log_path": "test_raw_log_path",
+        "raw_log_index_path": "test_raw_log_index_path",
+        "raw_log_metadata_path": "test_raw_log_metadata_path",
+        "log_format": "json",
+        "markdown_export": True,
+        "default_tags": ["test"],
+        "use_templates": True,
+        "persona": "test_persona",
+        "category_structure": {"Test": ["Subtest"]},
+        "prompts_by_subcategory": {"Subtest": "Test prompt"},
+        "test_mode": True,
+        "test_logs_dir": "test_test_logs_dir",
+        "test_vector_store_dir": "test_test_vector_store_dir",
+        "test_export_dir": "test_test_export_dir",
+        "test_correction_summaries_path": "test_test_correction_summaries_path",
+        "test_raw_log_path": "test_test_raw_log_path",
+        "test_summary_tracker_path": "test_test_summary_tracker_path",
+        "remote_sync": False,
+        "plugin_dir": "test_plugin_dir",
+        "enable_debug_logging": True,
+        "strict_offline_mode": True,
+    }
+
+    # Pre-instantiated default config for type-safety
+    _DEFAULT_CONFIG: AppConfig = AppConfig.parse_obj(_DEFAULTS)
+
+    @classmethod
+    def _default_config(cls) -> AppConfig:
+        """Return a fresh copy of the pre-instantiated default config."""
+        return cls._DEFAULT_CONFIG.copy()
+
     @classmethod
     def load_config(
         cls, config_path: str = "config/config.json", force_reload: bool = False
@@ -116,68 +170,28 @@ class ConfigManager:
         ):
             if not path.exists():
                 logger.error("Configuration file missing: %s", config_path)
-                # Return a default AppConfig instance with predefined default values
-                return AppConfig(
-                    mode="test",
-                    use_gui=False,
-                    interface_theme="dark",
-                    batch_size=5,
-                    autosave_interval=10,
-                    log_level="DEBUG",
-                    summarization=True,
-                    llm_provider="ollama",
-                    llm_model="mistral",
-                    openai_model="gpt-4",
-                    api_keys={"openai": "test-key"},
-                    embedding_model="all-MiniLM-L6-v2",
-                    faiss_top_k=5,
-                    force_summary_tracker_rebuild=True,
-                    vector_store_dir="test_vector_store_dir",
-                    faiss_index_path="test_faiss_index_path",
-                    faiss_metadata_path="test_faiss_metadata_path",
-                    logs_dir="test_logs_dir",
-                    export_dir="test_export_dir",
-                    correction_summaries_path="test_correction_summaries_path",
-                    raw_log_path="test_raw_log_path",
-                    raw_log_index_path="test_raw_log_index_path",
-                    raw_log_metadata_path="test_raw_log_metadata_path",
-                    log_format="json",
-                    markdown_export=True,
-                    default_tags=["test"],
-                    use_templates=True,
-                    persona="test_persona",
-                    category_structure={"Test": ["Subtest"]},
-                    prompts_by_subcategory={"Subtest": "Test prompt"},
-                    test_mode=True,
-                    test_logs_dir="test_test_logs_dir",
-                    test_vector_store_dir="test_test_vector_store_dir",
-                    test_export_dir="test_test_export_dir",
-                    test_correction_summaries_path="test_test_correction_summaries_path",
-                    test_raw_log_path="test_test_raw_log_path",
-                    test_summary_tracker_path="test_test_summary_tracker_path",
-                    remote_sync=False,
-                    plugin_dir="test_plugin_dir",
-                    enable_debug_logging=True,
-                    strict_offline_mode=True,
-                )  # Return default config if the file doesn't exist
+                return cls._default_config()
 
             try:
-                # Use the safe_read_json to read the config file
-                raw_config = safe_read_json(path)  # Returns an empty dict on failure
+                raw_config = safe_read_json(path)
+                try:
+                    text = path.read_text(encoding="utf-8")
+                    raw_config = json.loads(text)
+                except json.JSONDecodeError as e:
+                    logger.error("Failed to decode config JSON: %s", e)
+                    raise ValueError("Config validation failed: malformed JSON") from e
                 if not raw_config:
-                    logger.warning(
-                        "Using default configuration as config file is empty or invalid."
-                    )
-                    return AppConfig()  # Return default config if the read fails
+                    logger.warning("Config is empty—falling back to defaults.")
+                    return cls._default_config()
 
-                cls._config = AppConfig(**raw_config)  # Parse config into AppConfig model
+                cls._config = AppConfig(**raw_config)
                 cls._config_timestamp = path.stat().st_mtime
                 logger.info("Configuration loaded from %s", config_path)
             except ValidationError as e:
                 logger.error("Config validation error: %s", e, exc_info=True)
                 raise ValueError("Config validation failed") from e
-            except Exception as e:
-                logger.error("Unexpected error loading configuration: %s", e, exc_info=True)
+            except Exception:
+                logger.error("Unexpected error loading configuration", exc_info=True)
                 raise
         else:
             logger.debug("Using cached configuration.")
@@ -201,30 +215,29 @@ class ConfigManager:
         return getattr(config, key, default)
 
     @classmethod
-    def reset(cls):
-        """
-        Reset the cached configuration and timestamp, forcing the next load to read from disk.
-
-        This method clears the in-memory config cache and logs the reset event.
-        """
+    def reset(cls) -> None:
+        """Reset the cached configuration and timestamp."""
         cls._config = None
         cls._config_timestamp = None
         logger.debug("Config cache reset.")
 
     @classmethod
-    def validate_config_paths(cls):
+    def validate_config_paths(cls) -> bool:
         """
-        Check if the parent directories of critical config paths exist.
+        Validate that critical config paths have existing parent directories.
 
         Logs a warning for each missing directory. Returns True if all required directories exist, otherwise False.
+
+        Returns:
+            bool: True if all critical directories exist, False otherwise.
         """
         config = cls.load_config()
-        critical_paths = [
+        critical = [
             config.raw_log_path,
             config.correction_summaries_path,
             config.vector_store_dir,
         ]
-        missing_dirs = [p for p in critical_paths if not Path(p).parent.exists()]
-        for p in missing_dirs:
+        missing = [p for p in critical if not Path(p).parent.exists()]
+        for p in missing:
             logger.warning("Missing directory for config path: %s", p)
-        return not missing_dirs  # Returns True if all directories exist
+        return not missing

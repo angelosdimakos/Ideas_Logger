@@ -1,4 +1,3 @@
-import pytest
 from scripts.utils.file_utils import read_json
 
 

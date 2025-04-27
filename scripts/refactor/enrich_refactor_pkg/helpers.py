@@ -9,7 +9,6 @@ import os
 from pathlib import Path
 from typing import Sequence, Union
 
-from .path_utils import norm  # single canonical helper
 
 
 # ────────────────────────────────────────────────────────────────────────────────

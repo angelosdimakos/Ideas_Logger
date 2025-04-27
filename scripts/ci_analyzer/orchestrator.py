@@ -42,6 +42,9 @@ def backup_audit_file(path: str = "refactor_audit.json") -> None:
 
     Returns:
         None
+
+    Raises:
+        FileNotFoundError: If the specified audit file does not exist.
     """
 
     audit_path = Path(path)
@@ -67,6 +70,9 @@ def load_audit(path: str = "refactor_audit.json") -> Dict[str, Any]:
 
     Returns:
         Dict[str, Any]: Parsed audit data as a dictionary.
+
+    Raises:
+        json.JSONDecodeError: If the JSON file is malformed.
     """
     # First create a backup before loading
     backup_audit_file(path)
@@ -78,6 +84,9 @@ def header_block() -> str:
     """
     Returns a formatted Markdown header block for the CI audit summary,
     including metric summaries, emoji risk indicators, and visual bar indicators.
+
+    Returns:
+        str: Formatted Markdown header block.
     """
     return """
 ## 🔍 CI Audit Summary
@@ -118,13 +127,25 @@ def save_summary(markdown: str, out_path: str = "ci_summary.md") -> None:
     Args:
         markdown (str): The markdown content to save.
         out_path (str, optional): The output file path. Defaults to "ci_summary.md".
+
+    Returns:
+        None
+
+    Raises:
+        OSError: If the file cannot be written.
     """
     Path(out_path).write_text(markdown, encoding="utf-8")
 
 
-def main():
+def main() -> None:
     """
     Parses command-line arguments to load audit data, generate a CI summary report, and save it as a Markdown file.
+
+    Returns:
+        None
+
+    Raises:
+        argparse.ArgumentError: If the command-line arguments are invalid.
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("--audit", default="refactor_audit.json", help="Path to audit JSON file")

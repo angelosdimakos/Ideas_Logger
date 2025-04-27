@@ -3,6 +3,7 @@ import json
 import unittest
 from scripts.config.config_loader import load_config, get_config_value, get_absolute_path
 import pytest
+from pathlib import Path
 
 pytestmark = [pytest.mark.unit]
 
@@ -28,7 +29,7 @@ class TestConfigLoader(unittest.TestCase):
         os.makedirs(self.mock_logs_dir, exist_ok=True)
         os.makedirs(self.mock_exports_dir, exist_ok=True)
 
-        self.config_file = os.path.join(self.mock_data_dir, "config.json")
+        self.config_file = Path(self.mock_data_dir) / "config.json"
         sample_config = {
             "batch_size": 10,
             "correction_summaries_path": "logs/test_correction_summaries.json",
@@ -94,7 +95,7 @@ class TestConfigLoader(unittest.TestCase):
         """
         Ensures `load_config` gracefully returns an empty dictionary when the config file is missing.
         """
-        fake_path = os.path.join(self.mock_data_dir, "fake_config.json")
+        fake_path = Path(self.mock_data_dir) / "fake_config.json"
         config = load_config(fake_path)
         self.assertEqual(config, {})
 

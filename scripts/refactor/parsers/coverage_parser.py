@@ -17,6 +17,7 @@ import xml.etree.ElementTree as ET
 from typing import Dict, Tuple, Any, Set
 from scripts.refactor.enrich_refactor_pkg.path_utils import norm as normalize_path
 
+
 def parse_coverage_xml_to_method_hits(
     xml_path: str,
     method_ranges: Dict[str, Tuple[int, int]],
