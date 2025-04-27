@@ -1,7 +1,8 @@
 # 🚀 Ideas Logger — Structured Thought, Tested in Fire
 
-[![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/branch/feature%2Fci-artifact-analyzer/graph/badge.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)
+[![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/branch/main/graph/badge.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/graphs/sunburst.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)
 
 > `python` • `tkinter` • `ollama` • `faiss` • `gui-app` • `llm` • `summarization` • `productivity`
 
