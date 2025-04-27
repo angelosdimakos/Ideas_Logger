@@ -3,8 +3,6 @@
 [![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/branch/feature%2Fci-artifact-analyzer/graph/badge.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-
-
 > `python` • `tkinter` • `ollama` • `faiss` • `gui-app` • `llm` • `summarization` • `productivity`
 
 A powerful, locally-run GUI tool for capturing, organizing, summarizing, and exporting your best ideas — all powered by local LLMs like **Ollama**, and rigorously tested via full-stack **CI/CD** pipelines.
