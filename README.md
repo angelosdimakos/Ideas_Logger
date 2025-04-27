@@ -35,6 +35,7 @@ All pipelines are tested, audited, and hardened for real-world deployment across
 
 ### Test & CI Workflow
 ![Test & CI Architecture](docs/TestCIandArchitecture.png)
+
 ---
 
 ## ⚙️ Core Features
