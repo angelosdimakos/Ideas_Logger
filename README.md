@@ -28,6 +28,14 @@ It integrates:
 All pipelines are tested, audited, and hardened for real-world deployment across fresh environments.
 
 ---
+## 🏗️ System Overview
+
+### Production Workflow
+![Production Architecture](docs/ProductionCode.png)
+
+### Test & CI Workflow
+![Test & CI Architecture](docs/TestCIandArchitecture.png)
+---
 
 ## ⚙️ Core Features
 
