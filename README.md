@@ -12,6 +12,7 @@ A powerful, locally-run GUI tool for capturing, organizing, summarizing, and exp
 
 🧠 Built for creative thinkers, engineers, and productivity junkies who want their ideas to **survive the chaos** and become **automatically structured**, **summarized**, and **searchable**.
 
+
 ---
 
 ## 🖥️ Features
