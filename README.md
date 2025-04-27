@@ -1,8 +1,8 @@
 # 🚀 Ideas Logger – CI-Tested AI-Augmented GUI for Structured Thought
 
-[![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/graph/badge.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)
+[![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/branch/feature%2Fci-artifact-analyzer/graph/badge.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/graphs/sunburst.svg?token=C49N6JTFXY)](...)
+[![Codecov]([https://codecov.io/gh/angelosdimakos/Ideas_Logger/graphs/sunburst.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger/graphs/sunburst.svg?token=C49N6JTFXY)](...)
 
 
 
