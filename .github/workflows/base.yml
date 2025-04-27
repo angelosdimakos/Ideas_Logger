@@ -10,6 +10,8 @@ permissions:
   contents: read
   actions: read
   checks: write
+  pull-requests: write
+  statuses: write
 
 
 jobs:
@@ -128,9 +130,12 @@ jobs:
         with:
           files: ./coverage.xml
           fail_ci_if_error: false
-          verbose: true  # Get more output to diagnose
+          verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: angelosdimakos/Ideas_Logger
+          slug: github/angelosdimakos/Ideas_Logger
+          name: codecov
+          override_branch: main  # Specify your branch
+          override_commit: ${{ github.sha }}
 
       - name: 🧠 Run Full RefactorGuard Audit
         run: |
