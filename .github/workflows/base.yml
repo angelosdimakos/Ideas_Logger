@@ -118,12 +118,13 @@ jobs:
 
       - name: ☁️ Upload to Codecov
         uses: codecov/codecov-action@v4
+        continue-on-error: true
         with:
           files: ./coverage.xml
-          fail_ci_if_error: true
+          fail_ci_if_error: false
+          verbose: true  # Get more output to diagnose
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
       - name: 🧠 Run Full RefactorGuard Audit
         run: |
           source .venv/bin/activate
