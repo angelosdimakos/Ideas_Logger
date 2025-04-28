@@ -1,7 +1,7 @@
 # 🚀 Ideas Logger — Structured Thought, Tested in Fire
 
 [![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/branch/main/graph/badge.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-APACHE-yellow.svg)](LICENSE)
 [![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/graphs/sunburst.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)
 
 > `python` • `tkinter` • `ollama` • `faiss` • `gui-app` • `llm` • `summarization` • `productivity`
@@ -130,7 +130,7 @@ python scripts/main.py
 
 ## 🔒 License
 
-Licensed under the [MIT License](LICENSE).
+Licensed under the [APACHE License](LICENSE).
 
 Use it. Fork it. Build on it.  
 Attribution encouraged but not required.
