@@ -55,7 +55,7 @@ pytest_cache/
 # === Jupyter / Markdown Trash ===
 .ipynb_checkpoints/
 
-!conftest.py
+!tests/conftest.py
 
 
 .qodo

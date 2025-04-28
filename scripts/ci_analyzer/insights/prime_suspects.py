@@ -59,7 +59,7 @@ def generate_prime_insights(audit: Dict[str, Any]) -> List[str]:
     top_flake8 = Counter(flake8_codes).most_common(3)
     top_pydoc = Counter(pydoc_issues).most_common(3)
     top_mypy = Counter(mypy_codes).most_common(3)
-    top_complex = sorted(comp_methods, key=lambda t: -t[2])[:3]
+    top_complex = sorted(comp_methods, key=lambda t: -t[2])[:20]
 
     parts: List[str] = ["### 🎯 Prime Suspects\n"]
     if top_flake8:

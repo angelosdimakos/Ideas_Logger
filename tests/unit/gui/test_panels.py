@@ -18,7 +18,7 @@ import tkinter as tk
 from unittest.mock import MagicMock
 import pytest
 
-from conftest import GUI_AVAILABLE, tk_safe
+from tests.conftest import GUI_AVAILABLE, tk_safe
 
 # Import panels
 from scripts.gui.panels.action_panel import ActionPanel
