@@ -83,13 +83,7 @@ class DocstringAnalyzer:
 
     def extract_docstrings(self, file_path: Path) -> Dict[str, Any]:
         """
-        Extract docstrings from a Python file.
-
-        Args:
-            file_path (Path): The path to the Python file.
-
-        Returns:
-            Dict[str, Any]: A dictionary containing extracted docstrings.
+        Extract docstrings from a Python file, recursively.
         """
         try:
             source = file_path.read_text(encoding="utf-8")
@@ -100,34 +94,33 @@ class DocstringAnalyzer:
         if tree is None:
             return {}
 
-        result: Dict[str, Any] = {
+        result = {
             "module_doc": split_docstring_sections(ast.get_docstring(tree)),
             "classes": [],
             "functions": [],
         }
 
-        for node in ast.iter_child_nodes(tree):
+        def visit_node(node):
             if isinstance(node, ast.ClassDef):
                 doc = split_docstring_sections(ast.get_docstring(node))
-                result["classes"].append(
-                    {
-                        "name": node.name,
-                        "description": doc["description"],
-                        "args": doc["args"],
-                        "returns": doc["returns"],
-                    }
-                )
+                result["classes"].append({
+                    "name": node.name,
+                    "description": doc["description"],
+                    "args": doc["args"],
+                    "returns": doc["returns"],
+                })
             elif isinstance(node, ast.FunctionDef):
                 doc = split_docstring_sections(ast.get_docstring(node))
-                result["functions"].append(
-                    {
-                        "name": node.name,
-                        "description": doc["description"],
-                        "args": doc["args"],
-                        "returns": doc["returns"],
-                    }
-                )
+                result["functions"].append({
+                    "name": node.name,
+                    "description": doc["description"],
+                    "args": doc["args"],
+                    "returns": doc["returns"],
+                })
+            for child in ast.iter_child_nodes(node):
+                visit_node(child)
 
+        visit_node(tree)
         return result
 
     def analyze_directory(self, root: Path) -> Dict[str, Dict[str, Any]]:

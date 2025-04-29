@@ -1,0 +1,409 @@
+#!/usr/bin/env python3
+"""
+generate_codebase_kg.py
+
+Builds Knowledge Graphs for a Python codebase using docstring summaries.
+Analyzes module complexity (density, degree, busyness).
+Colors graphs based on complexity.
+
+Usage:
+    - Load JSON docstring summary
+    - Build Parent Graph (subpackages)
+    - Build Child Graphs (per subpackage)
+    - Analyze complexity
+    - Visualize with color-coding
+"""
+
+import json
+import networkx as nx
+import matplotlib.pyplot as plt
+import re
+import logging
+import matplotlib.patches as mpatches
+from typing import Dict, Any, List, Tuple
+import argparse
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
+def normalize_keys(docmap: dict) -> dict:
+    """
+    Normalize all keys to use forward slashes for consistency.
+
+    Args:
+        docmap (dict): A dictionary mapping module paths to their respective data.
+
+    Returns:
+        dict: A new dictionary with normalized keys.
+    """
+    return {k.replace("\\", "/"): v for k, v in docmap.items()}
+# --- Part 1: Graph Construction ---
+
+
+
+
+def extract_data_relations(graph: nx.DiGraph, module_node: str, description: str) -> None:
+    """
+    Extract data relations from module docstrings using pattern matching.
+
+    Args:
+        graph (nx.DiGraph): The directed graph to which data relations will be added.
+        module_node (str): The module node identifier.
+        description (str): The module description from which to extract relations.
+    """
+    # Define relationships patterns with their confidence levels
+    relation_patterns = {
+        # Data storage patterns
+        r"(stor(e|ing)|persist|sav(e|ing)|database|db)": ("data:Storage", "stores", 0.8),
+        # Configuration patterns
+        r"(config|settings|options|parameters)": ("data:Config", "configures", 0.85),
+        # Analysis patterns
+        r"(analyz|analys|summariz|extract)": ("data:Analysis", "analyzes", 0.8),
+        # Initialization patterns
+        r"(initializ|bootstrap|setup|start)": ("data:System", "initializes", 0.9),
+        # Loading patterns
+        r"(load|read|import|parse)": ("data:Input", "loads", 0.85),
+        # Monitoring patterns
+        r"(monitor|track|log|debug)": ("data:Logs", "monitors", 0.8),
+        # Visualization patterns
+        r"(visualiz|display|render|show)": ("data:Visualization", "visualizes", 0.85),
+        # Processing patterns
+        r"(process|transform|convert)": ("data:Processing", "processes", 0.75),
+    }
+
+    # Apply patterns to find relationships
+    desc_lower = description.lower() if description else ""
+    for pattern, (data_node, relation, confidence) in relation_patterns.items():
+        if re.search(pattern, desc_lower):
+            add_data_node(graph, module_node, data_node, relation, confidence)
+
+    # Extract specific objects that follow certain verbs
+    # This captures specific data objects mentioned in descriptions
+    object_patterns = [
+        (r"(load|read|parse)s?\s+(\w+)", "loads"),
+        (r"(generat|creat)es?\s+(\w+)", "generates"),
+        (r"(manag|handl)es?\s+(\w+)", "manages"),
+        (r"(track|monitor)s?\s+(\w+)", "tracks")
+    ]
+
+    for pattern, relation in object_patterns:
+        for match in re.finditer(pattern, desc_lower):
+            object_name = match.group(2)
+            # Filter out common words that aren't likely to be data objects
+            if len(object_name) > 3 and object_name not in ["the", "and", "for", "with"]:
+                add_data_node(graph, module_node, f"data:{object_name.capitalize()}", relation, 0.7)
+
+def add_data_node(graph: nx.DiGraph, module_node: str, data_node: str, relation: str, confidence: float) -> None:
+    """
+    Add a data node and its relation to the graph.
+
+    Args:
+        graph (nx.DiGraph): The directed graph to which the node will be added.
+        module_node (str): The module node identifier.
+        data_node (str): The data node identifier.
+        relation (str): The type of relation to the data node.
+        confidence (float): The confidence level of the relation.
+    """
+    graph.add_node(data_node, type="data")
+    graph.add_edge(module_node, data_node, relation=relation, confidence=confidence)
+
+def extract_parameters_and_returns_safe(fn_entry: Dict[str, Any]) -> Tuple[List[str], List[str]]:
+    """
+    Extract parameters and return values from a function entry.
+
+    Args:
+        fn_entry (Dict[str, Any]): A dictionary containing function metadata.
+
+    Returns:
+        Tuple[List[str], List[str]]: A tuple containing lists of parameters and return values.
+    """
+    params = []
+    returns = []
+
+    args = fn_entry.get("args", {})
+    if isinstance(args, dict):
+        params = list(args.keys())
+    elif isinstance(args, str):
+        for line in args.splitlines():
+            match = re.match(r"^\s*(\w+)\s*(\([^)]*\))?:", line)
+            if match:
+                params.append(match.group(1))
+
+    rets = fn_entry.get("returns", {})
+    if isinstance(rets, dict):
+        returns = list(rets.keys())
+    elif isinstance(rets, str):
+        for line in rets.splitlines():
+            match = re.match(r"^\s*(\w+)\s*(\([^)]*\))?:", line)
+            if match:
+                returns.append(match.group(1))
+            else:
+                fallback = re.match(r"^\s*(\w+)", line)
+                if fallback:
+                    returns.append(fallback.group(1))
+
+    return params, returns
+
+def build_kg_with_direct_keys_safe(docmap: Dict[str, Dict[str, Any]]) -> nx.DiGraph:
+    """
+    Constructs a knowledge graph from a mapping of modules to their respective data.
+
+    Args:
+        docmap (Dict[str, Dict[str, Any]]): A dictionary mapping module paths to their data attributes.
+
+    Returns:
+        nx.DiGraph: A directed graph representing the relationships between modules and their data.
+    """
+    G = nx.DiGraph()
+    folder_nodes = set()
+
+    for module_path, info in docmap.items():
+        if not module_path.startswith("scripts/"):
+            continue
+
+        parts = module_path.split("/")
+        folder_path = ""
+        last_folder = None
+
+        for part in parts[:-1]:
+            folder_path = f"{folder_path}/{part}" if folder_path else part
+            if folder_path not in folder_nodes:
+                G.add_node(folder_path, type="folder")
+                if last_folder:
+                    G.add_edge(last_folder, folder_path, relation="contains", confidence=1.0)
+                last_folder = folder_path
+                folder_nodes.add(folder_path)
+            else:
+                last_folder = folder_path
+
+        module_node = f"module:{module_path}"
+        G.add_node(module_node, type="module")
+        if last_folder:
+            G.add_edge(last_folder, module_node, relation="contains", confidence=1.0)
+
+        for cls in info.get("classes", []):
+            if isinstance(cls, dict) and "name" in cls:
+                cname = f"{module_path}.{cls['name']}"
+                G.add_node(cname, type="class")
+                G.add_edge(module_node, cname, relation="contains", confidence=1.0)
+
+        for fn in info.get("functions", []):
+            if isinstance(fn, dict) and "name" in fn:
+                fname = f"{module_path}.{fn['name']}"
+                G.add_node(fname, type="function")
+                G.add_edge(module_node, fname, relation="contains", confidence=1.0)
+
+                params, rets = extract_parameters_and_returns_safe(fn)
+                for p in params:
+                    pnode = f"{fname}.{p}"
+                    G.add_node(pnode, type="parameter")
+                    G.add_edge(fname, pnode, relation="has_parameter", confidence=0.8)
+                for r in rets:
+                    rnode = f"{fname}.returns.{r}"
+                    G.add_node(rnode, type="return")
+                    G.add_edge(fname, rnode, relation="returns", confidence=0.9)
+
+        module_doc = info.get("module_doc", {})
+        if isinstance(module_doc, dict):
+            desc = (module_doc.get("description") or "").lower()
+            if desc:
+                extract_data_relations(G, module_node, desc)
+
+    return G
+
+# --- Part 2: Complexity Analysis ---
+
+def density_analysis(graph: nx.Graph, name: str = "") -> Dict[str, Any]:
+    """
+    Analyze the density and complexity of a given graph.
+
+    Args:
+        graph (nx.Graph): The graph to analyze.
+        name (str, optional): An optional name for the graph.
+
+    Returns:
+        Dict[str, Any]: A dictionary containing various metrics of the graph's complexity.
+    """
+    node_count = graph.number_of_nodes()
+    edge_count = graph.number_of_edges()
+    avg_degree = (2 * edge_count) / node_count if node_count > 0 else 0
+    density = (2 * edge_count) / (node_count * (node_count - 1)) if node_count > 1 else 0
+    busyness = edge_count / node_count if node_count > 0 else 0
+
+    degrees = sorted(graph.degree, key=lambda x: x[1], reverse=True)
+    top_nodes = degrees[:5]
+
+    complexity_score = (
+        0.15 * (node_count / 100) +
+        0.20 * (edge_count / 200) +
+        0.35 * (avg_degree / 5) +
+        0.20 * (busyness / 2) +
+        0.10 * (density / 0.2)
+    ) * 100
+
+    return {
+        "name": name,
+        "nodes": node_count,
+        "edges": edge_count,
+        "avg_degree": avg_degree,
+        "density": density,
+        "busyness": busyness,
+        "complexity_score": complexity_score,
+        "top_nodes": top_nodes,
+    }
+
+# --- Part 3: Graph Visualization ---
+
+def get_complexity_color(score: float) -> str:
+    """
+    Get the color representation based on the complexity score.
+
+    Args:
+        score (float): The complexity score.
+
+    Returns:
+        str: The color corresponding to the complexity score.
+    """
+    if score < 20:
+        return "#ccffcc"  # Light green
+    elif 20 <= score <= 30:
+        return "#ffffcc"  # Light yellow
+    else:
+        return "#ffcccc"  # Light red
+
+def shorten_label(name: str) -> str:
+    """
+    Shorten a label for display purposes.
+
+    Args:
+        name (str): The label to shorten.
+
+    Returns:
+        str: The shortened label.
+    """
+    if name.startswith("module:"):
+        return name.split("/")[-1]
+    elif "data:" in name:
+        return name.split("data:")[-1]
+    else:
+        return name.split(".")[-1]
+
+def visualize_graph_with_complexity(graph: nx.DiGraph, complexity_scores: Dict[str, float], title: str) -> None:
+    """
+    Visualize the graph with complexity scores.
+
+    Args:
+        graph (nx.DiGraph): The graph to visualize.
+        complexity_scores (Dict[str, float]): A dictionary of complexity scores for nodes.
+        title (str): The title of the visualization.
+    """    try:
+        plt.figure(figsize=(16, 12))
+        layers = {t: [] for t in ["folder", "module", "class", "function", "parameter", "return", "data"]}
+        modules = {}
+
+        for n, d in graph.nodes(data=True):
+            t = d.get("type", "unknown")
+            if t in layers: layers[t].append(n)
+            if t == "module": modules[n] = []
+
+        pos = {}
+        y_gap = -2.0
+        x_gap = 1.5
+
+        for i, t in enumerate(layers.keys()):
+            nodes = layers[t]
+            x_start = -(len(nodes)-1) * x_gap / 2 if nodes else 0
+            for j, n in enumerate(nodes):
+                pos[n] = (x_start + j * x_gap, -i * y_gap)
+
+        for n in graph.nodes():
+            if n not in pos:
+                for p in graph.predecessors(n):
+                    if p in pos:
+                        pos[n] = (pos[p][0], pos[p][1] - y_gap)
+
+        ax = plt.gca()
+
+        for m in modules.keys():
+            preds = list(graph.predecessors(m))
+            parent = preds[0] if preds else None
+            children = [m] + list(graph.successors(m))
+            xs = [pos[n][0] for n in children if n in pos]
+            ys = [pos[n][1] for n in children if n in pos]
+            if not xs: continue
+            min_x, max_x = min(xs)-1, max(xs)+1
+            min_y, max_y = min(ys)-1, max(ys)+1
+
+            mod_name = m.replace("module:scripts/refactor/", "").split("/")[0]
+            score = complexity_scores.get(mod_name, 20.0)
+            rect_color = get_complexity_color(score)
+
+            ax.add_patch(mpatches.Rectangle((min_x, min_y), max_x-min_x, max_y-min_y,
+                                            facecolor=rect_color, alpha=0.3, edgecolor='gray'))
+            plt.text((min_x+max_x)/2, max_y+0.5, mod_name, ha='center', fontsize=10, fontweight="bold")
+
+        node_colors = []
+        for n, d in graph.nodes(data=True):
+            if d.get("type") == "module":
+                mod_name = n.replace("module:scripts/refactor/", "").split("/")[0]
+                score = complexity_scores.get(mod_name, 20.0)
+                node_colors.append(get_complexity_color(score))
+            else:
+                default_colors = {
+                    "folder": "white", "class": "lightgreen",
+                    "function": "orange", "parameter": "yellow",
+                    "return": "gray", "data": "pink"
+                }
+                node_colors.append(default_colors.get(d.get("type"), "lightgray"))
+
+        labels = {n: shorten_label(n) for n in graph.nodes()}
+
+        nx.draw(graph, pos, with_labels=True, labels=labels, node_color=node_colors,
+                edge_color="gray", node_size=1000, font_size=9, font_weight="bold")
+
+        edge_labels = nx.get_edge_attributes(graph, "relation")
+        nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels, font_color="red", font_size=8)
+
+        plt.title(f"KG: {title} (Complexity Aware)", fontsize=14)
+        plt.axis("off")
+        plt.tight_layout()
+        plt.show()
+
+    except Exception as e:
+        logging.error(f"Graph visualization with complexity failed: {e}")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Generate Knowledge Graph from docstring summary JSON.")
+    parser.add_argument("--json", type=str, required=True, help="Path to docstring_summary.json")
+    parser.add_argument("--focus", type=str, default="scripts/refactor/", help="Prefix to filter modules")
+    parser.add_argument("--export", type=str, choices=["graphml", "gexf"], help="Optional: export graph")
+    args = parser.parse_args()
+
+    # Load and normalize JSON
+    with open(args.json, "r", encoding="utf-8") as f:
+        docmap = json.load(f)
+    docmap = normalize_keys(docmap)  # <-- patch: normalize after load
+
+    # Filter
+    focus_subset = {k: v for k, v in docmap.items() if k.startswith(args.focus)}
+    if not focus_subset:
+        print(f"No modules found under focus '{args.focus}'. Check slashes or focus name.")
+
+    graph = build_kg_with_direct_keys_safe(focus_subset)
+
+    # Analyze
+    density_report = density_analysis(graph, name=args.focus)
+    print(f"Complexity Score for {args.focus}: {density_report['complexity_score']:.2f}")
+
+    # Visualize
+    complexity_scores = {args.focus.replace("scripts/refactor/", "").strip("/"): density_report["complexity_score"]}
+    visualize_graph_with_complexity(graph, complexity_scores, title=args.focus)
+
+    # Optional Export
+    if args.export:
+        filename = args.focus.replace("/", "_").replace("\\", "_").strip("_")
+        if args.export == "graphml":
+            nx.write_graphml(graph, f"{filename}.graphml")
+        elif args.export == "gexf":
+            nx.write_gexf(graph, f"{filename}.gexf")
+        print(f"Graph exported as {args.export} file: {filename}.{args.export}")
+
