@@ -1,0 +1,23 @@
+# ───────────────────────────────────────────────────────────────
+# Base image with common settings and dependencies
+# ───────────────────────────────────────────────────────────────
+FROM python:3.11-slim-bookworm AS python-base
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH=/app \
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on
+
+# Create non-root user
+ARG USER_UID=1001
+ARG USER_GID=1001
+RUN groupadd -g "${USER_GID}" myuser && \
+    useradd -u "${USER_UID}" -g myuser -m myuser
+
+# Create virtual environment
+ENV VIRTUAL_ENV=/opt/venv
+RUN python -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+WORKDIR /app

@@ -1,66 +1,69 @@
 # ───────────────────────────────────────────────────────────────
-# Multi-stage build to reduce final image size
+# Test Dockerfile - for running tests (medium size)
 # ───────────────────────────────────────────────────────────────
 
 # ───────────────────────────────────────────────────────────────
-# STAGE 1: Builder image
+# Stage 1: Build dependencies
 # ───────────────────────────────────────────────────────────────
 FROM python:3.11-slim-bookworm AS builder
 
-# System packages needed for building dependencies
-RUN set -eux; \
-    apt-get update && \
+# Install build dependencies
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         build-essential \
         git \
-        ca-certificates \
-        curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Create a virtual environment to isolate dependencies
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-
-# Copy and install Python requirements
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt && \
-    # Clean up pip cache
-    rm -rf ~/.cache/pip
-
-# ───────────────────────────────────────────────────────────────
-# STAGE 2: Runtime image
-# ───────────────────────────────────────────────────────────────
-FROM python:3.11-slim-bookworm AS runtime
-
-# Install only runtime dependencies
-RUN set -eux; \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        tk tcl \
-        libx11-6 libxext6 libxrender1 libxtst6 \
-        xvfb xauth \
         ca-certificates && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy Python virtual environment from builder
+# Create virtual environment
+ENV VIRTUAL_ENV=/opt/venv
+RUN python -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Copy and install both prod and test requirements
+COPY requirements-prod.txt requirements-test.txt ./
+RUN pip install --no-cache-dir -r requirements-prod.txt -r requirements-test.txt && \
+    rm -rf ~/.cache/pip
+
+# ───────────────────────────────────────────────────────────────
+# Stage 2: Test runtime
+# ───────────────────────────────────────────────────────────────
+FROM python:3.11-slim-bookworm AS runtime
+
+# Install runtime dependencies including X11 for GUI testing
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        libgomp1 \
+        tk tcl \
+        libx11-6 libxext6 libxrender1 libxtst6 \
+        xvfb xauth && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy virtual environment from builder
 COPY --from=builder /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
+
+# Set Python paths and environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH=/app
 
 # Create non-root user
 ARG USER_UID=1001
 ARG USER_GID=1001
 RUN groupadd -g "${USER_GID}" myuser && \
     useradd -u "${USER_UID}" -g myuser -m myuser
+
+# Switch to non-root user
 USER myuser
 WORKDIR /app
 
-ENV PYTHONPATH=/app \
-    DEBIAN_FRONTEND=noninteractive
-
-# Copy only necessary application files
+# Copy all application code needed for testing
 COPY --chown=myuser:myuser . .
 
-# Define entrypoint
+# Default command to run tests with xvfb for GUI testing
 ENTRYPOINT ["xvfb-run", "-a", "pytest"]
+CMD ["tests/"]

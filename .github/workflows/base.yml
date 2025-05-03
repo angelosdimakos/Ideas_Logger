@@ -103,7 +103,7 @@ jobs:
     needs: [lint, test]
     timeout-minutes: 5
     runs-on: ubuntu-latest
-    if: always()
+    if: ${{ success() }}
     container:
       image: ghcr.io/angelosdimakos/ideas_logger:latest
     env:
