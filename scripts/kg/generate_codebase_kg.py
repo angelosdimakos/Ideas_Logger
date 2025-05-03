@@ -17,6 +17,12 @@ Usage:
 import argparse
 import logging
 from typing import Dict, Any
+import os
+import sys
+
+# allow importing from project root
+toplevel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.insert(0, toplevel)
 
 from scripts.kg.modules.graph_builder import CodebaseAnalyzer
 
