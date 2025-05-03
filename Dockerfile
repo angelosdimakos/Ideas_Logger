@@ -10,9 +10,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python packages globally (no venv)
 COPY requirements.txt .
-RUN pip install --no-cache-dir --only-binary=faiss-cpu -r requirements.txt && \
-    rm -rf /root/.cache/pip
-
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir --only-binary=faiss-cpu faiss-cpu && \
+    pip install --no-cache-dir torch==2.3.1+cpu \
+    -f https://download.pytorch.org/whl/cpu/torch_stable.html && \
+    rm -rf ~/.cache/pip
 
 # ─────────────────────────────
 # Stage 2: Runtime environment
