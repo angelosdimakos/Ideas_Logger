@@ -16,7 +16,6 @@ Intended for use as a base class for specialized indexers in the Zephyrus projec
 from typing import List, Dict, Any
 import pickle
 import faiss
-from sentence_transformers import SentenceTransformer
 from scripts.config.config_loader import get_config_value
 from scripts.config.config_manager import ConfigManager
 import logging
@@ -45,6 +44,8 @@ class BaseIndexer:
         Raises:
             ValueError: If `index_name` is not "summary" or "raw".
         """
+        from sentence_transformers import SentenceTransformer
+
         if index_name == "summary":
             self.summaries_path = paths.correction_summaries_file
             self.index_path = paths.faiss_index_path
