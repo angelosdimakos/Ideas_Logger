@@ -65,7 +65,7 @@ def temp_config_file(temp_dir: Path) -> Path:
 # 🦢 TEST CONFIG PATCHER
 # ===========================
 @pytest.fixture(scope="function", autouse=True)
-def patch_config_and_paths(monkeypatch: Any, temp_dir: Path) -> None:
+def patch_config_and_paths(monkeypatch: Any, temp_dir: Path, request) -> None:
     """
     Patches the configuration and paths for testing.
 
@@ -73,6 +73,8 @@ def patch_config_and_paths(monkeypatch: Any, temp_dir: Path) -> None:
         monkeypatch (Any): The monkeypatch object to use for patching.
         temp_dir (Path): The temporary directory for the configuration.
     """
+    if "dont_patch_config" in request.keywords:
+        return
     config = build_test_config(temp_dir)
     monkeypatch.setattr("scripts.config.config_loader.load_config", lambda config_path=None: config)
     monkeypatch.setattr(
