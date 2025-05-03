@@ -39,7 +39,6 @@ jobs:
             venv-${{ runner.os }}-
 
       - name: 🚀  Build venv (cache miss only)
-        if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
           python -m venv .venv
           source .venv/bin/activate
