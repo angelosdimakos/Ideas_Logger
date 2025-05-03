@@ -12,18 +12,28 @@ RUN apt-get update && \
         libxrender1 \
         libxtst6 \
         xvfb \
+        xauth \
         git \
-        build-essential && \
-    rm -rf /var/lib/apt/lists/*
+        build-essential \
+        curl \
+        ca-certificates \
+        && rm -rf /var/lib/apt/lists/*
 
 # Set Python path so imports like `from tests...` work
 ENV PYTHONPATH=/app
 
-# Install Python dependencies
+# Pre-set non-interactive for potential future prompts (e.g. git)
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Python dependencies, including pytest explicitly
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt pytest
 
 COPY . .
+
+# Create a non-root user
+RUN adduser --system --group myuser
+USER myuser
 
 # Default: run tests with xvfb
 ENTRYPOINT ["xvfb-run", "-a", "pytest"]
