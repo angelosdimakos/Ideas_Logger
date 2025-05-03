@@ -2,7 +2,7 @@ name: Run Tests & CI Audit (Dockerized)
 
 on:
   push:
-    branches: [main, master, "feature/**", "fix/**", "dev/**"]
+    branches: [main, master, feature/**, fix/**, dev/**]
   pull_request:
     branches: [main, master]
 
@@ -14,23 +14,26 @@ permissions:
   statuses: write
 
 jobs:
-  lint:
+  ci:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/angelosdimakos/ideas_logger:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     env:
       ZEPHYRUS_HEADLESS: "1"
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run linters
+      - name: ✅ Run Linters
         run: |
           mkdir -p lint-reports
-          black --check scripts > lint-reports/black.txt 2>&1 || true
-          flake8 scripts > lint-reports/flake8.txt 2>&1 || true
-          MYPYPATH=. mypy --explicit-package-bases scripts > lint-reports/mypy.txt 2>&1 || true
-          pydocstyle scripts > lint-reports/pydocstyle.txt 2>&1 || true
-          interrogate -v scripts > lint-reports/interrogate.txt 2>&1 || true
+          black --check scripts                       > lint-reports/black.txt        2>&1 || true
+          flake8 scripts                              > lint-reports/flake8.txt       2>&1 || true
+          MYPYPATH=. mypy --explicit-package-bases scripts > lint-reports/mypy.txt         2>&1 || true
+          pydocstyle scripts                          > lint-reports/pydocstyle.txt   2>&1 || true
+          interrogate -v scripts                      > lint-reports/interrogate.txt  2>&1 || true
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -38,18 +41,8 @@ jobs:
           name: lint-reports
           path: lint-reports/
 
-  test:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/angelosdimakos/ideas_logger:latest
-    env:
-      ZEPHYRUS_HEADLESS: "1"
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Run tests
+      - name: ✅ Run Tests
         run: |
-          sudo apt-get update && sudo apt-get install -y xvfb
           xvfb-run -a pytest -n auto -c pytest.ini \
             --cov=scripts --cov-config=.coveragerc \
             --cov-report=xml --cov-report=html
@@ -60,32 +53,43 @@ jobs:
           name: htmlcov
           path: htmlcov/
 
-      - name: Upload to Codecov
+      - name: ☁️ Upload to Codecov
         uses: codecov/codecov-action@v5
         continue-on-error: true
         with:
           files: ./coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: angelosdimakos/Ideas_Logger
+          override_branch: ${{ github.ref_name }}
+          override_build: ${{ github.run_id }}
+          override_commit: ${{ github.sha }}
+          override_pr: ${{ github.event.pull_request.number }}
 
-      - name: Run Refactor Audits
+      - name: 🧠 Run Full RefactorGuard Audit
         run: |
           python scripts/refactor/refactor_guard_cli.py \
-            --refactored scripts --all --missing-tests \
-            --json --output refactor_full_audit.json
-          python scripts/refactor/refactor_guard_cli.py \
-            --refactored scripts --all --git-diff --missing-tests \
-            --json --output refactor_diff_audit.json
+            --refactored scripts --all --missing-tests --json \
+            --output refactor_full_audit.json
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: refactor-audits
-          path: |
-            refactor_full_audit.json
-            refactor_diff_audit.json
+          name: refactor-full-audit
+          path: refactor_full_audit.json
 
-      - name: Generate Docstring Summary
+      - name: 🧠 Run Diff RefactorGuard Audit
+        run: |
+          python scripts/refactor/refactor_guard_cli.py \
+            --refactored scripts --all --git-diff --missing-tests --json \
+            --output refactor_diff_audit.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: refactor-diff-audit
+          path: refactor_diff_audit.json
+
+      - name: 📋 Generate Docstring Summary
         run: |
           export PYTHONPATH="$PYTHONPATH:$(pwd)"
           python scripts/refactor/parsers/docstring_parser.py --json
@@ -96,59 +100,81 @@ jobs:
           name: docstring-summary
           path: docstring_summary.json
 
-  report:
-    needs: [lint, test]
-    runs-on: ubuntu-latest
-    if: always()
-    container:
-      image: ghcr.io/angelosdimakos/ideas_logger:latest
-    env:
-      ZEPHYRUS_HEADLESS: "1"
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Download Artifacts
+      - name: 📅 Download Artifacts
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
 
-      - name: Enrich and Summarize CI
+      - name: 📄 Enrich Both Refactor Audits
         run: |
           python scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py \
-            --audit artifacts/refactor-audits/refactor_full_audit.json \
+            --audit artifacts/refactor-full-audit/refactor_full_audit.json \
             --reports artifacts/lint-reports \
             --docstrings artifacts/docstring-summary/docstring_summary.json
 
           python scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py \
-            --audit artifacts/refactor-audits/refactor_diff_audit.json \
+            --audit artifacts/refactor-diff-audit/refactor_diff_audit.json \
             --reports artifacts/lint-reports \
             --docstrings artifacts/docstring-summary/docstring_summary.json
 
+      - name: 🔸 Generate CI Summaries
+        run: |
           python scripts/ci_analyzer/cli.py \
-            --audit artifacts/refactor-audits/refactor_full_audit.json \
+            --audit artifacts/refactor-full-audit/refactor_full_audit.json \
             --output ci_full_summary.md
-
           python scripts/ci_analyzer/cli.py \
-            --audit artifacts/refactor-audits/refactor_diff_audit.json \
+            --audit artifacts/refactor-diff-audit/refactor_diff_audit.json \
             --output ci_diff_summary.md
-
-          python scripts/ci_analyzer/ci_trends.py \
-            --audit artifacts/refactor-audits/refactor_full_audit.json
-
-          python scripts/ci_analyzer/ci_trends.py \
-            --audit artifacts/refactor-audits/refactor_diff_audit.json
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ci-summary-and-trends
+          name: ci-summaries
           path: |
             ci_full_summary.md
             ci_diff_summary.md
-            .ci-history/
 
-      - name: Post Summary
-        if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
+      - name: 📊 Compare Trends (Full Audit)
+        run: |
+          python scripts/ci_analyzer/ci_trends.py \
+            --audit artifacts/refactor-full-audit/refactor_full_audit.json
+
+      - name: 📊 Compare Trends (Diff Audit)
+        run: |
+          python scripts/ci_analyzer/ci_trends.py \
+            --audit artifacts/refactor-diff-audit/refactor_diff_audit.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          path: ci_diff_summary.md
+          name: ci-trends-history
+          path: .ci-history/
+
+      - name: 🗾️ Audit Summary Recap
+        run: |
+          if [ -f artifacts/refactor-full-audit/refactor_full_audit.json ]; then
+            python - <<'PYCODE'
+          import json
+          with open('artifacts/refactor-full-audit/refactor_full_audit.json', encoding='utf-8-sig') as f:
+              data = json.load(f)
+          method_count = sum(len(file.get('complexity', {})) for file in data.values())
+          file_count = len(data)
+          print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')
+          PYCODE
+          else
+            echo "⚠️ refactor_full_audit.json not found - skipping summary"
+          fi
+
+      - name: 🔸 Post CI Summary
+        if: always()
+        run: |
+          if [ -f ci_full_summary.md ]; then
+            echo "::group::CI Full Summary"
+            cat ci_full_summary.md
+            echo "::endgroup::"
+          fi
+          if [ -f ci_diff_summary.md ]; then
+            echo "::group::CI Diff Summary"
+            cat ci_diff_summary.md
+            echo "::endgroup::"
+          fi
