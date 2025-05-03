@@ -1,8 +1,8 @@
-name: Run Tests & CI Audit
+name: Run Tests & CI Audit (Dockerized)
 
 on:
   push:
-    branches: [main, master, feature/**, fix/**, dev/**]
+    branches: [main, master, "feature/**", "fix/**", "dev/**"]
   pull_request:
     branches: [main, master]
 
@@ -13,168 +13,85 @@ permissions:
   pull-requests: write
   statuses: write
 
-
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      venv-path: ${{ steps.venv-setup.outputs.venv-path }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11.8"
-          cache: 'pip'
-          cache-dependency-path: 'requirements.txt'
-
-      - name: 💠 Install dependencies
-        id: venv-setup
-        run: |
-          python -m pip install --upgrade pip wheel setuptools virtualenv
-          python -m venv .venv
-          source .venv/bin/activate
-          pip install -r requirements.txt
-          pip install faiss-cpu --only-binary=faiss-cpu
-          echo "venv-path=${GITHUB_WORKSPACE}/.venv" >> "$GITHUB_OUTPUT"
-
-      - name: 📆 Cache virtualenv
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            venv-${{ runner.os }}-
-
   lint:
-    needs: setup
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/angelosdimakos/ideas_logger:latest
     env:
       ZEPHYRUS_HEADLESS: "1"
     steps:
       - uses: actions/checkout@v3
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11.8"
-
-      - name: 📆 Restore cached virtualenv
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            venv-${{ runner.os }}-
-
-      - name: ✅ Run Linters
+      - name: Run linters
         run: |
-          source .venv/bin/activate
           mkdir -p lint-reports
           black --check scripts > lint-reports/black.txt 2>&1 || true
           flake8 scripts > lint-reports/flake8.txt 2>&1 || true
           MYPYPATH=. mypy --explicit-package-bases scripts > lint-reports/mypy.txt 2>&1 || true
           pydocstyle scripts > lint-reports/pydocstyle.txt 2>&1 || true
-          pip install interrogate
           interrogate -v scripts > lint-reports/interrogate.txt 2>&1 || true
 
-      - name: 📄 Upload Lint Reports
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
           name: lint-reports
           path: lint-reports/
 
   test:
-    needs: setup
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/angelosdimakos/ideas_logger:latest
     env:
       ZEPHYRUS_HEADLESS: "1"
     steps:
       - uses: actions/checkout@v3
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11.8"
-
-      - name: 📆 Restore cached virtualenv
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            venv-${{ runner.os }}-
-
-      - name: ✅ Run Tests with xvfb
+      - name: Run tests
         run: |
           sudo apt-get update && sudo apt-get install -y xvfb
-          source .venv/bin/activate
-          xvfb-run -a python -m pytest -n auto -c pytest.ini \
+          xvfb-run -a pytest -n auto -c pytest.ini \
             --cov=scripts --cov-config=.coveragerc \
             --cov-report=xml --cov-report=html
-      
 
-      - name: 📈 Upload Coverage Report
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
           name: htmlcov
           path: htmlcov/
 
-      - name: ☁️ Upload to Codecov
+      - name: Upload to Codecov
         uses: codecov/codecov-action@v5
         continue-on-error: true
         with:
           files: ./coverage.xml
-          fail_ci_if_error: false
-          verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: angelosdimakos/Ideas_Logger
-          override_branch: ${{ github.ref_name }}
-          override_build: ${{ github.run_id }}
-          override_commit: ${{ github.sha }}
-          override_pr: ${{ github.event.pull_request.number }}
 
-      - name: 🧠 Run Full RefactorGuard Audit
+      - name: Run Refactor Audits
         run: |
-          source .venv/bin/activate
           python scripts/refactor/refactor_guard_cli.py \
-            --refactored scripts --all --missing-tests --json \
-            --output refactor_full_audit.json
-
-      - name: 📄 Upload Full Refactor Audit
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: refactor-full-audit
-          path: refactor_full_audit.json
-
-      - name: 🧠 Run Diff RefactorGuard Audit
-        run: |
-          source .venv/bin/activate
+            --refactored scripts --all --missing-tests \
+            --json --output refactor_full_audit.json
           python scripts/refactor/refactor_guard_cli.py \
-            --refactored scripts --all --git-diff --missing-tests --json \
-            --output refactor_diff_audit.json
+            --refactored scripts --all --git-diff --missing-tests \
+            --json --output refactor_diff_audit.json
 
-      - name: 📄 Upload Diff Refactor Audit
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
-          name: refactor-diff-audit
-          path: refactor_diff_audit.json
+          name: refactor-audits
+          path: |
+            refactor_full_audit.json
+            refactor_diff_audit.json
 
-      - name: 📋 Generate Docstring Summary
+      - name: Generate Docstring Summary
         run: |
-          source .venv/bin/activate
           export PYTHONPATH="$PYTHONPATH:$(pwd)"
           python scripts/refactor/parsers/docstring_parser.py --json
-      
 
-      - name: 📄 Upload Docstring Summary
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
           name: docstring-summary
           path: docstring_summary.json
@@ -183,111 +100,55 @@ jobs:
     needs: [lint, test]
     runs-on: ubuntu-latest
     if: always()
+    container:
+      image: ghcr.io/angelosdimakos/ideas_logger:latest
     env:
       ZEPHYRUS_HEADLESS: "1"
     steps:
       - uses: actions/checkout@v3
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11.8"
-
-      - name: 📆 Restore cached virtualenv
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            venv-${{ runner.os }}-
-
-      - name: 📅 Download Artifacts
+      - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
 
-      - name: 📄 Enrich Both Refactor Audits
+      - name: Enrich and Summarize CI
         run: |
-          source .venv/bin/activate
           python scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py \
-            --audit artifacts/refactor-full-audit/refactor_full_audit.json \
+            --audit artifacts/refactor-audits/refactor_full_audit.json \
             --reports artifacts/lint-reports \
             --docstrings artifacts/docstring-summary/docstring_summary.json
 
           python scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py \
-            --audit artifacts/refactor-diff-audit/refactor_diff_audit.json \
+            --audit artifacts/refactor-audits/refactor_diff_audit.json \
             --reports artifacts/lint-reports \
             --docstrings artifacts/docstring-summary/docstring_summary.json
-      
-      
 
-      - name: 🔸 Generate CI Summaries
-        run: |
-          source .venv/bin/activate
           python scripts/ci_analyzer/cli.py \
-            --audit artifacts/refactor-full-audit/refactor_full_audit.json \
+            --audit artifacts/refactor-audits/refactor_full_audit.json \
             --output ci_full_summary.md
+
           python scripts/ci_analyzer/cli.py \
-            --audit artifacts/refactor-diff-audit/refactor_diff_audit.json \
+            --audit artifacts/refactor-audits/refactor_diff_audit.json \
             --output ci_diff_summary.md
 
-      - name: 📄 Upload CI Summary Markdown
+          python scripts/ci_analyzer/ci_trends.py \
+            --audit artifacts/refactor-audits/refactor_full_audit.json
+
+          python scripts/ci_analyzer/ci_trends.py \
+            --audit artifacts/refactor-audits/refactor_diff_audit.json
+
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
-          name: ci-summaries
+          name: ci-summary-and-trends
           path: |
             ci_full_summary.md
             ci_diff_summary.md
+            .ci-history/
 
-      - name: 📊 Compare Trends (Full Audit)
-        run: |
-          source .venv/bin/activate
-          python scripts/ci_analyzer/ci_trends.py \
-            --audit artifacts/refactor-full-audit/refactor_full_audit.json
-
-      - name: 📊 Compare Trends (Diff Audit)
-        run: |
-          source .venv/bin/activate
-          python scripts/ci_analyzer/ci_trends.py \
-            --audit artifacts/refactor-diff-audit/refactor_diff_audit.json
-      
-
-      - name: 🧾 Upload CI Trend Deltas
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Post Summary
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
         with:
-          name: ci-trends-history
-          path: .ci-history/
-
-
-
-      - name: 🗾️ Audit Summary Recap
-        run: |
-          if [ -f artifacts/refactor-full-audit/refactor_full_audit.json ]; then
-            source .venv/bin/activate
-            python - <<'PYCODE'
-          import json
-          with open('artifacts/refactor-full-audit/refactor_full_audit.json', encoding='utf-8-sig') as f:
-              data = json.load(f)
-          method_count = sum(len(file.get('complexity', {})) for file in data.values())
-          file_count = len(data)
-          print(f'\n📊 Summary:\n🧠 Methods analyzed: {method_count}\n🔧 Files analyzed: {file_count}')
-          PYCODE
-          else
-            echo "⚠️ refactor_full_audit.json not found - skipping summary"
-          fi
-
-      - name: 🔸 Post CI Summary
-        if: always()
-        run: |
-          if [ -f ci_full_summary.md ]; then
-            echo "::group::CI Full Summary"
-            cat ci_full_summary.md
-            echo "::endgroup::"
-          fi
-          if [ -f ci_diff_summary.md ]; then
-            echo "::group::CI Diff Summary"
-            cat ci_diff_summary.md
-            echo "::endgroup::"
-          fi
+          path: ci_diff_summary.md
