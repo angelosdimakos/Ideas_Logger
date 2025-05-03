@@ -20,35 +20,38 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      venv-restored: ${{ steps.cache-venv.outputs.cache-hit }}
+      venv-path: ${{ steps.venv-setup.outputs.venv-path }}
     steps:
       - uses: actions/checkout@v3
 
-      - name: 🐍  Set up CPython 3.11
+      - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"        # no pip cache – venv is faster
+          python-version: "3.11.8"
+          cache: 'pip'
+          cache-dependency-path: 'requirements.txt'
 
-      - name: 📦  Restore or create .venv
-        id: cache-venv
+      - name: 💠 Install dependencies
+        id: venv-setup
+        run: |
+          if [ -d ".venv" ]; then
+            rm -rf .venv
+            echo "Existing .venv directory removed."
+          fi
+          python -m pip install --upgrade pip wheel setuptools virtualenv
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -r requirements.txt
+          pip install faiss-cpu --only-binary=faiss-cpu
+          echo "venv-path=${GITHUB_WORKSPACE}/.venv" >> "$GITHUB_OUTPUT"
+
+      - name: 📆 Cache virtualenv
         uses: actions/cache@v3
         with:
           path: .venv
           key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
           restore-keys: |
             venv-${{ runner.os }}-
-
-      - name: 🚀  Build venv (cache miss only)
-        run: |
-          python -m venv .venv
-          source .venv/bin/activate
-          python -m pip install --upgrade pip wheel setuptools
-          pip install -r requirements.txt
-          # heavy wheels cached once
-          pip install faiss-cpu pytest-xdist xvfbwrapper interrogate
-
-      - name: 🖥️  Install xvfb system package once
-        run: sudo apt-get update && sudo apt-get install -y xvfb
 
 # -------------------------------------------------------------------
 # 2)  Lint   (runs in parallel with tests)
