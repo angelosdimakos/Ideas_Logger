@@ -1,66 +1,32 @@
-# ───────────────────────────────────────────────────────────────
-# Production Dockerfile - minimal size for running the application
-# ───────────────────────────────────────────────────────────────
-
-# ───────────────────────────────────────────────────────────────
-# Stage 1: Build dependencies
-# ───────────────────────────────────────────────────────────────
+# ---- Stage 1: Build dependencies ----
 FROM python:3.11-slim-bookworm AS builder
 
-# Install build dependencies
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        build-essential \
-        git \
-        ca-certificates && \
-    apt-get clean && \
+    apt-get install -y --no-install-recommends build-essential git ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-# Create virtual environment
-ENV VIRTUAL_ENV=/opt/venv
-RUN python -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
-# Copy and install production requirements only
 COPY requirements-prod.txt .
-RUN pip install --no-cache-dir -r requirements-prod.txt && \
-    rm -rf ~/.cache/pip
+RUN pip install --no-cache-dir -r requirements-prod.txt
 
-# ───────────────────────────────────────────────────────────────
-# Stage 2: Runtime
-# ───────────────────────────────────────────────────────────────
+# ---- Stage 2: Minimal runtime ----
 FROM python:3.11-slim-bookworm AS runtime
 
-# Install runtime dependencies
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        ca-certificates \
-        libgomp1 && \
-    apt-get clean && \
+    apt-get install -y --no-install-recommends ca-certificates libgomp1 && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy virtual environment from builder
-COPY --from=builder /opt/venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Set Python paths and environment variables
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONPATH=/app
-
-# Create non-root user
 ARG USER_UID=1001
 ARG USER_GID=1001
-RUN groupadd -g "${USER_GID}" myuser && \
-    useradd -u "${USER_UID}" -g myuser -m myuser
+RUN groupadd -g "${USER_GID}" myuser && useradd -u "${USER_UID}" -g myuser -m myuser
 
-# Switch to non-root user
 USER myuser
 WORKDIR /app
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/app
 
-# Copy application code (minimal set needed for production)
 COPY --chown=myuser:myuser scripts/ ./scripts/
 COPY --chown=myuser:myuser config/ ./config/
 
-# Run the application
 CMD ["python", "-m", "src.main"]

@@ -1,23 +1,12 @@
-# ───────────────────────────────────────────────────────────────
-# Development Dockerfile - includes all tools (largest size)
-# ───────────────────────────────────────────────────────────────
 FROM python:3.11-slim-bookworm
 
-# Install development packages and dependencies
+# Install development and GUI dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        build-essential \
-        git \
-        ca-certificates \
-        curl \
-        procps \
-        tk tcl \
+        build-essential git curl ca-certificates \
+        procps tk tcl \
         libx11-6 libxext6 libxrender1 libxtst6 \
-        xvfb xauth \
-        vim \
-        less \
-        libgomp1 && \
-    apt-get clean && \
+        xvfb xauth vim less libgomp1 && \
     rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
@@ -26,27 +15,18 @@ ARG USER_GID=1001
 RUN groupadd -g "${USER_GID}" myuser && \
     useradd -u "${USER_UID}" -g myuser -m myuser
 
-# Switch to non-root user
 USER myuser
 WORKDIR /app
 
-# Create and use virtual environment
-RUN python -m venv /home/myuser/.venv
-ENV PATH="/home/myuser/.venv/bin:$PATH" \
-    PYTHONPATH=/app \
+# Set environment
+ENV PATH="/home/myuser/.local/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH=/app
 
-# Copy requirements files
+# Install dev and prod dependencies directly
 COPY --chown=myuser:myuser requirements*.txt ./
+RUN pip install --no-cache-dir -r requirements-prod.txt -r requirements-dev.txt \
+    && pip install --no-cache-dir ipython jupyter
 
-# Install all requirements (including dev tools)
-RUN pip install --no-cache-dir -r requirements-prod.txt -r requirements-dev.txt && \
-    pip install --no-cache-dir ipython jupyter && \
-    rm -rf ~/.cache/pip
-
-# Create volume for code
-VOLUME ["/app"]
-
-# Default command for development container
 CMD ["bash"]
