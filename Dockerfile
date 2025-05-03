@@ -25,6 +25,7 @@ FROM python:3.11-slim-bookworm AS runtime
 # Install runtime system packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
+    curl gpg \
     tk tcl \
     libx11-6 libxext6 libxrender1 libxtst6 \
     xvfb xauth \
