@@ -4,6 +4,4 @@ pydantic==1.10.2
 ollama==0.1.0
 # Use CPU-only torch to reduce size significantly
 torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
-# For sentence-transformers, consider loading models at runtime
-# rather than packaging them with the container
-sentence-transformers
+

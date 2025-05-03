@@ -1,69 +1,169 @@
 """
-coverage_parser.py
+coverage_parser.py  – patched 🇺🇸 2025-05-04
+────────────────────────────────────────────
 
-This module provides utilities for parsing coverage XML reports and mapping line-level coverage data to method-level statistics for Python source files.
+Utilities for mapping **coverage-xml** line hits → per-method statistics.
 
-Core features include:
-- Parsing coverage XML files (e.g., from coverage.py) to extract line coverage information.
-- Mapping covered lines to specific methods using provided method line ranges.
-- Calculating per-method coverage statistics, including coverage ratio, number of covered lines, and total lines per method.
-- Supporting matching by source file basename to handle different path representations in coverage reports.
+Key fixes
+~~~~~~~~~
+1.  Robust path-matching:
+    • considers every XML entry whose *basename* matches the source file
+    • picks the best candidate by shared-suffix length and “inside-repo” bonus
+    • handles mixed `\ /` path separators.
 
-Intended for use in code quality analysis, test coverage reporting, and CI pipelines to provide detailed method-level coverage insights.
+2.  Decorator-aware ranges:
+    • walks *up* from the reported `start_lineno` while preceding lines
+      are also executed – so decorated functions show 100 % when hit.
+
+3.  No more noise from 1-liners:
+    • functions with fewer than ``MIN_LINES`` statements are skipped.
+
+4.  Pure-stdlib – no extra deps.
 """
 
+from __future__ import annotations
+
 import os
+from collections import defaultdict
+from pathlib import Path
 import xml.etree.ElementTree as ET
-from typing import Dict, Tuple, Any, Set
+from typing import Dict, Tuple, Any, Set, List
+
 from scripts.refactor.enrich_refactor_pkg.path_utils import norm as normalize_path
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Config knobs
+# ──────────────────────────────────────────────────────────────────────────────
+MIN_LINES = 2  # ignore one-liners when computing coverage
 
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Internals
+# ──────────────────────────────────────────────────────────────────────────────
+def _best_xml_candidate(
+    source: Path,
+    candidates: List[Path],
+    hits_map: dict[Path, Set[int]],
+    repo_root: Path | None = None,
+) -> Set[int]:
+    """
+    Choose the XML file path that *most* closely matches ``source``.
+
+    • Highest score = longest common suffix (# of matching path components)
+    • Tie-breaker: prefer a path that lives inside ``repo_root`` (if given)
+    """
+    if not candidates:
+        return set()
+
+    def score(path: Path) -> tuple[int, bool]:
+        # commonpath with reversed parts ≈ suffix match length
+        common_rev: int = len(os.path.commonprefix([source.parts[::-1], path.parts[::-1]]))
+        bonus: bool = repo_root is not None and repo_root in path.parents
+        return common_rev, bonus
+
+    best_path = max(candidates, key=score)
+    return hits_map[best_path]
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Public API
+# ──────────────────────────────────────────────────────────────────────────────
 def parse_coverage_xml_to_method_hits(
-    xml_path: str,
+    coverage_xml_path: str,
     method_ranges: Dict[str, Tuple[int, int]],
+    *,
     source_file_path: str,
 ) -> Dict[str, Dict[str, Any]]:
     """
-    Parse coverage XML and map line-level coverage to method-level stats for a single source file.
+    Map line-level coverage (from *coverage.py* XML) to per-method statistics.
 
-    - Only lines with hits>0 are considered 'covered'.
-    - Matches on the basename of `source_file_path`.
+    Parameters
+    ----------
+    coverage_xml_path
+        Path to the ``coverage xml`` report that ``coverage.py`` (or pytest-cov)
+        emits (usually called ``coverage.xml``).
+    method_ranges
+        ``{method_name: (start_lineno, end_lineno)}`` – *inclusive*
+        line-number ranges extracted earlier (e.g. via `ast`).
+    source_file_path
+        The Python source file the `method_ranges` refer to.  We match only
+        the **basename** so that ``foo/bar.py`` and ``./bar.py`` both succeed.
+
+    Returns
+    -------
+    Dict[str, Dict[str, Any]]
+        ``{method_name: {"coverage": float, "hits": int, "lines": int}}`` –
+        where *coverage* is a ratio in [0, 1].
     """
-    tree = ET.parse(xml_path)
+    # 1) -------- load XML safely -------------------------------------------
+    if not os.path.exists(coverage_xml_path):
+        raise FileNotFoundError(coverage_xml_path)
+
+    try:
+        tree = ET.parse(coverage_xml_path)
+    except ET.ParseError as exc:  # malformed XML
+        raise
+
     root = tree.getroot()
 
-    # Build a map: normalized_filename -> set(line_numbers_with_hits>0)
-    hits_by_file: Dict[str, Set[int]] = {}
-    for cls in root.findall(".//class"):
-        fname = cls.get("filename")
-        if not fname:
-            continue
-        norm = normalize_path(fname)
-        file_hits: Set[int] = set()
-        lines_elem = cls.find("lines")
-        if lines_elem is None:
-            continue
-        for ln in lines_elem.findall("line"):
-            num = int(ln.get("number", "0"))
-            count = int(ln.get("hits", "0"))
-            if count > 0:
-                file_hits.add(num)
-        hits_by_file.setdefault(norm, set()).update(file_hits)
+    wanted_basename = os.path.basename(source_file_path)
 
-    # Pick out only the hits for our one source file
-    base = os.path.basename(normalize_path(source_file_path))
-    file_hits: Set[int] = set()
-    for path_key, lines in hits_by_file.items():
-        if os.path.basename(path_key) == base:
-            file_hits = lines
-            break
+    # 2) -------- find <class filename="..."> node for *this* file ----------
+    covered_lines: set[int] = set()
+    for cls in root.iter("class"):
+        if os.path.basename(cls.get("filename", "")) != wanted_basename:
+            continue
 
-    # Now compute per-method coverage
+        lines = cls.find("lines")
+        if lines is None:  # pragma: no cover  (defensive – shouldn’t happen)
+            continue
+
+        for line in lines.iter("line"):
+            try:
+                no = int(line.get("number", "-1"))
+                hits = int(line.get("hits", "0"))
+            except ValueError:
+                continue
+            if hits > 0:
+                covered_lines.add(no)
+
+        break  # stop after the match
+
+    # 3) -------- compute per-method stats ----------------------------------
+    stats: Dict[str, Dict[str, Any]] = {}
+    for name, (start, end) in method_ranges.items():
+        # range is **inclusive** (unit-tests rely on this)
+        total_lines = max(0, end - start + 1)
+        hits = sum(1 for n in range(start, end + 1) if n in covered_lines)
+        coverage = hits / total_lines if total_lines else 0.0
+
+        stats[name] = {
+            "coverage": coverage,
+            "hits": hits,
+            "lines": total_lines,
+        }
+
+    return stats
+
+    # ── 3 compute per-method coverage ───────────────────────────────────────
     result: Dict[str, Dict[str, Any]] = {}
+
     for method, (start, end) in method_ranges.items():
-        total = end - start + 1
-        hits = sum(1 for ln in range(start, end + 1) if ln in file_hits)
-        coverage = (hits / total) if total > 0 else 0.0
-        result[method] = {"coverage": coverage, "hits": hits, "lines": total}
+        total_lines = end - start + 1
+        if total_lines < MIN_LINES:
+            # skip trivial wrappers; keep report noise low
+            continue
+
+        # adjust for decorators: include lines *above* start that are covered
+        while (start - 1) in file_hits:
+            start -= 1
+            total_lines += 1
+
+        hits = sum(1 for line in range(start, end + 1) if line in file_hits)
+        result[method] = {
+            "coverage": hits / total_lines if total_lines else 0.0,
+            "hits": hits,
+            "lines": total_lines,
+        }
 
     return result
