@@ -44,7 +44,6 @@ class BaseIndexer:
         Raises:
             ValueError: If `index_name` is not "summary" or "raw".
         """
-        from sentence_transformers import SentenceTransformer
 
         if index_name == "summary":
             self.summaries_path = paths.correction_summaries_file
@@ -60,9 +59,19 @@ class BaseIndexer:
         model_name = get_config_value(
             ConfigManager.load_config(), "embedding_model", "all-MiniLM-L6-v2"
         )
-        self.embedding_model: SentenceTransformer = SentenceTransformer(model_name)
         self.index = None
         self.metadata: List[Dict[str, Any]] = []
+
+    def _load_model(self):
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError:
+            raise ImportError("sentence-transformers is not installed.")
+
+        model_name = get_config_value(
+            ConfigManager.load_config(), "embedding_model", "all-MiniLM-L6-v2"
+        )
+        return SentenceTransformer(model_name)
 
     def load_index(self) -> None:
         """
