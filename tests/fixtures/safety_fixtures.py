@@ -100,6 +100,15 @@ def assert_all_output_in_temp(tmp_path_factory: Any) -> None:
     after = {p.resolve() for p in root_dir.rglob("*") if p.is_file()}
     new_files = after - before
 
+    ALLOWED_OUTPUT = {
+        "coverage.xml",
+        ".coverage",
+        ".coverage.*",  # xdist shards
+    }
+    ALLOWED_DIRS = {
+        "htmlcov",
+    }
+
     for path in new_files:
         relative = path.relative_to(root_dir)
 
@@ -110,6 +119,8 @@ def assert_all_output_in_temp(tmp_path_factory: Any) -> None:
             or tmp_root in path.parents
             or str(relative).startswith("tests/mock_data/")
             or relative.name.startswith(".coverage.")  # ✅ Ignore xdist coverage fragments
+            or relative.name in ALLOWED_OUTPUT
+            or relative.parts[0] in ALLOWED_DIRS
         ):
             continue
 
