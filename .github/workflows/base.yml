@@ -1,4 +1,4 @@
-name: Run Tests & CI Audit  (optimized)
+name: Run Tests & CI Audit (optimized)
 
 on:
   push:
@@ -13,9 +13,6 @@ permissions:
   pull-requests: write
   statuses: write
 
-# -------------------------------------------------------------------
-# 1)  Setup job – create / restore one cached .venv for all jobs
-# -------------------------------------------------------------------
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -31,13 +28,9 @@ jobs:
           cache: 'pip'
           cache-dependency-path: 'requirements.txt'
 
-      - name: 💠 Install dependencies
+      - name: 🔠 Install dependencies
         id: venv-setup
         run: |
-          if [ -d ".venv" ]; then
-            rm -rf .venv
-            echo "Existing .venv directory removed."
-          fi
           python -m pip install --upgrade pip wheel setuptools virtualenv
           python -m venv .venv
           source .venv/bin/activate
@@ -45,72 +38,46 @@ jobs:
           pip install faiss-cpu --only-binary=faiss-cpu
           echo "venv-path=${GITHUB_WORKSPACE}/.venv" >> "$GITHUB_OUTPUT"
 
-      - name: 📆 Cache virtualenv
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            venv-${{ runner.os }}-
-
-# -------------------------------------------------------------------
-# 2)  Lint   (runs in parallel with tests)
-# -------------------------------------------------------------------
   lint:
     needs: setup
     runs-on: ubuntu-latest
     env: { ZEPHYRUS_HEADLESS: "1" }
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-
       - name: ✅ Run linters
         run: |
           source .venv/bin/activate
           mkdir -p lint-reports
-          black  --check scripts                       > lint-reports/black.txt        2>&1 || true
-          flake8 scripts                              > lint-reports/flake8.txt       2>&1 || true
-          MYPYPATH=. mypy --explicit-package-bases scripts \
-                                                      > lint-reports/mypy.txt         2>&1 || true
-          pydocstyle scripts                          > lint-reports/pydocstyle.txt   2>&1 || true
-          interrogate -v scripts                      > lint-reports/interrogate.txt  2>&1 || true
-
+          black --check scripts > lint-reports/black.txt 2>&1 || true
+          flake8 scripts > lint-reports/flake8.txt 2>&1 || true
+          MYPYPATH=. mypy --explicit-package-bases scripts > lint-reports/mypy.txt 2>&1 || true
+          pydocstyle scripts > lint-reports/pydocstyle.txt 2>&1 || true
+          interrogate -v scripts > lint-reports/interrogate.txt 2>&1 || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: lint-reports
           path: lint-reports/
 
-# -------------------------------------------------------------------
-# 3)  Tests  (fast suite only)  + coverage + audits + docstrings
-# -------------------------------------------------------------------
   test:
     needs: setup
     runs-on: ubuntu-latest
     env: { ZEPHYRUS_HEADLESS: "1" }
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-
-      - name: 🧪 Run fast tests  (-m "not slow", 2 workers)
+      - name: 🥪 Run fast tests
         run: |
           source .venv/bin/activate
+          sudo apt-get update && sudo apt-get install -y xvfb
+          pip install pytest-xdist
           xvfb-run -a pytest -m "not slow" -n 2 -c pytest.ini \
             --cov=scripts --cov-config=.coveragerc \
             --cov-report=xml --cov-report=html
-
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: htmlcov
           path: htmlcov/
-
       - name: ☁️ Upload to Codecov
         uses: codecov/codecov-action@v5
         continue-on-error: true
@@ -118,22 +85,11 @@ jobs:
           files: ./coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: angelosdimakos/Ideas_Logger
-
-      # ---------- RefactorGuard audits ----------
-      - name: 🧠 Run *full* RefactorGuard audit
+      - name: 🧠 RefactorGuard audits
         run: |
           source .venv/bin/activate
-          python scripts/refactor/refactor_guard_cli.py \
-            --refactored scripts --all --missing-tests \
-            --json --output refactor_full_audit.json
-
-      - name: 🧠 Run *diff* RefactorGuard audit
-        run: |
-          source .venv/bin/activate
-          python scripts/refactor/refactor_guard_cli.py \
-            --refactored scripts --all --git-diff --missing-tests \
-            --json --output refactor_diff_audit.json
-
+          python scripts/refactor/refactor_guard_cli.py --refactored scripts --all --missing-tests --json --output refactor_full_audit.json
+          python scripts/refactor/refactor_guard_cli.py --refactored scripts --all --git-diff --missing-tests --json --output refactor_diff_audit.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -141,64 +97,38 @@ jobs:
           path: |
             refactor_full_audit.json
             refactor_diff_audit.json
-
-      # ---------- Doc-string summary ----------
-      - name: 📋 Generate doc-string summary
+      - name: 📋 Docstring summary
         run: |
           source .venv/bin/activate
           export PYTHONPATH="$PYTHONPATH:$(pwd)"
           python scripts/refactor/parsers/docstring_parser.py --json
-
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: docstring-summary
           path: docstring_summary.json
 
-# -------------------------------------------------------------------
-# 4)  Report / enrichment / CI-trends
-# -------------------------------------------------------------------
   report:
     needs: [lint, test]
     runs-on: ubuntu-latest
-    if: always()          # still runs if prior job failed
+    if: always()
     env: { ZEPHYRUS_HEADLESS: "1" }
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-
-      - name: 📥  Download artifacts
+      - name: 📅 Download artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-
-      # ---------- Enrich audits ----------
-      - name: 🧠 Enrich audits with lint & doc-strings
+      - name: 🧠 Enrich audits
         run: |
           source .venv/bin/activate
-          python scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py \
-            --audit artifacts/refactor-audits/refactor_full_audit.json \
-            --reports artifacts/lint-reports \
-            --docstrings artifacts/docstring-summary/docstring_summary.json
-          python scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py \
-            --audit artifacts/refactor-audits/refactor_diff_audit.json \
-            --reports artifacts/lint-reports \
-            --docstrings artifacts/docstring-summary/docstring_summary.json
-
-      # ---------- Generate markdown summaries ----------
-      - name: 📝 Generate CI summaries
+          python scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py --audit artifacts/refactor-audits/refactor_full_audit.json --reports artifacts/lint-reports --docstrings artifacts/docstring-summary/docstring_summary.json
+          python scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py --audit artifacts/refactor-audits/refactor_diff_audit.json --reports artifacts/lint-reports --docstrings artifacts/docstring-summary/docstring_summary.json
+      - name: 📅 Generate summaries
         run: |
           source .venv/bin/activate
-          python scripts/ci_analyzer/cli.py \
-            --audit artifacts/refactor-audits/refactor_full_audit.json \
-            --output ci_full_summary.md
-          python scripts/ci_analyzer/cli.py \
-            --audit artifacts/refactor-audits/refactor_diff_audit.json \
-            --output ci_diff_summary.md
-
+          python scripts/ci_analyzer/cli.py --audit artifacts/refactor-audits/refactor_full_audit.json --output ci_full_summary.md
+          python scripts/ci_analyzer/cli.py --audit artifacts/refactor-audits/refactor_diff_audit.json --output ci_diff_summary.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -206,41 +136,32 @@ jobs:
           path: |
             ci_full_summary.md
             ci_diff_summary.md
-
-      # ---------- Trend deltas ----------
-      - name: 📊 Compare trends
+      - name: 📊 Trend comparison
         run: |
           source .venv/bin/activate
           mkdir -p .ci-history
-          python scripts/ci_analyzer/ci_trends.py \
-            --audit artifacts/refactor-audits/refactor_full_audit.json
-          python scripts/ci_analyzer/ci_trends.py \
-            --audit artifacts/refactor-audits/refactor_diff_audit.json
-
+          python scripts/ci_analyzer/ci_trends.py --audit artifacts/refactor-audits/refactor_full_audit.json
+          python scripts/ci_analyzer/ci_trends.py --audit artifacts/refactor-audits/refactor_diff_audit.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ci-trends-history
           path: .ci-history/
-
-      # ---------- Pretty console recap ----------
-      - name: 🗂️  Audit recap
+      - name: 📂 Audit recap
         run: |
           source .venv/bin/activate
           python - <<'PY'
-          import json, pathlib, sys, textwrap
-          data = json.load(open('artifacts/refactor-audits/refactor_full_audit.json', encoding='utf-8'))
-          files, methods = len(data), sum(len(v.get("complexity",{})) for v in data.values())
+          import json, textwrap
+          data = json.load(open('artifacts/refactor-audits/refactor_full_audit.json'))
+          files, methods = len(data), sum(len(v.get("complexity", {})) for v in data.values())
           print(textwrap.dedent(f"""
             📊  Full-audit recap
-            ───────────────────
-            🗂  Files analysed   : {files}
+            ───────────────
+            📂  Files analysed   : {files}
             🧠  Methods analysed : {methods}
           """).strip())
           PY
-
-      # ---------- PR comment ----------
-      - name: 💬 Post diff summary on PR
+      - name: 💬 Post PR summary
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
