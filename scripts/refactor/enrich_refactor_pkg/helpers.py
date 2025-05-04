@@ -30,7 +30,11 @@ def run_cmd(cmd: Sequence[str], output_file: Union[str, os.PathLike]) -> int:
     Run *cmd*, write **combined stdout + stderr** to *output_file* (UTF-8),
     and return the subprocess' exit-code.
     """
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = subprocess.run(cmd, capture_output=True,
+                                encoding="utf-8",
+                                text=True,
+                                errors="replace"
+                          )
     Path(output_file).write_text(
         ((proc.stdout or "") + ("\n" + proc.stderr if proc.stderr else "")).strip(),
         encoding="utf-8",

@@ -72,7 +72,7 @@ def run_cli(args, tmp_path):
 
     cli_script = Path(__file__).parents[2] / "scripts" / "refactor" / "refactor_guard_cli.py"
     result = subprocess.run(
-        ["python", str(cli_script)] + args,
+        [sys.executable, str(cli_script)] + args,
         cwd=tmp_path,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,

@@ -1,118 +1,112 @@
 #!/usr/bin/env python3
 """
-This module provides the command-line interface (CLI) for RefactorGuard, a tool
-for auditing Python code refactors.
+RefactorGuard CLI – audit Python refactors from the command line.
 
-Core features include:
-- Parsing command-line arguments to configure audit behavior.
-- Supporting both single-file and recursive directory analysis modes.
-- Integrating with Git to restrict audits to changed files.
-- Merging and enriching audit reports with code quality and coverage data.
-- Outputting results in both JSON and human-readable formats.
-
-Intended for use as a standalone CLI tool or in CI pipelines to automate code
-quality and test coverage audits during refactoring.
+Core features
+─────────────
+* directory-wide or single-file analysis
+* Git-diff-only mode
+* merge / enrich existing JSON reports
+* optional coverage integration
 """
 
-import sys
+from __future__ import annotations
 
-# ─── Disable all .pyc / __pycache__ writes to avoid PermissionErrors ──────────
-sys.dont_write_bytecode = True
+import sys
+sys.dont_write_bytecode = True  # avoid __pycache__ PermissionErrors in CI
 
 import argparse
-import os
 import io
 import json
+import os
 import shutil
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
-# allow importing from project root
-toplevel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-sys.path.insert(0, toplevel)
+# ─── make “scripts.” imports work when executed as a script ────────────────
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(_PROJECT_ROOT))
 
 from scripts.refactor.refactor_guard import RefactorGuard, print_human_readable
 from scripts.refactor.method_line_ranges import extract_method_line_ranges
 from scripts.refactor.parsers.coverage_parser import parse_coverage_xml_to_method_hits
-import scripts.utils.git_utils as git_utils  # <-- dynamic import
 from scripts.refactor.enrich_refactor_pkg.quality_checker import (
-    merge_reports,
     merge_into_refactor_guard,
+    merge_reports,
 )
+import scripts.utils.git_utils as git_utils  # noqa:  E402  (late import ok)
 
-# enforce UTF-8 stdout for CI environments
-try:
-    if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(encoding="utf-8")
-    else:
-        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-except Exception:
-    pass
-
-
-def parse_args() -> argparse.Namespace:
+# ───────────────────────────────────────────────────────────────────────────
+# utility
+# ───────────────────────────────────────────────────────────────────────────
+def _ensure_utf8_stdout() -> None:
     """
-    Parses command-line arguments for the RefactorGuard CLI.
+    Force UTF-8 stdout on *interactive* consoles / CI logs.
 
-    Returns:
-        argparse.Namespace: Parsed command-line arguments.
+    Skipped automatically when running under Pytest (because the capture
+    plugin already monkey-patches ``sys.stdout``).
     """
-    p = argparse.ArgumentParser(description="RefactorGuard CLI: Audit Python refactors.")
-    p.add_argument("--original", type=str, default="", help="Original file or directory")
-    p.add_argument("--refactored", type=str, required=True, help="Refactored file or directory")
-    p.add_argument("--coverage-xml", type=str, default="coverage.xml", help="Path to coverage.xml")
-    p.add_argument("--tests", type=str, default="", help="Test file or directory")
-    p.add_argument("--all", action="store_true", help="Scan entire directory recursively")
-    p.add_argument("--diff-only", action="store_true", help="Only method diffs")
-    p.add_argument("--missing-tests", action="store_true", help="Only missing tests")
-    p.add_argument("--complexity-warnings", action="store_true", help="Only complexity warnings")
-    p.add_argument(
-        "--coverage-by-basename",
-        action="store_true",
-        help="Use basename as key for coverage enrich",
-    )
-    p.add_argument(
-        "--merge",
-        nargs=3,
-        metavar=("SRC1", "SRC2", "DEST"),
-        help="Merge reports from SRC1 and SRC2 into DEST",
-    )
-    p.add_argument("--json", action="store_true", help="Output JSON")
-    p.add_argument("--git-diff", action="store_true", help="Restrict to git-changed files")
-    p.add_argument(
-        "-o", "--output", type=str, default="refactor_audit.json", help="JSON output path"
-    )
+    if os.getenv("PYTEST_CURRENT_TEST"):
+        return  # pytest capture in progress – leave streams alone
+    try:
+        if hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8")
+        else:  # Py < 3.7
+            sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    except Exception:
+        # Never crash just for logging – swallow anything unexpected
+        pass
+
+
+# ───────────────────────────────────────────────────────────────────────────
+# CLI parsing helpers
+# ───────────────────────────────────────────────────────────────────────────
+def _parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(prog="refactor_guard_cli.py",
+                                description="Audit Python refactors and enrich reports.")
+    p.add_argument("--original", default="", help="Original file / dir (for diff)")
+    p.add_argument("--refactored", required=True, help="Refactored file / dir")
+    p.add_argument("--tests", default="", help="Folder with unit-tests")
+    p.add_argument("--coverage-xml", default="coverage.xml", help="Path to coverage.xml")
+    p.add_argument("--all", action="store_true", help="Recurse through directories")
+    p.add_argument("--git-diff", action="store_true", help="Analyse only Git-changed files")
+    p.add_argument("--diff-only", action="store_true", help="Drop complexity section in JSON")
+    p.add_argument("--missing-tests", action="store_true", help="Only show missing tests")
+    p.add_argument("--complexity-warnings", action="store_true", help="Only show high complexity")
+    p.add_argument("--coverage-by-basename", action="store_true",
+                   help="Key coverage hits by basename")
+    p.add_argument("--json", action="store_true", help="Write JSON instead of human output")
+    p.add_argument("-o", "--output", default="refactor_audit.json", help="JSON output file")
+    p.add_argument("--merge", nargs=3, metavar=("SRC1", "SRC2", "DEST"),
+                   help="Merge/enrich two reports")
     return p.parse_args()
 
 
-def handle_merge(args: argparse.Namespace) -> None:
-    """
-    Handles the merging of audit reports based on the provided arguments.
-
-    Args:
-        args (argparse.Namespace): Parsed command-line arguments.
-    """
+# ───────────────────────────────────────────────────────────────────────────
+# merge helper
+# ───────────────────────────────────────────────────────────────────────────
+def _handle_merge(args: argparse.Namespace) -> None:
     src1, src2, dest = args.merge
     if os.path.isfile(src2) and src2.lower().endswith(".json"):
         merged = merge_reports(src1, src2)
-        with open(dest, "w", encoding="utf-8") as f:
-            json.dump(merged, f, indent=2)
+        Path(dest).write_text(json.dumps(merged, indent=2), encoding="utf-8")
     elif os.path.isdir(src2):
         shutil.copy(src1, dest)
-        report_dir = Path(src2)
-        report_paths = {
-            "black": report_dir / "black.txt",
-            "flake8": report_dir / "flake8.txt",
-            "mypy": report_dir / "mypy.txt",
-            "pydocstyle": report_dir / "pydocstyle.txt",
-            "coverage": report_dir / "coverage.xml",
-        }
-        merge_into_refactor_guard(dest, report_paths=report_paths)
+        rpt = Path(src2)
+        merge_into_refactor_guard(
+            dest,
+            report_paths={
+                "black": rpt / "black.txt",
+                "flake8": rpt / "flake8.txt",
+                "mypy": rpt / "mypy.txt",
+                "pydocstyle": rpt / "pydocstyle.txt",
+                "coverage": rpt / "coverage.xml",
+            },
+        )
     else:
-        raise ValueError(f"Cannot merge from {src2}: not JSON or report dir")
-
-    print(f"[OK] Merged audits into {dest}")
+        raise ValueError(f"Cannot merge from {src2}: not JSON nor report dir")
+    print(f"[OK] merged → {dest}")
     sys.exit(0)
 
 
@@ -217,52 +211,39 @@ def handle_single_file(args: argparse.Namespace, guard: RefactorGuard) -> Dict[s
     return {basename: res}
 
 
-def main() -> None:
-    """
-    Main entry point for the RefactorGuard CLI.
-
-    This function orchestrates the command-line interface operations, including
-    parsing arguments and executing the appropriate audit functions.
-    """
-    args = parse_args()
+def main() -> int:  # noqa: C901  (complexity irrelevant for CLI wrapper)
+    _ensure_utf8_stdout()        # ← moved here (= after Pytest capture)
+    args = _parse_args()
     guard = RefactorGuard()
 
-    # Override max complexity from environment, if set
+    # env override for CI scripts
     if os.getenv("MAX_COMPLEXITY"):
         try:
             guard.config["max_complexity"] = int(os.getenv("MAX_COMPLEXITY"))
         except ValueError:
             pass
 
-    # Handle merge mode first
+    # 1) merge mode short-circuit
     if args.merge:
-        handle_merge(args)
+        _handle_merge(args)  # exits via sys.exit(0)
 
-    # Choose scan mode: full directory scan if --all or refactored is a directory,
-    # otherwise single‐file mode
+    # 2) choose scan mode
     if args.all or os.path.isdir(args.refactored):
         audit = handle_full_scan(args, guard)
     else:
         audit = handle_single_file(args, guard)
 
-    # JSON output mode
+    # 3) emit report
     if args.json:
         if args.diff_only:
-            for info in audit.values():
-                info["complexity"] = {}
-        with open(args.output, "w", encoding="utf-8") as out:
-            json.dump(audit, out, indent=2)
+            for v in audit.values():
+                v["complexity"] = {}
+        Path(args.output).write_text(json.dumps(audit, indent=2), encoding="utf-8")
         merge_into_refactor_guard(args.output)
-        sys.exit(0)
+        return 0  # ← explicit success exit code
 
-    # Human‑readable output
     print_human_readable(audit, guard, args)
-    try:
-        if os.path.exists(args.coverage_xml):
-            os.remove(args.coverage_xml)
-    except PermissionError:
-        pass
-
+    return 0  # ← also explicit
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

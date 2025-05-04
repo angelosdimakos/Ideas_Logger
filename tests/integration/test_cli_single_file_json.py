@@ -1,5 +1,6 @@
 import json
 import subprocess
+import sys
 from pathlib import Path
 import pytest
 
@@ -32,7 +33,7 @@ def test_single_file_json(single_file_setup):
 
     # Run the CLI directly as a subprocess
     cmd = [
-        "python",
+        sys.executable,
         str(cli_path),
         "--original",
         str(single_file_setup["original"]),

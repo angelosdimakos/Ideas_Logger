@@ -54,7 +54,8 @@ jobs:
           echo "🧪 Running tests with coverage..."
           xvfb-run -a pytest -n auto -c pytest.ini \
             --cov=scripts --cov-config=.coveragerc \
-            --cov-report=xml --cov-report=html
+            --cov-report=term --cov-report=html --cov-report=json
+          echo "✅ Coverage reports generated (.coverage, HTML, JSON)"
 
       - uses: actions/upload-artifact@v4
         if: always()

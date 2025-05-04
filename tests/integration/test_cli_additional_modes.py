@@ -14,8 +14,8 @@ def run_cli(args, tmp_path, monkeypatch):
     monkeypatch.setattr(refactor_guard_cli, "merge_into_refactor_guard", lambda *a, **k: None)
 
     try:
-        with pytest.raises(SystemExit):
-            refactor_guard_cli.main()
+        exit_code = refactor_guard_cli.main()
+        assert exit_code == 0
     except Exception as e:
         print(f"CLI execution failed: {e}")
         if output.exists():
@@ -97,7 +97,9 @@ def test_missing_tests_json_flag(tmp_repo, monkeypatch):
     )
 
     audit = run_cli(
-        ["--original", str(orig), "--refactored", str(ref), "--missing-tests", "--json"], root, monkeypatch
+        ["--original", str(orig), "--refactored", str(ref), "--missing-tests", "--json"],
+        root,
+        monkeypatch
     )
 
     file_data = find_file_in_audit(audit, "foo.py")

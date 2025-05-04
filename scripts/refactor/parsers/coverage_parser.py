@@ -28,6 +28,7 @@ from collections import defaultdict
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from typing import Dict, Tuple, Any, Set, List
+from .coverage_api_parser import parse_coverage_with_api as _parse_api
 
 from scripts.refactor.enrich_refactor_pkg.path_utils import norm as normalize_path
 
@@ -75,12 +76,12 @@ def parse_coverage_xml_to_method_hits(
     source_file_path: str,
 ) -> Dict[str, Dict[str, Any]]:
     """
-    Map line-level coverage (from *coverage.py* XML) to per-method statistics.
+    Map line-level coverage (from *coverage_plugin.py* XML) to per-method statistics.
 
     Parameters
     ----------
     coverage_xml_path
-        Path to the ``coverage xml`` report that ``coverage.py`` (or pytest-cov)
+        Path to the ``coverage xml`` report that ``coverage_plugin.py`` (or pytest-cov)
         emits (usually called ``coverage.xml``).
     method_ranges
         ``{method_name: (start_lineno, end_lineno)}`` – *inclusive*
@@ -167,3 +168,19 @@ def parse_coverage_xml_to_method_hits(
         }
 
     return result
+
+def parse_coverage_to_method_hits(
+    coverage_path: str,
+    method_ranges: dict[str, tuple[int, int]],
+    source_file_path: str,
+):
+    """
+    Smart wrapper that picks XML or JSON parsing automatically.
+    """
+    ext = Path(coverage_path).suffix.lower()
+    if ext == ".json":
+        return _parse_api(coverage_path, method_ranges, source_file_path)
+    else:                           # default / legacy flow
+        return parse_coverage_xml_to_method_hits(
+            coverage_path, method_ranges, source_file_path
+        )

@@ -5,7 +5,7 @@ from scripts.refactor.enrich_refactor_pkg.plugins.black import BlackPlugin
 from scripts.refactor.enrich_refactor_pkg.plugins.flake8 import Flake8Plugin
 from scripts.refactor.enrich_refactor_pkg.plugins.mypy import MypyPlugin
 from scripts.refactor.enrich_refactor_pkg.plugins.pydocstyle import PydocstylePlugin
-from scripts.refactor.enrich_refactor_pkg.plugins.coverage import CoveragePlugin
+from scripts.refactor.enrich_refactor_pkg.plugins.coverage_plugin import CoveragePlugin
 
 # local constants
 BLACK_REPORT = Path("black.txt")
