@@ -30,7 +30,7 @@ jobs:
           black --check scripts       > lint-reports/black.txt 2>&1 || true
           flake8 scripts              > lint-reports/flake8.txt 2>&1 || true
           MYPYPATH=. mypy --explicit-package-bases scripts > lint-reports/mypy.txt 2>&1 || true
-          pydocstyle scripts          > lint-reports/pydocstyle.txt 2>&1 || true
+          pydocstyle --add-ignore=D400,D401 scripts > lint-reports/pydocstyle.txt 2>&1 || true
           interrogate -v scripts      > lint-reports/interrogate.txt 2>&1 || true
 
       - uses: actions/upload-artifact@v4
@@ -60,8 +60,13 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: htmlcov
-          path: htmlcov/
+          name: coverage-reports
+          path: |
+            .coverage
+            coverage.json
+            coverage.xml
+            htmlcov/
+      
 
       - name: ☁️ Upload to Codecov
         uses: codecov/codecov-action@v5
