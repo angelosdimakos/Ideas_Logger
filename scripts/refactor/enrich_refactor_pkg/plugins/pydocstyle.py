@@ -1,13 +1,6 @@
-"""
-pydocstyle.py
-
-This module provides the PydocstylePlugin class, which integrates the pydocstyle tool
-for checking compliance with Python docstring conventions. It runs the tool and parses
-its output for reporting issues.
-"""
-
 from pathlib import Path
 from typing import Dict, Any
+import re
 
 from ..core import ToolPlugin
 from ..helpers import run_cmd, read_report
@@ -36,14 +29,29 @@ class PydocstylePlugin(ToolPlugin):
 
     def parse(self, dst: Dict[str, Dict[str, Any]]) -> None:
         """
-        Parse the output report from pydocstyle.
+        Parse the output report from pydocstyle. Falls back to raw dump if parsing fails.
 
         Args:
             dst (Dict[str, Dict[str, Any]]): The destination dictionary to populate with issues.
         """
+        issue_pattern = re.compile(r"^(.*\.py):(\d+):\s*(D\d+):\s*(.*)$")
+
         for line in read_report(self.default_report).splitlines():
-            if ":" not in line:
-                continue
-            key = norm(line.split(":", 1)[0])
-            issues = dst.setdefault(key, {}).setdefault("pydocstyle", {"issues": []})["issues"]
-            issues.append(line.strip())
+            line = line.strip()
+            match = issue_pattern.match(line)
+            if match:
+                path, lineno, code, msg = match.groups()
+                key = norm(path)
+                issue = {
+                    "line": int(lineno),
+                    "code": code,
+                    "message": msg.strip(),
+                    "raw": line
+                }
+            else:
+                # fallback to raw dump, assign to "_unparsed"
+                key = norm(line.split(":", 1)[0]) if ":" in line else "UNKNOWN"
+                issue = {"raw": line}
+
+            issues = dst.setdefault(key, {}).setdefault("pydocstyle", {}).setdefault("issues", [])
+            issues.append(issue)
