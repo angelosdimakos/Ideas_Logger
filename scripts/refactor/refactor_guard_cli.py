@@ -143,8 +143,8 @@ def handle_full_scan(args: argparse.Namespace, guard: RefactorGuard) -> Dict[str
     # 2) Normalize keys down to basenames
     summary = {}
     for path, info in raw.items():
-        basename = os.path.basename(path)
-        summary[basename] = info
+        norm_path = path.replace("\\", "/")  # Normalize for consistency
+        summary[norm_path] = info
 
     # 3) Inject coverage per file (if coverage.xml exists)
     if os.path.exists(args.coverage_xml):

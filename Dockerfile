@@ -8,12 +8,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential git curl ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Python packages globally (no venv)
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir --only-binary=faiss-cpu faiss-cpu && \
-    pip install --no-cache-dir torch==2.3.1+cpu \
-    -f https://download.pytorch.org/whl/cpu/torch_stable.html && \
+WORKDIR /app
+
+# Install large, stable dependencies first (rarely change)
+COPY base-requirements.txt .
+RUN pip install --no-cache-dir -r base-requirements.txt && \
+    rm -rf ~/.cache/pip
+
+# Install app-specific dependencies (change more frequently)
+COPY app-requirements.txt .
+RUN pip install --no-cache-dir -r app-requirements.txt && \
     rm -rf ~/.cache/pip
 
 # ─────────────────────────────
@@ -21,7 +25,6 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 # ─────────────────────────────
 FROM python:3.11-slim-bookworm AS runtime
 
-# Install runtime system packages
 # Install runtime system packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
@@ -32,7 +35,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-
 # Copy installed site-packages from builder
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
@@ -42,15 +44,19 @@ ARG USER_UID=1001
 ARG USER_GID=1001
 RUN groupadd -g $USER_GID myuser && \
     useradd -u $USER_UID -g myuser -m myuser
-USER myuser
+
+# Set up working directory
 WORKDIR /app
 
 # Environment
 ENV PYTHONPATH=/app \
     DEBIAN_FRONTEND=noninteractive
 
-# Copy only necessary files
+# Copy application code (this happens last to maximize cache usage)
 COPY --chown=myuser:myuser . .
+
+# Switch to non-root user
+USER myuser
 
 # Default test entrypoint
 ENTRYPOINT ["xvfb-run", "-a", "pytest"]

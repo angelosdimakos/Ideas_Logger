@@ -1,0 +1,14 @@
+numpy==1.25.0
+pydantic==1.10.2
+ollama==0.1.0
+pytest
+pytest-cov
+black
+flake8
+mypy
+pydocstyle
+interrogate
+matplotlib
+pytest-xdist
+requests
+coverage
