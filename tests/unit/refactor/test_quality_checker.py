@@ -72,7 +72,7 @@ def test_pydocstyle_report_parsing(tmp_path):
 
     expected = norm("scripts/refactor/example.py")
     assert expected in result
-    assert "in public module" in result[expected]["pydocstyle"]["issues"][0]
+    assert "in public module" in result[expected]["pydocstyle"]["issues"][0]["raw"]
 
 
 def test_coverage_report_parsing(tmp_path):
