@@ -31,10 +31,6 @@ sys.path.insert(0, str(_PROJECT_ROOT))
 from scripts.refactor.refactor_guard import RefactorGuard, print_human_readable
 from scripts.refactor.method_line_ranges import extract_method_line_ranges
 from scripts.refactor.parsers.coverage_parser import parse_coverage_xml_to_method_hits
-from scripts.refactor.enrich_refactor_pkg.quality_checker import (
-    merge_into_refactor_guard,
-    merge_reports,
-)
 import scripts.utils.git_utils as git_utils  # noqa:  E402  (late import ok)
 
 # ───────────────────────────────────────────────────────────────────────────
@@ -78,36 +74,11 @@ def _parse_args() -> argparse.Namespace:
                    help="Key coverage hits by basename")
     p.add_argument("--json", action="store_true", help="Write JSON instead of human output")
     p.add_argument("-o", "--output", default="refactor_audit.json", help="JSON output file")
-    p.add_argument("--merge", nargs=3, metavar=("SRC1", "SRC2", "DEST"),
-                   help="Merge/enrich two reports")
+
     return p.parse_args()
 
 
-# ───────────────────────────────────────────────────────────────────────────
-# merge helper
-# ───────────────────────────────────────────────────────────────────────────
-def _handle_merge(args: argparse.Namespace) -> None:
-    src1, src2, dest = args.merge
-    if os.path.isfile(src2) and src2.lower().endswith(".json"):
-        merged = merge_reports(src1, src2)
-        Path(dest).write_text(json.dumps(merged, indent=2), encoding="utf-8")
-    elif os.path.isdir(src2):
-        shutil.copy(src1, dest)
-        rpt = Path(src2)
-        merge_into_refactor_guard(
-            dest,
-            report_paths={
-                "black": rpt / "black.txt",
-                "flake8": rpt / "flake8.txt",
-                "mypy": rpt / "mypy.txt",
-                "pydocstyle": rpt / "pydocstyle.txt",
-                "coverage": rpt / "coverage.xml",
-            },
-        )
-    else:
-        raise ValueError(f"Cannot merge from {src2}: not JSON nor report dir")
-    print(f"[OK] merged → {dest}")
-    sys.exit(0)
+
 
 
 def handle_full_scan(args: argparse.Namespace, guard: RefactorGuard) -> Dict[str, Dict[str, Any]]:
@@ -224,8 +195,6 @@ def main() -> int:  # noqa: C901  (complexity irrelevant for CLI wrapper)
             pass
 
     # 1) merge mode short-circuit
-    if args.merge:
-        _handle_merge(args)  # exits via sys.exit(0)
 
     # 2) choose scan mode
     if args.all or os.path.isdir(args.refactored):
@@ -239,7 +208,6 @@ def main() -> int:  # noqa: C901  (complexity irrelevant for CLI wrapper)
             for v in audit.values():
                 v["complexity"] = {}
         Path(args.output).write_text(json.dumps(audit, indent=2), encoding="utf-8")
-        merge_into_refactor_guard(args.output)
         return 0  # ← explicit success exit code
 
     print_human_readable(audit, guard, args)

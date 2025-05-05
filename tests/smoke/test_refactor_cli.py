@@ -17,7 +17,6 @@ def setup_env(monkeypatch):
     """
     original_argv = sys.argv.copy()
     monkeypatch.setattr(cli, "RefactorGuard", DummyGuard)
-    monkeypatch.setattr(cli, "merge_into_refactor_guard", lambda *a, **k: None)
     monkeypatch.setattr(cli, "handle_full_scan", lambda args, guard: {})
     monkeypatch.setattr(os.path, "isdir", lambda path: False)
     yield

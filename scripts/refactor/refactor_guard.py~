@@ -28,7 +28,7 @@ from scripts.refactor.complexity.complexity_analyzer import calculate_function_c
 from scripts.refactor.parsers.coverage_api_parser import parse_coverage_with_api
 from scripts.refactor.method_line_ranges import extract_method_line_ranges
 
-logger = logging.getLogger("scripts.refactor.refactor_guard")
+logger = logging.getLogger(__name__)
 
 
 class AnalysisError(Exception):

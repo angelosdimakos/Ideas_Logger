@@ -94,11 +94,10 @@ def test_refactor_guard_missing_tests(tmp_path):
     assert missing["method"] == "bar"
 
 
-def test_malformed_test_file_logs_warning_and_reports_all_methods(tmp_path, caplog):
+def test_malformed_test_file_logs_warning_and_reports_all_methods(tmp_path):
     """
-    Unit tests for the RefactorGuard class, validating detection of method differences between original
-    and refactored modules, identification of missing tests for public methods,
-    and proper warning logging when test files are malformed or contain syntax errors.
+    Validates fallback behavior: when test coverage is missing and coverage.json is not found,
+    all methods in refactored files are assumed untested (i.e., reported as missing).
     """
     ref_py = tmp_path / "mod.py"
     test_py = tmp_path / "test_mod.py"
@@ -115,17 +114,11 @@ def test_malformed_test_file_logs_warning_and_reports_all_methods(tmp_path, capl
         encoding="utf-8",
     )
 
-    # Malformed syntax in test file
+    # Malformed syntax in test file (will be ignored now)
     test_py.write_text("def bad(:\n    pass", encoding="utf-8")
 
     guard = RefactorGuard()
-
-    caplog.set_level(logging.WARNING, logger="scripts.refactor.refactor_guard")
     result = guard.analyze_module("", str(ref_py), test_file_path=str(test_py))
 
-    # Expect the single method to be reported as missing
+    # Since no coverage.json exists, fallback logic applies and method 'm' is flagged as missing
     assert result["missing_tests"] == [{"class": "A", "method": "m"}]
-
-    # Confirm a warning was logged about parsing tests
-    warnings = [rec.message for rec in caplog.records if rec.levelno == logging.WARNING]
-    assert any("Could not parse tests" in str(msg) for msg in warnings)

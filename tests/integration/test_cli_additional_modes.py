@@ -3,15 +3,12 @@ import json
 from pathlib import Path
 import pytest
 from scripts.refactor import refactor_guard_cli
-from scripts.refactor.enrich_refactor_pkg.quality_checker import merge_into_refactor_guard
 
 
 def run_cli(args, tmp_path, monkeypatch):
     output = tmp_path / "refactor_audit.json"
     sys.argv = ["refactor_guard_cli.py"] + args + ["--output", str(output)]
 
-    # Patch internals for speedup
-    monkeypatch.setattr(refactor_guard_cli, "merge_into_refactor_guard", lambda *a, **k: None)
 
     try:
         exit_code = refactor_guard_cli.main()
