@@ -92,9 +92,10 @@ def handle_full_scan(args: argparse.Namespace, guard: RefactorGuard) -> Dict[str
     Returns:
         Dict[str, Dict[str, Any]]: A dictionary containing the audit results.
     """
-    orig = args.original or "scripts"
-    ref = args.refactored
-    tests = args.tests or None
+    # TODO: Replace this with proper --project-root normalization logic
+    orig = os.path.join("scripts", args.original) if args.original else "scripts"
+    ref = os.path.join("scripts", args.refactored)
+    tests = os.path.join("scripts", args.tests) if args.tests else None
 
     if not os.path.isdir(orig) and os.path.isdir(ref):
         orig = ref
