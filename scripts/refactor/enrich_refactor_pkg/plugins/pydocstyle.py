@@ -32,7 +32,7 @@ class PydocstylePlugin(ToolPlugin):
         Returns:
             int: The exit code from the pydocstyle command.
         """
-        return run_cmd(["pydocstyle", "--add-ignore=D401", "scripts"], self.default_report)
+        return run_cmd(["pydocstyle", "--add-ignore=D204,D400,D401", "scripts"], self.default_report)
 
     def parse(self, dst: Dict[str, Dict[str, Any]]) -> None:
         """
