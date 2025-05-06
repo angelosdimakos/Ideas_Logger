@@ -62,6 +62,8 @@
     "Visual or Audio Prompt": "Summarize this creative prompt into a single vivid visual/audio description.",
     "Gameplay Design Insight": "Summarize this as a gameplay mechanic or player-interaction concept.",
     "Creative Ops / Org Flow": "Summarize the creative workflow or team process insight described.",
+    "Refactor Advisor": "You're a senior Python developer. Given the following list of risky files with metrics (MyPy errors, lint issues, complexity, coverage), analyze and recommend which files should be refactored first and why. Be concise and practical.",
+    "Module Functionality": "Given a list of documented functions with their purposes, summarize what this Python module does overall. Focus on its role in the system, key responsibilities, and how its parts contribute to that role. Be concise but informative.",
     "_default": "Summarize the following idea into concise, meaningful bullet points:"
   },
 

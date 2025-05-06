@@ -51,6 +51,14 @@
           "correction_timestamp": "2025-03-24 23:50:31",
           "start": "2025-03-22 13:12:27",
           "end": "2025-03-22 13:24:55"
+        },
+        {
+          "batch": "2025-03-21 21:59:18 → 2025-03-22 13:04:09",
+          "original_summary": "1. Modularization: Separation of core logic from User Interface (UI) for improved organization and maintainability.\n2. Retrieval Augmented Generation (RAG): Automated summarisation using FAISS for training Large Language Models (LLM), aiming to automate future summarisation and tagging tasks.\n3. Integration: Planning to integrate RAG with FAISS to enable automated summarisation and tagging functionalities.\n4. Summarization Frequency: Embedded LLaMA3 for automatic summarization every ten entries, allowing inclusion of the corrected summary within the system.\n5. Image Generation: Development of programmatic image generation functionality to replace reliance on webpages. This will provide more control and flexibility in image handling.",
+          "corrected_summary": "",
+          "correction_timestamp": "2025-05-07 00:45:12",
+          "start": "2025-03-21 21:59:18",
+          "end": "2025-03-22 13:04:09"
         }
       ],
       "Execution Strategy": [
@@ -79,6 +87,14 @@
           "correction_timestamp": "2025-04-05 17:15:18",
           "start": "2025-03-22 00:05:47",
           "end": "2025-04-05 17:14:06"
+        },
+        {
+          "batch": "2025-03-22 00:12:41 → 2025-05-07 00:43:21",
+          "original_summary": "1. The insight conveyed in the first entry is about the importance of proper organization in programming, specifically using script folders for easier management of programmatic logic. It emphasizes that correct pathing is essential to ensure writing to the correct folders.\n\n2. The second entry discusses the need for a way to make massive changes in a codebase without continuously breaking it. This implies the necessity of effective strategies or tools to manage large-scale refactoring processes without introducing unintended errors.\n\n3. The third entry underscores the significance of properly defining project scope and classes before writing any lines of code. This is to ensure that the development process stays focused, organized, and scalable.\n\n4. The fourth entry indicates that using a local Language Model (LLM) to summarize an entire codebase into module-level intelligence yields better results than commercial tools. It highlights the benefits of good architecture, modularity, and scoped prompting in improving the overall quality and manageability of the codebase.\n\n5. The last entry shows excitement about using the local LLM for real Continuous Integration (CI) refactoring, suggesting that it could be a valuable tool for managing complex software development projects more efficiently.",
+          "corrected_summary": "",
+          "correction_timestamp": "2025-05-07 00:43:24",
+          "start": "2025-03-22 00:12:41",
+          "end": "2025-05-07 00:43:21"
         }
       ]
     },
