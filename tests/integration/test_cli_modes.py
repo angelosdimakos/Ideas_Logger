@@ -107,7 +107,7 @@ def test_missing_tests_human_output(simple_repo, capsys):
     refactor_guard_cli.main()
     out = capsys.readouterr().out
     assert "🧪 Missing Tests:" in out
-    assert "Foo → baz" in out
+    assert "❓ Foo.baz" in out
 
 
 def test_complexity_warnings_human_output(simple_repo, capsys, monkeypatch):
@@ -123,7 +123,7 @@ def test_complexity_warnings_human_output(simple_repo, capsys, monkeypatch):
     ]
     refactor_guard_cli.main()
     out = capsys.readouterr().out
-    assert "Foo.baz" in out  # ← this is what you're printing now
+    assert "⚠️  Foo.baz" in out
 
 
 def test_audit_contains_expected_file(simple_repo):

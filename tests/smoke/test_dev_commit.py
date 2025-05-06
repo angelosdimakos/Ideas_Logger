@@ -81,20 +81,26 @@ class TestDevCommit:
     def test_returns_correct_branch_name(self):
         """
         Tests that get_current_branch returns the correct current Git branch name by comparing
-        it to the output of a direct Git command.
+        it to the output of a direct Git command. Skips if not in a Git repo.
         """
-        expected_branch = "main"
-        actual_branch_process = subprocess.run(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True
-        )
-        actual_branch = actual_branch_process.stdout.strip()
+        try:
+            expected_branch = "main"
+            actual_branch_process = subprocess.run(
+                ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            actual_branch = actual_branch_process.stdout.strip()
 
-        result = get_current_branch()
+            result = get_current_branch()
 
-        assert result == actual_branch
-        assert (
-            result == expected_branch or actual_branch == result
-        ), f"Expected '{expected_branch}' or actual '{actual_branch}', but got '{result}'"
+            assert result == actual_branch
+            assert (
+                    result == expected_branch or actual_branch == result
+            ), f"Expected '{expected_branch}' or actual '{actual_branch}', but got '{result}'"
+        except subprocess.CalledProcessError:
+            pytest.skip("Skipping: not inside a Git repository.")
 
     def test_handles_not_in_git_repository(self):
         """

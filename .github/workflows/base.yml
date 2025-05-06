@@ -26,7 +26,7 @@ jobs:
       - name: 🧼 Run Linter Report CLI
         run: |
           echo "🔎 Running Linter Report CLI..."
-          python scripts/refactor/enrich_refactor_pkg/enrich_refactor_cli.py --audit linting_report.json
+          python scripts/refactor/lint_report_pkg/lint_report_cli.py --audit refactor_linting.json  
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -95,7 +95,7 @@ jobs:
       - name: 📋 Generate Docstring Summary
         run: |
           echo "📚 Generating docstring summary..."
-          python scripts/refactor/parsers/docstring_parser.py --json --output docstring_summary.json
+          python scripts/refactor/parsers/docstring_parser.py --json 
 
       - uses: actions/upload-artifact@v4
         if: always()

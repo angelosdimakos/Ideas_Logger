@@ -216,7 +216,7 @@ def print_human_readable(
                     if info["complexity"] > max_complexity
                 ]
 
-                if high_complexity and (not args or args.complexity_warnings):
+                if high_complexity and (not args or not args.complexity_warnings):
                     print("  🔍 High complexity methods:")
                     for name, score in high_complexity:
                         print(f"    ⚠️  {name}: {score}")
