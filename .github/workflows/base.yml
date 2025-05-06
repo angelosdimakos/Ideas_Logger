@@ -135,21 +135,23 @@ jobs:
           name: combined-report
           path: artifacts/merged_report.json
 
-      - name: 📊 Summarize Combined Report (Optional)
+      - name: 📊 Generate Severity Audit Report
         run: |
-          echo "📝 Summarizing Combined Report (Example - Replace with your logic)"
-          python scripts/ci_analyzer/cli.py \
+          echo "📈 Running CI Severity Audit..."
+          python scripts/ci_analyzer/severity_audit.py \
             --audit artifacts/merged_report.json \
-            --output ci_merged_summary.md
+            --output artifacts/ci_severity_report.md
+      
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ci-summary
-          path: ci_merged_summary.md
+          name: ci-severity-report
+          path: artifacts/ci_severity_report.md
+
 
       - name: 💬 Post PR Summary (Optional)
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          path: ci-summary/ci_merged_summary.md
+          path: artifacts/ci_severity_report.md

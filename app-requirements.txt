@@ -12,3 +12,5 @@ matplotlib
 pytest-xdist
 requests
 coverage
+pandas
+typer
