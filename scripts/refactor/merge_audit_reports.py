@@ -4,6 +4,9 @@ merge_audit_reports.py – bespoke normalizer
 
 Merges docstring, coverage/complexity, and linting JSON reports into a unified output.
 Uses **custom normalization logic per input source** to ensure accurate matching.
+
+Author: Your Name
+Version: 1.0
 """
 
 import json
@@ -13,8 +16,16 @@ from typing import Dict, Any
 
 
 def normalize_path(path: str) -> str:
-    """Normalize any report path by stripping everything up to and including the project 'scripts' directory
-and converting to a forward‑slash relative path."""
+    """
+    Normalize any report path by stripping everything up to and including the project 'scripts' directory
+    and converting to a forward‑slash relative path.
+
+    Args:
+        path (str): The original file path.
+
+    Returns:
+        str: The normalized relative path.
+    """
     # unify all separators
     normalized = path.replace('\\', '/')
     parts = Path(normalized).parts
@@ -29,13 +40,30 @@ and converting to a forward‑slash relative path."""
 
 
 def load_and_normalize(path: Path) -> Dict[str, Any]:
-    """Load JSON and normalize its keys using a common path normalizer."""
+    """
+    Load JSON and normalize its keys using a common path normalizer.
+
+    Args:
+        path (Path): The path to the JSON file.
+
+    Returns:
+        Dict[str, Any]: A dictionary with normalized keys and their corresponding values.
+    """
     with path.open(encoding='utf-8') as f:
         raw = json.load(f)
     return {normalize_path(k): v for k, v in raw.items()}
 
 
 def merge_reports(doc_path: Path, cov_path: Path, lint_path: Path, output_path: Path) -> None:
+    """
+    Merge docstring, coverage, and linting reports into a single JSON output.
+
+    Args:
+        doc_path (Path): Path to the docstring JSON file.
+        cov_path (Path): Path to the coverage JSON file.
+        lint_path (Path): Path to the linting JSON file.
+        output_path (Path): Path where the merged output will be saved.
+    """
     doc_data = load_and_normalize(doc_path)
     cov_data = load_and_normalize(cov_path)
     lint_data = load_and_normalize(lint_path)
@@ -54,7 +82,10 @@ def merge_reports(doc_path: Path, cov_path: Path, lint_path: Path, output_path: 
     print(f"✅ Final merged report written to {output_path}")
 
 
-def main():
+def main() -> None:
+    """
+    Main entry point for the script.
+    """
     parser = argparse.ArgumentParser(description="Merge audit JSONs with unified normalization.")
     parser.add_argument("--docstrings", required=True, type=Path, help="Path to docstring JSON")
     parser.add_argument("--coverage", required=True, type=Path, help="Path to coverage JSON")
