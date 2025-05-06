@@ -32,10 +32,16 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 def main():
     """Main entry point for the script."""
-    parser = argparse.ArgumentParser(description="Generate Knowledge Graph from docstring summary JSON.")
+    parser = argparse.ArgumentParser(
+        description="Generate Knowledge Graph from docstring summary JSON."
+    )
     parser.add_argument("--json", type=str, required=True, help="Path to docstring_summary.json")
-    parser.add_argument("--focus", type=str, default="scripts/refactor/", help="Prefix to filter modules")
-    parser.add_argument("--export", type=str, choices=["graphml", "gexf"], help="Optional: export graph")
+    parser.add_argument(
+        "--focus", type=str, default="scripts/refactor/", help="Prefix to filter modules"
+    )
+    parser.add_argument(
+        "--export", type=str, choices=["graphml", "gexf"], help="Optional: export graph"
+    )
     args = parser.parse_args()
 
     # Initialize analyzer

@@ -38,14 +38,16 @@ class DataRelationExtractor:
         (r"(load|read|parse)s?\s+(\w+)", "loads"),
         (r"(generat|creat)es?\s+(\w+)", "generates"),
         (r"(manag|handl)es?\s+(\w+)", "manages"),
-        (r"(track|monitor)s?\s+(\w+)", "tracks")
+        (r"(track|monitor)s?\s+(\w+)", "tracks"),
     ]
 
     # Filter words for object extraction
     FILTER_WORDS = {"the", "and", "for", "with"}
 
     @classmethod
-    def extract_data_relations(cls, graph: nx.DiGraph, module_node: NodeID, description: str) -> None:
+    def extract_data_relations(
+        cls, graph: nx.DiGraph, module_node: NodeID, description: str
+    ) -> None:
         """
         Extract data relations from module docstrings using pattern matching.
 
@@ -71,20 +73,12 @@ class DataRelationExtractor:
                 # Filter out common words that aren't likely to be data objects
                 if len(object_name) > 3 and object_name not in cls.FILTER_WORDS:
                     cls._add_data_node(
-                        graph,
-                        module_node,
-                        f"data:{object_name.capitalize()}",
-                        relation,
-                        0.7
+                        graph, module_node, f"data:{object_name.capitalize()}", relation, 0.7
                     )
 
     @staticmethod
     def _add_data_node(
-            graph: nx.DiGraph,
-            module_node: NodeID,
-            data_node: NodeID,
-            relation: str,
-            confidence: float
+        graph: nx.DiGraph, module_node: NodeID, data_node: NodeID, relation: str, confidence: float
     ) -> None:
         """
         Add a data node and its relation to the graph.

@@ -35,7 +35,7 @@ class ToolPlugin(ABC):
 
 
 # ── 2. Plugin discovery ───────────────────────────────────────────────────────
-from scripts.refactor.enrich_refactor_pkg.plugins import PLUGINS as _PLUGINS
+from scripts.refactor.lint_report_pkg.plugins import PLUGINS as _PLUGINS
 
 
 def all_plugins() -> List[ToolPlugin]:

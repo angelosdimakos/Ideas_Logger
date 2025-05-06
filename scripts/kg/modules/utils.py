@@ -13,7 +13,7 @@ DocMap = Dict[str, Dict[str, Any]]
 ComplexityScores = Dict[str, float]
 
 # Generic type for better type hinting
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def load_json_file(file_path: str) -> DocMap:

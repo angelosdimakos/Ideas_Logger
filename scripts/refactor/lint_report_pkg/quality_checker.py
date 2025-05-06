@@ -12,12 +12,12 @@ import json
 from pathlib import Path
 from typing import Dict, Any, Set
 
-from scripts.refactor.enrich_refactor_pkg.path_utils import norm
-from scripts.refactor.enrich_refactor_pkg.helpers import safe_print
-from scripts.refactor.enrich_refactor_pkg.core import all_plugins
+from scripts.refactor.lint_report_pkg.path_utils import norm
+from scripts.refactor.lint_report_pkg.helpers import safe_print
+from scripts.refactor.lint_report_pkg.core import all_plugins
 
 # auto-import plugin modules so they register
-import scripts.refactor.enrich_refactor_pkg.plugins  # noqa: F401
+import scripts.refactor.lint_report_pkg.plugins  # noqa: F401
 
 ENC = "utf-8"
 
@@ -25,9 +25,17 @@ ENC = "utf-8"
 def merge_into_refactor_guard(audit_path: str = "refactor_audit.json") -> None:
     """Enrich *audit_path* with quality data produced by every plugin."""
     audit_file = Path(audit_path)
+    # ---------- NEW: bootstrap empty audit ----------
     if not audit_file.exists():
-        safe_print("[!] Missing refactor audit JSON!")
-        return
+        safe_print("[~] No audit JSON found; starting fresh.")
+        audit_raw: Dict[str, Any] = {}
+    else:
+        try:
+            audit_raw = json.loads(audit_file.read_text(encoding=ENC))
+        except json.JSONDecodeError as err:
+            safe_print(f"[~] Audit JSON corrupt ({err}); starting fresh.")
+            audit_raw = {}
+    # ---------- END NEW ----------
 
     try:
         audit_raw: Dict[str, Any] = json.loads(audit_file.read_text(encoding=ENC))

@@ -38,10 +38,7 @@ class KnowledgeGraphBuilder:
         # Filter docmap if prefix is provided
         filtered_docmap = self.docmap
         if focus_prefix:
-            filtered_docmap = {
-                k: v for k, v in self.docmap.items()
-                if k.startswith(focus_prefix)
-            }
+            filtered_docmap = {k: v for k, v in self.docmap.items() if k.startswith(focus_prefix)}
 
         return self._build_graph(filtered_docmap)
 
@@ -150,7 +147,9 @@ class CodebaseAnalyzer:
 
         # No modules found
         if graph.number_of_nodes() == 0:
-            logging.warning(f"No modules found under focus '{self.focus_prefix}'. Check slashes or focus name.")
+            logging.warning(
+                f"No modules found under focus '{self.focus_prefix}'. Check slashes or focus name."
+            )
             return graph, {}
 
         # Analyze complexity

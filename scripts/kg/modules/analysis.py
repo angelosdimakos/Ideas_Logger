@@ -36,12 +36,12 @@ class ComplexityAnalyzer:
 
         # Calculate complexity score using weighted metrics
         complexity_score = (
-                                   0.15 * (node_count / 100) +
-                                   0.20 * (edge_count / 200) +
-                                   0.35 * (avg_degree / 5) +
-                                   0.20 * (busyness / 2) +
-                                   0.10 * (density / 0.2)
-                           ) * 100
+            0.15 * (node_count / 100)
+            + 0.20 * (edge_count / 200)
+            + 0.35 * (avg_degree / 5)
+            + 0.20 * (busyness / 2)
+            + 0.10 * (density / 0.2)
+        ) * 100
 
         return {
             "name": name,

@@ -6,7 +6,7 @@ from pathlib import Path
 import tempfile
 import pytest
 
-from scripts.refactor.enrich_refactor_pkg.quality_checker import merge_into_refactor_guard
+from scripts.refactor.lint_report_pkg.quality_checker import merge_into_refactor_guard
 
 
 def test_merge_into_refactor_guard_unit(tmp_path):
@@ -39,14 +39,13 @@ def test_merge_into_refactor_guard_unit(tmp_path):
 @pytest.mark.slow
 def test_enrich_refactor_cli_integration():
     """
-    Slow integration test that calls the enrich_refactor_pkg CLI via subprocess,
+    Slow integration test that calls the lint_report_pkg CLI via subprocess,
     simulating an audit file and dummy reports to verify full enrichment behavior.
     """
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir = Path(tmpdir)
         audit_path = tmpdir / "refactor_audit.json"
-        report_dir = tmpdir / "lint-reports"
-        report_dir.mkdir(parents=True, exist_ok=True)
+
 
         target_file = Path("Ideas_Logger/example.py").as_posix()
 
@@ -56,16 +55,15 @@ def test_enrich_refactor_cli_integration():
 
         # Dummy lint reports that mention the file
         for name in ["flake8.txt", "black.txt", "mypy.txt", "pydocstyle.txt"]:
-            (report_dir / name).write_text(f"{target_file}:1:1: Dummy warning\n", encoding="utf-8")
+
+            (tmpdir / name).write_text(f"{target_file}:1:1: Dummy warning\n", encoding="utf-8")
 
         result = subprocess.run(
             [
                 "python",
-                "scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py",
+                "scripts/refactor/lint_report_pkg/lint_report_cli.py",
                 "--audit",
                 str(audit_path),
-                "--reports",
-                str(report_dir),
             ],
             capture_output=True,
             text=True,

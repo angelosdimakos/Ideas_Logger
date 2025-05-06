@@ -8,6 +8,7 @@ import argparse
 class DummyGuard:
     """Dummy RefactorGuard to skip heavy initialization"""
     def __init__(self):
+        self.config = {}  # make CLI happy
         pass
 
 @pytest.fixture(autouse=True)

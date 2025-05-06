@@ -18,7 +18,9 @@ class GraphVisualizer:
         """Initialize the visualizer."""
         self.figsize = (16, 12)
 
-    def visualize_graph(self, graph: nx.DiGraph, complexity_scores: ComplexityScores, title: str) -> None:
+    def visualize_graph(
+        self, graph: nx.DiGraph, complexity_scores: ComplexityScores, title: str
+    ) -> None:
         """
         Visualize the graph with complexity scores.
 
@@ -33,7 +35,10 @@ class GraphVisualizer:
             fig.graph = graph
 
             # Organize nodes by type into layers
-            layers = {t: [] for t in ["folder", "module", "class", "function", "parameter", "return", "data"]}
+            layers = {
+                t: []
+                for t in ["folder", "module", "class", "function", "parameter", "return", "data"]
+            }
             modules = {}
 
             for n, d in graph.nodes(data=True):
@@ -68,17 +73,13 @@ class GraphVisualizer:
                 edge_color="gray",
                 node_size=1000,
                 font_size=9,
-                font_weight="bold"
+                font_weight="bold",
             )
 
             # Add edge labels
             edge_labels = nx.get_edge_attributes(graph, "relation")
             nx.draw_networkx_edge_labels(
-                graph,
-                pos,
-                edge_labels=edge_labels,
-                font_color="red",
-                font_size=8
+                graph, pos, edge_labels=edge_labels, font_color="red", font_size=8
             )
 
             # Finalize plot
@@ -124,7 +125,7 @@ class GraphVisualizer:
             pos: Dictionary of node positions to update.
         """
         # Get the current graph from pyplot figure if available
-        graph = plt.gcf().graph if hasattr(plt.gcf(), 'graph') else None
+        graph = plt.gcf().graph if hasattr(plt.gcf(), "graph") else None
         if not graph:
             return
 
@@ -136,11 +137,11 @@ class GraphVisualizer:
                         break
 
     def _draw_module_rectangles(
-            self,
-            ax: plt.Axes,
-            modules: Dict[NodeID, list],
-            pos: Dict[NodeID, tuple],
-            complexity_scores: ComplexityScores
+        self,
+        ax: plt.Axes,
+        modules: Dict[NodeID, list],
+        pos: Dict[NodeID, tuple],
+        complexity_scores: ComplexityScores,
     ) -> None:
         """
         Draw colored rectangles around modules based on complexity.
@@ -151,7 +152,7 @@ class GraphVisualizer:
             pos: Dictionary of node positions.
             complexity_scores: Dictionary of complexity scores.
         """
-        graph = plt.gcf().graph if hasattr(plt.gcf(), 'graph') else None
+        graph = plt.gcf().graph if hasattr(plt.gcf(), "graph") else None
 
         for m in modules.keys():
             # Get predecessors if graph is available, otherwise use empty list
@@ -184,7 +185,7 @@ class GraphVisualizer:
                     max_y - min_y,
                     facecolor=rect_color,
                     alpha=0.3,
-                    edgecolor='gray'
+                    edgecolor="gray",
                 )
             )
 
@@ -193,9 +194,9 @@ class GraphVisualizer:
                 (min_x + max_x) / 2,
                 max_y + 0.5,
                 mod_name,
-                ha='center',
+                ha="center",
                 fontsize=10,
-                fontweight="bold"
+                fontweight="bold",
             )
 
     def _get_node_colors(self, graph: nx.DiGraph, complexity_scores: ComplexityScores) -> list:
@@ -223,7 +224,7 @@ class GraphVisualizer:
                     "function": "orange",
                     "parameter": "yellow",
                     "return": "gray",
-                    "data": "pink"
+                    "data": "pink",
                 }
                 node_colors.append(default_colors.get(d.get("type"), "lightgray"))
 

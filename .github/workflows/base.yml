@@ -23,21 +23,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: 🧼 Run Linters
+      - name: 🧼 Run Linter Report CLI
         run: |
-          echo "🔎 Running linters..."
-          mkdir -p lint-reports
-          black --check scripts       > lint-reports/black.txt 2>&1 || true
-          flake8 scripts              > lint-reports/flake8.txt 2>&1 || true
-          MYPYPATH=. mypy --explicit-package-bases scripts > lint-reports/mypy.txt 2>&1 || true
-          pydocstyle --add-ignore=D400,D401 scripts > lint-reports/pydocstyle.txt 2>&1 || true
-          interrogate -v scripts      > lint-reports/interrogate.txt 2>&1 || true
+          echo "🔎 Running Linter Report CLI..."
+          python scripts/refactor/enrich_refactor_pkg/enrich_refactor_cli.py --audit linting_report.json
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: lint-reports
-          path: lint-reports/
+          name: lint-report
+          path: linting_report.json
 
   test:
     runs-on: ubuntu-latest
@@ -66,7 +61,6 @@ jobs:
             coverage.json
             coverage.xml
             htmlcov/
-      
 
       - name: ☁️ Upload to Codecov
         uses: codecov/codecov-action@v5
@@ -76,28 +70,32 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: angelosdimakos/Ideas_Logger
 
-      - name: 🧠 RefactorGuard Full + Diff Audit
+      - name: 🧠 Run RefactorGuard
         run: |
-          echo "📊 Running RefactorGuard audits..."
+          echo "📊 Running RefactorGuard..."
           python scripts/refactor/refactor_guard_cli.py \
-            --refactored scripts --all --missing-tests \
-            --json --output refactor_full_audit.json
-          python scripts/refactor/refactor_guard_cli.py \
-            --refactored scripts --all --git-diff --missing-tests \
-            --json --output refactor_diff_audit.json
+            --refactored scripts --all \
+            --json --output refactor_audit.json \
+            --coverage-path coverage.json # Important: Pass coverage data
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: refactor-audits
-          path: |
-            refactor_full_audit.json
-            refactor_diff_audit.json
+          name: refactor-audit
+          path: refactor_audit.json
+
+  docstring:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    container:
+      image: ghcr.io/angelosdimakos/ideas_logger:latest
+    steps:
+      - uses: actions/checkout@v3
 
       - name: 📋 Generate Docstring Summary
         run: |
           echo "📚 Generating docstring summary..."
-          python scripts/refactor/parsers/docstring_parser.py --json
+          python scripts/refactor/parsers/docstring_parser.py --json --output docstring_summary.json
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -106,7 +104,7 @@ jobs:
           path: docstring_summary.json
 
   report:
-    needs: [lint, test]
+    needs: [lint, test, docstring]
     timeout-minutes: 5
     runs-on: ubuntu-latest
     if: ${{ success() }}
@@ -122,41 +120,36 @@ jobs:
         with:
           path: ./artifacts
 
-      - name: 📊 Enrich & Summarize CI
+      - name: ✨ Generate Combined Report
         run: |
-          echo "🧠 Enriching audits and generating summaries..."
-          python scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py \
-            --audit artifacts/refactor-audits/refactor_full_audit.json \
-            --reports artifacts/lint-reports \
-            --docstrings artifacts/docstring-summary/docstring_summary.json
-          python scripts/refactor/enrich_refactor_pkg/enrich_refactor_ci.py \
-            --audit artifacts/refactor-audits/refactor_diff_audit.json \
-            --reports artifacts/lint-reports \
-            --docstrings artifacts/docstring-summary/docstring_summary.json
-
-          python scripts/ci_analyzer/cli.py \
-            --audit artifacts/refactor-audits/refactor_full_audit.json \
-            --output ci_full_summary.md
-          python scripts/ci_analyzer/cli.py \
-            --audit artifacts/refactor-audits/refactor_diff_audit.json \
-            --output ci_diff_summary.md
-
-          python scripts/ci_analyzer/ci_trends.py \
-            --audit artifacts/refactor-audits/refactor_full_audit.json
-          python scripts/ci_analyzer/ci_trends.py \
-            --audit artifacts/refactor-audits/refactor_diff_audit.json
+          echo "⚗️ Merging Reports..."
+          python scripts/refactor/merge_audit_reports.py \
+            --docstrings artifacts/docstring-summary/docstring_summary.json \
+            --coverage artifacts/refactor-audit/refactor_audit.json \
+            --linting artifacts/lint-report/linting_report.json \
+            -o artifacts/merged_report.json
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ci-summary-and-trends
-          path: |
-            ci_full_summary.md
-            ci_diff_summary.md
-            .ci-history/
+          name: combined-report
+          path: artifacts/merged_report.json
 
-      - name: 💬 Post PR Summary
+      - name: 📊 Summarize Combined Report (Optional)
+        run: |
+          echo "📝 Summarizing Combined Report (Example - Replace with your logic)"
+          python scripts/ci_analyzer/cli.py \
+            --audit artifacts/merged_report.json \
+            --output ci_merged_summary.md
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-summary
+          path: ci_merged_summary.md
+
+      - name: 💬 Post PR Summary (Optional)
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          path: ci_diff_summary.md
+          path: ci-summary/ci_merged_summary.md

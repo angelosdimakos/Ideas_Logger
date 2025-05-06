@@ -1,11 +1,11 @@
 from pathlib import Path
 
-from scripts.refactor.enrich_refactor_pkg.path_utils import norm
-from scripts.refactor.enrich_refactor_pkg.plugins.black import BlackPlugin
-from scripts.refactor.enrich_refactor_pkg.plugins.flake8 import Flake8Plugin
-from scripts.refactor.enrich_refactor_pkg.plugins.mypy import MypyPlugin
-from scripts.refactor.enrich_refactor_pkg.plugins.pydocstyle import PydocstylePlugin
-from scripts.refactor.enrich_refactor_pkg.plugins.coverage_plugin import CoveragePlugin
+from scripts.refactor.lint_report_pkg.path_utils import norm
+from scripts.refactor.lint_report_pkg.plugins.black import BlackPlugin
+from scripts.refactor.lint_report_pkg.plugins.flake8 import Flake8Plugin
+from scripts.refactor.lint_report_pkg.plugins.mypy import MypyPlugin
+from scripts.refactor.lint_report_pkg.plugins.pydocstyle import PydocstylePlugin
+from scripts.refactor.lint_report_pkg.plugins.coverage_plugin import CoveragePlugin
 
 # local constants
 BLACK_REPORT = Path("black.txt")
@@ -61,8 +61,11 @@ def test_mypy_report_parsing(tmp_path):
 
 
 def test_pydocstyle_report_parsing(tmp_path):
-    report = tmp_path / PYDOCSTYLE_REPORT
-    report.write_text("scripts/refactor/example.py:1 in public module")
+    report = tmp_path / "pydocstyle.txt"
+    report.write_text("scripts/refactor/example.py:1 in public module `<module>`\nD100: Missing docstring in public module")
+    real_path = tmp_path / "scripts" / "refactor" / "example.py"
+    real_path.parent.mkdir(parents=True)
+    real_path.write_text("def foo(): pass")  # create the actual file so norm works correctly
 
     plugin = PydocstylePlugin()
     plugin.default_report = report
@@ -70,10 +73,11 @@ def test_pydocstyle_report_parsing(tmp_path):
     result = {}
     plugin.parse(result)
 
-    expected = norm("scripts/refactor/example.py")
-    assert expected in result
-    assert "in public module" in result[expected]["pydocstyle"]["issues"][0]["raw"]
+    expected = str(Path("scripts/refactor/example.py")).replace("\\", "/")
+    result = {k.replace("\\", "/"): v for k, v in result.items()}
 
+    assert expected in result
+    assert "Missing docstring" in result[expected]["pydocstyle"]["functions"]["<module>"][0]["message"]
 
 def test_coverage_report_parsing(tmp_path):
     xml = tmp_path / COVERAGE_XML

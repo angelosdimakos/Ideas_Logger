@@ -17,7 +17,7 @@ script_path = Path(__file__).resolve()
 project_root = script_path.parents[3]  # should point to your repo root
 sys.path.insert(0, str(project_root))
 
-from scripts.refactor.enrich_refactor_pkg.path_utils import norm
+from scripts.refactor.lint_report_pkg.path_utils import norm
 
 DEFAULT_EXCLUDES = {".venv", "venv", "__pycache__", ".git", "build", "dist"}
 
@@ -103,20 +103,24 @@ class DocstringAnalyzer:
         def visit_node(node):
             if isinstance(node, ast.ClassDef):
                 doc = split_docstring_sections(ast.get_docstring(node))
-                result["classes"].append({
-                    "name": node.name,
-                    "description": doc["description"],
-                    "args": doc["args"],
-                    "returns": doc["returns"],
-                })
+                result["classes"].append(
+                    {
+                        "name": node.name,
+                        "description": doc["description"],
+                        "args": doc["args"],
+                        "returns": doc["returns"],
+                    }
+                )
             elif isinstance(node, ast.FunctionDef):
                 doc = split_docstring_sections(ast.get_docstring(node))
-                result["functions"].append({
-                    "name": node.name,
-                    "description": doc["description"],
-                    "args": doc["args"],
-                    "returns": doc["returns"],
-                })
+                result["functions"].append(
+                    {
+                        "name": node.name,
+                        "description": doc["description"],
+                        "args": doc["args"],
+                        "returns": doc["returns"],
+                    }
+                )
             for child in ast.iter_child_nodes(node):
                 visit_node(child)
 

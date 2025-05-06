@@ -93,8 +93,7 @@ def test_refactor_guard_missing_tests(tmp_path):
 
     guard = RefactorGuard()
     guard.config["force_fallback"] = True
-    result = guard.analyze_module(None, str(ref_py), test_file_path=str(test_py))
-
+    result = guard.analyze_module("", str(ref_py), test_file_path=str(test_py))
     print("DEBUG RESULT", result)
 
     # Only 'bar' should be reported missing
@@ -138,8 +137,7 @@ def test_malformed_test_file_logs_warning_and_reports_all_methods(tmp_path):
 
     guard = RefactorGuard()
     guard.config["force_fallback"] = True
-    result = guard.analyze_module(None, str(ref_py), test_file_path=str(test_py))
-
+    result = guard.analyze_module("", str(ref_py), test_file_path=str(test_py))
     print("DEBUG RESULT", result)
 
     # Since no coverage.json exists, fallback logic applies and method 'm' is flagged as missing

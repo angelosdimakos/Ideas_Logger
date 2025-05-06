@@ -39,6 +39,7 @@ pyproject entry‑point:
 [tool.poetry.scripts]
 zephyrus = "scripts.cli.cli:app"
 """
+
 from __future__ import annotations
 
 import json
@@ -52,12 +53,14 @@ import typer
 #  Dynamic imports (real modules or graceful stubs)                             #
 ################################################################################
 
+
 def _safe_import(path: str, stub_attrs: Optional[dict] = None):
     try:
         module = __import__(path, fromlist=["*"])
     except ModuleNotFoundError:  # provide minimal stub
         module = type(path, (), stub_attrs or {})()  # type: ignore[arg-type]
     return module
+
 
 # Core logging & summarisation
 core_mod = _safe_import("scripts.core.core")
@@ -68,7 +71,9 @@ orchestrator = _safe_import("scripts.ci_analyzer.orchestrator")
 ci_trends_mod = _safe_import("scripts.ci_analyzer.ci_trends")
 
 # Dev helper
-dev_commit_mod = _safe_import("scripts.dev_commit", {"switch_to_new_branch": lambda: print("TODO: Git helper not available")})
+dev_commit_mod = _safe_import(
+    "scripts.dev_commit", {"switch_to_new_branch": lambda: print("TODO: Git helper not available")}
+)
 
 # RefactorGuard (future module)
 refactor_mod = _safe_import(
@@ -106,6 +111,7 @@ app = typer.Typer(add_completion=False, help="Zephyrus Logger CLI v2 🪐")
 #  Helpers                                                                      #
 ################################################################################
 
+
 def _core() -> "core_mod.ZephyrusLoggerCore":  # type: ignore[name-defined]
     return core_mod.ZephyrusLoggerCore(script_dir=Path.cwd())
 
@@ -113,9 +119,11 @@ def _core() -> "core_mod.ZephyrusLoggerCore":  # type: ignore[name-defined]
 def _ctrl() -> "ctrl_mod.GUIController":  # type: ignore[name-defined]
     return ctrl_mod.GUIController(logger_core=None, script_dir=str(Path.cwd()))
 
+
 ################################################################################
 #  Idea logging & summarisation                                                 #
 ################################################################################
+
 
 @app.command()
 def log(
@@ -149,24 +157,32 @@ def summarize() -> None:
 kg_app = typer.Typer(help="Knowledge‑graph operations (stub)")
 app.add_typer(kg_app, name="kg")
 
+
 @kg_app.command("build")
-def kg_build(since: Optional[str] = typer.Option(None, help="Only build from notes after YYYY‑MM‑DD")) -> None:
+def kg_build(
+    since: Optional[str] = typer.Option(None, help="Only build from notes after YYYY‑MM‑DD")
+) -> None:
     kg_mod.build_graph(since=since)
+
 
 @kg_app.command("query")
 def kg_query(entity: str = typer.Argument(..., help="Entity or node label")) -> None:
     res = kg_mod.query_graph(entity)
     typer.echo(json.dumps(res, indent=2, ensure_ascii=False))
 
+
 ################################################################################
 #  RefactorGuard – guarded code generation                                      #
 ################################################################################
+
 
 @app.command("generate")
 def generate_function(
     signature: str = typer.Argument(..., help="Python signature e.g. 'add(a: int, b: int) -> int'"),
     context_entity: Optional[str] = typer.Option(None, help="KG entity to give as context"),
-    tests: Optional[Path] = typer.Option(None, help="Optional pytest file used as acceptance guard"),
+    tests: Optional[Path] = typer.Option(
+        None, help="Optional pytest file used as acceptance guard"
+    ),
     max_tokens: int = typer.Option(256, help="Token limit for LLM"),
 ) -> None:
     guard = refactor_mod.RefactorGuard()
@@ -174,14 +190,24 @@ def generate_function(
     code = guard.generate_function(signature, graph_ctx, tests_path=tests, max_tokens=max_tokens)
     typer.echo(code)
 
+
 ################################################################################
 #  Search & coverage                                                            #
 ################################################################################
 
+
 @app.command()
-def search(query: str = typer.Argument(...), mode: str = typer.Option("summary", help="summary | raw"), k: int = 5) -> None:
+def search(
+    query: str = typer.Argument(...),
+    mode: str = typer.Option("summary", help="summary | raw"),
+    k: int = 5,
+) -> None:
     core = _core()
-    hits = core.search_summaries(query, k) if mode.startswith("summary") else core.search_raw_logs(query, k)
+    hits = (
+        core.search_summaries(query, k)
+        if mode.startswith("summary")
+        else core.search_raw_logs(query, k)
+    )
     typer.echo(json.dumps(hits, indent=2, ensure_ascii=False))
 
 
@@ -189,9 +215,11 @@ def search(query: str = typer.Argument(...), mode: str = typer.Option("summary",
 def coverage() -> None:
     typer.echo(json.dumps(_ctrl().get_coverage_data(), indent=2))
 
+
 ################################################################################
 #  Index maintenance                                                            #
 ################################################################################
+
 
 @app.command("rebuild-index")
 def rebuild_index(index: str = typer.Option("all", help="summary | raw | all")) -> None:
@@ -203,12 +231,14 @@ def rebuild_index(index: str = typer.Option("all", help="summary | raw | all")) 
         tracker.raw_indexer.rebuild()
         typer.echo("🔄 Raw index rebuilt")
 
+
 ################################################################################
 #  CI analytics                                                                 #
 ################################################################################
 
 ci_app = typer.Typer(help="CI code‑quality commands")
 app.add_typer(ci_app, name="ci")
+
 
 @ci_app.command("report")
 def ci_report(
@@ -219,6 +249,7 @@ def ci_report(
     md = orchestrator.generate_ci_summary(data)
     orchestrator.save_summary(md, str(out))
     typer.echo(f"📄 CI report saved → {out}")
+
 
 @ci_app.command("trends")
 def ci_trends(
@@ -231,17 +262,21 @@ def ci_trends(
     ci_trends_mod.print_comparison(curr, delta)
     ci_trends_mod.save_metrics(curr, str(history))
 
+
 ################################################################################
 #  Dev helper                                                                   #
 ################################################################################
+
 
 @app.command("git-new-branch")
 def git_new_branch() -> None:  # pragma: no cover
     dev_commit_mod.switch_to_new_branch()
 
+
 ################################################################################
 #  One‑shot pipeline                                                            #
 ################################################################################
+
 
 @app.command()
 def pipe(
@@ -273,6 +308,7 @@ def pipe(
         ci_report()  # reuse Typer callback – called with defaults
 
     typer.echo("✅ Pipeline finished")
+
 
 ################################################################################
 

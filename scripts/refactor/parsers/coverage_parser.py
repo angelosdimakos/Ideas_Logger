@@ -30,7 +30,7 @@ import xml.etree.ElementTree as ET
 from typing import Dict, Tuple, Any, Set, List
 from .coverage_api_parser import parse_coverage_with_api as _parse_api
 
-from scripts.refactor.enrich_refactor_pkg.path_utils import norm as normalize_path
+from scripts.refactor.lint_report_pkg.path_utils import norm as normalize_path
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Config knobs
@@ -169,6 +169,7 @@ def parse_coverage_xml_to_method_hits(
 
     return result
 
+
 def parse_coverage_to_method_hits(
     coverage_path: str,
     method_ranges: dict[str, tuple[int, int]],
@@ -180,7 +181,5 @@ def parse_coverage_to_method_hits(
     ext = Path(coverage_path).suffix.lower()
     if ext == ".json":
         return _parse_api(coverage_path, method_ranges, source_file_path)
-    else:                           # default / legacy flow
-        return parse_coverage_xml_to_method_hits(
-            coverage_path, method_ranges, source_file_path
-        )
+    else:  # default / legacy flow
+        return parse_coverage_xml_to_method_hits(coverage_path, method_ranges, source_file_path)
