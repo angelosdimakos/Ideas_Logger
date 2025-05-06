@@ -26,7 +26,7 @@ jobs:
       - name: 🧼 Run Linter Report CLI
         run: |
           echo "🔎 Running Linter Report CLI..."
-          python scripts/refactor/lint_report_pkg/lint_report_cli.py --audit refactor_linting.json  
+          python scripts/refactor/lint_report_pkg/lint_report_cli.py --audit linting_report.json  
 
       - uses: actions/upload-artifact@v4
         if: always()
