@@ -1,0 +1,44 @@
+[1mscripts/ai\chat_refactor.py[m[36m:[m8[36m:[m1[36m:[m [1m[31mF401[m 'scripts.ai.llm_router.get_prompt_template' imported but unused
+[1mscripts/ai\llm_refactor_advisor.py[m[36m:[m95[36m:[m19[36m:[m [1m[31mW292[m no newline at end of file
+[1mscripts/ai\llm_router.py[m[36m:[m9[36m:[m1[36m:[m [1m[31mE302[m expected 2 blank lines, found 1
+[1mscripts/ai\llm_router.py[m[36m:[m24[36m:[m1[36m:[m [1m[31mE302[m expected 2 blank lines, found 1
+[1mscripts/ai\module_docstring_summarizer.py[m[36m:[m9[36m:[m1[36m:[m [1m[31mF401[m 'pathlib.Path' imported but unused
+[1mscripts/ai\module_docstring_summarizer.py[m[36m:[m72[36m:[m22[36m:[m [1m[31mW292[m no newline at end of file
+[1mscripts/ci_analyzer\severity_audit.py[m[36m:[m155[36m:[m11[36m:[m [1m[31mW292[m no newline at end of file
+[1mscripts/ci_analyzer\severity_index.py[m[36m:[m11[36m:[m1[36m:[m [1m[31mE302[m expected 2 blank lines, found 1
+[1mscripts/ci_analyzer\severity_index.py[m[36m:[m52[36m:[m1[36m:[m [1m[31mE302[m expected 2 blank lines, found 1
+[1mscripts/ci_analyzer\severity_index.py[m[36m:[m71[36m:[m87[36m:[m [1m[31mW292[m no newline at end of file
+[1mscripts/indexers\base_indexer.py[m[36m:[m59[36m:[m9[36m:[m [1m[31mF841[m local variable 'model_name' is assigned to but never used
+[1mscripts/indexers\base_indexer.py[m[36m:[m122[36m:[m16[36m:[m [1m[31mE741[m ambiguous variable name 'I'
+[1mscripts/kg\generate_codebase_kg.py[m[36m:[m19[36m:[m1[36m:[m [1m[31mF401[m 'typing.Dict' imported but unused
+[1mscripts/kg\generate_codebase_kg.py[m[36m:[m19[36m:[m1[36m:[m [1m[31mF401[m 'typing.Any' imported but unused
+[1mscripts/kg\modules\visualization.py[m[36m:[m9[36m:[m1[36m:[m [1m[31mF401[m 'typing.Any' imported but unused
+[1mscripts/kg\modules\visualization.py[m[36m:[m160[36m:[m13[36m:[m [1m[31mF841[m local variable 'parent' is assigned to but never used
+[1mscripts/refactor\code_generation\code_cli.py[m[36m:[m43[36m:[m1[36m:[m [1m[31mF401[m 'sys' imported but unused
+[1mscripts/refactor\code_generation\code_cli.py[m[36m:[m54[36m:[m67[36m:[m [1m[31mF821[m undefined name 'module'
+[1mscripts/refactor\lint_report_pkg\__init__.py[m[36m:[m12[36m:[m29[36m:[m [1m[31mF821[m undefined name 'ToolPlugin'
+[1mscripts/refactor\lint_report_pkg\__init__.py[m[36m:[m49[36m:[m1[36m:[m [1m[31mF401[m '.quality_checker.merge_into_refactor_guard' imported but unused
+[1mscripts/refactor\lint_report_pkg\__init__.py[m[36m:[m49[36m:[m1[36m:[m [1m[31mF401[m '.quality_checker.merge_reports' imported but unused
+[1mscripts/refactor\lint_report_pkg\lint_report_cli.py[m[36m:[m19[36m:[m1[36m:[m [1m[31mF401[m 'json' imported but unused
+[1mscripts/refactor\lint_report_pkg\lint_report_cli.py[m[36m:[m32[36m:[m1[36m:[m [1m[31mE302[m expected 2 blank lines, found 1
+[1mscripts/refactor\lint_report_pkg\lint_report_cli.py[m[36m:[m73[36m:[m5[36m:[m [1m[31mE303[m too many blank lines (2)
+[1mscripts/refactor\lint_report_pkg\plugins\coverage_plugin.py[m[36m:[m9[36m:[m1[36m:[m [1m[31mF401[m 'math' imported but unused
+[1mscripts/refactor\lint_report_pkg\plugins\coverage_plugin.py[m[36m:[m10[36m:[m1[36m:[m [1m[31mF401[m 'json' imported but unused
+[1mscripts/refactor\lint_report_pkg\plugins\coverage_plugin.py[m[36m:[m40[36m:[m24[36m:[m [1m[31mE221[m multiple spaces before operator
+[1mscripts/refactor\lint_report_pkg\plugins\coverage_plugin.py[m[36m:[m41[36m:[m25[36m:[m [1m[31mE221[m multiple spaces before operator
+[1mscripts/refactor\lint_report_pkg\plugins\coverage_plugin.py[m[36m:[m43[36m:[m24[36m:[m [1m[31mE221[m multiple spaces before operator
+[1mscripts/refactor\lint_report_pkg\plugins\pydocstyle.py[m[36m:[m17[36m:[m1[36m:[m [1m[31mF401[m 'collections.defaultdict' imported but unused
+[1mscripts/refactor\parsers\coverage_api_parser.py[m[36m:[m16[36m:[m1[36m:[m [1m[31mE302[m expected 2 blank lines, found 1
+[1mscripts/refactor\parsers\coverage_api_parser.py[m[36m:[m32[36m:[m1[36m:[m [1m[31mE302[m expected 2 blank lines, found 1
+[1mscripts/refactor\parsers\coverage_api_parser.py[m[36m:[m61[36m:[m1[36m:[m [1m[31mE302[m expected 2 blank lines, found 1
+[1mscripts/refactor\parsers\coverage_parser.py[m[36m:[m12[36m:[m22[36m:[m [1m[31mW605[m invalid escape sequence '\ '
+[1mscripts/refactor\parsers\coverage_parser.py[m[36m:[m27[36m:[m1[36m:[m [1m[31mF401[m 'collections.defaultdict' imported but unused
+[1mscripts/refactor\parsers\coverage_parser.py[m[36m:[m33[36m:[m1[36m:[m [1m[31mF401[m 'scripts.refactor.lint_report_pkg.path_utils.norm as normalize_path' imported but unused
+[1mscripts/refactor\parsers\coverage_parser.py[m[36m:[m105[36m:[m5[36m:[m [1m[31mF841[m local variable 'exc' is assigned to but never used
+[1mscripts/refactor\parsers\coverage_parser.py[m[36m:[m159[36m:[m30[36m:[m [1m[31mF821[m undefined name 'file_hits'
+[1mscripts/refactor\parsers\coverage_parser.py[m[36m:[m163[36m:[m67[36m:[m [1m[31mF821[m undefined name 'file_hits'
+[1mscripts/refactor\parsers\json_coverage_parser.py[m[36m:[m12[36m:[m1[36m:[m [1m[31mF401[m 'typing.List' imported but unused
+[1mscripts/refactor\refactor_guard.py[m[36m:[m228[36m:[m69[36m:[m [1m[31mW292[m no newline at end of file
+[1mscripts/refactor\refactor_guard_cli.py[m[36m:[m22[36m:[m1[36m:[m [1m[31mF401[m 'shutil' imported but unused
+[1mscripts/utils\file_utils.py[m[36m:[m8[36m:[m63[36m:[m [1m[31mW291[m trailing whitespace
+[1mscripts/utils\link_summaries_to_raw_logs.py[m[36m:[m94[36m:[m62[36m:[m [1m[31mE203[m whitespace before ':'

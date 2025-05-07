@@ -14,3 +14,4 @@ requests
 coverage
 pandas
 typer
+flake8-json
