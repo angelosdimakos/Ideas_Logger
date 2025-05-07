@@ -5,6 +5,7 @@ ignore =
     E402
     W503
     W504
+
 exclude =
     .venv
     venv
@@ -12,3 +13,15 @@ exclude =
     .git
     build
     dist
+    htmlcov
+    .coverage
+    .mypy_cache
+    .pytest_cache
+    .tox
+    coverage.xml
+    *.egg-info
+
+per-file-ignores =
+    __init__.py:F401
+    scripts/__init__.py:F401
+    scripts/refactor/lint_report_pkg/__init__.py:F401,F403

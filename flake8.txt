@@ -42,3 +42,47 @@
 [1mscripts/refactor\refactor_guard_cli.py[m[36m:[m22[36m:[m1[36m:[m [1m[31mF401[m 'shutil' imported but unused
 [1mscripts/utils\file_utils.py[m[36m:[m8[36m:[m63[36m:[m [1m[31mW291[m trailing whitespace
 [1mscripts/utils\link_summaries_to_raw_logs.py[m[36m:[m94[36m:[m62[36m:[m [1m[31mE203[m whitespace before ':'
+scripts/ai\chat_refactor.py:8:1: F401 'scripts.ai.llm_router.get_prompt_template' imported but unused
+scripts/ai\llm_refactor_advisor.py:95:19: W292 no newline at end of file
+scripts/ai\llm_router.py:9:1: E302 expected 2 blank lines, found 1
+scripts/ai\llm_router.py:24:1: E302 expected 2 blank lines, found 1
+scripts/ai\module_docstring_summarizer.py:9:1: F401 'pathlib.Path' imported but unused
+scripts/ai\module_docstring_summarizer.py:72:22: W292 no newline at end of file
+scripts/ci_analyzer\severity_audit.py:155:11: W292 no newline at end of file
+scripts/ci_analyzer\severity_index.py:11:1: E302 expected 2 blank lines, found 1
+scripts/ci_analyzer\severity_index.py:52:1: E302 expected 2 blank lines, found 1
+scripts/ci_analyzer\severity_index.py:71:87: W292 no newline at end of file
+scripts/indexers\base_indexer.py:59:9: F841 local variable 'model_name' is assigned to but never used
+scripts/indexers\base_indexer.py:122:16: E741 ambiguous variable name 'I'
+scripts/kg\generate_codebase_kg.py:19:1: F401 'typing.Dict' imported but unused
+scripts/kg\generate_codebase_kg.py:19:1: F401 'typing.Any' imported but unused
+scripts/kg\modules\visualization.py:9:1: F401 'typing.Any' imported but unused
+scripts/kg\modules\visualization.py:160:13: F841 local variable 'parent' is assigned to but never used
+scripts/refactor\code_generation\code_cli.py:43:1: F401 'sys' imported but unused
+scripts/refactor\code_generation\code_cli.py:54:67: F821 undefined name 'module'
+scripts/refactor\lint_report_pkg\__init__.py:12:29: F821 undefined name 'ToolPlugin'
+scripts/refactor\lint_report_pkg\core.py:17:1: E302 expected 2 blank lines, found 1
+scripts/refactor\lint_report_pkg\lint_report_cli.py:19:1: F401 'json' imported but unused
+scripts/refactor\lint_report_pkg\lint_report_cli.py:32:1: E302 expected 2 blank lines, found 1
+scripts/refactor\lint_report_pkg\lint_report_cli.py:73:5: E303 too many blank lines (2)
+scripts/refactor\lint_report_pkg\plugins\coverage_plugin.py:9:1: F401 'math' imported but unused
+scripts/refactor\lint_report_pkg\plugins\coverage_plugin.py:10:1: F401 'json' imported but unused
+scripts/refactor\lint_report_pkg\plugins\coverage_plugin.py:40:24: E221 multiple spaces before operator
+scripts/refactor\lint_report_pkg\plugins\coverage_plugin.py:41:25: E221 multiple spaces before operator
+scripts/refactor\lint_report_pkg\plugins\coverage_plugin.py:43:24: E221 multiple spaces before operator
+scripts/refactor\lint_report_pkg\plugins\flake8.py:42:5: E303 too many blank lines (2)
+scripts/refactor\lint_report_pkg\plugins\pydocstyle.py:17:1: F401 'collections.defaultdict' imported but unused
+scripts/refactor\parsers\coverage_api_parser.py:16:1: E302 expected 2 blank lines, found 1
+scripts/refactor\parsers\coverage_api_parser.py:32:1: E302 expected 2 blank lines, found 1
+scripts/refactor\parsers\coverage_api_parser.py:61:1: E302 expected 2 blank lines, found 1
+scripts/refactor\parsers\coverage_parser.py:12:22: W605 invalid escape sequence '\ '
+scripts/refactor\parsers\coverage_parser.py:27:1: F401 'collections.defaultdict' imported but unused
+scripts/refactor\parsers\coverage_parser.py:33:1: F401 'scripts.refactor.lint_report_pkg.path_utils.norm as normalize_path' imported but unused
+scripts/refactor\parsers\coverage_parser.py:105:5: F841 local variable 'exc' is assigned to but never used
+scripts/refactor\parsers\coverage_parser.py:159:30: F821 undefined name 'file_hits'
+scripts/refactor\parsers\coverage_parser.py:163:67: F821 undefined name 'file_hits'
+scripts/refactor\parsers\json_coverage_parser.py:12:1: F401 'typing.List' imported but unused
+scripts/refactor\refactor_guard.py:228:69: W292 no newline at end of file
+scripts/refactor\refactor_guard_cli.py:22:1: F401 'shutil' imported but unused
+scripts/utils\file_utils.py:8:63: W291 trailing whitespace
+scripts/utils\link_summaries_to_raw_logs.py:94:62: E203 whitespace before ':'

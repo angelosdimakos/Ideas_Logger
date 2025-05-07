@@ -41,7 +41,7 @@ def _discover_plugins() -> None:
     for f in pkg_dir.glob("*.py"):
         if f.name.startswith("_"):
             continue
-        import_module(f"scripts.refactor.enrich_refactor_pkg.plugins.{f.stem}")
+        import_module(f"scripts.refactor.lint_report_pkg.plugins.{f.stem}")
 
 
 _discover_plugins()

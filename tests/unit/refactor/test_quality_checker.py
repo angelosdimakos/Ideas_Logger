@@ -2,7 +2,7 @@ from pathlib import Path
 
 from scripts.refactor.lint_report_pkg.path_utils import norm
 from scripts.refactor.lint_report_pkg.plugins.black import BlackPlugin
-from scripts.refactor.lint_report_pkg.plugins.flake8_plugin import Flake8Plugin
+from scripts.refactor.lint_report_pkg.plugins.flake8 import Flake8Plugin
 from scripts.refactor.lint_report_pkg.plugins.mypy import MypyPlugin
 from scripts.refactor.lint_report_pkg.plugins.pydocstyle import PydocstylePlugin
 from scripts.refactor.lint_report_pkg.plugins.coverage_plugin import CoveragePlugin
