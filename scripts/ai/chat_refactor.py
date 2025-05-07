@@ -1,15 +1,41 @@
+"""
+This module provides functionality to load reports and build contextual prompts for an AI assistant.
+
+It includes functions to load JSON reports and generate prompts based on the report data and user queries.
+"""
+
 import json
-from llm_router import get_prompt_template, apply_persona
-from config_manager import load_config
-from scripts.llm.ai_summarizer import AISummarizer
+from scripts.ai.llm_router import get_prompt_template, apply_persona
+from scripts.config.config_manager import ConfigManager
+from scripts.ai.ai_summarizer import AISummarizer
 
 
-def load_report(path: str):
+def load_report(path: str) -> dict:
+    """
+    Load a JSON report from the specified file path.
+
+    Args:
+        path (str): The path to the JSON report file.
+
+    Returns:
+        dict: The loaded report data.
+    """
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
 def build_contextual_prompt(query: str, report_data: dict, config) -> str:
+    """
+    Build a contextual prompt for the AI assistant based on the developer's query and report data.
+
+    Args:
+        query (str): The developer's question.
+        report_data (dict): The report data containing file information.
+        config: Configuration object containing persona information.
+
+    Returns:
+        str: The constructed prompt for the AI assistant.
+    """
     top_files = sorted(
         report_data.items(),
         key=lambda x: x[1].get("severity_score", 0),
@@ -46,7 +72,7 @@ if __name__ == "__main__":
         print("Usage: python chat_refactor.py merged_report.json")
         sys.exit(1)
 
-    config = load_config()
+    config = ConfigManager.load_config()
     summarizer = AISummarizer()
     report = load_report(sys.argv[1])
 

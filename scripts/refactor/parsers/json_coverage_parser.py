@@ -1,3 +1,12 @@
+"""
+JSON Coverage Parser
+===============================
+This module provides functionality to parse coverage data from a specified JSON file.
+
+It includes methods for matching coverage data with requested files and handling potential mismatches.
+"""
+
+
 import json
 from pathlib import Path
 from typing import Dict, Tuple, Any, List
@@ -8,6 +17,23 @@ def parse_json_coverage(
     method_ranges: Dict[str, Tuple[int, int]],
     filepath: str,
 ) -> Dict[str, Any]:
+    """
+    Parse JSON coverage data from the specified path and return coverage information.
+
+    Parameters:
+    ----------
+    json_path: str
+        Path to the JSON coverage data file.
+    method_ranges: Dict[str, Tuple[int, int]]
+        A dictionary mapping method names to their line ranges.
+    filepath: str
+        The path of the file for which coverage is being analyzed.
+
+    Returns:
+    -------
+    Dict[str, Any]
+        A dictionary containing coverage information for the specified file.
+    """
     requested_path = str(Path(filepath).as_posix())
 
     with open(json_path, "r", encoding="utf-8") as f:
@@ -48,15 +74,14 @@ def parse_json_coverage(
     executed = set(coverage_info.get("executed_lines", []))
     result = {
         requested_path: {
-            method: {
-                "coverage": sum(1 for line in range(start, end + 1) if line in executed) / (end - start + 1),
-                "hits": sum(1 for line in range(start, end + 1) if line in executed),
+            m: {
+                "coverage": len(executed) / (end - start + 1) if (end - start + 1) > 0 else 0.0,
+                "hits": len(executed),
                 "lines": end - start + 1,
-                "covered_lines": [l for l in range(start, end + 1) if l in executed],
-                "missing_lines": [l for l in range(start, end + 1) if l not in executed],
+                "covered_lines": list(executed),
+                "missing_lines": list(set(range(start, end + 1)) - executed),
             }
-            for method, (start, end) in method_ranges.items()
+            for m, (start, end) in method_ranges.items()
         }
     }
-
     return result

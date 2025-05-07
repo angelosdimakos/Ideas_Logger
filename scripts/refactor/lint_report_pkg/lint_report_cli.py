@@ -1,24 +1,17 @@
 #!/usr/bin/env python3
 """
-lint_report_cli.py
+Lint Report CLI
+===============================
+This script enriches a RefactorGuard audit file with linting, coverage, and docstring analysis data.
 
-Enriches a RefactorGuard audit file with linting, coverage, and docstring analysis data.
+Key points:
+- Zero-setup: If the audit JSON is missing, an empty one is created for plugins to populate.
+- No --reports argument: Each plugin runs its own tool and saves its report next to the audit file.
+- Optional docstring merge: If a docstring summary JSON is present, it is injected under a top-level "docstrings" key in the audit file.
 
-Key points
-----------
-* **Zero‑setup** – if the audit JSON is missing, we create an empty one and
-  let the plugin suite populate it.
-* **No --reports argument** – each plugin is responsible for running its own
-  tool and saving its report next to the audit file, so there is nothing to
-  micromanage from this CLI.
-* **Optional docstring merge** – if a docstring summary JSON is present we
-  inject it under a top‑level "docstrings" key in the audit file.
-
-Typical usage
--------------
+Typical usage:
 $ python lint_report_cli.py --audit refactor_audit.json
-$ python lint_report_cli.py --audit refactor_audit.json \
-                               --docstrings docstring_summary.json
+$ python lint_report_cli.py --audit refactor_audit.json --docstrings docstring_summary.json
 """
 
 import sys
@@ -36,18 +29,14 @@ import scripts.refactor.lint_report_pkg.quality_checker as quality_checker  # ty
 
 ENC = "utf-8"
 
+def enrich_refactor_audit(audit_path: str) -> None:
+    """
+    Enrich *audit_path* with lint, coverage, and optional docstring data.
 
-def enrich_refactor_audit(
-    audit_path: str,
-) -> None:
-    """Enrich *audit_path* with lint, coverage and optional docstring data.
-
-    Parameters
+    Parameters:
     ----------
-    audit_path:
+    audit_path: str
         Path to the RefactorGuard audit JSON file.
-    docstring_path:
-        Path to a docstring‑analysis JSON summary (optional).
     """
     audit_file = Path(audit_path)
 
@@ -64,8 +53,6 @@ def enrich_refactor_audit(
     safe_print(f"[+] Enriching audit file: {audit_file}")
     quality_checker.merge_into_refactor_guard(str(audit_file))
     safe_print("[✓] Lint and coverage data merged.")
-
-
 
 
 # ----------------------------------------------------------------------

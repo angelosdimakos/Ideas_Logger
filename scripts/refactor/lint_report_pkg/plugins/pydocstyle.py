@@ -1,3 +1,12 @@
+"""
+Pydocstyle Plugin for Lint Report Package
+===============================
+This module provides a plugin for the pydocstyle tool, implementing the ToolPlugin interface.
+
+It includes functionality to run pydocstyle on code and parse its output for docstring issues.
+"""
+
+
 from pathlib import Path
 from typing import Dict, Any
 import re
@@ -7,16 +16,17 @@ from ..helpers import run_cmd, read_report
 from ..path_utils import norm
 from collections import defaultdict
 
+
 class PydocstylePlugin(ToolPlugin):
     """
-    A plugin for running the pydocstyle tool.
+    Plugin for the pydocstyle tool.
 
-    This class is responsible for executing the pydocstyle command and parsing its
-    output to identify any docstring issues in the specified scripts.
+    Attributes:
+        name (str): The name of the plugin.
+        default_report (Path): The default report file path.
     """
-
-    name = "pydocstyle"
-    default_report = Path("pydocstyle.txt")
+    name: str = "pydocstyle"
+    default_report: Path = Path("pydocstyle.txt")
 
     def run(self) -> int:
         """
@@ -32,6 +42,9 @@ class PydocstylePlugin(ToolPlugin):
     def parse(self, dst: Dict[str, Dict[str, Any]]) -> None:
         """
         Parse pydocstyle output and inject docstring issues grouped by symbol with full detail.
+
+        Args:
+            dst (Dict[str, Dict[str, Any]]): Destination dictionary to update with docstring issues.
         """
         lines = read_report(self.default_report).splitlines()
         report = [line.strip() for line in lines if line.strip()]
@@ -60,4 +73,3 @@ class PydocstylePlugin(ToolPlugin):
             dst.setdefault(key, {}).setdefault("pydocstyle", {}).setdefault("functions", {}).setdefault(label,
                                                                                                         []).append(
                 entry)
-

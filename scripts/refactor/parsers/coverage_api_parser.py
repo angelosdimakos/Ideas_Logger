@@ -1,4 +1,12 @@
-# coverage_api_parser.py
+"""
+Coverage API Parser
+===============================
+This module provides functionality to parse coverage data from a specified path.
+
+It includes methods for handling file paths and matching coverage data with requested files.
+"""
+
+
 from __future__ import annotations
 from coverage import Coverage
 from pathlib import Path
@@ -6,9 +14,37 @@ from typing import Dict, Tuple, Any, List
 
 # ── helpers ───────────────────────────────────────────────────────────────
 def _canonical(p: str | Path) -> str:
+    """
+    Return the canonical path for the given path.
+
+    Parameters:
+    ----------
+    p: str | Path
+        The path to be canonicalized.
+
+    Returns:
+    -------
+    str
+        The canonical path.
+    """
     return str(Path(p).resolve()).replace("\\", "/")
 
 def _best_suffix_match(target: str, candidates: List[str]) -> str | None:
+    """
+    Find the best suffix match for the target path among the given candidates.
+
+    Parameters:
+    ----------
+    target: str
+        The target path.
+    candidates: List[str]
+        A list of candidate paths.
+
+    Returns:
+    -------
+    str | None
+        The best suffix match, or None if no match is found.
+    """
     tgt = _canonical(target).split("/")
     best, best_len = None, 0
     for c in candidates:
@@ -27,6 +63,23 @@ def parse_coverage_with_api(
     method_ranges: Dict[str, Tuple[int, int]],
     filepath: str,
 ) -> Dict[str, Any]:
+    """
+    Parse coverage data from the specified path and return coverage information.
+
+    Parameters:
+    ----------
+    coverage_path: str
+        Path to the coverage data file.
+    method_ranges: Dict[str, Tuple[int, int]]
+        A dictionary mapping method names to their line ranges.
+    filepath: str
+        The path of the file for which coverage is being analyzed.
+
+    Returns:
+    -------
+    Dict[str, Any]
+        A dictionary containing coverage information for the specified file.
+    """
     cov = Coverage(data_file=coverage_path)
     cov.load()
     data = cov.get_data()

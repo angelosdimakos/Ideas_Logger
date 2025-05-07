@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-quality_checker – public API.
+Quality Checker for Lint Report Package
+===============================
+This module serves as the public API for the lint report package.
 
-• imports all plugins (via plugins.__init__)
-• drives tool execution + parsing
-• merges results into RefactorGuard audit
+It imports all plugins, drives tool execution and parsing, and merges results into the RefactorGuard audit.
 """
 
 from __future__ import annotations
@@ -23,7 +23,14 @@ ENC = "utf-8"
 
 
 def merge_into_refactor_guard(audit_path: str = "refactor_audit.json") -> None:
-    """Enrich *audit_path* with quality data produced by every plugin."""
+    """
+    Enrich *audit_path* with quality data produced by every plugin.
+
+    Parameters:
+    ----------
+    audit_path: str
+        Path to the RefactorGuard audit JSON file.
+    """
     audit_file = Path(audit_path)
     # ---------- NEW: bootstrap empty audit ----------
     if not audit_file.exists():
@@ -87,7 +94,16 @@ def merge_into_refactor_guard(audit_path: str = "refactor_audit.json") -> None:
 
 
 def merge_reports(file_a: str, file_b: str) -> Dict[str, Any]:
-    """Return merged dict where *b* overrides *a* on duplicate keys."""
+    """
+    Return merged dict where *b* overrides *a* on duplicate keys.
+
+    Parameters:
+    ----------
+    file_a: str
+        Path to the first JSON file.
+    file_b: str
+        Path to the second JSON file.
+    """
     with open(file_a, encoding=ENC) as fa:
         data_a = json.load(fa)
     with open(file_b, encoding=ENC) as fb:

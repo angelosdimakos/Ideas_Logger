@@ -1,4 +1,20 @@
+"""
+This module provides functionality to generate summary metrics from code quality reports.
+
+It includes functions to analyze report data and summarize key metrics related to methods, tests, complexity, docstrings, and linter issues.
+"""
+
+
 def generate_metrics_summary(report_data: dict) -> str:
+    """
+    Generate a summary of metrics from the provided report data.
+
+    Args:
+        report_data (dict): Dictionary containing report data for each file.
+
+    Returns:
+        str: A Markdown formatted string summarizing the metrics.
+    """
     total_methods = 0
     missing_tests = 0
     high_complexity = 0

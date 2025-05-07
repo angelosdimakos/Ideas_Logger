@@ -1,5 +1,9 @@
 """
-Complexity analysis tools for codebase knowledge graphs.
+Complexity Analysis for Knowledge Graphs
+===============================
+This module provides tools for analyzing the complexity of knowledge graphs.
+
+It includes metrics for density, degree, busyness, and overall complexity scores.
 """
 
 from typing import Dict, Any
@@ -8,7 +12,15 @@ import networkx as nx
 
 
 class ComplexityAnalyzer:
-    """Analyzes graph complexity using various metrics."""
+    """
+    Analyzes graph complexity using various metrics.
+
+    Attributes:
+        None
+
+    Methods:
+        analyze_density: Analyzes the density and complexity of a given graph.
+    """
 
     @staticmethod
     def analyze_density(graph: nx.Graph, name: str = "") -> Dict[str, Any]:
@@ -16,11 +28,14 @@ class ComplexityAnalyzer:
         Analyze the density and complexity of a given graph.
 
         Args:
-            graph: The graph to analyze.
-            name: An optional name for the graph.
+            graph (nx.Graph): The graph to analyze.
+            name (str): An optional name for the graph.
 
         Returns:
-            A dictionary containing various metrics of the graph's complexity.
+            Dict[str, Any]: A dictionary containing various metrics of the graph's complexity.
+
+        Raises:
+            None
         """
         node_count = graph.number_of_nodes()
         edge_count = graph.number_of_edges()

@@ -31,7 +31,11 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 
 def main():
-    """Main entry point for the script."""
+    """
+    Main entry point for the script.
+
+    Parses command-line arguments and initializes the CodebaseAnalyzer.
+    """
     parser = argparse.ArgumentParser(
         description="Generate Knowledge Graph from docstring summary JSON."
     )

@@ -1,8 +1,7 @@
-"""Zephyrus unified CLI (v2)
+"""
+Zephyrus unified CLI (v2)
 ==========================
-A single command‑line entry point that surfaces **all existing back‑end
-capabilities discovered in the parsed *docstring_summary.json*.  The CLI now
-covers four pillars:
+A single command‑line entry point that surfaces **all existing back‑end capabilities discovered in the parsed *docstring_summary.json*.  The CLI now covers four pillars:
 
 1.  **Idea Logger**       – capture & retrieve raw notes
 2.  **Summariser**        – AI docstring‑style summaries
@@ -11,9 +10,7 @@ covers four pillars:
 5.  **CI Analytics**      – code‑quality reports + metric trends
 6.  **Developer helpers** – Git branch suggester
 
-It is built with **Typer** and keeps zero logic inside: every verb delegates to
-functions/classes already present in the codebase, or – where a module is still
-future work – a soft stub prints a helpful TODO but does not break the flow.
+It is built with **Typer** and keeps zero logic inside: every verb delegates to functions/classes already present in the codebase, or – where a module is still future work – a soft stub prints a helpful TODO but does not break the flow.
 
 Install & run:
 --------------
@@ -54,7 +51,17 @@ import typer
 ################################################################################
 
 
-def _safe_import(path: str, stub_attrs: Optional[dict] = None):
+def _safe_import(path: str, stub_attrs: Optional[dict] = None) -> module:
+    """
+    Dynamically import a module.
+
+    Args:
+        path (str): Module path.
+        stub_attrs (Optional[dict]): Stub attributes.
+
+    Returns:
+        module: Imported module.
+    """
     try:
         module = __import__(path, fromlist=["*"])
     except ModuleNotFoundError:  # provide minimal stub
@@ -113,12 +120,23 @@ app = typer.Typer(add_completion=False, help="Zephyrus Logger CLI v2 🪐")
 
 
 def _core() -> "core_mod.ZephyrusLoggerCore":  # type: ignore[name-defined]
+    """
+    Get the core logger instance.
+
+    Returns:
+        core_mod.ZephyrusLoggerCore: Core logger instance.
+    """
     return core_mod.ZephyrusLoggerCore(script_dir=Path.cwd())
 
 
 def _ctrl() -> "ctrl_mod.GUIController":  # type: ignore[name-defined]
-    return ctrl_mod.GUIController(logger_core=None, script_dir=str(Path.cwd()))
+    """
+    Get the GUI controller instance.
 
+    Returns:
+        ctrl_mod.GUIController: GUI controller instance.
+    """
+    return ctrl_mod.GUIController(logger_core=None, script_dir=str(Path.cwd()))
 
 ################################################################################
 #  Idea logging & summarisation                                                 #
@@ -132,7 +150,15 @@ def log(
     sub: str = typer.Option("General", help="Sub‑category"),
     summarize_immediately: bool = typer.Option(False, "--summarize/--no-summarize"),
 ) -> None:
-    """Write a raw idea; (optionally) summarise immediately."""
+    """
+    Write a raw idea; (optionally) summarise immediately.
+
+    Args:
+        note (str): Raw idea text.
+        main (str): Main category.
+        sub (str): Sub‑category.
+        summarize_immediately (bool): Whether to summarise immediately.
+    """
     ok = _ctrl().log_entry(main, sub, note)
     if not ok:
         typer.echo("❌ Failed to log idea", err=True)
@@ -145,7 +171,9 @@ def log(
 
 @app.command()
 def summarize() -> None:
-    """Summarise *all* unsummarised entries."""
+    """
+    Summarise *all* unsummarised entries.
+    """
     _core().force_summary_all()
     typer.echo("📝 All pending summaries created")
 
@@ -162,11 +190,23 @@ app.add_typer(kg_app, name="kg")
 def kg_build(
     since: Optional[str] = typer.Option(None, help="Only build from notes after YYYY‑MM‑DD")
 ) -> None:
+    """
+    Build the knowledge graph.
+
+    Args:
+        since (Optional[str]): Only build from notes after YYYY‑MM‑DD.
+    """
     kg_mod.build_graph(since=since)
 
 
 @kg_app.command("query")
 def kg_query(entity: str = typer.Argument(..., help="Entity or node label")) -> None:
+    """
+    Query the knowledge graph.
+
+    Args:
+        entity (str): Entity or node label.
+    """
     res = kg_mod.query_graph(entity)
     typer.echo(json.dumps(res, indent=2, ensure_ascii=False))
 
@@ -185,6 +225,15 @@ def generate_function(
     ),
     max_tokens: int = typer.Option(256, help="Token limit for LLM"),
 ) -> None:
+    """
+    Generate a function using RefactorGuard.
+
+    Args:
+        signature (str): Python signature e.g. 'add(a: int, b: int) -> int'.
+        context_entity (Optional[str]): KG entity to give as context.
+        tests (Optional[Path]): Optional pytest file used as acceptance guard.
+        max_tokens (int): Token limit for LLM.
+    """
     guard = refactor_mod.RefactorGuard()
     graph_ctx = {"entity": context_entity} if context_entity else None
     code = guard.generate_function(signature, graph_ctx, tests_path=tests, max_tokens=max_tokens)
@@ -202,6 +251,14 @@ def search(
     mode: str = typer.Option("summary", help="summary | raw"),
     k: int = 5,
 ) -> None:
+    """
+    Search for entries.
+
+    Args:
+        query (str): Search query.
+        mode (str): Search mode (summary | raw).
+        k (int): Number of results to return.
+    """
     core = _core()
     hits = (
         core.search_summaries(query, k)
@@ -213,6 +270,9 @@ def search(
 
 @app.command()
 def coverage() -> None:
+    """
+    Get coverage data.
+    """
     typer.echo(json.dumps(_ctrl().get_coverage_data(), indent=2))
 
 
@@ -223,6 +283,12 @@ def coverage() -> None:
 
 @app.command("rebuild-index")
 def rebuild_index(index: str = typer.Option("all", help="summary | raw | all")) -> None:
+    """
+    Rebuild the index.
+
+    Args:
+        index (str): Index to rebuild (summary | raw | all).
+    """
     tracker = _core().summary_tracker
     if index in ("summary", "all") and getattr(tracker, "summary_indexer", None):
         tracker.summary_indexer.rebuild()
@@ -245,6 +311,13 @@ def ci_report(
     audit: Path = typer.Option(Path("refactor_audit.json")),
     out: Path = typer.Option(Path("ci_summary.md")),
 ) -> None:
+    """
+    Generate a CI report.
+
+    Args:
+        audit (Path): Audit file.
+        out (Path): Output file.
+    """
     data = orchestrator.load_audit(str(audit))
     md = orchestrator.generate_ci_summary(data)
     orchestrator.save_summary(md, str(out))
@@ -256,6 +329,13 @@ def ci_trends(
     audit: Path = typer.Option(Path("refactor_audit.json")),
     history: Path = typer.Option(Path(".ci-history/last_metrics.json")),
 ) -> None:
+    """
+    Get CI trends.
+
+    Args:
+        audit (Path): Audit file.
+        history (Path): History file.
+    """
     curr = ci_trends_mod.extract_metrics(ci_trends_mod.load_audit(str(audit)))
     prev = ci_trends_mod.load_previous_metrics(str(history))
     delta = ci_trends_mod.compare_metrics(curr, prev)
@@ -270,6 +350,9 @@ def ci_trends(
 
 @app.command("git-new-branch")
 def git_new_branch() -> None:  # pragma: no cover
+    """
+    Switch to a new Git branch.
+    """
     dev_commit_mod.switch_to_new_branch()
 
 
@@ -286,7 +369,16 @@ def pipe(
     refactor: Optional[str] = typer.Option(None, help="Signature for guarded generation"),
     ci_report: bool = typer.Option(False, help="Run ci report at the end"),
 ) -> None:
-    """Complete flow: log → summarise → KG build → optional guarded generation → optional CI report."""
+    """
+    Complete flow: log → summarise → KG build → optional guarded generation → optional CI report.
+
+    Args:
+        note (str): Idea text.
+        main (str): Main category.
+        sub (str): Sub‑category.
+        refactor (Optional[str]): Signature for guarded generation.
+        ci_report (bool): Whether to run CI report at the end.
+    """
     # 1) Log idea
     if not _ctrl().log_entry(main, sub, note):
         typer.echo("❌ Couldn’t log idea", err=True)

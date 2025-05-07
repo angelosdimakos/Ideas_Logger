@@ -1,3 +1,11 @@
+"""
+Core Module for Lint Report Package
+=====================================
+This module provides the base class for tool plugins and functions for plugin discovery.
+
+It includes the abstract base class ToolPlugin that all plugins must implement.
+"""
+
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -14,23 +22,31 @@ class ToolPlugin(ABC):
     @property
     @abstractmethod
     def name(self) -> str:
-        """Unique plugin identifier (e.g., "black")."""
+        """
+        Unique plugin identifier (e.g., "black").
+        """
         ...
 
     @property
     @abstractmethod
     def default_report(self) -> Path:
-        """Filesystem path where the tool writes its report (txt/xml)."""
+        """
+        Filesystem path where the tool writes its report (txt/xml).
+        """
         ...
 
     @abstractmethod
     def run(self) -> int:
-        """Execute the tool, writing output to `default_report`; return exit code."""
+        """
+        Execute the tool, writing output to `default_report`; return exit code.
+        """
         ...
 
     @abstractmethod
     def parse(self, dst: Dict[str, Dict[str, Any]]) -> None:
-        """Read `default_report` and merge quality findings into `dst`."""
+        """
+        Read `default_report` and merge quality findings into `dst`.
+        """
         ...
 
 
@@ -39,5 +55,7 @@ from scripts.refactor.lint_report_pkg.plugins import PLUGINS as _PLUGINS
 
 
 def all_plugins() -> List[ToolPlugin]:
-    """Return the list of ToolPlugin instances auto-registered via plugins package."""
+    """
+    Return the list of ToolPlugin instances auto-registered via plugins package.
+    """
     return _PLUGINS

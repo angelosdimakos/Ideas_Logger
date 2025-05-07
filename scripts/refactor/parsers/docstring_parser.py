@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-docstring_parser.py
+Docstring Parser
+===============================
+This module scans a Python project directory for missing or partial docstrings.
 
-Scan a Python project directory for missing or partial docstrings.
-Outputs structured JSON and markdown-style reports with description, args, and return sections.
+It outputs structured JSON and markdown-style reports with description, args, and return sections.
 """
 
 import ast

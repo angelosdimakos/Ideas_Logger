@@ -1,7 +1,24 @@
+"""
+This module provides functionality to compute severity scores for code quality analysis.
+
+It includes functions to compute individual severity scores for files and to create a severity index DataFrame from report data.
+"""
+
+
 import numpy as np
 import pandas as pd
 
 def compute_severity(file_path: str, content: dict) -> dict:
+    """
+    Compute the severity score for a given file based on its coverage and linting data.
+
+    Args:
+        file_path (str): The path of the file being analyzed.
+        content (dict): The report data for the file, including coverage and linting information.
+
+    Returns:
+        dict: A dictionary containing the severity metrics for the file.
+    """
     coverage_data = content.get("coverage", {}).get("complexity", {})
     linting = content.get("linting", {}).get("quality", {})
     mypy_errors = linting.get("mypy", {}).get("errors", [])
@@ -33,6 +50,22 @@ def compute_severity(file_path: str, content: dict) -> dict:
     }
 
 def compute_severity_index(report_data: dict) -> pd.DataFrame:
+    """
+    Compute a severity index for all files in the report data.
+
+    Args:
+        report_data (dict): Dictionary containing report data for each file.
+
+    Returns:
+        pd.DataFrame: A DataFrame sorted by severity score.
+    """
     rows = [compute_severity(fp, content) for fp, content in report_data.items()]
+
+    # Create DataFrame with appropriate columns if empty
+    if not rows:
+        return pd.DataFrame(columns=["File", "Mypy Errors", "Lint Issues",
+                                     "Avg Complexity", "Avg Coverage %",
+                                     "Severity Score"])
+
     df = pd.DataFrame(rows)
     return df.sort_values(by="Severity Score", ascending=False).reset_index(drop=True)

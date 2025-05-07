@@ -1,7 +1,21 @@
+"""
+This module provides functionality to generate detailed Markdown reports for top offenders in code quality analysis.
+
+It includes functions to create drilldowns that summarize linting errors, complexity, coverage, and function descriptions for the top offenders.
+"""
+
+
 def generate_top_offender_drilldowns(severity_df, report_data: dict, top_n: int = 3) -> str:
     """
     Generate a Markdown section with drilldowns for the top N offenders.
-    Each section is wrapped in a <details> block for readability.
+
+    Args:
+        severity_df: DataFrame containing severity information for files.
+        report_data (dict): Dictionary containing report data for each file.
+        top_n (int): Number of top offenders to include in the report.
+
+    Returns:
+        str: Markdown formatted string with detailed analysis of top offenders.
     """
     md = "\n## 🔎 Top Offenders: Detailed Analysis\n"
     top_files = severity_df.head(top_n)["File"].tolist()
