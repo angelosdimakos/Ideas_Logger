@@ -24,15 +24,15 @@ try {
         Write-Warning "⚠No CI run found. Skipping artifact download."
     } else {
         Write-Host "Pulling combined audit reports..."
-        gh run download $run_id --name combined-report --dir tests/fixtures --force
-        gh run download $run_id --name ci-severity-report --dir tests/fixtures --force
+        gh run download $run_id --name combined-report --dir tests/fixtures
+        gh run download $run_id --name ci-severity-report --dir tests/fixtures
         Write-Host "Downloaded: merged_report.json + ci_severity_report.md"
 
         if ($WithGolden) {
             Write-Host "Pulling golden regression fixtures..."
-            gh run download $run_id --name lint-report --dir tests/fixtures --force
-            gh run download $run_id --name docstring-summary --dir tests/fixtures --force
-            gh run download $run_id --name refactor-audit --dir tests/fixtures --force
+            gh run download $run_id --name lint-report --dir tests/fixtures
+            gh run download $run_id --name docstring-summary --dir tests/fixtures
+            gh run download $run_id --name refactor-audit --dir tests/fixtures
             Write-Host "Downloaded: linting_report.json, docstring_summary.json, refactor_audit.json"
         }
     }

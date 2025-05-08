@@ -59,6 +59,7 @@ class BaseIndexer:
         model_name = get_config_value(
             ConfigManager.load_config(), "embedding_model", "all-MiniLM-L6-v2"
         )
+        self.embedding_model = self._load_model()
         self.index = None
         self.metadata: List[Dict[str, Any]] = []
 
