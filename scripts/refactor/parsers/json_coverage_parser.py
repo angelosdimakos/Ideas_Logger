@@ -72,14 +72,15 @@ def parse_json_coverage(
         }
 
     executed = set(coverage_info.get("executed_lines", []))
+
     result = {
         requested_path: {
             m: {
-                "coverage": len(executed) / (end - start + 1) if (end - start + 1) > 0 else 0.0,
-                "hits": len(executed),
+                "coverage": min(1.0, len(executed.intersection(range(start, end + 1))) / (end - start + 1)) if (end - start + 1) > 0 else 0.0,
+                "hits": len(executed.intersection(range(start, end + 1))),
                 "lines": end - start + 1,
-                "covered_lines": list(executed),
-                "missing_lines": list(set(range(start, end + 1)) - executed),
+                "covered_lines": [ln for ln in range(start, end + 1) if ln in executed],
+                "missing_lines": [ln for ln in range(start, end + 1) if ln not in executed],
             }
             for m, (start, end) in method_ranges.items()
         }

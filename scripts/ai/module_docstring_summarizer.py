@@ -1,30 +1,13 @@
-"""
-This module provides functionality to summarize the purpose of Python modules based on their function-level docstrings.
-
-It includes functions to summarize module docstrings and process reports containing module information.
-"""
-
-
 import json
 from pathlib import Path
+import argparse
+
 from scripts.ai.ai_summarizer import AISummarizer
 from scripts.config.config_manager import ConfigManager
 from scripts.ai.llm_router import get_prompt_template, apply_persona
 
 
 def summarize_module(file_path: str, doc_entries: list, summarizer: AISummarizer, config: ConfigManager) -> str:
-    """
-    Summarize a module's purpose based on its function-level docstrings.
-
-    Args:
-        file_path (str): The path of the module file.
-        doc_entries (list): A list of function docstring entries.
-        summarizer (AISummarizer): The summarizer object used for generating summaries.
-        config (ConfigManager): Configuration object containing relevant settings.
-
-    Returns:
-        str: The summarized purpose of the module.
-    """
     if not doc_entries:
         return "No docstrings found."
 
@@ -32,10 +15,7 @@ def summarize_module(file_path: str, doc_entries: list, summarizer: AISummarizer
     for entry in doc_entries:
         name = entry.get("name", "unknown")
         desc = (entry.get("description") or "").strip()
-
-        # Always include the function name, even if description is empty
         summaries.append(f"- `{name}`: {desc}")
-
     joined = "\n".join(summaries)
     prompt = get_prompt_template("Module Functionality", config)
     full_prompt = f"{prompt}\n\n{joined}"
@@ -43,30 +23,37 @@ def summarize_module(file_path: str, doc_entries: list, summarizer: AISummarizer
     return summarizer.summarize_entry(final_prompt, subcategory="Module Functionality")
 
 
-def main(input_path: str) -> None:
-    """
-    Main function to load a report and summarize the docstrings for each module.
-
-    Args:
-        input_path (str): The path to the input JSON report file.
-    """
+def run(input_path: str, output_path: str | None = None, path_filter: str | None = None) -> None:
     config = ConfigManager.load_config()
     summarizer = AISummarizer()
+    summaries = {}
 
     with open(input_path, "r", encoding="utf-8") as f:
         report = json.load(f)
 
     for file_path, data in report.items():
+        if path_filter and path_filter not in file_path:
+            continue
         funcs = data.get("docstrings", {}).get("functions", [])
-        if funcs:
-            print(f" {file_path}")  # Print with a space prefix for consistency
-            summary = summarize_module(file_path, funcs, summarizer, config)
-            print(f" {summary}")
+        if not funcs:
+            continue
+        summary = summarize_module(file_path, funcs, summarizer, config)
+        summaries[file_path] = summary
+
+    if output_path:
+        out_path = Path(output_path)
+        lines = [f"## {path}\n\n{summary}\n" for path, summary in summaries.items()]
+        out_path.write_text("\n".join(lines), encoding="utf-8")
+        print(f"✅ Written to {output_path}")
+    else:
+        for path, summary in summaries.items():
+            print(f"\n{path}\n{summary}")
 
 
 if __name__ == "__main__":
-    import sys
-    if len(sys.argv) < 2:
-        print("Usage: python module_docstring_summarizer.py merged_report.json")
-        sys.exit(1)
-    main(sys.argv[1])
+    parser = argparse.ArgumentParser(description="Summarize Python module functionality from docstrings.")
+    parser.add_argument("input", help="Path to merged_report.json")
+    parser.add_argument("--to", help="Path to write Markdown summary to")
+    parser.add_argument("--filter", help="Only include modules with this substring in the path")
+    args = parser.parse_args()
+    run(args.input, output_path=args.to, path_filter=args.filter)

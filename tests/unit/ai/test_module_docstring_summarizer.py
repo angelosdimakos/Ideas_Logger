@@ -13,7 +13,7 @@ from unittest.mock import patch, MagicMock
 from pathlib import Path
 
 # Import the module to test
-from scripts.ai.module_docstring_summarizer import summarize_module, main
+from scripts.ai.module_docstring_summarizer import summarize_module, run
 
 
 class TestModuleDocstringSummarizer:
@@ -166,7 +166,7 @@ class TestModuleDocstringSummarizer:
                 old_argv = sys.argv
                 try:
                     sys.argv = ['module_docstring_summarizer.py', temp_report_file]
-                    main(temp_report_file)
+                    run(temp_report_file)
                 finally:
                     sys.argv = old_argv
 
@@ -177,8 +177,8 @@ class TestModuleDocstringSummarizer:
                 # Check that summarize_module was called for each file with docstrings
                 assert mock_summarizer.summarize_entry.call_count == 2  # for models.py and views.py
 
-                # Check printed output
-                mock_print.assert_any_call(" app/models.py")
-                mock_print.assert_any_call(" Module summary")
-                mock_print.assert_any_call(" app/views.py")
+                # Check printed output - match the actual format from the run function
+                mock_print.assert_any_call("\napp/models.py\nModule summary")
+                mock_print.assert_any_call("\napp/views.py\nModule summary")
+                # app/utils.py has no functions, so it shouldn't be processed
                 # app/utils.py has no functions, so it shouldn't be processed
