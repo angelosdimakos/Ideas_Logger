@@ -11,11 +11,11 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
-# Workflow name with escaped ampersand
+# Workflow and paths
 $workflowName = "Run Tests `& CI Audit (Dockerized)"
 $artifactsDir = "tests/fixtures/artifacts"
 
-# Ensure artifacts directory exists and clean only it
+# Ensure artifacts directory exists and is cleaned
 if (Test-Path $artifactsDir) {
     Write-Host "Cleaning downloaded artifacts in $artifactsDir..."
     Remove-Item "$artifactsDir\*" -Recurse -Force
@@ -33,10 +33,15 @@ try {
     if (-not $run_id) {
         Write-Warning "No CI run found. Skipping artifact download."
     } else {
-        Write-Host "Pulling combined audit reports..."
+        Write-Host "Pulling core audit reports..."
         gh run download $run_id --name combined-report --dir $artifactsDir
         gh run download $run_id --name ci-severity-report --dir $artifactsDir
-        Write-Host "Downloaded: merged_report.json + ci_severity_report.md"
+        Write-Host "Downloaded: merged_report.json, ci_severity_report.md"
+
+        # Always pull strictness-mapping
+        Write-Host "Pulling strictness mapping report..."
+        gh run download $run_id --name strictness-mapping --dir $artifactsDir
+        Write-Host "Downloaded: strictness_mapping.json"
 
         if ($WithGolden) {
             Write-Host "Pulling golden regression fixtures..."
