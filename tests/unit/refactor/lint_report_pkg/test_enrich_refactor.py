@@ -27,13 +27,20 @@ def test_merge_into_refactor_guard_unit(tmp_path):
     (reports_dir / "mypy.txt").write_text(f"{target_file}: error: Dummy error\n", encoding="utf-8")
     (reports_dir / "pydocstyle.txt").write_text(f"{target_file}:1: D100: Missing docstring\n", encoding="utf-8")
 
-    # Now run the enrichment process
+    # Run the enrichment process
     merge_into_refactor_guard(str(audit_path))
 
     enriched = json.loads(audit_path.read_text(encoding="utf-8"))
-    assert "quality" in enriched[target_file]
-    assert isinstance(enriched[target_file]["quality"], dict)
-    assert any(enriched[target_file]["quality"].values()), "No quality tool output merged"
+
+    # Use flexible matching instead of hardcoded key lookup
+    matched_key = next((k for k in enriched if k.replace("\\", "/").endswith("example.py")), None)
+    assert matched_key, "Could not find 'example.py' in audit keys after enrichment"
+
+    quality_data = enriched[matched_key].get("quality")
+    assert quality_data is not None, f"'quality' key missing in enriched['{matched_key}']"
+    assert isinstance(quality_data, dict), f"'quality' is not a dict in enriched['{matched_key}']"
+    assert any(quality_data.values()), "Quality data merged, but all tool outputs are empty or falsy"
+
 
 
 @pytest.mark.slow
