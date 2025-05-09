@@ -2,7 +2,6 @@
 [run]
 branch = True
 source = scripts
-dynamic_context = test_function
 
 [report]
 show_missing = True
