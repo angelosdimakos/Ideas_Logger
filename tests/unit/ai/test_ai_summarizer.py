@@ -1,13 +1,17 @@
 import json
 import pytest
+from unittest.mock import patch, MagicMock
 from scripts.utils.file_utils import read_json
 from scripts.ai.ai_summarizer import AISummarizer
 from tests.mocks.test_helpers import make_dummy_aisummarizer, make_fake_logs
 
 pytestmark = [pytest.mark.unit, pytest.mark.ai_mocked]
 
-
 class TestAISummarizer:
+
+    @pytest.fixture
+    def summarizer(self):
+        return AISummarizer()
 
     def test_generate_summary_triggers_and_writes_summary(self, logger_core):
         date_str = "2025-03-22"
@@ -17,8 +21,7 @@ class TestAISummarizer:
             date_str: {
                 main_category: {
                     subcategory: [
-                        {"timestamp": f"{date_str} 12:00:00", "content": f"entry {i}"}
-                        for i in range(5)
+                        {"timestamp": f"{date_str} 12:00:00", "content": f"entry {i}"} for i in range(5)
                     ]
                 }
             }
@@ -45,8 +48,7 @@ class TestAISummarizer:
             date_str: {
                 "TestCat": {
                     "SubCat": [
-                        {"timestamp": f"{date_str} 12:00:00", "content": f"entry {i}"}
-                        for i in range(5)
+                        {"timestamp": f"{date_str} 12:00:00", "content": f"entry {i}"} for i in range(5)
                     ]
                 }
             }
@@ -85,15 +87,8 @@ class TestAISummarizer:
         assert "subcategory context" in result
         assert result.startswith("Summary with subcategory context:")
 
-    def test_bulk_summary_with_none_input(self, monkeypatch):
+    def test_bulk_summary_with_none_input(self):
         summarizer = AISummarizer()
-
-        class MockOllama:
-            @staticmethod
-            def generate(model, prompt):
-                return {"response": "Should not be called"}
-
-        monkeypatch.setattr("scripts.ai.ai_summarizer.ollama", MockOllama)
         result = summarizer.summarize_entries_bulk(None)
         assert result == "No entries provided"
 
@@ -110,11 +105,8 @@ class TestAISummarizer:
         assert result == ""
 
     def test_summarize_entry_returns_non_string(self, monkeypatch):
-        # Use default summarizer, but override mock to return None
         from scripts.ai import ai_summarizer
-
         monkeypatch.setattr(ai_summarizer.ollama, "generate", lambda *a, **kw: {"response": None})
-
         summarizer = AISummarizer()
         result = summarizer.summarize_entry("Some input")
         assert result == "Mock fallback summary"
@@ -125,12 +117,51 @@ class TestAISummarizer:
         summary_file.chmod(0o400)  # Read-only
 
         logger_core.log_manager.correction_summaries_file = summary_file
-
         date_str = "2025-03-22"
-        logs = make_fake_logs(date_str, "TestCat", "SubCat")  # ✅ Proper dict structure
+        logs = make_fake_logs(date_str, "TestCat", "SubCat")
         logger_core.log_manager.json_log_file.write_text(json.dumps(logs, indent=2))
-
         logger_core.ai_summarizer = make_dummy_aisummarizer()
-        success = logger_core.generate_summary(date_str, "TestCat", "SubCat")
 
+        success = logger_core.generate_summary(date_str, "TestCat", "SubCat")
         assert not success
+
+    # ======================= Advanced Robustness Tests =========================
+
+    def test_bulk_summary_token_overflow(self, monkeypatch):
+        summarizer = AISummarizer()
+        entries = ["Very long log entry " * 1000 for _ in range(100)]
+
+        with patch("scripts.ai.ai_summarizer.ollama.generate") as mock_generate, \
+             patch.object(summarizer, "_fallback_summary", return_value="[OVERSIZED FALLBACK]") as mock_fallback:
+
+            mock_generate.side_effect = Exception("Token limit exceeded")
+            result = summarizer.summarize_entries_bulk(entries)
+
+            mock_fallback.assert_called_once()
+            assert "[OVERSIZED FALLBACK]" in result
+
+    def test_bulk_summary_malformed_response(self, monkeypatch):
+        summarizer = AISummarizer()
+        entries = ["Log entry A", "Log entry B"]
+
+        with patch("scripts.ai.ai_summarizer.ollama.generate") as mock_generate, \
+             patch.object(summarizer, "_fallback_summary", return_value="[MALFORMED FALLBACK]") as mock_fallback:
+
+            mock_generate.return_value = {"invalid_key": "missing response field"}
+            result = summarizer.summarize_entries_bulk(entries)
+
+            mock_fallback.assert_called_once()
+            assert "[MALFORMED FALLBACK]" in result
+
+    def test_bulk_summary_api_timeout(self, monkeypatch):
+        summarizer = AISummarizer()
+        entries = ["Log entry A", "Log entry B"]
+
+        with patch("scripts.ai.ai_summarizer.ollama.generate") as mock_generate, \
+             patch.object(summarizer, "_fallback_summary", return_value="[TIMEOUT FALLBACK]") as mock_fallback:
+
+            mock_generate.side_effect = TimeoutError("LLM API timed out")
+            result = summarizer.summarize_entries_bulk(entries)
+
+            mock_fallback.assert_called_once()
+            assert result == "[TIMEOUT FALLBACK]"
