@@ -55,6 +55,9 @@ ENV PYTHONPATH=/app \
 # Copy application code (this happens last to maximize cache usage)
 COPY --chown=myuser:myuser . .
 
+# Ensure myuser owns the /app directory fully
+RUN chown -R myuser:myuser /app
+
 # Switch to non-root user
 USER myuser
 
