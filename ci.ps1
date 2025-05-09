@@ -13,7 +13,7 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
 
 # Workflow and paths
 $workflowName = "Run Tests `& CI Audit (Dockerized)"
-$artifactsDir = "tests/fixtures/artifacts"
+$artifactsDir = "/artifacts"
 
 # Ensure artifacts directory exists and is cleaned
 if (Test-Path $artifactsDir) {

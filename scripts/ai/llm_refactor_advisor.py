@@ -52,7 +52,9 @@ def extract_top_offenders(report_data: dict, top_n: int = 5) -> list:
         rows.append((fp, score, errors, lint_issues, avg_cx, avg_cov))
     return sorted(rows, key=lambda r: r[1], reverse=True)[:top_n]  # Return top N offenders sorted by score
 
-def build_refactor_prompt(offenders: list, config, subcategory: str = "Tooling & Automation") -> str:
+
+def build_refactor_prompt(offenders: list, config, subcategory: str = "Tooling & Automation", verbose: bool = False,
+                          limit: int = None) -> str:
     """
     Build a refactor prompt for the AI assistant based on identified offenders.
 
@@ -60,15 +62,26 @@ def build_refactor_prompt(offenders: list, config, subcategory: str = "Tooling &
         offenders (list): A list of top offenders with their metrics.
         config: Configuration object containing persona information.
         subcategory (str): The subcategory for the prompt.
+        verbose (bool): If True, include more detailed information.
+        limit (int, optional): The maximum number of offenders to include in the prompt. Defaults to None (include all).
 
     Returns:
         str: The constructed prompt for the AI assistant.
     """
-    prompt = get_prompt_template(subcategory, config)  # Get the prompt template based on the subcategory
+    prompt = get_prompt_template(subcategory, config)
     prompt += "\n\nHere is a ranked list of risky files:\n"
+
+    # Apply the limit if it's provided
+    if limit is not None:
+        offenders = offenders[:limit]
+
     for fp, score, errors, lint_issues, cx, cov in offenders:
-        prompt += f"- `{fp}`: Score={score:.1f}, MyPy={len(errors)}, Lint={lint_issues}, Cx={cx}, Coverage={cov*100:.1f}%\n"
-    return apply_persona(prompt, config.persona)  # Apply persona to the constructed prompt
+        prompt_line = f"- `{fp}`: Score={score:.1f}, MyPy={len(errors)}, Lint={lint_issues}, Cx={cx}, Coverage={cov * 100:.1f}%"
+        if verbose:
+            prompt_line += f", Full Path={fp}"
+        prompt += prompt_line + "\n"
+    return apply_persona(prompt, config.persona)
+
 
 
 if __name__ == "__main__":

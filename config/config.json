@@ -64,6 +64,8 @@
     "Creative Ops / Org Flow": "Summarize the creative workflow or team process insight described.",
     "Refactor Advisor": "You're a senior Python developer. Given the following list of risky files with metrics (MyPy errors, lint issues, complexity, coverage), analyze and recommend which files should be refactored first and why. Be concise and practical.",
     "Module Functionality": "Given a list of documented functions with their purposes, summarize what this Python module does overall. Focus on its role in the system, key responsibilities, and how its parts contribute to that role. Be concise but informative.",
+    "Strategic Recommendations": "You're an expert software architect. Given project-wide metrics (test coverage, code complexity, documentation coverage, and known high-risk files), provide a prioritized and highly actionable set of recommendations to improve long-term maintainability and reduce technical debt. Avoid generic advice; be specific to the provided metrics and suggest concrete architectural or process changes.",
+    "Audit Summary": "You are a technical manager. Provide an executive summary of the following code audit metrics. Highlight key strengths, critical risks, and immediate action points. Be concise, insightful, and use a professional tone suitable for presentation to stakeholders.",
     "_default": "Summarize the following idea into concise, meaningful bullet points:"
   },
 
