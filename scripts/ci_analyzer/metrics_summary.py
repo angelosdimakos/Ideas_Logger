@@ -23,19 +23,19 @@ def generate_metrics_summary(report_data: dict) -> str:
 
     for content in report_data.values():
         for m in content.get("coverage", {}).get("complexity", {}).values():
-            total_methods += 1
+            total_methods += 1  # Count each method audited
             if m.get("coverage", 1.0) == 0:
-                missing_tests += 1
+                missing_tests += 1  # Increment count for methods with no tests
             if m.get("complexity", 0) >= 10:
-                high_complexity += 1
+                high_complexity += 1  # Increment count for methods with high complexity
 
         for func in content.get("docstrings", {}).get("functions", []):
             if not func.get("description") or not func.get("args") or not func.get("returns"):
-                missing_docstrings += 1
+                missing_docstrings += 1  # Count methods missing docstring components
 
         lint = content.get("linting", {}).get("quality", {})
-        linter_issues += len(lint.get("mypy", {}).get("errors", []))
-        linter_issues += sum(len(v) for v in lint.get("pydocstyle", {}).get("functions", {}).values())
+        linter_issues += len(lint.get("mypy", {}).get("errors", []))  # Count MyPy errors
+        linter_issues += sum(len(v) for v in lint.get("pydocstyle", {}).get("functions", {}).values())  # Count Pydocstyle issues
 
     return f"""## 📊 Summary Metrics
 
@@ -45,4 +45,4 @@ def generate_metrics_summary(report_data: dict) -> str:
 - 📚 Methods missing docstrings: **{missing_docstrings}**
 - 🧼 Linter issues detected: **{linter_issues}**
 
-"""
+"""  # Return a formatted summary of the metrics

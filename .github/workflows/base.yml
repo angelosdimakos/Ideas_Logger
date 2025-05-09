@@ -84,6 +84,20 @@ jobs:
           name: refactor-audit
           path: refactor_audit.json
 
+      - name: 📐 Run Strictness Analyzer
+        run: |
+          echo "📐 Running Strictness Analyzer..."
+          python scripts/refactor/strictness_analyzer.py \
+            --source scripts/ --tests tests/unit \
+            --coverage coverage.json --output strictness_mapping.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: strictness-mapping
+          path: strictness_mapping.json
+
+
   docstring:
     runs-on: ubuntu-latest
     timeout-minutes: 5

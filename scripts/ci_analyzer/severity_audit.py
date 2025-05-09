@@ -14,7 +14,6 @@ from scripts.ci_analyzer.drilldown import generate_top_offender_drilldowns
 from scripts.ci_analyzer.metrics_summary import generate_metrics_summary
 from scripts.ci_analyzer.visuals import risk_emoji, render_bar
 
-
 def format_priority(score: float) -> str:
     """
     Format the priority level based on the severity score.
@@ -25,13 +24,12 @@ def format_priority(score: float) -> str:
     Returns:
         str: A string representing the priority level (High, Medium, Low).
     """
-    if score > 30:
+    if score > 30:  # High priority for scores above 30
         return "🔥 High"
-    elif score > 15:
+    elif score > 15:  # Medium priority for scores above 15
         return "⚠️ Medium"
-    else:
+    else:  # Low priority for scores 15 and below
         return "✅ Low"
-
 
 def generate_header_block(severity_df, report_data: Dict[str, Dict]) -> str:
     """
@@ -44,46 +42,46 @@ def generate_header_block(severity_df, report_data: Dict[str, Dict]) -> str:
     Returns:
         str: A Markdown formatted string representing the header block.
     """
-    total_files = len(report_data)
-    files_with_issues = severity_df.query("`Mypy Errors` > 0 or `Lint Issues` > 0").shape[0] if not severity_df.empty else 0
+    total_files = len(report_data)  # Total number of files in the report
+    files_with_issues = severity_df.query("`Mypy Errors` > 0 or `Lint Issues` > 0").shape[0] if not severity_df.empty else 0  # Count files with issues
 
     # Handle empty DataFrame case
-    worst_file = severity_df.iloc[0]["File"] if not severity_df.empty else "None"
+    worst_file = severity_df.iloc[0]["File"] if not severity_df.empty else "None"  # Get the worst file from the severity DataFrame
 
     # Compute metrics for visual bars
-    total_methods = 0
-    missing_tests = 0
-    missing_docstrings = 0
-    linter_issues = 0
+    total_methods = 0  # Initialize total methods count
+    missing_tests = 0  # Initialize missing tests count
+    missing_docstrings = 0  # Initialize missing docstrings count
+    linter_issues = 0  # Initialize linter issues count
 
-    for content in report_data.values():
-        complexity = content.get("coverage", {}).get("complexity", {})
-        total_methods += len(complexity)
-        missing_tests += sum(1 for m in complexity.values() if m.get("coverage", 1.0) == 0)
+    for content in report_data.values():  # Iterate over report data
+        complexity = content.get("coverage", {}).get("complexity", {})  # Get complexity data
+        total_methods += len(complexity)  # Update total methods count
+        missing_tests += sum(1 for m in complexity.values() if m.get("coverage", 1.0) == 0)  # Update missing tests count
 
-        missing_docstrings += sum(
+        missing_docstrings += sum(  # Update missing docstrings count
             1 for f in content.get("docstrings", {}).get("functions", [])
             if not f.get("description") or not f.get("args") or not f.get("returns")
         )
 
-        lint = content.get("linting", {}).get("quality", {})
-        linter_issues += len(lint.get("mypy", {}).get("errors", []))
-        linter_issues += sum(len(v) for v in lint.get("pydocstyle", {}).get("functions", {}).values())
+        lint = content.get("linting", {}).get("quality", {})  # Get linting data
+        linter_issues += len(lint.get("mypy", {}).get("errors", []))  # Update linter issues count
+        linter_issues += sum(len(v) for v in lint.get("pydocstyle", {}).get("functions", {}).values())  # Update linter issues count
 
-    pct_docs = 100 * (1 - missing_docstrings / total_methods) if total_methods else 100
-    pct_tests = 100 * (1 - missing_tests / total_methods) if total_methods else 100
-    pct_lint = 100 * (1 - linter_issues / total_methods) if total_methods else 100
+    pct_docs = 100 * (1 - missing_docstrings / total_methods) if total_methods else 100  # Calculate percentage of documented methods
+    pct_tests = 100 * (1 - missing_tests / total_methods) if total_methods else 100  # Calculate percentage of tested methods
+    pct_lint = 100 * (1 - linter_issues / total_methods) if total_methods else 100  # Calculate percentage of lint-free methods
 
     return f"""# 📊 CI Code Quality Audit Report
 
-## 🔍 Executive Summary
+## Executive Summary
 
 | Metric                     | Value    | Visual |
 |----------------------------|----------|--------|
-| Files analyzed             | `{total_files}`    | 📦     |
-| Files with issues          | `{files_with_issues}`     | ⚠️     |
-| **Top risk file**          | `{worst_file}` | 🔥     |
-| Methods audited            | `{total_methods}`    | 🧮     |
+| Files analyzed             | `{total_files}`    |     |
+| Files with issues          | `{files_with_issues}`     |     |
+| **Top risk file**          | `{worst_file}` |     |
+| Methods audited            | `{total_methods}`    |     |
 | Missing tests              | `{missing_tests}`    | {render_bar(pct_tests)} {risk_emoji(pct_tests)} |
 | Missing docstrings         | `{missing_docstrings}`    | {render_bar(pct_docs)} {risk_emoji(pct_docs)} |
 | Linter issues              | `{linter_issues}`    | {render_bar(pct_lint)} {risk_emoji(pct_lint)} |
@@ -106,7 +104,7 @@ def generate_severity_table(severity_df) -> str:
 
     # Check if DataFrame is empty
     if severity_df.empty:
-        table += "| No files found | 0 | 0 | 0 | 0% | 0 | ✅ Low |\n"
+        table += "| No files found | 0 | 0 | 0 | 0% | 0 | Low |\n"
         return table
 
     top_df = severity_df.head(10)

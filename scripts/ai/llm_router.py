@@ -18,8 +18,8 @@ def get_prompt_template(subcategory: str, config=None) -> str:
     Returns:
         str: The prompt string for the specified subcategory.
     """
-    config = config or ConfigManager.load_config()
-    return config.prompts_by_subcategory.get(subcategory, config.prompts_by_subcategory["_default"])
+    config = config or ConfigManager.load_config()  # Load config if not provided
+    return config.prompts_by_subcategory.get(subcategory, config.prompts_by_subcategory["_default"])  # Return specific or default prompt
 
 def apply_persona(prompt: str, persona: str) -> str:
     """
@@ -34,8 +34,8 @@ def apply_persona(prompt: str, persona: str) -> str:
     """
     persona_mods = {
         "default": "",
-        "reviewer": "\n\nRespond like a senior code reviewer. Be terse and blunt.",
-        "mentor": "\n\nRespond like a mentor. Provide suggestions with empathy and reasoning.",
-        "planner": "\n\nProvide next steps like a project planner.",
+        "reviewer": "\n\nRespond like a senior code reviewer. Be terse and blunt.",  # Adjust prompt for a reviewer persona
+        "mentor": "\n\nRespond like a mentor. Provide suggestions with empathy and reasoning.",  # Adjust prompt for a mentor persona
+        "planner": "\n\nProvide next steps like a project planner.",  # Adjust prompt for a planner persona
     }
-    return prompt + persona_mods.get(persona, "")
+    return prompt + persona_mods.get(persona, "")  # Append persona modifications to the prompt

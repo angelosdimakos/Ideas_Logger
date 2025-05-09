@@ -16,11 +16,11 @@ def risk_emoji(score: float) -> str:
         str: An emoji indicating the risk level (green, yellow, or red).
     """
     if score >= 90:
-        return "🟢"
+        return "🟢"  # Green emoji for low risk
     elif score >= 70:
-        return "🟡"
+        return "🟡"  # Yellow emoji for moderate risk
     else:
-        return "🔴"
+        return "🔴"  # Red emoji for high risk
 
 
 def render_bar(score: float, width: int = 20) -> str:
@@ -34,5 +34,5 @@ def render_bar(score: float, width: int = 20) -> str:
     Returns:
         str: A string representing the filled and unfilled sections of the bar.
     """
-    filled = int((score / 100.0) * width)
-    return "▓" * filled + "░" * (width - filled)
+    filled = int((score / 100.0) * width)  # Calculate how many sections of the bar should be filled
+    return "▓" * filled + "░" * (width - filled)  # Return the filled and unfilled sections of the bar

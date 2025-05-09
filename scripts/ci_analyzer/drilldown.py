@@ -18,10 +18,10 @@ def generate_top_offender_drilldowns(severity_df, report_data: dict, top_n: int 
         str: Markdown formatted string with detailed analysis of top offenders.
     """
     md = "\n## 🔎 Top Offenders: Detailed Analysis\n"
-    top_files = severity_df.head(top_n)["File"].tolist()
+    top_files = severity_df.head(top_n)["File"].tolist()  # Get top N files based on severity
 
     for filepath in top_files:
-        content = report_data.get(filepath, {})
+        content = report_data.get(filepath, {})  # Retrieve report data for the file
         md += f"\n<details>\n<summary>🔍 `{filepath}`</summary>\n\n"
 
         # MyPy Errors
@@ -29,7 +29,7 @@ def generate_top_offender_drilldowns(severity_df, report_data: dict, top_n: int 
         if mypy_errors:
             md += "\n**❗ MyPy Errors:**\n"
             for err in mypy_errors:
-                md += f"- {err}\n"
+                md += f"- {err}\n"  # List each MyPy error
 
         # Pydocstyle Issues
         pydoc_issues = content.get("linting", {}).get("quality", {}).get("pydocstyle", {}).get("functions", {})
@@ -37,16 +37,16 @@ def generate_top_offender_drilldowns(severity_df, report_data: dict, top_n: int 
             md += "\n**🧼 Pydocstyle Issues:**\n"
             for fn_name, issues in pydoc_issues.items():
                 for issue in issues:
-                    md += f"- `{fn_name}`: {issue['code']} — {issue['message']}\n"
+                    md += f"- `{fn_name}`: {issue['code']} — {issue['message']}\n"  # List each Pydocstyle issue
 
         # Complexity & Coverage
         complexity_data = content.get("coverage", {}).get("complexity", {})
         if complexity_data:
             md += "\n**📉 Complexity & Coverage Issues:**\n"
             for fn_name, meta in complexity_data.items():
-                cx = meta.get("complexity", 0)
-                cov = round(meta.get("coverage", 0.0) * 100, 1)
-                if cx > 5 or cov < 50:
+                cx = meta.get("complexity", 0)  # Get complexity value
+                cov = round(meta.get("coverage", 0.0) * 100, 1)  # Get coverage percentage
+                if cx > 5 or cov < 50:  # Highlight functions with high complexity or low coverage
                     md += f"- `{fn_name}`: Complexity = {cx}, Coverage = {cov}%\n"
 
         # Function Docstrings

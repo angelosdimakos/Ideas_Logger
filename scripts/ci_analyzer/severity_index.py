@@ -19,20 +19,21 @@ def compute_severity(file_path: str, content: dict) -> dict:
     Returns:
         dict: A dictionary containing the severity metrics for the file.
     """
-    coverage_data = content.get("coverage", {}).get("complexity", {})
-    linting = content.get("linting", {}).get("quality", {})
-    mypy_errors = linting.get("mypy", {}).get("errors", [])
-    pydocstyle_issues = linting.get("pydocstyle", {}).get("functions", {})
+    coverage_data = content.get("coverage", {}).get("complexity", {})  # Get coverage complexity data
+    linting = content.get("linting", {}).get("quality", {})  # Get linting quality data
+    mypy_errors = linting.get("mypy", {}).get("errors", [])  # Get MyPy errors
+    pydocstyle_issues = linting.get("pydocstyle", {}).get("functions", {})  # Get Pydocstyle issues
 
-    num_lint_issues = sum(len(v) for v in pydocstyle_issues.values())
-    num_mypy_errors = len(mypy_errors)
+    num_lint_issues = sum(len(v) for v in pydocstyle_issues.values())  # Count total Pydocstyle issues
+    num_mypy_errors = len(mypy_errors)  # Count total MyPy errors
 
-    complexities = [fn.get("complexity", 0) for fn in coverage_data.values()]
-    coverages = [fn.get("coverage", 1.0) for fn in coverage_data.values()]
+    complexities = [fn.get("complexity", 0) for fn in coverage_data.values()]  # Get complexities of functions
+    coverages = [fn.get("coverage", 1.0) for fn in coverage_data.values()]  # Get coverage percentages of functions
 
-    avg_complexity = np.mean(complexities) if complexities else 0
-    avg_coverage = np.mean(coverages) if coverages else 1.0
+    avg_complexity = np.mean(complexities) if complexities else 0  # Calculate average complexity
+    avg_coverage = np.mean(coverages) if coverages else 1.0  # Calculate average coverage
 
+    # Calculate the severity score based on weighted metrics
     severity_score = (
         2.0 * num_mypy_errors +
         1.5 * num_lint_issues +
