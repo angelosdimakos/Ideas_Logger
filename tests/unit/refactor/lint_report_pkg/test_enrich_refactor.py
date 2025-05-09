@@ -1,5 +1,3 @@
-# tests/unit/refactor/test_enrich_refactor.py
-
 import json
 import subprocess
 from pathlib import Path
@@ -27,56 +25,49 @@ def test_merge_into_refactor_guard_unit(tmp_path):
     (reports_dir / "mypy.txt").write_text(f"{target_file}: error: Dummy error\n", encoding="utf-8")
     (reports_dir / "pydocstyle.txt").write_text(f"{target_file}:1: D100: Missing docstring\n", encoding="utf-8")
 
-    # Run the enrichment process
+    # Now run the enrichment process
     merge_into_refactor_guard(str(audit_path))
 
     enriched = json.loads(audit_path.read_text(encoding="utf-8"))
-
-    # Use flexible matching instead of hardcoded key lookup
-    matched_key = next((k for k in enriched if k.replace("\\", "/").endswith("example.py")), None)
-    assert matched_key, "Could not find 'example.py' in audit keys after enrichment"
-
-    quality_data = enriched[matched_key].get("quality")
-    assert quality_data is not None, f"'quality' key missing in enriched['{matched_key}']"
-    assert isinstance(quality_data, dict), f"'quality' is not a dict in enriched['{matched_key}']"
-    assert any(quality_data.values()), "Quality data merged, but all tool outputs are empty or falsy"
-
+    matched_key = next((k for k in enriched if k.endswith("example.py")), None)
+    assert matched_key, "Could not find 'example.py' in audit keys"
+    assert "quality" in enriched[matched_key]
+    assert isinstance(enriched[matched_key]["quality"], dict)
+    assert any(enriched[matched_key]["quality"].values()), "No quality tool output merged"
 
 
 @pytest.mark.slow
 def test_enrich_refactor_cli_integration():
     """
-    Slow integration test that calls the lint_report_pkg CLI via subprocess,
+    Integration test that calls the lint_report_pkg CLI via subprocess,
     simulating an audit file and dummy reports to verify full enrichment behavior.
     """
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir = Path(tmpdir)
         audit_path = tmpdir / "refactor_audit.json"
 
-
         target_file = Path("Ideas_Logger/example.py").as_posix()
-
-        # Minimal fake audit with normalized path
         audit_data = {target_file: {"complexity": {"dummy": 1}}}
         audit_path.write_text(json.dumps(audit_data), encoding="utf-8")
 
         # Dummy lint reports that mention the file
         for name in ["flake8.txt", "black.txt", "mypy.txt", "pydocstyle.txt"]:
-
             (tmpdir / name).write_text(f"{target_file}:1:1: Dummy warning\n", encoding="utf-8")
 
+        # Dynamically resolve the CLI script path
+        project_root = Path(__file__).resolve().parents[4]
+        cli_script = project_root / "scripts" / "refactor" / "lint_report_pkg" / "lint_report_cli.py"
+        assert cli_script.exists(), f"CLI script not found at expected path: {cli_script}"
+
         result = subprocess.run(
-            [
-                "python",
-                "scripts/refactor/lint_report_pkg/lint_report_cli.py",
-                "--audit",
-                str(audit_path),
-            ],
+            ["python", str(cli_script), "--audit", str(audit_path)],
             capture_output=True,
             text=True,
         )
 
-        assert result.returncode == 0, f"CLI failed:\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
+        assert result.returncode == 0, (
+            f"CLI failed:\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
+        )
 
         enriched = json.loads(audit_path.read_text(encoding="utf-8"))
         matched_key = next(
