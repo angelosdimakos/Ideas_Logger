@@ -33,20 +33,35 @@ def parse_json_coverage(
     raw_files = data.get("files", {})
     files = {Path(k).as_posix(): v for k, v in raw_files.items()}
 
-    # Try exact match, else fallback to best suffix match
+    # Try exact match first (already normalized above)
     coverage_info = files.get(requested_path)
+
     if not coverage_info:
+        print(f"[DEBUG] Exact path '{requested_path}' not found. Attempting suffix fallback...")
+
         requested_parts = Path(requested_path).parts
         best_match = None
         best_len = 0
+
         for key in files:
-            parts = Path(key).parts
+            # Explicitly normalize backslashes before splitting into parts
+            normalized_key = key.replace("\\", "/")
+            parts = Path(normalized_key).parts
+
             match_len = sum(1 for a, b in zip(reversed(parts), reversed(requested_parts)) if a == b)
+
             if match_len > best_len:
                 best_match = key
                 best_len = match_len
+
+            # Debug each comparison
+            print(f"[DEBUG] Comparing key: {normalized_key}, match_len: {match_len}")
+
         if best_match:
             coverage_info = files[best_match]
+            print(f"[DEBUG] Suffix fallback matched: {best_match}")
+        else:
+            print(f"[DEBUG] Suffix fallback failed to find a match.")
 
     # No coverage data found; assume fully uncovered
     if not coverage_info:
