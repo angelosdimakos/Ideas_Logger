@@ -17,19 +17,26 @@ from scripts.ai.llm_optimization import build_strategic_recommendations_prompt
 from scripts.refactor.compressor.merged_report_squeezer import (
     decompress_obj as decompress_merged,
 )
-from scripts.refactor.compressor.strictness_loader import (
-    load as load_strictness_comp,
-)
+from scripts.refactor.compressor.strictness_report_squeezer import decompress_obj as load_strictness_comp
+
 
 file_limit = 30
 import fnmatch
+
+# -----------------------------------------------------------------
+# Determine artifacts directory (fall back to current directory if not found)
+default_artifacts_dir = "artifacts"
+if os.path.isdir(default_artifacts_dir):
+    artifacts_dir = default_artifacts_dir
+else:
+    artifacts_dir = "."
 
 # -----------------------------------------------------------------
 # Files / folders we want to ignore, mirroring .coveragerc [run] omit
 EXCLUDE_PATTERNS: list[str] = [
     "tests/*",
     "dashboard/*",
-    "gui/*",
+    "gui/**",
     "*/__init__.py",
 ]
 
@@ -37,43 +44,42 @@ def is_excluded(path: str) -> bool:
     filename = os.path.basename(path)
     return filename == "__init__.py" or any(fnmatch.fnmatch(path, pat) for pat in EXCLUDE_PATTERNS)
 
-# -----------------------------------------------------------------
-
-
 # ---------------------- Utility Functions ---------------------- #
 def load_artifact(path: str) -> dict:
     """
     Load either the original JSON file or its compressed twin.
-    Returns an **identical** Python structure in both cases.
+    Strips out any entries matching exclusion patterns directly at load time.
     """
-    # 1) compressed first (fast path)
-    comp = f"{path}.comp.json"
-    gz   = f"{comp}.gz"
+    base, _ = os.path.splitext(path)
+    comp = f"{base}.comp.json"
+    gz = f"{comp}.gz"
 
+    # Try compressed versions first
     if os.path.exists(gz):
-        # e.g. artifacts/merged_report.comp.json.gz
         with open(gz, "rb") as fh:
-            import gzip, json
+            import gzip
             blob = json.loads(gzip.decompress(fh.read()).decode())
     elif os.path.exists(comp):
         with open(comp, "r", encoding="utf-8") as fh:
-            import json
             blob = json.load(fh)
     elif os.path.exists(path):
-        # fall back to the big uncompressed original
         with open(path, "r", encoding="utf-8") as fh:
-            import json
             return json.load(fh)
     else:
-        return {}      # nothing found
+        return {}
 
-    # pick the right decompressor
+    # Decompress if needed
     if path.endswith("merged_report.json"):
-        return decompress_merged(blob)
-    if path.endswith("strictness_mapping.json"):
-        return load_strictness_comp(blob)   # already returns decompressed
-    return blob        # defensive fallback
+        blob = decompress_merged(blob)
+    elif path.endswith("final_strictness_report.json"):
+        blob = load_strictness_comp(blob)
 
+    # Filter out excluded keys at the top level
+    if isinstance(blob, dict):
+        filtered = {k: v for k, v in blob.items() if not is_excluded(k)}
+        return filtered
+
+    return blob  # Defensive fallback
 
 
 def compute_severity(file_path: str, content: dict) -> dict:
@@ -97,8 +103,6 @@ def compute_severity(file_path: str, content: dict) -> dict:
     num_mypy_errors = len(mypy_errors)
 
     complexities = [fn.get("complexity", 0) for fn in coverage_data.values()]
-    coverages = [fn.get("coverage", 1.0) for fn in coverage_data.values()]
-
     avg_complexity = np.mean(complexities) if complexities else 0
     avg_coverage = weighted_coverage(coverage_data) if coverage_data else 1.0
 
@@ -126,17 +130,19 @@ def weighted_coverage(func_dict: dict) -> float:
         - "loc"       number of source lines (fallback = 1)
     """
     covered_loc = 0
-    total_loc   = 0
+    total_loc = 0
     for f in func_dict.values():
         loc = f.get("loc", 1)
         covered_loc += f.get("coverage", 0) * loc
-        total_loc   += loc
+        total_loc += loc
     return covered_loc / total_loc if total_loc else 0.0
 
 # ---------------------- Load Artifacts ---------------------- #
 artifacts_dir = "artifacts"
 merged_data = load_artifact(os.path.join(artifacts_dir, "merged_report.json"))
-strictness_data = load_artifact(os.path.join(artifacts_dir, "strictness_mapping.json"))
+
+# ✅ Updated to load final strictness report
+strictness_data = load_artifact(os.path.join(artifacts_dir, "final_strictness_report.json"))
 
 # ---------------------- Streamlit Config ---------------------- #
 st.set_page_config(page_title="CI Audit Dashboard", layout="wide")
@@ -148,24 +154,32 @@ summarizer = AISummarizer()
 
 # ---------------------- Executive Summary ---------------------- #
 st.subheader("Executive Summary")
-summary = strictness_data.get("summary", {})
-total_tests = summary.get("total_tests", 0)
-avg_strictness = round(summary.get("avg_strictness", 0), 2)
-avg_severity = round(summary.get("avg_severity", 0), 2)
-prod_files = summary.get("total_prod_files_covered", 0)
+modules = strictness_data.get("modules", {})
+unique_tests = set()
+strictness_values, severity_values, coverage_values = [], [], []
 
-coverage_sum, coverage_count = 0, 0
-for report in merged_data.values():
-    complexity = report.get("coverage", {}).get("complexity", {})
-    all_funcs: dict = {}
-    for file_path, report in merged_data.items():
-        if is_excluded(file_path):
-            continue  # 🚫 skip tests / GUI
-        all_funcs.update(report.get("coverage", {}).get("complexity", {}))
+for file_path, mod_data in modules.items():
+    if is_excluded(file_path):
+        continue  # 🚫 Skip excluded files (including gui/*)
+    coverage = mod_data.get("module_coverage", 0)
+    coverage_values.append(coverage)
+    for test in mod_data.get("tests", []):
+        test_name = test.get("test_name")
+        if test_name:
+            unique_tests.add(test_name)
+        strictness_values.append(test.get("strictness", 0))
+        severity_values.append(test.get("severity", 0))
 
-overall_cov_ratio = weighted_coverage(all_funcs) if all_funcs else 0
-overall_coverage = round(overall_cov_ratio * 100, 2)
+total_tests = len(unique_tests)
+avg_strictness = round(np.mean(strictness_values), 2) if strictness_values else 0.0
+avg_severity = round(np.mean(severity_values), 2) if severity_values else 0.0
 
+
+prod_files = len(modules)
+overall_coverage = round(np.mean(coverage_values) * 100, 2) if coverage_values else 0.0
+
+
+# ✅ Accurate Docstring Analysis from merged_report
 doc_total, doc_missing = 0, 0
 for report in merged_data.values():
     doc_info = report.get("docstrings", {})
@@ -177,28 +191,42 @@ for report in merged_data.values():
     doc_total += 1 + len(classes) + len(functions)
     doc_missing += sum(1 for cls in classes if not cls.get("description"))
     doc_missing += sum(1 for func in functions if not func.get("description"))
-missing_doc_percent = round((doc_missing / doc_total) * 100, 2) if doc_total else 0
 
+missing_doc_percent = round((doc_missing / doc_total) * 100, 2) if doc_total else 0.0
+
+# ✅ Display Metrics
 col1, col2, col3 = st.columns(3)
-col1.metric("Total Tests", total_tests)
+col1.metric("Total Unique Tests", total_tests)
 col2.metric("Avg Strictness", avg_strictness)
 col3.metric("Avg Severity", avg_severity)
 
 col4, col5, col6 = st.columns(3)
-col4.metric("Prod Files", prod_files)
-col5.metric("Coverage", f"{overall_coverage}%")
+col4.metric("Production Modules", prod_files)
+col5.metric("Overall Coverage", f"{overall_coverage}%")
 col6.metric("Missing Docstrings", f"{missing_doc_percent}%")
 
 st.markdown("---")
 
+
 # ---------------------- 📚 AI-Powered Report Summarization ---------------------- #
 with st.expander("📚 AI Report Summary", expanded=True):
+    if "ai_summary" not in st.session_state:
+        st.session_state["ai_summary"] = ""  # Initialize if not set
+
     if st.button("Generate AI Summary"):
         with st.spinner("Generating AI summary..."):
             prompt = get_prompt_template("Audit Summary", config)
             final_prompt = apply_persona(prompt, config.persona)
 
-            # Add key metrics to the prompt for better context
+            # Compute top low-coverage production modules
+            low_cov_modules = []
+            modules_data = strictness_data.get("modules", {})
+            for mod_name, mod_data in modules_data.items():
+                cov = mod_data.get("module_coverage", 0)
+                low_cov_modules.append((mod_name, cov))
+
+            low_cov_modules.sort(key=lambda x: x[1])
+
             metrics_context = f"""
             Key metrics:
             - Total Tests: {total_tests}
@@ -207,12 +235,19 @@ with st.expander("📚 AI Report Summary", expanded=True):
             - Production Files: {prod_files}
             - Overall Coverage: {overall_coverage}%
             - Missing Docstrings: {missing_doc_percent}%
-            """
+
+            Top Low-Coverage Production Modules:"""
+            for mod, cov in low_cov_modules[:5]:
+                metrics_context += f"\n- {mod}: {cov * 100:.1f}% coverage"
 
             enriched_prompt = final_prompt + "\n\n" + metrics_context
-            summary_text = summarizer.summarize_entry(enriched_prompt, subcategory="Audit Summary")
-            st.success("AI summary generated successfully!")
-            st.write(summary_text)
+            st.session_state["ai_summary"] = summarizer.summarize_entry(enriched_prompt, subcategory="Audit Summary")
+
+    if st.session_state["ai_summary"]:
+        st.success("AI summary generated successfully!")
+        st.write(st.session_state["ai_summary"])
+
+
 
 # ---------------------- 📈 Coverage by Module ---------------------- #
 with st.expander("📈 Coverage by Module", expanded=True):
@@ -247,9 +282,27 @@ st.markdown("---")
 
 # ---------------------- 🤖 Refactor Advisor (LLM Suggestions) ---------------------- #
 with st.expander("🤖 Refactor Advisor (LLM Suggestions)", expanded=True):
+    # Initialize session state for persistence
+    if "refactor_suggestions" not in st.session_state:
+        st.session_state.refactor_suggestions = None
+    if "offender_df" not in st.session_state:
+        st.session_state.offender_df = None
+    if "refactor_metrics" not in st.session_state:
+        st.session_state.refactor_metrics = {
+            "high_complexity": 0,
+            "low_coverage": 0,
+            "many_errors": 0
+        }
+
     # Add file limit control for refactor analysis
-    refactor_limit = st.slider("Number of files to analyze:", min_value=5, max_value=50, value=30, step=5,
-                               key="refactor_file_limit")
+    refactor_limit = st.slider(
+        "Number of files to analyze:",
+        min_value=5,
+        max_value=50,
+        value=30,
+        step=5,
+        key="refactor_file_limit"
+    )
 
     if st.button("Generate Refactor Suggestions"):
         with st.spinner("Analyzing code and generating suggestions..."):
@@ -261,11 +314,12 @@ with st.expander("🤖 Refactor Advisor (LLM Suggestions)", expanded=True):
             low_coverage_files = [os.path.basename(fp) for fp, _, _, _, _, cov in offenders if cov < 50]
             many_errors_files = [os.path.basename(fp) for fp, _, errors, _, _, _ in offenders if len(errors) > 5]
 
-            # Display issue categories metrics
-            col1, col2, col3 = st.columns(3)
-            col1.metric("High Complexity Files", len(high_complexity_files))
-            col2.metric("Low Coverage Files", len(low_coverage_files))
-            col3.metric("Files with Many Errors", len(many_errors_files))
+            # Store metrics in session state
+            st.session_state.refactor_metrics = {
+                "high_complexity": len(high_complexity_files),
+                "low_coverage": len(low_coverage_files),
+                "many_errors": len(many_errors_files)
+            }
 
             # Process detailed information about the offenders
             offender_details = []
@@ -290,11 +344,10 @@ with st.expander("🤖 Refactor Advisor (LLM Suggestions)", expanded=True):
             prompt = build_refactor_prompt(offenders, config, verbose=False, limit=refactor_limit)
             suggestions = summarizer.summarize_entry(prompt, subcategory="Refactor Advisor")
 
-            # Display suggestions with improved formatting
-            st.success("Refactor suggestions generated!")
-            st.markdown(f"### AI-Generated Refactoring Suggestions\n{suggestions}")
+            # Store suggestions in session state
+            st.session_state.refactor_suggestions = suggestions
 
-            # Create dataframe for offender details
+            # Create dataframe for offender details and store it
             offender_df = pd.DataFrame([{
                 "File": os.path.basename(d["file"]),
                 "Severity Score": round(d["score"], 2),
@@ -304,15 +357,32 @@ with st.expander("🤖 Refactor Advisor (LLM Suggestions)", expanded=True):
                 "Complexity": round(d["complexity"], 2)
             } for d in offender_details])
 
-            # Display the dataframe with improved styling
-            st.subheader("Top Offending Files")
+            st.session_state.offender_df = offender_df
 
-            # Apply color styling based on severity score
-            styled_df = offender_df.style.background_gradient(
-                subset=["Severity Score"], cmap="Reds"
-            )
+    # Display metrics if available
+    if st.session_state.refactor_metrics["high_complexity"] > 0 or \
+            st.session_state.refactor_metrics["low_coverage"] > 0 or \
+            st.session_state.refactor_metrics["many_errors"] > 0:
+        col1, col2, col3 = st.columns(3)
+        col1.metric("High Complexity Files", st.session_state.refactor_metrics["high_complexity"])
+        col2.metric("Low Coverage Files", st.session_state.refactor_metrics["low_coverage"])
+        col3.metric("Files with Many Errors", st.session_state.refactor_metrics["many_errors"])
 
-            st.dataframe(styled_df)
+    # Display suggestions if available
+    if st.session_state.refactor_suggestions:
+        st.success("Refactor suggestions generated!")
+        st.markdown(f"### AI-Generated Refactoring Suggestions\n{st.session_state.refactor_suggestions}")
+
+    # Display the dataframe if available
+    if st.session_state.offender_df is not None:
+        st.subheader("Top Offending Files")
+
+        # Apply color styling based on severity score
+        styled_df = st.session_state.offender_df.style.background_gradient(
+            subset=["Severity Score"], cmap="Reds"
+        )
+
+        st.dataframe(styled_df)
 
 st.markdown("---")
 
@@ -378,24 +448,23 @@ st.markdown("---")
 
 # ---------------------- 🧩 Strictness Analyzer (Production Coverage View) ---------------------- #
 with st.expander("🧩 Strictness Analyzer (Production Coverage View)", expanded=True):
-    mapping = strictness_data.get("test_to_prod_mapping", [])
+    modules_data = strictness_data.get("modules", {})
     prod_to_tests = {}
 
-    for entry in mapping:
-        prod_files = entry.get("covers_prod_files", [])
-        test_name = entry.get("name", "Unnamed Test")
-        test_strictness = entry.get("strictness", 0)
-        test_severity = entry.get("severity_score", 0)
-
-        for prod_file in prod_files:
-            cleaned_file = os.path.basename(prod_file)
-            if cleaned_file not in prod_to_tests:
-                prod_to_tests[cleaned_file] = []
-            prod_to_tests[cleaned_file].append({
+    for prod_path, module_info in modules_data.items():
+        cleaned_file = os.path.basename(prod_path)
+        tests = module_info.get("tests", [])
+        for entry in tests:
+            test_name = entry.get("test_name", "Unnamed Test")
+            test_strictness = entry.get("strictness", 0)
+            test_severity = entry.get("severity", 0)
+            prod_to_tests.setdefault(cleaned_file, []).append({
                 "test_name": test_name,
                 "strictness": test_strictness,
                 "severity": test_severity
+
             })
+
 
     if prod_to_tests:
         # Create a more informative dataframe
@@ -431,14 +500,17 @@ st.markdown("---")
 # ---------------------- 📊 Severity Distribution ---------------------- #
 with st.expander("📊 Severity Distribution", expanded=True):
     severity_buckets = {"Low": 0, "Medium": 0, "High": 0}
-    for item in mapping:
-        severity = item.get("severity_score", 0)
-        if severity >= 0.7:
-            severity_buckets["High"] += 1
-        elif severity >= 0.3:
-            severity_buckets["Medium"] += 1
-        else:
-            severity_buckets["Low"] += 1
+    modules = strictness_data.get("modules", {})
+
+    for module_data in modules.values():
+        for test in module_data.get("tests", []):
+            severity = test.get("severity", 0)
+            if severity <= 0.3:
+                severity_buckets["Low"] += 1
+            elif severity <= 0.7:
+                severity_buckets["Medium"] += 1
+            else:
+                severity_buckets["High"] += 1
 
     # Create a more informative chart
     fig2, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
@@ -468,36 +540,36 @@ with st.expander("📊 Severity Distribution", expanded=True):
 
 st.markdown("---")
 
-# ---------------------- 💬 Chat-Style Risk Advisor ---------------------- #
 with st.expander("💬 Ask the AI Assistant", expanded=True):
-    # Tabs for different question types
     tab1, tab2, tab3 = st.tabs(["General Questions", "Code Analysis", "Documentation"])
 
     with tab1:
         st.markdown("Ask questions about overall code quality, test coverage, or any metrics.")
         user_query = st.text_input("Ask a question about code risk or quality:", key="general_query")
+
         if st.button("Get AI Response", key="general_btn"):
             if user_query.strip():
                 with st.spinner("Analyzing your question..."):
                     prompt = build_contextual_prompt(user_query, merged_data, config)
-                    response = summarizer.summarize_entry(prompt, subcategory="Risk Advisor Chat")
-                    st.markdown(response)
+                    st.session_state["general_response"] = summarizer.summarize_entry(prompt, subcategory="Risk Advisor Chat")
             else:
                 st.warning("Please enter a question before submitting.")
+
+        if "general_response" in st.session_state:
+            st.markdown(st.session_state["general_response"])
 
     with tab2:
         st.markdown("Ask specific questions about code structure, complexity, or refactoring needs.")
         file_options = ["Select a file..."] + [os.path.basename(f) for f in merged_data.keys()]
-        selected_file = st.selectbox("Focus on a specific file:", file_options)
+        selected_file = st.selectbox("Focus on a specific file:", file_options, key="selected_file")
 
         code_query = st.text_input("Ask about code issues or improvements:", key="code_query")
+
         if st.button("Analyze Code", key="code_btn"):
             if code_query.strip() and selected_file != "Select a file...":
                 with st.spinner("Performing code analysis..."):
-                    # Find the full path
                     full_path = next((f for f in merged_data.keys() if os.path.basename(f) == selected_file), None)
                     if full_path:
-                        # Build specialized prompt with file-specific context
                         file_data = merged_data[full_path]
                         complexity_info = file_data.get("coverage", {}).get("complexity", {})
                         lint_info = file_data.get("linting", {}).get("quality", {})
@@ -510,42 +582,50 @@ with st.expander("💬 Ask the AI Assistant", expanded=True):
 
                         User Question: {code_query}
                         """
-
-                        response = summarizer.summarize_entry(specialized_prompt, subcategory="Code Analysis")
-                        st.markdown(response)
+                        st.session_state["code_response"] = summarizer.summarize_entry(specialized_prompt, subcategory="Code Analysis")
             else:
                 st.warning("Please select a file and enter a question.")
+
+        if "code_response" in st.session_state:
+            st.markdown(st.session_state["code_response"])
 
     with tab3:
         st.markdown("Get help with improving documentation or understanding module functionality.")
         module_options = ["Select a module..."] + [os.path.basename(f) for f in merged_data.keys()]
-        selected_module = st.selectbox("Select a module:", module_options)
+        selected_module = st.selectbox("Select a module:", module_options, key="selected_module")
+
+        folder_options = ["Select a folder..."] + sorted(set(os.path.dirname(f) for f in merged_data.keys()))
+        selected_folder = st.selectbox("Or select a folder:", folder_options, key="selected_folder")
 
         if st.button("Summarize Module Functionality", key="doc_btn"):
             if selected_module != "Select a module...":
                 with st.spinner("Generating module summary..."):
-                    # Find the full path
                     full_path = next((f for f in merged_data.keys() if os.path.basename(f) == selected_module), None)
                     if full_path:
                         doc_info = merged_data[full_path].get("docstrings", {})
                         funcs = doc_info.get("functions", [])
-                        module_summary = summarize_module(full_path, funcs, summarizer, config)
+                        st.session_state["doc_response"] = summarize_module(full_path, funcs, summarizer, config)
 
-                        st.subheader(f"Module Summary: {selected_module}")
-                        st.markdown(module_summary)
+            elif selected_folder != "Select a folder...":
+                with st.spinner("Generating folder summary..."):
+                    folder_files = [f for f in merged_data.keys() if os.path.dirname(f) == selected_folder]
+                    combined_funcs = []
+                    for f_path in folder_files:
+                        funcs = merged_data[f_path].get("docstrings", {}).get("functions", [])
+                        combined_funcs.extend(funcs)
 
-                        # Show docstring stats
-                        total_funcs = len(funcs)
-                        missing_docs = sum(1 for func in funcs if not func.get("description"))
-                        doc_percentage = round(((total_funcs - missing_docs) / total_funcs) * 100,
-                                               1) if total_funcs else 0
-
-                        st.metric("Documentation Coverage", f"{doc_percentage}%",
-                                  delta=None if doc_percentage >= 80 else f"{missing_docs} missing")
+                    if combined_funcs:
+                        st.session_state["doc_response"] = summarize_module(selected_folder, combined_funcs, summarizer, config)
+                    else:
+                        st.session_state["doc_response"] = "No documented functions found in this folder."
             else:
-                st.warning("Please select a module.")
+                st.warning("Please select either a module or a folder.")
+
+        if "doc_response" in st.session_state:
+            st.markdown(st.session_state["doc_response"])
 
 st.markdown("---")
+
 
 # ---------------------- 📂 Reports & Downloads ---------------------- #
 st.subheader("📂 Reports")
@@ -557,20 +637,22 @@ col_a.download_button(
     mime="application/json"
 )
 col_b.download_button(
-    "Download Strictness Mapping",
+    "Download Final Strictness Report",
     data=json.dumps(strictness_data, indent=2),
-    file_name="strictness_mapping.json",
+    file_name="final_strictness_report.json",
     mime="application/json"
 )
 if col_c.button("🔄 Refresh Data"):
     st.rerun()
 
+
 # ---------------------- 📈 AI-Powered Recommendations ---------------------- #
-st.subheader("📈 Strategic Recommendations")
 with st.expander("Get AI-Powered Recommendations", expanded=True):
+    if "strategic_recommendations" not in st.session_state:
+        st.session_state["strategic_recommendations"] = ""
+
     if st.button("Generate Strategic Recommendations"):
         with st.spinner("Analyzing your codebase and generating recommendations..."):
-            # Prepare comprehensive data for the AI
             summary_metrics = {
                 "total_tests": total_tests,
                 "avg_strictness": avg_strictness,
@@ -584,8 +666,30 @@ with st.expander("Get AI-Powered Recommendations", expanded=True):
                                   for s in severity_data[:5]]
             }
 
-            strategic_prompt = build_strategic_recommendations_prompt(severity_data, summary_metrics, limit=file_limit)
-            recommendations = summarizer.summarize_entry(strategic_prompt, subcategory="Strategic Recommendations")
-            st.markdown(recommendations)
+            low_cov_modules = []
+            modules_data = strictness_data.get("modules", {})
+            for mod_name, mod_data in modules_data.items():
+                cov = mod_data.get("module_coverage", 0)
+                low_cov_modules.append((mod_name, cov))
+
+            low_cov_modules.sort(key=lambda x: x[1])
+
+            low_cov_context = "\nTop Low-Coverage Production Modules:"
+            for mod, cov in low_cov_modules[:5]:
+                low_cov_context += f"\n- {mod}: {cov * 100:.1f}% coverage"
+
+            strategic_prompt = build_strategic_recommendations_prompt(
+                severity_data, summary_metrics, limit=file_limit
+            )
+            enriched_prompt = strategic_prompt + "\n\n" + low_cov_context
+
+            st.session_state["strategic_recommendations"] = summarizer.summarize_entry(
+                enriched_prompt, subcategory="Strategic Recommendations"
+            )
+
+    if st.session_state["strategic_recommendations"]:
+        st.markdown(st.session_state["strategic_recommendations"])
+
+
 
 st.markdown("---")
