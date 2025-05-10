@@ -112,9 +112,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: 📥 Download Refactor Audit Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: refactor-audit
+          path: ./artifacts/refactor-audit
+          merge-multiple: true  # Flatten directory structure to avoid nested folders
+
       - name: 📚 Run Test Discovery
         run: |
           echo "🔎 Running Test Discovery..."
+          mkdir -p ./artifacts
           python scripts/refactor/test_discovery.py \
             --tests tests/unit \
             --output ./artifacts/test_report.json
