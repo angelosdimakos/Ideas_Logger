@@ -104,7 +104,7 @@ jobs:
           path: docstring_summary.json
 
   strictness-analysis:
-    needs: [test]
+    needs: [ test ]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     container:
@@ -112,26 +112,27 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: 📥 Download Refactor Audit
-        uses: actions/download-artifact@v4
-        with:
-          name: refactor-audit
-          path: ./artifacts/refactor-audit
+      - name: 📚 Run Test Discovery
+        run: |
+          echo "🔎 Running Test Discovery..."
+          python scripts/refactor/test_discovery.py \
+            --tests tests/unit \
+            --output ./artifacts/test_report.json
 
       - name: 📐 Run Strictness Analyzer
         run: |
-          echo "📐 Running Strictness Analyzer..."
+          echo "📐 Running Strictness Analyzer with Precomputed Report..."
           python scripts/refactor/strictness_analyzer.py \
-            --tests tests/unit \
-            --source scripts \
+            --test-report ./artifacts/test_report.json \
             --audit ./artifacts/refactor-audit/refactor_audit.json \
-            --output ./artifacts/strictness_mapping.json
+            --output ./artifacts/final_strictness_report.json
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: strictness-mapping
-          path: ./artifacts/strictness_mapping.json
+          name: final-strictness-report
+          path: ./artifacts/final_strictness_report.json
+
 
   report:
     needs: [lint, test, docstring]

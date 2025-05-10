@@ -11,6 +11,7 @@ __pycache__/
 +!tests/fixtures/refactor_audit.json
 +!tests/fixtures/coverage.json
 +!tests/fixtures/merged_report.json
++!tests/fixtures/test_report.json
 
 # === Virtual Envs ===
 .venv/
