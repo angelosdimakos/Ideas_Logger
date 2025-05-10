@@ -212,7 +212,14 @@ def map_tests_to_prod_code(
         covered_files: Set[str] = set()
         normalized_path = str(Path(result["file"]).resolve().as_posix())
 
-        # ... (path selection logic unchanged)
+        # Identify which prod file(s) this test covers
+        for prod_file in audit_model.__root__:
+            # Match by containing directory+name pattern
+            test_parts = normalized_path.split('/')
+            module_dir = test_parts[-2]
+            test_mod = test_parts[-1].replace('test_', '')
+            if f"{module_dir}/{test_mod}.py" in prod_file:
+                covered_files.add(prod_file)
 
         result["covers_prod_files"] = list(covered_files)
         covered_methods = []
@@ -224,7 +231,6 @@ def map_tests_to_prod_code(
                 metrics_map = audit_model.get_file_metrics(prod_file)
 
                 for method_name, line_range in methods.items():
-                    # Directly read JSON coverage if available
                     metric = metrics_map.get(method_name)
                     if metric:
                         cov_ratio = metric.coverage
@@ -232,7 +238,6 @@ def map_tests_to_prod_code(
                         miss_lines = metric.missing_lines
                         hits = metric.hits
                     else:
-                        # Fallback: compute via range
                         data = audit_model.get_coverage_for_lines(prod_file, line_range[0], line_range[1])
                         cov_ratio = data.get("coverage_ratio", 0.0)
                         cov_lines = data["covered_lines"]
@@ -262,6 +267,49 @@ def map_tests_to_prod_code(
         else:
             result["severity_score"] = result.get("strictness_score", 0.5)
 
+# New function: generate module-centric report
+def generate_module_report(
+    audit_model: AuditReport,
+    test_results: List[Dict[str, Any]]
+) -> Dict[str, Any]:
+    """
+    Build a report keyed by production file, each containing its coverage metrics
+    and the list of test evaluations covering that module.
+    """
+    report: Dict[str, Any] = {}
+    for prod_file, file_audit in audit_model.__root__.items():
+        # Module-level coverage: average of method coverages
+        method_metrics = file_audit.complexity
+        if method_metrics:
+            avg_cov = round(sum(m.coverage for m in method_metrics.values()) / len(method_metrics), 2)
+        else:
+            avg_cov = 0.0
+
+        # Find tests covering this prod file
+        tests_for_module = []
+        for tr in test_results:
+            if prod_file in tr.get("covers_prod_files", []):
+                tests_for_module.append({
+                    "test_name": tr["name"],
+                    "strictness": tr.get("strictness_score", 0.0),
+                    "hit_ratio": tr.get("hit_ratio", 0.0),
+                    "severity": tr.get("severity_score", 0.0)
+                })
+
+        report[prod_file] = {
+            "module_coverage": avg_cov,
+            "methods": [
+                {
+                    "name": name,
+                    "coverage": m.coverage,
+                    "complexity": m.complexity
+                }
+                for name, m in method_metrics.items()
+            ],
+            "tests": tests_for_module
+        }
+    return report
+
 
 def scan_test_directory(tests_path: Path) -> List[Dict[str, Any]]:
     """Scan a directory for test files and extract test functions"""
@@ -278,7 +326,7 @@ def scan_test_directory(tests_path: Path) -> List[Dict[str, Any]]:
 
 
 def main(tests_dir: str, source_dir: str, audit_path: str, output_path: Optional[str] = None) -> None:
-    """Main function to run the test coverage mapping"""
+    """Main function to run the test coverage mapping and generate module-centric report"""
     tests_path = Path(tests_dir)
     source_path = Path(source_dir)
     audit_json = Path(audit_path)
@@ -287,51 +335,44 @@ def main(tests_dir: str, source_dir: str, audit_path: str, output_path: Optional
         print("❌ Invalid path(s). Ensure tests, source, and audit files exist.")
         sys.exit(1)
 
+    # 1. Scan tests and extract strictness metrics
     test_results = scan_test_directory(tests_path)
     print(f"📚 Found {len(test_results)} test functions.")
 
+    # 2. Load the refactor audit JSON into the Pydantic model
     print("📈 Loading audit report via Pydantic...")
     audit_model = load_audit_report(str(audit_json))
 
+    # 3. Attach coverage hits and compute strictness scores
     print("🔗 Attaching audit hits and calculating strictness...")
     attach_audit_hits(test_results, audit_model)
 
+    # 4. Map tests to production code modules
     print("🗺️ Mapping tests to production code...")
     map_tests_to_prod_code(test_results, source_path, audit_model)
 
-    # Calculate covered files and methods for the summary
-    covered_files = set(f for r in test_results for f in r.get("covers_prod_files", []))
-    covered_methods = sum(len(r.get("covers_prod_methods", [])) for r in test_results)
+    # 5. Generate a module-centric report
+    print("🔧 Generating module-centric report...")
+    module_report = generate_module_report(audit_model, test_results)
+    report = {"modules": module_report}
 
-    report = {
-        "summary": {
-            "total_tests": len(test_results),
-            "avg_strictness": round(
-                sum(r.get("strictness_score", 0) for r in test_results) / len(test_results), 2
-            ) if test_results else 0,
-            "avg_severity": round(
-                sum(r.get("severity_score", 0) for r in test_results) / len(test_results), 2
-            ) if test_results else 0,
-            "total_prod_files_covered": len(covered_files),
-            "total_prod_methods_covered": covered_methods,
-        },
-        "test_analysis": test_results
-    }
-
+    # 6. Output the report either to file or stdout
     if output_path:
         out_path = Path(output_path)
         out_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
-        print(f"✅ Report written to: {out_path}")
+        print(f"✅ Module report written to: {out_path}")
     else:
         print(json.dumps(report, indent=2))
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Map tests to production code with quality metrics.")
+    parser = argparse.ArgumentParser(
+        description="Map tests to production code with quality metrics and generate module report."
+    )
     parser.add_argument("--tests", required=True, help="Path to test suite directory.")
     parser.add_argument("--source", required=True, help="Path to source code directory.")
     parser.add_argument("--audit", required=True, help="Path to refactor audit JSON file.")
-    parser.add_argument("--output", help="Where to save the mapping report (JSON).")
+    parser.add_argument("--output", help="Where to save the module-centric report (JSON).")
     args = parser.parse_args()
 
     main(args.tests, args.source, args.audit, args.output)
