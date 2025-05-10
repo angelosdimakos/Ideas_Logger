@@ -288,23 +288,31 @@ def map_tests_to_prod_code(
 
 def scan_test_directory(tests_path: Path) -> List[Dict[str, Any]]:
     """
-    Scan test directory and extract test function information.
+    Scan test directory or single test file and extract test function information.
 
     Args:
-        tests_path (Path): The path to the test directory.
+        tests_path (Path): The path to the test directory or test file.
 
     Returns:
         List[Dict[str, Any]]: A list of dictionaries containing test function information.
     """
     print("🔍 Scanning test files and extracting functions...")
     test_results: List[Dict[str, Any]] = []
-    for test_file in tests_path.rglob("test_*.py"):
+
+    if tests_path.is_file() and tests_path.name.startswith("test_") and tests_path.suffix == ".py":
+        test_files = [tests_path]
+    else:
+        test_files = list(tests_path.rglob("test_*.py"))
+
+    for test_file in test_files:
         with open(test_file, "r", encoding="utf-8") as f:
             lines = f.readlines()
         funcs = extract_test_functions(test_file)
         for func in funcs:
             test_results.append(analyze_strictness(lines, func))
+
     return test_results
+
 
 
 def main(
@@ -387,3 +395,4 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=str, help="Where to save the mapping report (JSON).")
     args = parser.parse_args()
     main(args.tests, args.source, args.coverage, args.output)
+sys.modules.setdefault("strictness_analyzer", sys.modules[__name__])
