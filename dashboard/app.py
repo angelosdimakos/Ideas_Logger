@@ -14,7 +14,6 @@ from scripts.ai.chat_refactor import build_contextual_prompt
 from scripts.ai.module_docstring_summarizer import summarize_module
 from scripts.config.config_manager import ConfigManager
 from scripts.ai.llm_optimization import build_strategic_recommendations_prompt
-# NEW – bespoke compressors / loaders
 from scripts.refactor.compressor.merged_report_squeezer import (
     decompress_obj as decompress_merged,
 )
