@@ -62,11 +62,18 @@ class TestStrictnessAnalyzer(unittest.TestCase):
 
     def test_compute_strictness_score(self):
         results = [{
-            "assert_count": 5,
+            "asserts": 5,  # Max influence after normalization
             "coverage_hit_ratio": 0.8,
-            "covers_prod_methods": [{"complexity": 4}]
+            "covers_prod_methods": [{"complexity": 4}]  # Moderate complexity
         }]
         scored_results = compute_strictness_score(results)
+
+        # Compute expected score manually
+        # assertion_factor = 1.0 (capped at 5 asserts)
+        # coverage_factor = 0.8
+        # complexity_factor = 1 + (4 / 15) = 1.2667 -> capped to 1.2667
+        # strictness_score = 1.0 * 0.8 * 1.2667 = ~1.013 (rounded to 1.013)
+
         self.assertAlmostEqual(scored_results[0]["strictness_score"], 1.013, places=3)
         self.assertEqual(scored_results[0]["strictness_grade"], "A")
 

@@ -104,75 +104,28 @@ def analyze_strictness(lines: List[str], func: Dict[str, Any]) -> Dict[str, Any]
     }
 
 
-def compute_strictness_score(results):
-    """
-    Computes a strictness score for each test case, considering:
-    - Assertion coverage (assert_count)
-    - Code coverage (coverage_hit_ratio)
-    - Method complexity (weighted from covered methods)
-    Assigns both a numerical score and a grade.
-    """
-
-    for result in results:
-        # Extract core metrics
-        assert_count = result.get("assert_count", 0)
-        coverage_ratio = result.get("coverage_hit_ratio", 0.0)
-        covered_methods = result.get("covers_prod_methods", [])
-
-        # Compute average method complexity (if available)
-        complexities = [m.get("complexity", 1) for m in covered_methods]
-        avg_complexity = sum(complexities) / len(complexities) if complexities else 1
-
-        # Scoring Components
-        assertion_score = min(1.0, assert_count / 5)  # Cap at 5 assertions contributing fully
-        coverage_score = coverage_ratio  # Already normalized [0, 1]
-        complexity_weight = min(1.5, 1 + (avg_complexity / 15))  # Dampen extreme complexity influence
-
-        # Final Strictness Score Calculation
-        strictness_score = round(assertion_score * coverage_score * complexity_weight, 3)
-        result["strictness_score"] = strictness_score
-
-        # Assign Grade Based on Strictness Score
-        if strictness_score >= 1.0:
-            grade = "A"
-        elif strictness_score >= 0.7:
-            grade = "B"
-        elif strictness_score >= 0.4:
-            grade = "C"
-        else:
-            grade = "D"
-
-        result["strictness_grade"] = grade
-
-    return results
-
-
-
-
-def attach_coverage_hits(results, coverage_data):
+def attach_coverage_hits(results: List[Dict[str, Any]], coverage_data: Dict[str, Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
     Attaches coverage and hit data to each test result and associated production methods.
-    Now correctly handles normalized paths and suffix fallback matching.
+    Now correctly handles normalized paths and avoids overmatching.
     """
+    normalized_coverage_data = {Path(k).as_posix(): v for k, v in coverage_data.items()}
+
     for result in results:
         raw_file_path = result.get("file", "")
         requested_path = str(Path(raw_file_path).as_posix())
 
-        # Normalize coverage_data keys
-        normalized_coverage_data = {Path(k).as_posix(): v for k, v in coverage_data.items()}
-
         # Try exact path match first
         coverage_info = normalized_coverage_data.get(requested_path)
 
-        # Fallback to best suffix match if needed
+        # Fallback to best suffix match
         if not coverage_info:
             requested_parts = Path(requested_path).parts
             best_match = None
             best_len = 0
 
             for key in normalized_coverage_data:
-                normalized_key = key.replace("\\", "/")
-                parts = Path(normalized_key).parts
+                parts = Path(key).parts
                 match_len = sum(1 for a, b in zip(reversed(parts), reversed(requested_parts)) if a == b)
                 if match_len > best_len:
                     best_match = key
@@ -180,12 +133,13 @@ def attach_coverage_hits(results, coverage_data):
 
             if best_match:
                 coverage_info = normalized_coverage_data[best_match]
-                result["matched_coverage_path"] = best_match  # Debug info if needed
+                result["matched_coverage_path"] = best_match
             else:
                 result["coverage_hit_ratio"] = 0.0
-                continue  # No coverage found, skip further processing
+                result["coverage_hits"] = 0
+                result["covers_prod_methods"] = []
+                continue
 
-        # Attach coverage metrics
         total_hits = 0
         total_lines = 0
         covered_methods = []
@@ -208,7 +162,48 @@ def attach_coverage_hits(results, coverage_data):
             total_lines += lines
 
         result["covers_prod_methods"] = covered_methods
+        result["coverage_hits"] = total_hits
         result["coverage_hit_ratio"] = round(total_hits / total_lines, 3) if total_lines else 0.0
+
+    return results
+
+
+def compute_strictness_score(results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Computes a strictness score for each test case based on:
+    - Assertion count (asserts)
+    - Code coverage (coverage_hit_ratio)
+    - Method complexity (from covered methods)
+    Returns results with 'strictness_score' and 'strictness_grade'.
+    """
+
+    for result in results:
+        assert_count = result.get("asserts", 0)
+        coverage_ratio = result.get("coverage_hit_ratio", 0.0)
+        covered_methods = result.get("covers_prod_methods", [])
+
+        complexities = [m.get("complexity", 1) for m in covered_methods]
+        avg_complexity = sum(complexities) / len(complexities) if complexities else 1
+
+        assertion_factor = min(1.0, assert_count / 5)  # Cap at 5 asserts contributing fully
+        coverage_factor = coverage_ratio  # Already between 0.0 and 1.0
+        complexity_factor = min(1.5, 1 + (avg_complexity / 15))  # Mild boost for complex methods
+
+        strictness_score = round(assertion_factor * coverage_factor * complexity_factor, 3)
+
+        result["strictness_score"] = strictness_score
+
+        # Assign grade
+        if strictness_score >= 1.0:
+            grade = "A"
+        elif strictness_score >= 0.7:
+            grade = "B"
+        elif strictness_score >= 0.4:
+            grade = "C"
+        else:
+            grade = "D"
+
+        result["strictness_grade"] = grade
 
     return results
 
@@ -269,85 +264,52 @@ def map_test_to_prod_path(test_path: Path, test_root: Path, source_root: Path) -
 
 
 def map_tests_to_prod_code(
-        test_results: List[Dict[str, Any]],
-        test_root: Path,
-        source_root: Path,
-        coverage_data: Dict[str, Dict[str, Any]],
+    test_results: List[Dict[str, Any]],
+    test_root: Path,
+    source_root: Path,
+    coverage_data: Dict[str, Dict[str, Any]],
 ) -> None:
     """
-    Map test functions to production code they cover.
-
-    Args:
-        test_results (List[Dict[str, Any]]): The results of the test analysis.
-        test_root (Path): The root directory of the test files.
-        source_root (Path): The root directory of the production code.
-        coverage_data (Dict[str, Dict[str, Any]]): The coverage data mapping.
+    Maps test functions to the production code they cover, avoiding overmatching.
+    Prioritizes coverage data over directory-based heuristics.
     """
-    # Build a cache of files mapped by coverage
-    covered_files: Dict[str, Set[str]] = {}
-    for path, methods in coverage_data.items():
-        for method_name, method_info in methods.items():
-            if not method_name.startswith("test_"):
-                # This is likely a production method covered by tests
-                for test_path in test_results:
-                    test_file = Path(test_path["file"]).resolve().as_posix()
-                    if test_file not in covered_files:
-                        covered_files[test_file] = set()
-                    covered_files[test_file].add(path)
 
-    # Map each test to production code
+    # Normalize coverage keys
+    normalized_coverage = {Path(k).as_posix(): v for k, v in coverage_data.items()}
+
     for result in test_results:
-        test_path = Path(result["file"])
+        test_file_path = Path(result["file"]).as_posix()
+        covered_prod_files: Set[str] = set()
 
-        # Get production paths from coverage data first
-        test_file_path = test_path.resolve().as_posix()
-        covered_prod_paths = covered_files.get(test_file_path, set())
+        # 1. Try direct coverage match first
+        coverage_info = normalized_coverage.get(test_file_path)
 
-        # If coverage data doesn't help, try directory structure mapping
-        if not covered_prod_paths:
-            prod_path = map_test_to_prod_path(test_path, test_root, source_root)
-            if prod_path:
-                covered_prod_paths = {prod_path.resolve().as_posix()}
+        if coverage_info:
+            # Add files from coverage data only if methods were covered
+            for method_name, method_data in coverage_info.items():
+                if method_data.get("hits", 0) > 0:
+                    covered_prod_files.add(test_file_path)
+        else:
+            # 2. Fallback to structural matching only if coverage failed
+            rel_test_path = Path(result["file"]).relative_to(test_root)
+            prod_candidate = source_root / rel_test_path.parent / rel_test_path.name.replace("test_", "")
+            if prod_candidate.exists():
+                covered_prod_files.add(prod_candidate.as_posix())
 
-        # Add production code info to test result
-        result["covers_prod_files"] = list(covered_prod_paths)
+        # Assign discovered production files
+        result["covers_prod_files"] = list(covered_prod_files)
 
-        # Extract methods from each production file
-        covered_methods = []
-        method_complexity = {}
-        for prod_file in covered_prod_paths:
-            if not Path(prod_file).is_file():
-                continue  # Skip directories, we can't calculate complexity on them
-            try:
-                methods = extract_method_line_ranges(prod_file)
-                complexity = calculate_function_complexity_map(prod_file)
-
-                # Add methods and complexity to results
-                for method_name, line_range in methods.items():
-                    covered_methods.append({
-                        "name": method_name,
-                        "file": prod_file,
-                        "line_range": line_range,
-                        "complexity": complexity.get(method_name, 1)
-                    })
-                    method_complexity[method_name] = complexity.get(method_name, 1)
-            except Exception as e:
-                print(f"Error processing production file {prod_file}: {e}")
-
-        result["covers_prod_methods"] = covered_methods
-
-        # Adjust test severity based on production code complexity
+        # Compute and attach production method complexity if any
+        covered_methods = result.get("covers_prod_methods", [])
         if covered_methods:
-            avg_complexity = sum(m["complexity"] for m in covered_methods) / len(covered_methods)
+            avg_complexity = sum(m.get("complexity", 1) for m in covered_methods) / len(covered_methods)
             result["prod_code_complexity"] = avg_complexity
 
-            # Adjust severity score
             strictness = result.get("strictness_score", 0.5)
-            complexity_factor = min(2.0, 1.0 + (avg_complexity / 10.0))
+            complexity_factor = 1.0 + avg_complexity / 10.0
             result["severity_score"] = round(strictness * complexity_factor, 2)
         else:
             result["severity_score"] = result.get("strictness_score", 0.5)
-
 
 def scan_test_directory(tests_path: Path) -> List[Dict[str, Any]]:
     """
