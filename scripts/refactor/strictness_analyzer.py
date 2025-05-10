@@ -210,16 +210,16 @@ def map_tests_to_prod_code(
     """Map test functions to production code, using JSON coverage metrics for each method"""
     for result in test_results:
         covered_files: Set[str] = set()
-        normalized_path = str(Path(result["file"]).resolve().as_posix())
 
-        # Identify which prod file(s) this test covers
-        for prod_file in audit_model.__root__:
-            # Match by containing directory+name pattern
-            test_parts = normalized_path.split('/')
-            module_dir = test_parts[-2]
-            test_mod = test_parts[-1].replace('test_', '')
-            if f"{module_dir}/{test_mod}.py" in prod_file:
-                covered_files.add(prod_file)
+        # Build a test_key by stripping "test_" and lowercasing
+        test_key = result["name"].lower().removeprefix("test_")
+        # Name‐match against every prod method in the audit JSON
+        for prod_file, file_audit in audit_model.__root__.items():
+            for method_name in file_audit.complexity:
+                if test_key in method_name.lower():
+                    covered_files.add(prod_file)
+                    break
+
 
         result["covers_prod_files"] = list(covered_files)
         covered_methods = []
