@@ -46,7 +46,6 @@ class StrictnessEntry(BaseModel):
     name: str
     file: str
     strictness_score: float
-    hit_ratio: Optional[float] = 0.0
     severity_score: Optional[float] = None
 
 
@@ -116,7 +115,6 @@ def generate_module_report(
                 tests_for_module.append({
                     "test_name": test_entry.name,
                     "strictness": round(test_entry.strictness_score, 2),
-                    "hit_ratio": round(test_entry.hit_ratio or 0.0, 2),
                     "severity": round(
                         test_entry.severity_score or test_entry.strictness_score, 2
                     )
@@ -127,7 +125,6 @@ def generate_module_report(
                         tests_for_module.append({
                             "test_name": test_entry.name,
                             "strictness": round(test_entry.strictness_score, 2),
-                            "hit_ratio": round(test_entry.hit_ratio or 0.0, 2),
                             "severity": round(
                                 test_entry.severity_score or test_entry.strictness_score, 2
                             )

@@ -92,6 +92,5 @@ def test_module_report_generation(test_report_path, audit_report_path):
     # Check strictness and severity are properly calculated and rounded
     for test in tests:
         assert 0.0 <= test["strictness"] <= 1.0, "Strictness out of expected bounds."
-        assert 0.0 <= test["hit_ratio"] <= 1.0, "Hit ratio out of expected bounds."
         assert 0.0 <= test["severity"] <= 1.0, "Severity out of expected bounds."
 
