@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 from scripts.refactor.parsers.json_coverage_parser import parse_json_coverage  # Adjust import to your actual path
 
-FIXTURES_DIR = Path(__file__).parent.parent.parent / "fixtures"
+FIXTURES_DIR = Path(__file__).parent.parent.parent.parent / "fixtures"
 
 
 @pytest.fixture

@@ -30,7 +30,8 @@ def parse_json_coverage(
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    files = data.get("files", {})
+    raw_files = data.get("files", {})
+    files = {Path(k).as_posix(): v for k, v in raw_files.items()}
 
     # Try exact match, else fallback to best suffix match
     coverage_info = files.get(requested_path)
