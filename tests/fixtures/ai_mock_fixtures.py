@@ -90,3 +90,4 @@ def mock_failed_summarizer() -> Any:
             raise Exception("Simulated failure")
 
     return FailingSummarizer()
+
