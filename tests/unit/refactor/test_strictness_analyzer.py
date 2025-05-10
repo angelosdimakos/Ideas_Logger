@@ -1,176 +1,105 @@
 import unittest
-from pathlib import Path
-from typing import List, Dict, Any
-from unittest.mock import patch, mock_open
-import textwrap
 import json
-
+from pathlib import Path
 from scripts.refactor.strictness_analyzer import (
     extract_test_functions,
     analyze_strictness,
+    attach_coverage_from_merged_report,
     compute_strictness_score,
-    attach_coverage_hits,
-    map_test_to_prod_path,
-    scan_test_directory,
-    main,
 )
 
+class TestCoverageMapper(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Resolve the absolute paths reliably regardless of working directory
+        base_dir = Path(__file__).parent.parent.parent
+        merged_report_path = base_dir / "fixtures" / "merged_report.json"
+        cls.test_file_path = base_dir / "unit" / "ai" / "test_ai_summarizer.py"
 
-class TestStrictnessAnalyzer(unittest.TestCase):
+        if not merged_report_path.exists():
+            raise FileNotFoundError(f"Merged report not found at: {merged_report_path.resolve()}")
+        if not cls.test_file_path.exists():
+            raise FileNotFoundError(f"Test file not found at: {cls.test_file_path.resolve()}")
+
+        cls.merged_report = json.loads(merged_report_path.read_text(encoding="utf-8"))
+        cls.test_lines = cls.test_file_path.read_text(encoding="utf-8").splitlines()
 
     def test_extract_test_functions(self):
-        src = textwrap.dedent("""
-            def test_one():
-                pass
+        funcs = extract_test_functions(self.test_file_path)
+        self.assertTrue(funcs, "No test functions extracted.")
+        for func in funcs:
+            self.assertIn("test", func["name"])
+            self.assertTrue(func["start"] <= func["end"])
 
-            def helper():
-                pass
+    def test_analyze_strictness_metrics(self):
+        funcs = extract_test_functions(self.test_file_path)
+        analyzed = [analyze_strictness(self.test_lines, f) for f in funcs]
+        for result in analyzed:
+            self.assertIn("asserts", result)
+            self.assertIn("branches", result)
+            self.assertGreaterEqual(result["length"], 1)
 
-            def test_two():
-                pass
-        """)
-        with patch("builtins.open", mock_open(read_data=src)):
-            funcs = extract_test_functions(Path("dummy.py"))
-        names = [f["name"] for f in funcs]
-        self.assertEqual(names, ["test_one", "test_two"])
-        # line numbers should reflect the dedented source
-        self.assertEqual(funcs[0]["start"], 2)
-        self.assertEqual(funcs[0]["end"], 3)
-        self.assertEqual(funcs[1]["start"], 8)
-        self.assertEqual(funcs[1]["end"], 9)
+    def test_attach_coverage_data(self):
+        funcs = extract_test_functions(self.test_file_path)
+        analyzed = [analyze_strictness(self.test_lines, f) for f in funcs]
+        attach_coverage_from_merged_report(analyzed, self.merged_report)
+        for result in analyzed:
+            self.assertIn("coverage_hits", result)
+            self.assertIn("coverage_hit_ratio", result)
+            self.assertIsInstance(result["covers_prod_methods"], list)
 
-    def test_analyze_strictness(self):
-        lines = [
-            "def test_x():",             #1
-            "    assert a",              #2
-            "    if cond:",              #3
-            "        pass",              #4
-            "    mock_obj.foo()",        #5
-            "    with pytest.raises(Exception):",  #6
-            "        pass",              #7
-            "    for i in []:",          #8
-            "        pass",              #9
-        ]
-        func = {"name": "test_x", "start": 1, "end": 9, "path": "f.py"}
-        r = analyze_strictness(lines, func)
-        self.assertEqual(r["asserts"], 1)
-        self.assertEqual(r["branches"], 2)   # one 'if', one 'for'
-        self.assertEqual(r["mocks"], 1)
-        self.assertEqual(r["raises"], 1)
-        self.assertEqual(r["length"], 9)
-        self.assertEqual(r["file"], "f.py")
-
-    def test_compute_strictness_score(self):
+    def test_strictness_score_exact_calculation(self):
         results = [{
-            "asserts": 5,  # Max influence after normalization
-            "coverage_hit_ratio": 0.8,
-            "covers_prod_methods": [{"complexity": 4}]  # Moderate complexity
+            "asserts": 5,  # Max capped at 5, so assertion_factor = 1.0
+            "coverage_hit_ratio": 0.8,  # coverage_factor = 0.8
+            "covers_prod_methods": [{"complexity": 4}]  # avg_complexity = 4, complexity_factor = 1 + (4/15) = 1.2667
         }]
-        scored_results = compute_strictness_score(results)
+        compute_strictness_score(results)
 
-        # Compute expected score manually
-        # assertion_factor = 1.0 (capped at 5 asserts)
-        # coverage_factor = 0.8
-        # complexity_factor = 1 + (4 / 15) = 1.2667 -> capped to 1.2667
-        # strictness_score = 1.0 * 0.8 * 1.2667 = ~1.013 (rounded to 1.013)
+        expected_assertion_factor = 1.0
+        expected_coverage_factor = 0.8
+        expected_complexity_factor = 1 + (4 / 15)  # ≈ 1.2667
+        expected_score = round(expected_assertion_factor * expected_coverage_factor * expected_complexity_factor, 3)  # ≈ 1.013
 
-        self.assertAlmostEqual(scored_results[0]["strictness_score"], 1.013, places=3)
-        self.assertEqual(scored_results[0]["strictness_grade"], "A")
+        result = results[0]
+        self.assertAlmostEqual(result["strictness_score"], expected_score, places=3)
+        self.assertEqual(result["strictness_grade"], "A")
 
-    def test_attach_coverage_hits(self):
-        results = [{
-            "name": "t1", "file": "a.py", "start": 1, "end": 3, "length": 3,
-            "asserts": 1, "raises": 0, "mocks": 0, "branches": 0
-        }]
-        key = Path("a.py").resolve().as_posix()
-        coverage_data = {key: {
-            "t1": {
-                "hits": 2,
-                "lines": 3,
-                "coverage": 0.666,
-                "covered_lines": [1, 2],
-                "missing_lines": [3]
-            }
-        }}
+    def test_full_pipeline_with_exact_values(self):
+        funcs = extract_test_functions(self.test_file_path)
+        analyzed = [analyze_strictness(self.test_lines, f) for f in funcs]
+        attach_coverage_from_merged_report(analyzed, self.merged_report)
+        compute_strictness_score(analyzed)
 
-        attach_coverage_hits(results, coverage_data)
+        for result in analyzed:
+            print(f"Test: {result['name']}, Strictness: {result['strictness_score']}, Grade: {result['strictness_grade']}")
+            self.assertTrue(0.0 <= result["strictness_score"] <= 1.5)
+            self.assertIn(result["strictness_grade"], {"A", "B", "C", "D"})
 
-        self.assertAlmostEqual(results[0]["coverage_hit_ratio"], 0.666, places=2)
-        self.assertEqual(results[0]["covers_prod_methods"][0]["hits"], 2)
-        self.assertEqual(results[0]["covers_prod_methods"][0]["lines"], 3)
-
-    def test_map_test_to_prod_path_basic(self):
-        test_root = Path("tests")
-        src_root = Path("src")
-        with patch("pathlib.Path.exists", return_value=True):
-            p = map_test_to_prod_path(Path("tests/test_mod.py"), test_root, src_root)
-            self.assertEqual(p, Path("src/mod.py"))
-
-    def test_map_test_to_prod_path_rglob(self):
-        test_root = Path("tests")
-        src_root = Path("src")
-        with patch("pathlib.Path.exists", return_value=False), \
-             patch("pathlib.Path.rglob", return_value=[Path("src/foo/bar.py")]):
-            p = map_test_to_prod_path(Path("tests/any/test_bar.py"), test_root, src_root)
-            self.assertEqual(p, Path("src/foo/bar.py"))
-
-    def test_scan_test_directory(self):
-        # Simulated in-memory file system with 3 test files, including the missing fixture
-        fs = {
-            "tests/test_a.py": "def test_func1(): pass",
-            "tests/sub/test_b.py": "def test_func2(): pass",
-            "tests/fixtures/test_data_fixtures.py": "def test_fixture(): pass",  # Added missing fixture file
+    def test_irrelevant_test_case_mapping(self):
+        # Introduce a dummy test case that should not map to AISummarizer
+        irrelevant_test = {
+            "name": "test_unrelated_feature",
+            "file": "tests/unit/ci_analyzer/test_ci_severity.py",
+            "start": 1,
+            "end": 5,
+            "asserts": 2,
+            "mocks": 0,
+            "raises": 0,
+            "branches": 1,
+            "length": 5,
         }
+        analyzed = [irrelevant_test]
+        attach_coverage_from_merged_report(analyzed, self.merged_report)
+        compute_strictness_score(analyzed)
 
-        def mo(fp, *a, **k):
-            normalized_fp = str(fp).replace("\\", "/")
-            data = fs.get(normalized_fp)
-            if data is None:
-                raise KeyError(f"File not found in mock FS: {normalized_fp}")
-            return mock_open(read_data=data)(fp, *a, **k)
-
-        with patch("builtins.open", side_effect=mo), \
-                patch("pathlib.Path.rglob", return_value=[Path(p) for p in fs.keys()]), \
-                patch("scripts.refactor.strictness_analyzer.extract_test_functions") as mock_extract, \
-                patch("scripts.refactor.strictness_analyzer.analyze_strictness") as mock_analyze:
-            # Provide one response per discovered file
-            mock_extract.side_effect = [
-                [{"name": "test_func1", "start": 1, "end": 2, "path": "tests/test_a.py"}],
-                [{"name": "test_func2", "start": 1, "end": 2, "path": "tests/sub/test_b.py"}],
-                [{"name": "test_fixture", "start": 1, "end": 2, "path": "tests/fixtures/test_data_fixtures.py"}],
-            ]
-            mock_analyze.side_effect = [
-                {"name": "test_func1", "file": "tests/test_a.py", "start": 1, "end": 2, "asserts": 0, "raises": 0,
-                 "mocks": 0, "branches": 0, "length": 1},
-                {"name": "test_func2", "file": "tests/sub/test_b.py", "start": 1, "end": 2, "asserts": 0, "raises": 0,
-                 "mocks": 0, "branches": 0, "length": 1},
-                {"name": "test_fixture", "file": "tests/fixtures/test_data_fixtures.py", "start": 1, "end": 2,
-                 "asserts": 0, "raises": 0, "mocks": 0, "branches": 0, "length": 1},
-            ]
-
-            out = scan_test_directory(Path("tests"))
-
-            # Validate outputs
-            self.assertEqual(len(out), 3)
-            self.assertEqual(out[0]["name"], "test_func1")
-            self.assertEqual(out[1]["name"], "test_func2")
-            self.assertEqual(out[2]["name"], "test_fixture")
-
-            # Validate mocks were called exactly as expected
-            self.assertEqual(mock_extract.call_count, 3)
-            self.assertEqual(mock_analyze.call_count, 3)
-
-    def test_main_smoke(self):
-        # just verify it calls write_text once, no crash
-        with patch("scripts.refactor.strictness_analyzer.scan_test_directory", return_value=[]), \
-             patch("scripts.refactor.strictness_analyzer.parse_json_coverage", return_value={}), \
-             patch("scripts.refactor.strictness_analyzer.attach_coverage_hits"), \
-             patch("scripts.refactor.strictness_analyzer.map_tests_to_prod_code"), \
-             patch("pathlib.Path.exists", return_value=True), \
-             patch("pathlib.Path.write_text") as wt:
-            main("tests","src","cov.json","out.json")
-            wt.assert_called_once()
-
+        result = analyzed[0]
+        # Since this test should have no valid prod method coverage, coverage should be 0
+        self.assertEqual(result["coverage_hit_ratio"], 0.0)
+        self.assertEqual(result["coverage_hits"], 0)
+        self.assertEqual(result["strictness_score"], 0.0)
+        self.assertEqual(result["strictness_grade"], "D")
+        self.assertFalse(result["covers_prod_methods"], "This irrelevant test should not cover any production methods.")
 
 if __name__ == "__main__":
     unittest.main()

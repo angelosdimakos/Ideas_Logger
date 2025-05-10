@@ -142,6 +142,21 @@ jobs:
             --coverage artifacts/refactor-audit/refactor_audit.json \
             --linting artifacts/lint-report/linting_report.json \
             -o artifacts/merged_report.json
+          
+      - name: 📐 Run Strictness Analyzer
+        run: |
+          echo "📐 Running Strictness Analyzer on Merged Report..."
+          python scripts/refactor/strictness_analyzer.py \
+            --tests tests/unit \
+            --merged_report artifacts/merged_report.json \
+            --output artifacts/strictness_mapping.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: strictness-mapping
+          path: artifacts/strictness_mapping.json
+
 
       - uses: actions/upload-artifact@v4
         if: always()
