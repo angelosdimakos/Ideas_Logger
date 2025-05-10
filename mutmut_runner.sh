@@ -5,22 +5,24 @@ set +e
 
 echo "🔬 Starting mutmut mutation testing..."
 
-# Initialize mutmut database if needed
-mutmut init || true
-
-# Run mutmut and continue even if failures occur
-mutmut run --safeguard-passed --no-progress --tests-dir tests
+# Run mutmut
+# Removed 'init' command as it doesn't exist according to help output
+# Removed '--safeguard-passed' option as it doesn't exist
+# Removed '--no-progress' option as it doesn't exist
+echo "Running mutation tests..."
+mutmut run
 
 # Capture exit code for reference
 MUTMUT_EXIT_CODE=$?
 
 # Show mutation results summary
 echo "📊 Mutation Testing Results:"
-mutmut results --json > mutmut_results.json
+# The JSON output option doesn't exist, using standard output instead
+mutmut results > mutmut_results.txt
 mutmut results
 
-# Optional: Highlight surviving mutations clearly
-SURVIVORS=$(mutmut results | grep "SURVIVED" | wc -l)
+# Count survivors by parsing results file
+SURVIVORS=$(grep "Survived" mutmut_results.txt | wc -l)
 echo "⚠️  Total Surviving Mutations: $SURVIVORS"
 
 if [ "$SURVIVORS" -gt 0 ]; then
