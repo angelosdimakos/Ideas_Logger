@@ -1,13 +1,28 @@
+"""
+Module for optimizing LLM interactions by summarizing file data
+and generating prompts for refactoring and strategic recommendations.
+
+Author: [Your Name]
+Date: 2025-05-10
+"""
+
 import os
 import numpy as np
 from scripts.ai.llm_router import get_prompt_template, apply_persona
 
-# 1. Create a new helper function to summarize file data before sending to LLM
-def summarize_file_data_for_llm(file_data, file_path):
+def summarize_file_data_for_llm(file_data: dict, file_path: str) -> dict:
     """
     Condense file data to essential information for LLM processing.
     This helps reduce token usage when sending many files.
+
+    Args:
+        file_data (dict): The data of the file containing coverage and linting information.
+        file_path (str): The path of the file being summarized.
+
+    Returns:
+        dict: A summary of the file data including complexity, coverage, and issues.
     """
+
     # Extract key metrics
     coverage_info = file_data.get("coverage", {}).get("complexity", {})
     lint_info = file_data.get("linting", {}).get("quality", {})
@@ -34,9 +49,17 @@ def summarize_file_data_for_llm(file_data, file_path):
         "top_issues": extract_top_issues(file_data, max_issues=3)  # Extract only top 3 issues
     }
 
+def extract_top_issues(file_data: dict, max_issues: int = 3) -> list:
+    """
+    Extract the most important issues from a file.
 
-def extract_top_issues(file_data, max_issues=3):
-    """Extract the most important issues from a file."""
+    Args:
+        file_data (dict): The data of the file containing issues.
+        max_issues (int): Maximum number of issues to extract.
+
+    Returns:
+        list: A list of the most important issues.
+    """
     issues = []
 
     # Get MyPy errors (limited sample)
@@ -65,7 +88,7 @@ def extract_top_issues(file_data, max_issues=3):
 
 
 # 2. Modify the build_refactor_prompt function to handle more files efficiently
-def build_refactor_prompt(offenders, config, verbose=False, limit=30):
+def build_refactor_prompt(offenders: list, config: dict, verbose: bool = False, limit: int = 30) -> str:
     """
     Build a prompt for refactoring suggestions, optimized for handling many files.
 
@@ -74,6 +97,9 @@ def build_refactor_prompt(offenders, config, verbose=False, limit=30):
         config: Configuration object
         verbose: Whether to include detailed info about each file
         limit: Maximum number of files to include
+
+    Returns:
+        str: A prompt for refactoring suggestions
     """
     offenders = offenders[:limit]  # Limit to specified number
 
@@ -115,8 +141,18 @@ def build_refactor_prompt(offenders, config, verbose=False, limit=30):
 
 
 # 3. Enhancement for Strategic Recommendations to handle 30 files
-def build_strategic_recommendations_prompt(severity_data, summary_metrics, limit=30):
-    """Build a prompt for strategic recommendations that can handle many files."""
+def build_strategic_recommendations_prompt(severity_data: list, summary_metrics: dict, limit: int = 30) -> str:
+    """
+    Build a prompt for strategic recommendations that can handle many files.
+
+    Args:
+        severity_data: List of severity data for each file
+        summary_metrics: Dictionary of summary metrics
+        limit: Maximum number of files to include
+
+    Returns:
+        str: A prompt for strategic recommendations
+    """
     top_offenders = severity_data[:limit]
 
     # Group files by issue type
@@ -184,7 +220,7 @@ def compute_severity(file_path: str, content: dict) -> dict:
         content: Dictionary containing analysis data for the file
 
     Returns:
-        Dictionary with severity metrics
+        dict: A dictionary with severity metrics
     """
     coverage_data = content.get("coverage", {}).get("complexity", {})
     linting = content.get("linting", {}).get("quality", {})
