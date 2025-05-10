@@ -61,29 +61,36 @@ class TestStrictnessAnalyzer(unittest.TestCase):
         self.assertEqual(r["file"], "f.py")
 
     def test_compute_strictness_score(self):
-        # (2*1.5 +1 +0.3*3 +0.5*4)/10 = 6.9/10=0.69, 0.7*0.69+0.3*0.8=0.483+0.24=0.723 -> 0.72
-        self.assertAlmostEqual(compute_strictness_score(2,1,3,4,10,0.8), 0.72)
-        # all zero
-        self.assertAlmostEqual(compute_strictness_score(0,0,0,0,1,0.0), 0.0)
-        # (5*1.5+2+0.3*1+0.5*2)/20=10.8/20=0.54, 0.7*0.54+0.3*1=0.378+0.3=0.678 -> 0.68
-        self.assertAlmostEqual(compute_strictness_score(5,2,1,2,20,1.0), 0.68)
+        results = [{
+            "assert_count": 5,
+            "coverage_hit_ratio": 0.8,
+            "covers_prod_methods": [{"complexity": 4}]
+        }]
+        scored_results = compute_strictness_score(results)
+        self.assertAlmostEqual(scored_results[0]["strictness_score"], 1.013, places=3)
+        self.assertEqual(scored_results[0]["strictness_grade"], "A")
 
     def test_attach_coverage_hits(self):
-        # prepare a single test function
         results = [{
             "name": "t1", "file": "a.py", "start": 1, "end": 3, "length": 3,
             "asserts": 1, "raises": 0, "mocks": 0, "branches": 0
         }]
-        # key must match normalized path of "a.py"
         key = Path("a.py").resolve().as_posix()
-        coverage_data = { key: {"t1": {"covered_lines": [1,2]}} }
+        coverage_data = {key: {
+            "t1": {
+                "hits": 2,
+                "lines": 3,
+                "coverage": 0.666,
+                "covered_lines": [1, 2],
+                "missing_lines": [3]
+            }
+        }}
 
         attach_coverage_hits(results, coverage_data)
-        self.assertEqual(results[0]["coverage_hits"], 2)
-        # hit_ratio = 2/3 = 0.67 rounded to 0.67
-        self.assertAlmostEqual(results[0]["hit_ratio"], 0.67, places=2)
-        # structural_score = (1*1.5)/3 =0.5; combined=0.7*0.5+0.3*(2/3)=0.35+0.2=0.55
-        self.assertAlmostEqual(results[0]["strictness_score"], 0.55)
+
+        self.assertAlmostEqual(results[0]["coverage_hit_ratio"], 0.666, places=2)
+        self.assertEqual(results[0]["covers_prod_methods"][0]["hits"], 2)
+        self.assertEqual(results[0]["covers_prod_methods"][0]["lines"], 3)
 
     def test_map_test_to_prod_path_basic(self):
         test_root = Path("tests")

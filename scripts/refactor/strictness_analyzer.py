@@ -16,20 +16,34 @@ Features:
 - Produces a comprehensive report on test-to-code relationships
 
 Author: Angelos Dimakos
-Version: 1.0.0
+Version: 1.1.0
 """
 
 import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Set, Tuple
+from typing import Dict, List, Any, Optional, Set
 
 # Import your existing modules
 from scripts.refactor.parsers.json_coverage_parser import parse_json_coverage
 from scripts.refactor.ast_extractor import extract_class_methods
 from scripts.refactor.method_line_ranges import extract_method_line_ranges
 from scripts.refactor.complexity.complexity_analyzer import calculate_function_complexity_map
+
+
+def scan_test_directory(tests_path: Path) -> List[Dict[str, Any]]:
+    print("🔍 Scanning test files and extracting functions...")
+    test_results = []
+    test_files = [tests_path] if tests_path.is_file() else list(tests_path.rglob("test_*.py"))
+
+    for test_file in test_files:
+        with open(test_file, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        funcs = extract_test_functions(test_file)
+        for func in funcs:
+            test_results.append(analyze_strictness(lines, func))
+    return test_results
 
 
 def extract_test_functions(filepath: Path) -> List[Dict[str, Any]]:
@@ -90,65 +104,114 @@ def analyze_strictness(lines: List[str], func: Dict[str, Any]) -> Dict[str, Any]
     }
 
 
-def compute_strictness_score(
-        asserts: int,
-        raises: int,
-        mocks: int,
-        branches: int,
-        length: int,
-        hit_ratio: float,
-) -> float:
+def compute_strictness_score(results):
     """
-    Compute a weighted strictness score using heuristics and coverage hit ratio.
-
-    Args:
-        asserts (int): The number of assert statements.
-        raises (int): The number of expected exceptions.
-        mocks (int): The number of mock objects used.
-        branches (int): The number of branches in the code.
-        length (int): The length of the test function.
-        hit_ratio (float): The coverage hit ratio.
-
-    Returns:
-        float: The computed strictness score.
+    Computes a strictness score for each test case, considering:
+    - Assertion coverage (assert_count)
+    - Code coverage (coverage_hit_ratio)
+    - Method complexity (weighted from covered methods)
+    Assigns both a numerical score and a grade.
     """
-    structural_score = (asserts * 1.5 + raises + 0.3 * mocks + 0.5 * branches) / max(1, length)
-    combined = 0.7 * structural_score + 0.3 * hit_ratio  # Weighted blend
-    return round(combined, 2)
+
+    for result in results:
+        # Extract core metrics
+        assert_count = result.get("assert_count", 0)
+        coverage_ratio = result.get("coverage_hit_ratio", 0.0)
+        covered_methods = result.get("covers_prod_methods", [])
+
+        # Compute average method complexity (if available)
+        complexities = [m.get("complexity", 1) for m in covered_methods]
+        avg_complexity = sum(complexities) / len(complexities) if complexities else 1
+
+        # Scoring Components
+        assertion_score = min(1.0, assert_count / 5)  # Cap at 5 assertions contributing fully
+        coverage_score = coverage_ratio  # Already normalized [0, 1]
+        complexity_weight = min(1.5, 1 + (avg_complexity / 15))  # Dampen extreme complexity influence
+
+        # Final Strictness Score Calculation
+        strictness_score = round(assertion_score * coverage_score * complexity_weight, 3)
+        result["strictness_score"] = strictness_score
+
+        # Assign Grade Based on Strictness Score
+        if strictness_score >= 1.0:
+            grade = "A"
+        elif strictness_score >= 0.7:
+            grade = "B"
+        elif strictness_score >= 0.4:
+            grade = "C"
+        else:
+            grade = "D"
+
+        result["strictness_grade"] = grade
+
+    return results
 
 
-def attach_coverage_hits(results: List[Dict[str, Any]], coverage_data: Dict[str, Dict[str, Any]]) -> None:
+
+
+def attach_coverage_hits(results, coverage_data):
     """
-    Attach line hit counts and recompute score.
-
-    Args:
-        results (List[Dict[str, Any]]): The results of the test analysis.
-        coverage_data (Dict[str, Dict[str, Any]]): The coverage data mapping.
+    Attaches coverage and hit data to each test result and associated production methods.
+    Now correctly handles normalized paths and suffix fallback matching.
     """
     for result in results:
-        normalized_path = str(Path(result["file"]).resolve().as_posix())
-        file_hits = coverage_data.get(normalized_path, {})
-        # file_hits is a dict mapping function names to stats
-        hits = sum(
-            1
-            for i in range(result["start"], result["end"] + 1)
-            if any(
-                i in meth_info.get("covered_lines", []) for meth_info in file_hits.values()
-            )
-        )
-        length = result["length"]
-        hit_ratio = hits / length if length else 0.0
+        raw_file_path = result.get("file", "")
+        requested_path = str(Path(raw_file_path).as_posix())
 
-        result["coverage_hits"] = hits
-        result["hit_ratio"] = round(hit_ratio, 2)
-        result["strictness_score"] = compute_strictness_score(
-            result["asserts"],
-            result["raises"],
-            result["mocks"],
-            result["branches"],
-            length,
-            hit_ratio,
-        )
+        # Normalize coverage_data keys
+        normalized_coverage_data = {Path(k).as_posix(): v for k, v in coverage_data.items()}
+
+        # Try exact path match first
+        coverage_info = normalized_coverage_data.get(requested_path)
+
+        # Fallback to best suffix match if needed
+        if not coverage_info:
+            requested_parts = Path(requested_path).parts
+            best_match = None
+            best_len = 0
+
+            for key in normalized_coverage_data:
+                normalized_key = key.replace("\\", "/")
+                parts = Path(normalized_key).parts
+                match_len = sum(1 for a, b in zip(reversed(parts), reversed(requested_parts)) if a == b)
+                if match_len > best_len:
+                    best_match = key
+                    best_len = match_len
+
+            if best_match:
+                coverage_info = normalized_coverage_data[best_match]
+                result["matched_coverage_path"] = best_match  # Debug info if needed
+            else:
+                result["coverage_hit_ratio"] = 0.0
+                continue  # No coverage found, skip further processing
+
+        # Attach coverage metrics
+        total_hits = 0
+        total_lines = 0
+        covered_methods = []
+
+        for method, cov_stats in coverage_info.items():
+            hits = cov_stats.get("hits", 0)
+            lines = cov_stats.get("lines", 0)
+            coverage = cov_stats.get("coverage", 0.0)
+
+            covered_methods.append({
+                "name": method,
+                "hits": hits,
+                "lines": lines,
+                "coverage": coverage,
+                "covered_lines": cov_stats.get("covered_lines", []),
+                "missing_lines": cov_stats.get("missing_lines", [])
+            })
+
+            total_hits += hits
+            total_lines += lines
+
+        result["covers_prod_methods"] = covered_methods
+        result["coverage_hit_ratio"] = round(total_hits / total_lines, 3) if total_lines else 0.0
+
+    return results
+
 
 
 def map_test_to_prod_path(test_path: Path, test_root: Path, source_root: Path) -> Path:
@@ -315,84 +378,65 @@ def scan_test_directory(tests_path: Path) -> List[Dict[str, Any]]:
 
 
 
-def main(
-        tests_dir: str,
-        source_dir: str,
-        coverage_path: str,
-        output_path: Optional[str] = None,
-) -> None:
-    """
-    Main entry point for the script.
-
-    Args:
-        tests_dir (str): The directory containing test files.
-        source_dir (str): The directory containing production code.
-        coverage_path (str): The path to the coverage data file.
-        output_path (Optional[str]): The path to the output file (if any).
-    """
+def main(tests_dir: str, source_dir: str, coverage_path: str, output_path: Optional[str] = None) -> None:
     tests_path = Path(tests_dir)
     source_path = Path(source_dir)
     coverage_json = Path(coverage_path)
 
-    if not tests_path.exists():
-        print(f"❌ Tests path does not exist: {tests_path}")
-        sys.exit(1)
-    if not source_path.exists():
-        print(f"❌ Source path does not exist: {source_path}")
-        sys.exit(1)
-    if not coverage_json.exists():
-        print(f"❌ Coverage file not found: {coverage_json}")
+    if not tests_path.exists() or not source_path.exists() or not coverage_json.exists():
+        print("❌ One or more input paths do not exist.")
         sys.exit(1)
 
-    # Scan tests and build results
     test_results = scan_test_directory(tests_path)
-    print(f"Found {len(test_results)} test functions in {tests_path}")
+    print(f"Found {len(test_results)} test functions.")
 
-    # Parse coverage per-file and per-function
-    print("📈 Parsing coverage...")
-    coverage_data: Dict[str, Dict[str, Dict]] = {}
+    print("📈 Parsing coverage for tests and production files...")
+    coverage_data = {}
     for test_result in test_results:
         test_file = Path(test_result["file"])
         method_ranges = {test_result["name"]: (test_result["start"], test_result["end"])}
         cov_for_file = parse_json_coverage(str(coverage_json), method_ranges, str(test_file))
         coverage_data.update(cov_for_file)
 
-    # Attach coverage hits and compute strictness
+    # Also parse coverage for production files directly
+    for prod_file in source_path.rglob("*.py"):
+        try:
+            methods = extract_method_line_ranges(prod_file)
+            cov_for_prod = parse_json_coverage(str(coverage_json), methods, str(prod_file))
+            coverage_data.update(cov_for_prod)
+        except Exception as e:
+            print(f"⚠️ Failed to parse coverage for production file {prod_file}: {e}")
+
     print("🔗 Attaching coverage hits and calculating strictness scores...")
     attach_coverage_hits(test_results, coverage_data)
+    test_results = compute_strictness_score(test_results)
 
-    # Map tests to production code
     print("🗺️ Mapping tests to production code...")
     map_tests_to_prod_code(test_results, tests_path, source_path, coverage_data)
 
-    # Generate report
     report = {
         "summary": {
             "total_tests": len(test_results),
-            "avg_strictness": round(sum(r.get("strictness_score", 0) for r in test_results) / len(test_results),
-                                    2) if test_results else 0,
-            "avg_severity": round(sum(r.get("severity_score", 0) for r in test_results) / len(test_results),
-                                  2) if test_results else 0,
+            "avg_strictness": round(sum(r.get("strictness_score", 0) for r in test_results) / max(len(test_results), 1), 2),
+            "avg_severity": round(sum(r.get("severity_score", 0) for r in test_results) / max(len(test_results), 1), 2),
             "total_prod_files_covered": len(set(file for r in test_results for file in r.get("covers_prod_files", []))),
         },
         "test_to_prod_mapping": test_results
     }
 
-    # Output results
     if output_path:
         out_path = Path(output_path)
         out_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
-        print(f"✅ Test-to-production code mapping written to: {out_path}")
+        print(f"✅ Report written to {out_path}")
     else:
         print(json.dumps(report, indent=2))
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Map tests to production code with quality metrics.")
     parser.add_argument("--tests", type=str, required=True, help="Path to test suite directory.")
     parser.add_argument("--source", type=str, required=True, help="Path to source code directory.")
     parser.add_argument("--coverage", type=str, required=True, help="Path to JSON coverage report.")
-    parser.add_argument("--output", type=str, help="Where to save the mapping report (JSON).")
+    parser.add_argument("--output", type=str, help="Output report JSON path.")
     args = parser.parse_args()
+
     main(args.tests, args.source, args.coverage, args.output)
-sys.modules.setdefault("strictness_analyzer", sys.modules[__name__])
