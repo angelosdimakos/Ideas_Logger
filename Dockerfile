@@ -50,6 +50,7 @@ WORKDIR /app
 
 # Environment
 ENV PYTHONPATH=/app \
+    PATH=$PATH:/home/myuser/.local/bin \
     DEBIAN_FRONTEND=noninteractive
 
 # Copy application code (this happens last to maximize cache usage)
