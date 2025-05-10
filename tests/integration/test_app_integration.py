@@ -38,6 +38,9 @@ class TestMainTabIntegration(unittest.TestCase):
         self.main_tab = MainTab(self.root, controller=self.controller)
         self.main_tab.pack(fill=tk.BOTH, expand=True)
 
+        # Process events to ensure the UI has time to initialize properly
+        self.root.update()
+
     def tearDown(self):
         self.main_tab.destroy()
         self.root.destroy()
@@ -55,11 +58,23 @@ class TestMainTabIntegration(unittest.TestCase):
     def test_integration_coverage_data(self):
         coverage_panel = self.main_tab.coverage_panel
         coverage_panel.refresh()
+
+        # Process events to ensure the tree gets populated
+        self.root.update()
+
         items = coverage_panel.tree.get_children()
-        self.assertGreater(len(items), 0)
-        first_item = coverage_panel.tree.item(items[0])["values"]
-        self.assertEqual(first_item[0], "IntegrationTest")
-        self.assertEqual(first_item[1], "90%")
+        # If no items, print debug info to help diagnose
+        if not items:
+            print("DEBUG: Coverage data returned:", self.controller.get_coverage_data())
+            print("DEBUG: Tree children:", coverage_panel.tree.get_children())
+
+        self.assertGreater(len(items), 0, "Coverage tree should contain at least one item")
+
+        # Make sure we have items before trying to access them
+        if items:
+            first_item = coverage_panel.tree.item(items[0])["values"]
+            self.assertEqual(first_item[0], "IntegrationTest")
+            self.assertEqual(first_item[1], "90%")
 
     def test_integration_action_buttons(self):
         action_panel = self.main_tab.action_panel

@@ -5,11 +5,21 @@ set +e
 
 echo "🔬 Starting mutmut mutation testing..."
 
-# Run mutmut
-# Removed 'init' command as it doesn't exist according to help output
-# Removed '--safeguard-passed' option as it doesn't exist
-# Removed '--no-progress' option as it doesn't exist
+# Create backup of tests if they don't exist
+if [ ! -d "tests.bak" ]; then
+    echo "Creating backup of tests directory..."
+    cp -r tests tests.bak
+fi
+
+# Clean up any previous test runs
+if [ -f "mutmut_results.txt" ]; then
+    rm mutmut_results.txt
+fi
+
+# Run mutmut with options it actually supports
 echo "Running mutation tests..."
+# Add --paths-to-mutate to only mutate specific files if you want to limit the scope
+# Add --tests-dir if you want to specify the test directory
 mutmut run
 
 # Capture exit code for reference
@@ -17,16 +27,19 @@ MUTMUT_EXIT_CODE=$?
 
 # Show mutation results summary
 echo "📊 Mutation Testing Results:"
-# The JSON output option doesn't exist, using standard output instead
-mutmut results > mutmut_results.txt
-mutmut results
+mutmut results | tee mutmut_results.txt
 
-# Count survivors by parsing results file
-SURVIVORS=$(grep "Survived" mutmut_results.txt | wc -l)
+# Count survivors properly by checking for 'Survived' in the output
+SURVIVORS=$(grep -c 'Survived:' mutmut_results.txt || echo "0")
 echo "⚠️  Total Surviving Mutations: $SURVIVORS"
 
+# Show details of surviving mutations if any
 if [ "$SURVIVORS" -gt 0 ]; then
-    echo "🚨 Some mutations survived. Review the results carefully!"
+    echo "🚨 Some mutations survived. Here are the details:"
+    echo "----------------------------------------"
+    grep -A 3 'Survived:' mutmut_results.txt
+    echo "----------------------------------------"
+    echo "Run 'mutmut show <id>' to see more details about a specific mutation."
 else
     echo "✅ All mutations killed. Good job!"
 fi
