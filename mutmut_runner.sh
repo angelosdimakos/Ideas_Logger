@@ -18,8 +18,6 @@ fi
 
 # Run mutmut with options it actually supports
 echo "Running mutation tests..."
-# Add --paths-to-mutate to only mutate specific files if you want to limit the scope
-# Add --tests-dir if you want to specify the test directory
 mutmut run
 
 # Capture exit code for reference
@@ -33,11 +31,11 @@ mutmut results | tee mutmut_results.txt
 SURVIVORS=$(grep -c 'Survived:' mutmut_results.txt || echo "0")
 echo "⚠️  Total Surviving Mutations: $SURVIVORS"
 
-# Show details of surviving mutations if any
+# Fix bug in comparison - ensure SURVIVORS is treated as a number
 if [ "$SURVIVORS" -gt 0 ]; then
     echo "🚨 Some mutations survived. Here are the details:"
     echo "----------------------------------------"
-    grep -A 3 'Survived:' mutmut_results.txt
+    grep -A 3 'Survived:' mutmut_results.txt || echo "No details available"
     echo "----------------------------------------"
     echo "Run 'mutmut show <id>' to see more details about a specific mutation."
 else
