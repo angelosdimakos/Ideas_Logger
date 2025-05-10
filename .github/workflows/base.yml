@@ -84,9 +84,6 @@ jobs:
           name: refactor-audit
           path: refactor_audit.json
 
-
-
-
   docstring:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -105,6 +102,36 @@ jobs:
         with:
           name: docstring-summary
           path: docstring_summary.json
+
+  strictness-analysis:
+    needs: [test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    container:
+      image: ghcr.io/angelosdimakos/ideas_logger:latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 📥 Download Refactor Audit
+        uses: actions/download-artifact@v4
+        with:
+          name: refactor-audit
+          path: ./artifacts/refactor-audit
+
+      - name: 📐 Run Strictness Analyzer
+        run: |
+          echo "📐 Running Strictness Analyzer..."
+          python scripts/refactor/strictness_analyzer.py \
+            --tests tests/unit \
+            --source scripts \
+            --audit ./artifacts/refactor-audit/refactor_audit.json \
+            --output ./artifacts/strictness_mapping.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: strictness-mapping
+          path: ./artifacts/strictness_mapping.json
 
   report:
     needs: [lint, test, docstring]
@@ -131,21 +158,6 @@ jobs:
             --coverage artifacts/refactor-audit/refactor_audit.json \
             --linting artifacts/lint-report/linting_report.json \
             -o artifacts/merged_report.json
-          
-      - name: 📐 Run Strictness Analyzer
-        run: |
-          echo "📐 Running Strictness Analyzer on Merged Report..."
-          python scripts/refactor/strictness_analyzer.py \
-            --tests tests/unit \
-            --merged_report artifacts/merged_report.json \
-            --output artifacts/strictness_mapping.json
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: strictness-mapping
-          path: artifacts/strictness_mapping.json
-
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -159,7 +171,6 @@ jobs:
           python scripts/ci_analyzer/severity_audit.py \
             --audit artifacts/merged_report.json \
             --output artifacts/ci_severity_report.md
-      
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -167,9 +178,62 @@ jobs:
           name: ci-severity-report
           path: artifacts/ci_severity_report.md
 
-
       - name: 💬 Post PR Summary (Optional)
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           path: artifacts/ci_severity_report.md
+
+  final-report:
+    needs: [report, strictness-analysis]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    container:
+      image: ghcr.io/angelosdimakos/ideas_logger:latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 📥 Download All Reports
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: 🔄 Create Final Report Summary
+        run: |
+          echo "## CI Quality Analysis Summary" > final_report.md
+          echo "" >> final_report.md
+          echo "### Test Coverage and Quality Metrics" >> final_report.md
+          echo "" >> final_report.md
+          
+          # Include severity report if available
+          if [ -f "./artifacts/ci-severity-report/ci_severity_report.md" ]; then
+            cat "./artifacts/ci-severity-report/ci_severity_report.md" >> final_report.md
+          fi
+          
+          echo "" >> final_report.md
+          echo "### Test Strictness Analysis" >> final_report.md
+          echo "" >> final_report.md
+          
+          # Include summary from strictness analysis if available
+          if [ -f "./artifacts/strictness-mapping/strictness_mapping.json" ]; then
+            echo "Test strictness analysis completed successfully. See detailed report in artifacts." >> final_report.md
+            echo '```' >> final_report.md
+            python -c "import json; data = json.load(open('./artifacts/strictness-mapping/strictness_mapping.json')); print(f\"Total Tests: {data['summary']['total_tests']}\nAvg Strictness: {data['summary']['avg_strictness']}\nAvg Severity: {data['summary']['avg_severity']}\nFiles Covered: {data['summary']['total_prod_files_covered']}\")" >> final_report.md
+            echo '```' >> final_report.md
+          else
+            echo "⚠️ Strictness analysis report not available." >> final_report.md
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: final-report
+          path: final_report.md
+
+      - name: 📄 Post Final Report Summary (Optional)
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: final_report.md
+          recreate: true

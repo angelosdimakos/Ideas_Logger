@@ -10,6 +10,7 @@ __pycache__/
 +!tests/fixtures/linting_report.json
 +!tests/fixtures/refactor_audit.json
 +!tests/fixtures/coverage.json
++!tests/fixtures/merged_report.json
 
 # === Virtual Envs ===
 .venv/
