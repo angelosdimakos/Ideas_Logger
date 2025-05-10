@@ -1,15 +1,6 @@
-"""
-JSON Coverage Parser
-===============================
-This module provides functionality to parse coverage data from a specified JSON file.
-
-It includes methods for matching coverage data with requested files and handling potential mismatches.
-"""
-
-
 import json
 from pathlib import Path
-from typing import Dict, Tuple, Any, List
+from typing import Dict, Tuple, Any
 
 
 def parse_json_coverage(
@@ -20,7 +11,7 @@ def parse_json_coverage(
     """
     Parse JSON coverage data from the specified path and return coverage information.
 
-    Parameters:
+    Parameters
     ----------
     json_path: str
         Path to the JSON coverage data file.
@@ -29,10 +20,10 @@ def parse_json_coverage(
     filepath: str
         The path of the file for which coverage is being analyzed.
 
-    Returns:
+    Returns
     -------
     Dict[str, Any]
-        A dictionary containing coverage information for the specified file.
+        A dictionary containing accurate coverage information for the specified file.
     """
     requested_path = str(Path(filepath).as_posix())
 
@@ -41,10 +32,9 @@ def parse_json_coverage(
 
     files = data.get("files", {})
 
-    # Try exact match, else fuzzy suffix match
+    # Try exact match, else fallback to best suffix match
     coverage_info = files.get(requested_path)
     if not coverage_info:
-        # fallback: longest matching suffix
         requested_parts = Path(requested_path).parts
         best_match = None
         best_len = 0
@@ -57,6 +47,7 @@ def parse_json_coverage(
         if best_match:
             coverage_info = files[best_match]
 
+    # No coverage data found; assume fully uncovered
     if not coverage_info:
         return {
             requested_path: {
@@ -71,18 +62,38 @@ def parse_json_coverage(
             }
         }
 
-    executed = set(coverage_info.get("executed_lines", []))
+    # Properly use function-level summaries if available
+    func_summaries = coverage_info.get("functions", {})
+    result = {}
 
-    result = {
-        requested_path: {
-            m: {
-                "coverage": min(1.0, len(executed.intersection(range(start, end + 1))) / (end - start + 1)) if (end - start + 1) > 0 else 0.0,
-                "hits": len(executed.intersection(range(start, end + 1))),
-                "lines": end - start + 1,
-                "covered_lines": [ln for ln in range(start, end + 1) if ln in executed],
-                "missing_lines": [ln for ln in range(start, end + 1) if ln not in executed],
-            }
-            for m, (start, end) in method_ranges.items()
+    for m, (start, end) in method_ranges.items():
+        func_cov = func_summaries.get(m, {})
+        summary = func_cov.get("summary", {})
+
+        coverage_percent = summary.get("percent_covered", 0.0)
+        hits = summary.get("covered_lines", 0)
+        total_lines = summary.get("num_statements", end - start + 1)
+        missing_lines = summary.get("missing_lines", total_lines - hits)
+
+        # If no detailed summary, fall back to executed_lines analysis
+        if not summary:
+            executed = set(coverage_info.get("executed_lines", []))
+            covered_lines = [ln for ln in range(start, end + 1) if ln in executed]
+            missing_lines_list = [ln for ln in range(start, end + 1) if ln not in executed]
+
+            coverage_percent = (
+                100.0 * len(covered_lines) / max(1, end - start + 1)
+            )
+            hits = len(covered_lines)
+            total_lines = end - start + 1
+            missing_lines = missing_lines_list
+
+        result[m] = {
+            "coverage": round(coverage_percent / 100.0, 4),  # Normalize to [0.0, 1.0]
+            "hits": hits,
+            "lines": total_lines,
+            "covered_lines": func_cov.get("executed_lines", []),
+            "missing_lines": missing_lines if isinstance(missing_lines, list) else [],
         }
-    }
-    return result
+
+    return {requested_path: result}

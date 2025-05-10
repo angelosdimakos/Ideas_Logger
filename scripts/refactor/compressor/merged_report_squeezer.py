@@ -67,6 +67,7 @@ import argparse
 import gzip
 import json
 import sys
+import os
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -83,6 +84,22 @@ def _get_or_add(triple: DocTriple, cache: Dict[DocTriple, int], table: List[List
         cache[triple] = len(table)
         table.append(list(triple))  # store as list to save a few chars
     return cache[triple]
+
+# ── NEW: utility ──────────────────────────────────────────────────────────────
+def _calc_percent(cov_blob: dict[str, Any]) -> float | None:
+    """
+    Return overall file-coverage percentage if the *complexity* section
+    provides enough data, otherwise None.
+    """
+    comp = cov_blob.get("complexity")
+    if not comp:
+        return None
+
+    total, covered = 0, 0
+    for stats in comp.values():
+        total   += stats.get("lines", 0)
+        covered += stats.get("covered_lines", 0)
+    return round(100 * covered / total, 1) if total else None
 
 
 # ----------------------------------------------------------------------------
@@ -157,21 +174,38 @@ def compress_obj(original: Dict[str, Any], *, retain_keys: bool = False) -> Dict
 
         doc_block = {"m": module_id, "c": cls_arr, "f": fn_arr}
         if retain_keys:
-            # swap one‑letter keys for verbose ones for easier eyeballing
             doc_block = {
                 "module_doc": module_id,
                 "classes": cls_arr,
                 "functions": fn_arr,
             }
 
+        # -------------------------------------------------- coverage block + percent calculation
+        cov_blob: Dict[str, Any] = report.get("coverage", {})
+        comp = cov_blob.get("complexity", {})
+
+        total, covered = 0, 0
+        for stats in comp.values():
+            total += stats.get("lines", 0)
+            covered_lines = stats.get("covered_lines", 0)
+            if isinstance(covered_lines, list):
+                covered += len(covered_lines)
+            else:
+                covered += covered_lines  # Assume it's already an int or 0
+
+        if total:
+            percent = round(100 * covered / total, 1)
+            cov_blob = {"p": percent, **cov_blob}  # Add 'p' field at the top
+
         # -------------------------------------------------- assemble new report
         files_blob[file_path] = {
             "d": doc_block,
-            "cov": report.get("coverage", {}),
+            "cov": cov_blob,
             "lint": report.get("linting", {}),
         }
 
     return {"doc": doc_table, "files": files_blob}
+
 
 
 # ----------------------------------------------------------------------------
@@ -259,6 +293,10 @@ def _cli() -> None:
     st = sub.add_parser("selftest")
     st.add_argument("infile")
 
+    # NEW: percent viewer
+    pv = sub.add_parser("percent", help="Show per-file coverage percentages from compressed report")
+    pv.add_argument("infile")
+
     args = p.parse_args()
     cmd = args.cmd
 
@@ -266,10 +304,12 @@ def _cli() -> None:
         orig = _load_json(Path(args.infile))
         compact = compress_obj(orig)
         _dump_json(compact, Path(args.outfile), pretty=args.pretty, gzip_level=args.gzip)
+
     elif cmd == "decompress":
         blob = _load_json(Path(args.infile))
         full = decompress_obj(blob)
         _dump_json(full, Path(args.outfile), pretty=args.pretty)
+
     elif cmd == "selftest":
         orig = _load_json(Path(args.infile))
         roundtrip = decompress_obj(compress_obj(orig))
@@ -278,6 +318,21 @@ def _cli() -> None:
         else:
             print("✗ round‑trip FAILED", file=sys.stderr)
             sys.exit(1)
+
+    elif cmd == "percent":
+        blob = _load_json(Path(args.infile))
+        files = blob.get("files", {})
+        if not files:
+            print("No files found in compressed report.", file=sys.stderr)
+            sys.exit(1)
+
+        print(f"{'File':<50} {'Coverage (%)':>12}")
+        print("-" * 65)
+        for path, rep in files.items():
+            short = os.path.basename(path)
+            pct = rep.get("cov", {}).get("p")
+            pct_display = f"{pct:.1f}" if pct is not None else "—"
+            print(f"{short:<50} {pct_display:>12}")
 
 
 if __name__ == "__main__":
