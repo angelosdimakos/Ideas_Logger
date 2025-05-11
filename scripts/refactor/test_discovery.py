@@ -41,6 +41,9 @@ def extract_test_functions(filepath: Path) -> List[dict]:
     tree = ast.parse(source)
     functions = []
 
+    # Normalize 'file' to just the stem (e.g., 'test_utils' instead of full path)
+    file_stem = filepath.stem
+
     for node in ast.walk(tree):
         if isinstance(node, ast.ClassDef):
             for method in node.body:
@@ -51,7 +54,7 @@ def extract_test_functions(filepath: Path) -> List[dict]:
                         "name": f"{node.name}.{method.name}",
                         "start": start,
                         "end": end,
-                        "path": str(filepath)
+                        "path": file_stem  # ✅ Store only the filename without extension
                     })
         elif isinstance(node, ast.FunctionDef) and node.name.startswith("test"):
             start = node.lineno
@@ -60,10 +63,11 @@ def extract_test_functions(filepath: Path) -> List[dict]:
                 "name": node.name,
                 "start": start,
                 "end": end,
-                "path": str(filepath)
+                "path": file_stem  # ✅ Same here
             })
 
     return functions
+
 
 
 def analyze_strictness(lines: List[str], func: dict) -> StrictnessEntry:
