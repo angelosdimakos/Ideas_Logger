@@ -251,7 +251,7 @@ def generate_module_report(
 
     return {module: output.dict() for module, output in final_report.modules.items()}
 
-def fuzzy_match(a: str, b: str, threshold: int = 70) -> bool:
+def fuzzy_match(a: str, b: str, threshold: int = 80) -> bool:
     """Fuzzy matching with partial ratio preference for looser matching."""
     partial_score = fuzz.partial_ratio(a, b)
     token_score = fuzz.token_sort_ratio(a, b)
@@ -281,59 +281,40 @@ def validate_report_schema(data: Dict[str, Any], report_type: str = "final") -> 
         logging.warning(f"Schema validation failed: {e}")
         return False
 
-import logging
 
 def should_assign_test_to_module(
     prod_file_name: str,
     method_names: List[str],
     test_entry: StrictnessEntry,
     test_imports: Dict[str, List[str]],
-    fuzzy_threshold: int = 70,  # Increased threshold for stricter matching
-    convention_weight: float = 0.8,
-    fuzzy_weight: float = 0.5
+    fuzzy_threshold: int = 80,  # Very high threshold for strict fuzzy matching
 ) -> bool:
     """
-    Decide if a test should be assigned to a production module using enhanced matching.
+    Decide if a test should be assigned to a production module using strict matching.
+    Prioritizes conventions and imports. Fuzzy matching is a last resort with a high bar.
     """
     test_file_name = Path(test_entry.file).stem.lower()
     normalized_test_name = normalize_test_name(test_entry.name.lower(), remove_test_prefix=True)
 
-    # 1. Convention-Based Check (e.g., test_module.py for module.py)
+    # 1. Strong Convention-Based Check
     if f"test_{prod_file_name}" == test_file_name or f"{prod_file_name}_test" == test_file_name:
-        logger.debug(f"✅ Convention match: prod='{prod_file_name}', test='{test_file_name}'")
+        logger.debug(f"✅ Strong convention match: prod='{prod_file_name}', test='{test_file_name}'")
         return True
 
-    # 2. Check if the test file imports the production module (if import data is available)
+    # 2. Strict Import Check
     imported_modules = test_imports.get(test_file_name, [])
     if imported_modules and prod_file_name in imported_modules:
-        logger.debug(f"✅ Import match: prod='{prod_file_name}', test='{test_file_name}', imports={imported_modules}")
+        logger.debug(f"✅ Strict import match: prod='{prod_file_name}', test='{test_file_name}', imports={imported_modules}")
         return True
 
-    # 3. Targeted Fuzzy Matching on Parts of Names
-    prod_parts = [prod_file_name] + [m.lower() for m in method_names]
-    test_parts = [test_file_name, normalized_test_name]
-
-    best_match_score = 0
-    for p_part in prod_parts:
-        for t_part in test_parts:
-            score = max(fuzz.partial_ratio(p_part, t_part), fuzz.token_sort_ratio(p_part, t_part))
-            best_match_score = max(best_match_score, score)
-
-    if best_match_score >= fuzzy_threshold:
-        logger.debug(
-            f"🤔 Fuzzy match (parts): prod='{prod_file_name}' (parts: {prod_parts}), "
-            f"test='{test_file_name}' (parts: {test_parts}), Score: {best_match_score}"
-        )
-        return True
-
-    # 4. More Holistic Fuzzy Matching (as before, but potentially with a higher threshold)
+    # 3. Very Strict Fuzzy Matching on Combined Names (as a last resort)
     prod_composite = "".join([prod_file_name] + [normalize_test_name(m.lower(), remove_test_prefix=True) for m in method_names]).replace("_", "").lower()
     test_composite = "".join([test_file_name, normalized_test_name]).replace("_", "").lower()
     holistic_match_score = max(fuzz.partial_ratio(prod_composite, test_composite), fuzz.token_sort_ratio(prod_composite, test_composite))
 
-    if holistic_match_score >= fuzzy_threshold - 10: # Slightly lower threshold for holistic
+    if holistic_match_score >= fuzzy_threshold:
         logger.debug(
-            f"🤔 Fuzzy match (holistic): prod='{prod_composite}', test='{test_composite}', Score: {holistic_match_score}"
+            f"⚠️ Very strict fuzzy match (holistic): prod='{prod_composite}', test='{test_composite}', Score: {holistic_match_score}"
         )
         return True
 
