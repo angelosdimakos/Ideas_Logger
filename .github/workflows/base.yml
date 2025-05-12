@@ -135,7 +135,7 @@ jobs:
           echo "🔎 Running Test Discovery..."
           mkdir -p ./artifacts
           python scripts/refactor/test_discovery.py \
-            --tests tests/unit \
+            --tests tests\
             --output ./artifacts/test_report.json
 
       - name: 📐 Run Strictness Analyzer

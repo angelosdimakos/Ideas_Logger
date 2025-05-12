@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 from pydantic import BaseModel, Field
 from rapidfuzz import fuzz
+import os
 
 # ─── make “scripts.” imports work when executed as a script ────────────────
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -211,11 +212,15 @@ def generate_module_report(
     test_imports: Dict[str, List[str]]
 ) -> Dict[str, Any]:
     """
-    Merge audit and strictness data into a standardized final report.
+    Merge audit and strictness data into a standardized final report,
+    excluding __init__.py files.
     """
     final_report = FinalReport()
 
     for prod_file, file_audit in audit_model.__root__.items():
+        if os.path.basename(prod_file) == "__init__.py":
+            continue  # Skip __init__.py files
+
         prod_file_name = Path(prod_file).stem.lower()
         method_metrics = file_audit.complexity
         avg_cov = weighted_coverage(method_metrics) if method_metrics else 0.0
@@ -251,7 +256,7 @@ def generate_module_report(
 
     return {module: output.dict() for module, output in final_report.modules.items()}
 
-def fuzzy_match(a: str, b: str, threshold: int = 80) -> bool:
+def fuzzy_match(a: str, b: str, threshold: int = 70) -> bool:
     """Fuzzy matching with partial ratio preference for looser matching."""
     partial_score = fuzz.partial_ratio(a, b)
     token_score = fuzz.token_sort_ratio(a, b)
@@ -287,7 +292,7 @@ def should_assign_test_to_module(
     method_names: List[str],
     test_entry: StrictnessEntry,
     test_imports: Dict[str, List[str]],
-    fuzzy_threshold: int = 80,  # Very high threshold for strict fuzzy matching
+    fuzzy_threshold: int = 70,  # Very high threshold for strict fuzzy matching
 ) -> bool:
     """
     Decide if a test should be assigned to a production module using strict matching.
