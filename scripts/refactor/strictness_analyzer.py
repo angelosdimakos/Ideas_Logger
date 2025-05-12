@@ -248,7 +248,8 @@ def generate_module_report(
             )
         ]
 
-        final_report.modules[prod_file] = ModuleOutput(
+        normalized_path = Path(prod_file).as_posix()
+        final_report.modules[normalized_path] = ModuleOutput(
             module_coverage=round(avg_cov, 2),
             methods=methods,
             tests=tests_for_module
