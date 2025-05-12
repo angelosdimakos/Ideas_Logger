@@ -235,7 +235,7 @@ def generate_module_report(
 
         tests_for_module = [
             TestOutput(
-                test_name=test_entry.name,
+                test_name=test_entry.name,  # This should be the original unnormalized name!
                 strictness=round(test_entry.strictness_score, 2),
                 severity=round(get_test_severity(test_entry, coverage=avg_cov), 2)
             )
