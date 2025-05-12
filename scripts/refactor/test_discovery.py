@@ -1,7 +1,7 @@
 import ast
 import json
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 from pydantic import BaseModel, Field
 
 
@@ -22,6 +22,7 @@ class StrictnessEntry(BaseModel):
 
 class StrictnessReport(BaseModel):
     tests: List[StrictnessEntry]
+    imports: Dict[str, List[str]] = Field(default_factory=dict)  # filename -> list of imports
 
     def to_json(self, indent: int = 2) -> str:
         return self.json(indent=indent)
@@ -33,17 +34,16 @@ class StrictnessReport(BaseModel):
 
 # -------------------- Analysis Logic --------------------
 
-def extract_test_functions(filepath: Path) -> List[dict]:
-    """Extract test functions and methods from a Python file."""
+def parse_ast_tree(filepath: Path):
+    """Parse a Python file into an AST tree."""
     with open(filepath, "r", encoding="utf-8") as f:
         source = f.read()
+    return ast.parse(source), filepath.stem  # Also return normalized file stem
 
-    tree = ast.parse(source)
+
+def extract_test_functions_from_tree(tree, file_stem: str) -> List[dict]:
+    """Extract test functions and methods from an AST tree."""
     functions = []
-
-    # Normalize 'file' to just the stem (e.g., 'test_utils' instead of full path)
-    file_stem = filepath.stem
-
     for node in ast.walk(tree):
         if isinstance(node, ast.ClassDef):
             for method in node.body:
@@ -51,10 +51,10 @@ def extract_test_functions(filepath: Path) -> List[dict]:
                     start = method.lineno
                     end = getattr(method, "end_lineno", start)
                     functions.append({
-                        "name": f"{node.name}.{method.name}",
+                        "name": normalize_test_name(f"{node.name}.{method.name}"),
                         "start": start,
                         "end": end,
-                        "path": file_stem  # ✅ Store only the filename without extension
+                        "path": file_stem
                     })
         elif isinstance(node, ast.FunctionDef) and node.name.startswith("test"):
             start = node.lineno
@@ -63,10 +63,43 @@ def extract_test_functions(filepath: Path) -> List[dict]:
                 "name": node.name,
                 "start": start,
                 "end": end,
-                "path": file_stem  # ✅ Same here
+                "path": file_stem
             })
-
     return functions
+
+
+def extract_imports_from_tree(tree) -> List[str]:
+    """Extract top-level imported modules from an AST tree."""
+    imports = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                imports.add(alias.name.split('.')[0])
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            imports.add(node.module.split('.')[0])
+    return sorted(imports)
+
+def normalize_test_name(name: str, remove_test_prefix: bool = False) -> str:
+    """
+    Normalize test function/method names to reduce duplication.
+    
+    Args:
+        name: The original test name, e.g., "TestConfigLoader.test_get_effective_config".
+        remove_test_prefix: If True, removes 'test_' prefix for looser matching.
+
+    Returns:
+        Normalized name as a lowercase string.
+    """
+    # Handle class.method case
+    parts = name.split('.')
+    base_name = parts[-1].lower()
+    
+    if remove_test_prefix and base_name.startswith("test_"):
+        base_name = base_name[5:]  # Remove 'test_' prefix
+
+    return base_name.replace("_", "")
+
+
 
 
 
@@ -108,15 +141,22 @@ def scan_test_directory(tests_path: Path) -> StrictnessReport:
     test_files = [tests_path] if tests_path.is_file() else list(tests_path.rglob("test_*.py"))
 
     results = []
+    imports_map = {}
+
     for test_file in test_files:
         with open(test_file, "r", encoding="utf-8") as f:
             lines = f.readlines()
-        funcs = extract_test_functions(test_file)
+        tree, file_stem = parse_ast_tree(test_file)
+        funcs = extract_test_functions_from_tree(tree, file_stem)
+        imports = extract_imports_from_tree(tree)
+        imports_map[file_stem] = imports
+
         for func in funcs:
             analysis = analyze_strictness(lines, func)
             results.append(analysis)
 
-    return StrictnessReport(tests=results)
+    return StrictnessReport(tests=results, imports=imports_map)
+
 
 
 # -------------------- CLI Entry Point --------------------

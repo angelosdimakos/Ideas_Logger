@@ -18,6 +18,7 @@ import logging
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 from pydantic import BaseModel, Field
+from rapidfuzz import fuzz
 
 # -------------------- Logging Setup --------------------
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
@@ -56,6 +57,8 @@ class StrictnessEntry(BaseModel):
 class StrictnessReport(BaseModel):
     """Top-level model for the strictness report."""
     tests: List[StrictnessEntry]
+    imports: Dict[str, List[str]] = Field(default_factory=dict)  # filename -> list of imports
+
 
 
 class MethodOutput(BaseModel):
@@ -105,17 +108,32 @@ def weighted_coverage(func_dict: Dict[str, ComplexityMetrics]) -> float:
     return covered_loc / total_loc if total_loc else 0.0
 
 
-def get_test_severity(test_entry: StrictnessEntry) -> float:
+def get_test_severity(
+    test_entry: StrictnessEntry,
+    coverage: Optional[float] = None,
+    alpha: float = 0.7
+) -> float:
     """
-    Get test severity, falling back to strictness if not available.
+    Compute severity with implicit weighting from coverage.
 
     Args:
-        test_entry: StrictnessEntry object with test data
+        test_entry: StrictnessEntry object with test data.
+        coverage: Optional coverage value (0.0 to 1.0). If None, no weighting applied.
+        alpha: Weighting factor for severity vs. coverage. 
+               Higher alpha means severity dominates.
 
     Returns:
-        float: Test severity score
+        float: Adjusted severity score.
     """
-    return test_entry.severity_score if test_entry.severity_score is not None else test_entry.strictness_score
+    base_severity = test_entry.severity_score if test_entry.severity_score is not None else test_entry.strictness_score
+
+    if coverage is None:
+        return base_severity  # Fall back to pure severity if no coverage info.
+
+    # Invert coverage (low coverage => higher severity weight), apply blending
+    adjusted_severity = (alpha * base_severity) + ((1 - alpha) * (1 - coverage))
+
+    return round(min(adjusted_severity, 1.0), 2)  # Cap at 1.0
 
 
 # -------------------- Loaders --------------------
@@ -182,22 +200,17 @@ def load_test_report(test_report_path: str) -> List[StrictnessEntry]:
 # -------------------- Report Generator --------------------
 
 def generate_module_report(
-        audit_model: AuditReport,
-        strictness_entries: List[StrictnessEntry]
+    audit_model: AuditReport,
+    strictness_entries: List[StrictnessEntry],
+    test_imports: Dict[str, List[str]]
 ) -> Dict[str, Any]:
     """
     Merge audit and strictness data into a standardized final report.
-
-    Args:
-        audit_model: AuditReport object with complexity and coverage data
-        strictness_entries: List of StrictnessEntry objects with test data
-
-    Returns:
-        Dict[str, Any]: Mapping of module filenames to their report data
     """
     final_report = FinalReport()
 
     for prod_file, file_audit in audit_model.__root__.items():
+        prod_file_name = Path(prod_file).stem.lower()
         method_metrics = file_audit.complexity
         avg_cov = weighted_coverage(method_metrics) if method_metrics else 0.0
 
@@ -209,42 +222,32 @@ def generate_module_report(
             ) for name, m in method_metrics.items()
         ]
 
-        tests_for_module = []
-        prod_file_name = Path(prod_file).stem.lower()
-
-        for test_entry in strictness_entries:
-            test_name = test_entry.name.lower()
-            test_file_name = Path(test_entry.file).stem.lower() if hasattr(test_entry, "file") else ""
-
-            assigned = False
-            if prod_file_name in test_file_name or prod_file_name in test_name:
-                assigned = True
-            else:
-                for method_name in method_metrics.keys():
-                    if method_name.lower() in test_name:
-                        assigned = True
-                        break
-
-            if assigned:
-                tests_for_module.append(
-                    TestOutput(
-                        test_name=test_entry.name,
-                        strictness=round(test_entry.strictness_score, 2),
-                        severity=round(get_test_severity(test_entry), 2)
-                    )
-                )
+        tests_for_module = [
+            TestOutput(
+                test_name=test_entry.name,
+                strictness=round(test_entry.strictness_score, 2),
+                severity=round(get_test_severity(test_entry, coverage=avg_cov), 2)
+            )
+            for test_entry in strictness_entries
+            if should_assign_test_to_module(
+                prod_file_name,
+                list(method_metrics.keys()),
+                test_entry,
+                test_imports
+            )
+        ]
 
         final_report.modules[prod_file] = ModuleOutput(
             module_coverage=round(avg_cov, 2),
             methods=methods,
-            tests=tests_for_module  # Will remain empty if no relevant tests were found
+            tests=tests_for_module
         )
 
-    return {
-        module: output.dict()
-        for module, output in final_report.modules.items()
-    }
+    return {module: output.dict() for module, output in final_report.modules.items()}
 
+def fuzzy_match(a: str, b: str, threshold: int = 70) -> bool:
+    """Simple wrapper for fuzzy matching using RapidFuzz."""
+    return fuzz.token_sort_ratio(a, b) >= threshold
 
 
 def validate_report_schema(data: Dict[str, Any], report_type: str = "final") -> bool:
@@ -266,17 +269,59 @@ def validate_report_schema(data: Dict[str, Any], report_type: str = "final") -> 
         logging.warning(f"Schema validation failed: {e}")
         return False
 
+def should_assign_test_to_module(
+    prod_file_name: str,
+    method_names: List[str],
+    test_entry: StrictnessEntry,
+    test_imports: Dict[str, List[str]],
+    threshold: int = 50
+) -> bool:
+    """
+    Decide if a test should be assigned to a production module based on imports and fuzzy matching.
+
+    Args:
+        prod_file_name: Production file/module name (stemmed, lowercase).
+        method_names: List of method names in the production module (already lowercase).
+        test_entry: Test metadata entry.
+        test_imports: Mapping of test files to their imported modules.
+        threshold: Similarity threshold for fuzzy matching.
+
+    Returns:
+        bool: True if the test should be assigned to this module.
+    """
+    test_name = test_entry.name.lower()
+    test_file_name = Path(test_entry.file).stem.lower()
+
+    # 1. Import Filter
+    imported_modules = test_imports.get(test_file_name, [])
+    if prod_file_name not in imported_modules:
+        return False  # Skip early if the module isn't even imported
+
+    # 2. Fuzzy Matching on file and test names
+    if fuzzy_match(prod_file_name, test_name, threshold) or fuzzy_match(prod_file_name, test_file_name, threshold):
+        return True
+
+    # 3. Fuzzy Matching on method names
+    for method in method_names:
+        if fuzzy_match(method.lower(), test_name, threshold):
+            return True
+
+    return False
+
+
 
 def main(test_report_path: str, audit_path: str, output_path: Optional[str] = None) -> None:
     logging.info("📚 Loading precomputed strictness report...")
-    test_results = load_test_report(test_report_path)
+    strictness_report = StrictnessReport.parse_obj(json.load(Path(test_report_path).open("r", encoding="utf-8")))
+    test_results = strictness_report.tests
+    test_imports = strictness_report.imports
     logging.info(f"✅ Loaded {len(test_results)} test evaluations.")
 
     logging.info("📈 Loading audit coverage report...")
     audit_model = load_audit_report(audit_path)
 
     logging.info("🔧 Merging reports into module-centric format...")
-    module_report = generate_module_report(audit_model, test_results)
+    module_report = generate_module_report(audit_model, test_results, test_imports)
 
     if not validate_report_schema(module_report):
         logging.warning("Generated report does not match expected schema!")

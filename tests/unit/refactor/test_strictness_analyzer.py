@@ -1,18 +1,21 @@
 import json
 from pathlib import Path
 import pytest
-from scripts.refactor.strictness_analyzer import load_test_report, load_audit_report, generate_module_report
-
+from scripts.refactor.strictness_analyzer import (
+    load_test_report,
+    load_audit_report,
+    generate_module_report,
+    StrictnessReport
+)
 
 # -------------------- Fixtures --------------------
 
 @pytest.fixture
 def test_report_path(tmp_path):
-    """Fixture to provide a real test report JSON file."""
     test_data = {
         "tests": [
             {
-                "name": "test_config",
+                "name": "test_paths_config",
                 "file": "tests/unit/test_paths.py",
                 "start": 9,
                 "end": 32,
@@ -35,7 +38,10 @@ def test_report_path(tmp_path):
                 "length": 14,
                 "strictness_score": 0.49
             }
-        ]
+        ],
+        "imports": {
+            "test_paths": ["paths"]
+        }
     }
     path = tmp_path / "test_report.json"
     path.write_text(json.dumps(test_data), encoding="utf-8")
@@ -44,7 +50,6 @@ def test_report_path(tmp_path):
 
 @pytest.fixture
 def audit_report_path(tmp_path):
-    """Fixture to provide a real refactor audit JSON file."""
     audit_data = {
         "paths.py": {
             "complexity": {
@@ -63,15 +68,16 @@ def audit_report_path(tmp_path):
     path.write_text(json.dumps(audit_data), encoding="utf-8")
     return path
 
-
 # -------------------- Tests --------------------
 
 def test_module_report_generation(test_report_path, audit_report_path):
-    """Verify that the merged report is correct and matches schema expectations."""
-    test_entries = load_test_report(str(test_report_path))
+    strictness_report = StrictnessReport.parse_obj(json.loads(Path(test_report_path).read_text(encoding="utf-8")))
+    test_entries = strictness_report.tests
+    test_imports = strictness_report.imports
+
     audit_model = load_audit_report(str(audit_report_path))
 
-    report = generate_module_report(audit_model, test_entries)
+    report = generate_module_report(audit_model, test_entries, test_imports)
 
     # Assertions
     assert "paths.py" in report, "Expected 'paths.py' module in report."
@@ -86,11 +92,11 @@ def test_module_report_generation(test_report_path, audit_report_path):
 
     assert "tests" in module_data
     tests = module_data["tests"]
+    print(f"DEBUG: Detected test names: {[t['test_name'] for t in tests]}")
+    print(f"DEBUG: Production file being analyzed: 'paths.py'")
     assert isinstance(tests, list)
-    assert any(t["test_name"] == "test_config" for t in tests), "Expected 'test_config' test case in results."
+    assert any(t["test_name"] == "test_paths_config" for t in tests), "Expected 'test_paths_config' test case in results."
 
-    # Check strictness and severity are properly calculated and rounded
     for test in tests:
         assert 0.0 <= test["strictness"] <= 1.0, "Strictness out of expected bounds."
         assert 0.0 <= test["severity"] <= 1.0, "Severity out of expected bounds."
-

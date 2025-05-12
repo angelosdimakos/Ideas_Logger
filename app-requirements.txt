@@ -16,3 +16,4 @@ pandas
 typer
 flake8-json
 mutmut
+rapidfuzz

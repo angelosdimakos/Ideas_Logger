@@ -2,8 +2,15 @@ import tempfile
 import textwrap
 import json
 from pathlib import Path
-from scripts.refactor.test_discovery import extract_test_functions, analyze_strictness, scan_test_directory, StrictnessEntry, StrictnessReport
-
+from scripts.refactor.test_discovery import (
+    parse_ast_tree,
+    extract_test_functions_from_tree,
+    extract_imports_from_tree,
+    analyze_strictness,
+    scan_test_directory,
+    StrictnessEntry,
+    StrictnessReport
+)
 
 def test_extract_test_functions_single_function():
     test_code = textwrap.dedent("""
@@ -14,10 +21,28 @@ def test_extract_test_functions_single_function():
         tmp_file.write(test_code)
         tmp_file_path = Path(tmp_file.name)
 
-    results = extract_test_functions(tmp_file_path)
+    tree, file_stem = parse_ast_tree(tmp_file_path)
+    results = extract_test_functions_from_tree(tree, file_stem)
+
     assert len(results) == 1
     assert results[0]["name"] == "test_example"
 
+def test_extract_imports():
+    test_code = textwrap.dedent("""
+    import os
+    from sys import path
+    import my_module.submodule
+    """)
+    with tempfile.NamedTemporaryFile("w+", suffix=".py", delete=False) as tmp_file:
+        tmp_file.write(test_code)
+        tmp_file_path = Path(tmp_file.name)
+
+    tree, _ = parse_ast_tree(tmp_file_path)
+    imports = extract_imports_from_tree(tree)
+
+    assert "os" in imports
+    assert "sys" in imports
+    assert "my_module" in imports
 
 def test_analyze_strictness_correct_metrics():
     lines = [
@@ -38,7 +63,6 @@ def test_analyze_strictness_correct_metrics():
     assert entry.branches == 1
     assert entry.length == 6
     assert 0.0 <= entry.strictness_score <= 1.0
-
 
 def test_scan_test_directory_and_generate_report():
     test_code = textwrap.dedent("""
@@ -61,7 +85,6 @@ def test_scan_test_directory_and_generate_report():
         assert entry.branches == 1
         assert 0.0 <= entry.strictness_score <= 1.0
 
-
 def test_strictness_report_serialization():
     entry = StrictnessEntry(
         name="test_serialization",
@@ -82,7 +105,6 @@ def test_strictness_report_serialization():
 
     assert "tests" in data
     assert data["tests"][0]["name"] == "test_serialization"
-
 
 def test_strictness_report_save(tmp_path):
     entry = StrictnessEntry(
