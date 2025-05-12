@@ -211,15 +211,12 @@ def generate_module_report(
     strictness_entries: List[StrictnessEntry],
     test_imports: Dict[str, List[str]]
 ) -> Dict[str, Any]:
-    """
-    Merge audit and strictness data into a standardized final report,
-    excluding __init__.py files.
-    """
     final_report = FinalReport()
+    assigned_tests = set()  # Track assigned test names globally
 
     for prod_file, file_audit in audit_model.__root__.items():
         if os.path.basename(prod_file) == "__init__.py":
-            continue  # Skip __init__.py files
+            continue
 
         prod_file_name = Path(prod_file).stem.lower()
         method_metrics = file_audit.complexity
@@ -233,20 +230,25 @@ def generate_module_report(
             ) for name, m in method_metrics.items()
         ]
 
-        tests_for_module = [
-            TestOutput(
-                test_name=test_entry.name,  # This should be the original unnormalized name!
-                strictness=round(test_entry.strictness_score, 2),
-                severity=round(get_test_severity(test_entry, coverage=avg_cov), 2)
-            )
-            for test_entry in strictness_entries
+        tests_for_module = []
+        for test_entry in strictness_entries:
+            if test_entry.name in assigned_tests:
+                continue  # Skip if already assigned
+
             if should_assign_test_to_module(
                 prod_file_name,
                 list(method_metrics.keys()),
                 test_entry,
                 test_imports
-            )
-        ]
+            ):
+                tests_for_module.append(
+                    TestOutput(
+                        test_name=test_entry.name,
+                        strictness=round(test_entry.strictness_score, 2),
+                        severity=round(get_test_severity(test_entry, coverage=avg_cov), 2)
+                    )
+                )
+                assigned_tests.add(test_entry.name)  # Mark as assigned
 
         normalized_path = Path(prod_file).as_posix()
         final_report.modules[normalized_path] = ModuleOutput(
