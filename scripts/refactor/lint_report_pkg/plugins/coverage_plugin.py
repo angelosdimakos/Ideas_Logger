@@ -6,8 +6,6 @@ report. Skips execution when the current process is itself a pytest run
 """
 
 import os
-import math
-import json
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any, Dict

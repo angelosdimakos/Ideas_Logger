@@ -3,7 +3,6 @@ import os
 import pytest
 from scripts.refactor import refactor_guard_cli as cli
 from scripts.refactor.refactor_guard_cli import main
-import argparse
 
 class DummyGuard:
     """Dummy RefactorGuard to skip heavy initialization"""

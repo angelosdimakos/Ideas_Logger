@@ -1,6 +1,4 @@
 # tests/test_graph_builder.py
-import pytest
-import networkx as nx
 
 import scripts.kg.modules.graph_builder as graph_builder
 from scripts.kg.modules.graph_builder import KnowledgeGraphBuilder

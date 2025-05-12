@@ -24,13 +24,11 @@ Key fixes
 from __future__ import annotations
 
 import os
-from collections import defaultdict
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from typing import Dict, Tuple, Any, Set, List
 from .coverage_api_parser import parse_coverage_with_api as _parse_api
 
-from scripts.refactor.lint_report_pkg.path_utils import norm as normalize_path
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Config knobs
@@ -102,7 +100,7 @@ def parse_coverage_xml_to_method_hits(
 
     try:
         tree = ET.parse(coverage_xml_path)
-    except ET.ParseError as exc:  # malformed XML
+    except ET.ParseError:  # malformed XML
         raise
 
     root = tree.getroot()

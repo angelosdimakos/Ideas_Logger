@@ -6,7 +6,7 @@ import logging
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import networkx as nx
-from typing import Dict, Any
+from typing import Dict
 
 from scripts.kg.modules.utils import NodeID, ComplexityScores
 

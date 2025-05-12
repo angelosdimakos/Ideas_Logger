@@ -6,7 +6,6 @@ the logger core, summary tracker, and indexers.
 """
 import pytest
 import numpy as np
-from unittest.mock import MagicMock
 from pathlib import Path
 from typing import Any
 

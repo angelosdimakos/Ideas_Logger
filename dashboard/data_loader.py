@@ -2,7 +2,6 @@ import os
 import json
 import gzip
 import fnmatch
-from pathlib import Path
 from typing import Any, Dict
 
 # these come from your existing compressor modules

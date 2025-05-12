@@ -1,6 +1,4 @@
-import pytest
 
-import subprocess
 from refactor_testing import run_tests
 
 def test_run_tests():

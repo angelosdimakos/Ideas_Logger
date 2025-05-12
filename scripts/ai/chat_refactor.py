@@ -5,7 +5,7 @@ It includes functions to load JSON reports and generate prompts based on the rep
 """
 
 import json
-from scripts.ai.llm_router import get_prompt_template, apply_persona
+from scripts.ai.llm_router import apply_persona
 from scripts.config.config_manager import ConfigManager
 from scripts.ai.ai_summarizer import AISummarizer
 

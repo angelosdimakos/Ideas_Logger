@@ -1,10 +1,9 @@
 import os
-import json
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from dashboard.data_loader import load_artifact, is_excluded
+from dashboard.data_loader import load_artifact
 from dashboard.metrics import (
     compute_executive_summary,
     get_low_coverage_modules,

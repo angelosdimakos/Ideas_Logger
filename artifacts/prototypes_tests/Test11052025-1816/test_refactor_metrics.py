@@ -1,4 +1,3 @@
-import pytest
 
 import refactor_docs
 from unittest.mock import Mock

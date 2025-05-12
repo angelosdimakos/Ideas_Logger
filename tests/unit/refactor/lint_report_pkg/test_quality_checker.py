@@ -1,5 +1,4 @@
 from pathlib import Path
-from scripts.refactor.lint_report_pkg.path_utils import norm
 from scripts.refactor.lint_report_pkg.plugins.black import BlackPlugin
 from scripts.refactor.lint_report_pkg.plugins.flake8 import Flake8Plugin
 from scripts.refactor.lint_report_pkg.plugins.mypy import MypyPlugin

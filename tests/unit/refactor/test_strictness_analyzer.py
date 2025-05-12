@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 import pytest
 from scripts.refactor.strictness_analyzer import (
-    load_test_report,
     load_audit_report,
     generate_module_report,
     StrictnessReport
@@ -93,7 +92,7 @@ def test_module_report_generation(test_report_path, audit_report_path):
     assert "tests" in module_data
     tests = module_data["tests"]
     print(f"DEBUG: Detected test names: {[t['test_name'] for t in tests]}")
-    print(f"DEBUG: Production file being analyzed: 'paths.py'")
+    print("DEBUG: Production file being analyzed: 'paths.py'")
     assert isinstance(tests, list)
     assert any(t["test_name"] == "test_paths_config" for t in tests), "Expected 'test_paths_config' test case in results."
 

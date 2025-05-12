@@ -1,4 +1,3 @@
-import pytest
 
 import refactor_static_analysis
 

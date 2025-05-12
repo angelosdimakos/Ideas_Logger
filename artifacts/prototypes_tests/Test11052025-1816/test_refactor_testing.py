@@ -1,6 +1,5 @@
 import pytest
 
-import yaml
 from refactor_linting import load_config
 
 def test_load_config():

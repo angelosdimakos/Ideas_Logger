@@ -25,7 +25,7 @@ def test_extract_test_functions_single_function():
     results = extract_test_functions_from_tree(tree, file_stem)
 
     assert len(results) == 1
-    assert results[0]["name"] == "example"
+    assert results[0]["name"] == "test_example"
 
 def test_extract_imports():
     test_code = textwrap.dedent("""
@@ -80,7 +80,7 @@ def test_scan_test_directory_and_generate_report():
         assert isinstance(report, StrictnessReport)
         assert len(report.tests) == 1
         entry = report.tests[0]
-        assert entry.name == "case"
+        assert entry.name == "test_case"
         assert entry.asserts == 2
         assert entry.branches == 1
         assert 0.0 <= entry.strictness_score <= 1.0

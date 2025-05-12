@@ -1,5 +1,4 @@
 import ast
-import json
 from pathlib import Path
 from typing import List, Dict
 from pydantic import BaseModel, Field
@@ -52,7 +51,7 @@ def extract_test_functions_from_tree(tree, file_stem: str) -> List[dict]:
                     end = getattr(method, "end_lineno", start)
                     full_name = f"{node.name}.{method.name}"
                     functions.append({
-                        "name": normalize_test_name(full_name, remove_test_prefix=True),
+                        "name": full_name,  # ✅ Preserve original name here
                         "start": start,
                         "end": end,
                         "path": file_stem
@@ -61,7 +60,7 @@ def extract_test_functions_from_tree(tree, file_stem: str) -> List[dict]:
             start = node.lineno
             end = getattr(node, "end_lineno", start)
             functions.append({
-                "name": normalize_test_name(node.name, remove_test_prefix=True),  # ✅ Normalize here too!
+                "name": node.name,  # ✅ Preserve original name here
                 "start": start,
                 "end": end,
                 "path": file_stem

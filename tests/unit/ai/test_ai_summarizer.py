@@ -1,6 +1,6 @@
 import json
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from scripts.utils.file_utils import read_json
 from scripts.ai.ai_summarizer import AISummarizer
 from tests.mocks.test_helpers import make_dummy_aisummarizer, make_fake_logs

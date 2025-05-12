@@ -8,7 +8,6 @@ the application starts.
 """
 
 import logging
-from pathlib import Path
 from scripts.utils.file_utils import write_json
 from scripts.paths import ZephyrusPaths  # Import ZephyrusPaths
 

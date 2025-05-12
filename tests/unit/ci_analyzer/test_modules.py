@@ -12,9 +12,6 @@ This test suite contains unit tests for:
 import unittest
 import pandas as pd
 from unittest.mock import patch, mock_open, MagicMock
-import json
-import sys
-from io import StringIO
 
 # Import modules to test
 from scripts.ci_analyzer.visuals import risk_emoji, render_bar

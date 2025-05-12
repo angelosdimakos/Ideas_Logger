@@ -1,5 +1,4 @@
 # tests/test_visualization.py
-import pytest
 from scripts.kg.modules.visualization import GraphVisualizer
 
 def test_get_complexity_color():

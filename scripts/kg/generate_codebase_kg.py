@@ -16,7 +16,6 @@ Usage:
 
 import argparse
 import logging
-from typing import Dict, Any
 import os
 import sys
 

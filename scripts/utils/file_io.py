@@ -1,4 +1,8 @@
-import json, gzip, bz2, lzma, os
+import json
+import gzip
+import bz2
+import lzma
+import os
 from pathlib import Path
 from typing import Any, Dict, IO
 

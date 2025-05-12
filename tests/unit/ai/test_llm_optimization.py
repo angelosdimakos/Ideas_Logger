@@ -4,14 +4,10 @@ Tests for llm_optimization.py functions.
 This module contains tests for the LLM optimization helper functions used to
 process files and build prompts for refactoring suggestions.
 """
-import os
 import pytest
-from unittest.mock import patch, MagicMock, call
-import numpy as np
-import sys
+from unittest.mock import patch, MagicMock
 import importlib.util
 from pathlib import Path
-from scripts.config.config_manager import ConfigManager
 
 # Adjust this path to match your project structure
 # Assuming the script is in scripts/ai/llm_optimization.py

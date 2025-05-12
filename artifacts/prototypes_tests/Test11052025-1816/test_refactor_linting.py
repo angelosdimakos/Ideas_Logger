@@ -1,6 +1,5 @@
-import pytest
 
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 from refactor_metrics.MetricCalculator import MetricCalculator
 
 class TestMetricCalculator:

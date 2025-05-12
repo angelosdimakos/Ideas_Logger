@@ -9,7 +9,6 @@ import unittest
 import os
 import json
 import tempfile
-import pandas as pd
 from pathlib import Path
 
 # Import modules to test

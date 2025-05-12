@@ -36,7 +36,7 @@ from scripts.config.config_loader import get_effective_config, get_config_value
 from scripts.core.environment_bootstrapper import EnvironmentBootstrapper
 from scripts.core.markdown_logger import MarkdownLogger
 from scripts.paths import ZephyrusPaths
-from scripts.utils.file_utils import write_json, read_json
+from scripts.utils.file_utils import read_json
 from scripts.core.log_manager import LogManager
 from scripts.core.summary_tracker import SummaryTracker
 from scripts.core.summary_engine import SummaryEngine

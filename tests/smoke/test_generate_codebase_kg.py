@@ -1,9 +1,7 @@
 # tests/test_generate_codebase_kg.py
 import sys
 import json
-import argparse
 import pytest
-from pathlib import Path
 
 import scripts.kg.generate_codebase_kg as generate_codebase_kg
 

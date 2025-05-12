@@ -16,7 +16,6 @@ $ python lint_report_cli.py --audit refactor_audit.json --docstrings docstring_s
 
 import sys
 import argparse
-import json
 from pathlib import Path
 
 # Ensure the repo root is on sys.path so we can import the helper + qc modules

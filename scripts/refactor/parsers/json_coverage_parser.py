@@ -61,7 +61,7 @@ def parse_json_coverage(
             coverage_info = files[best_match]
             print(f"[DEBUG] Suffix fallback matched: {best_match}")
         else:
-            print(f"[DEBUG] Suffix fallback failed to find a match.")
+            print("[DEBUG] Suffix fallback failed to find a match.")
 
     # No coverage data found; assume fully uncovered
     if not coverage_info:

@@ -14,7 +14,6 @@ import re
 from ..core import ToolPlugin
 from ..helpers import run_cmd, read_report
 from ..path_utils import norm
-from collections import defaultdict
 
 
 class PydocstylePlugin(ToolPlugin):
