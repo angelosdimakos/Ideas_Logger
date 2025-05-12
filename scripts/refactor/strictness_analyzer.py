@@ -19,6 +19,11 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 from pydantic import BaseModel, Field
 from rapidfuzz import fuzz
+
+# ─── make “scripts.” imports work when executed as a script ────────────────
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(_PROJECT_ROOT))
+
 from scripts.refactor.test_discovery import normalize_test_name
 
 # -------------------- Logging Setup --------------------
