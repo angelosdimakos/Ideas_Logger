@@ -282,6 +282,8 @@ def validate_report_schema(data: Dict[str, Any], report_type: str = "final") -> 
         logging.warning(f"Schema validation failed: {e}")
         return False
 
+import logging
+
 def should_assign_test_to_module(
     prod_file_name: str,
     method_names: List[str],
@@ -290,11 +292,11 @@ def should_assign_test_to_module(
     threshold: int = 50
 ) -> bool:
     """
-    Decide if a test should be assigned to a production module based on imports and fuzzy matching.
+    Decide if a test should be assigned to a production module using groupwise fuzzy matching.
 
     Args:
         prod_file_name: Production file/module name (stemmed, lowercase).
-        method_names: List of method names in the production module (already lowercase).
+        method_names: List of method names in the production module.
         test_entry: Test metadata entry.
         test_imports: Mapping of test files to their imported modules.
         threshold: Similarity threshold for fuzzy matching.
@@ -302,29 +304,32 @@ def should_assign_test_to_module(
     Returns:
         bool: True if the test should be assigned to this module.
     """
-    test_name_raw = test_entry.name.lower()
+    logger = logging.getLogger("AssignmentLogic")
     test_file_name = Path(test_entry.file).stem.lower()
-
-    # Normalize names for better fuzzy matching
-    test_name = normalize_test_name(test_name_raw, remove_test_prefix=True)
-    prod_name = prod_file_name.replace("_", "").lower()
 
     # 1. Relaxed Import Filter: Only apply if imports explicitly provided
     imported_modules = test_imports.get(test_file_name, [])
     if imported_modules and prod_file_name not in imported_modules:
-        return False  # Only block if import info exists and doesn't match
+        logger.debug(f"🛑 Import check failed for prod '{prod_file_name}' and test file '{test_file_name}' (Imports: {imported_modules})")
+        return False
 
-    # 2. Fuzzy Matching on file and test names (normalized)
-    if fuzzy_match(prod_name, test_name, threshold) or fuzzy_match(prod_name, test_file_name, threshold):
-        return True
+    # 2. Build Composite Strings for Matching
+    prod_tokens = [prod_file_name] + [
+        normalize_test_name(m.lower(), remove_test_prefix=True) for m in method_names
+    ]
+    prod_composite = "".join(prod_tokens).replace("_", "").lower()
 
-    # 3. Fuzzy Matching on method names (normalized)
-    for method in method_names:
-        normalized_method = normalize_test_name(method.lower(), remove_test_prefix=True)
-        if fuzzy_match(normalized_method, test_name, threshold):
-            return True
+    test_tokens = [test_file_name, normalize_test_name(test_entry.name.lower(), remove_test_prefix=True)]
+    test_composite = "".join(test_tokens).replace("_", "").lower()
 
-    return False
+    # 3. Fuzzy Match Composite Strings
+    match_score = max(fuzz.partial_ratio(prod_composite, test_composite), fuzz.token_sort_ratio(prod_composite, test_composite))
+
+    logger.debug(
+        f"🔎 Matching prod='{prod_composite}' with test='{test_composite}' | Score: {match_score} | Threshold: {threshold}"
+    )
+
+    return match_score >= threshold
 
 
 
