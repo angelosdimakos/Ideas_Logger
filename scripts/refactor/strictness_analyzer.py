@@ -292,7 +292,7 @@ def should_assign_test_to_module(
     method_names: List[str],
     test_entry: StrictnessEntry,
     test_imports: Dict[str, List[str]],
-    fuzzy_threshold: int = 80,  # Very high threshold for strict fuzzy matching
+    fuzzy_threshold: int = 80,
 ) -> bool:
     """
     Decide if a test should be assigned to a production module using strict matching.
@@ -312,7 +312,14 @@ def should_assign_test_to_module(
         logger.debug(f"✅ Strict import match: prod='{prod_file_name}', test='{test_file_name}', imports={imported_modules}")
         return True
 
-    # 3. Very Strict Fuzzy Matching on Combined Names (as a last resort)
+    # 💡 2b. Class Name Fuzzy Check
+    class_name_raw = test_entry.name.split('.')[0].lower()
+    normalized_class_name = normalize_test_name(class_name_raw, remove_test_prefix=True)
+    if fuzzy_match(prod_file_name, normalized_class_name, fuzzy_threshold):
+        logger.debug(f"✅ Class-based fuzzy match: prod='{prod_file_name}', test_class='{normalized_class_name}'")
+        return True
+
+    # 3. Very Strict Fuzzy Matching on Combined Names (last resort)
     prod_composite = "".join([prod_file_name] + [normalize_test_name(m.lower(), remove_test_prefix=True) for m in method_names]).replace("_", "").lower()
     test_composite = "".join([test_file_name, normalized_test_name]).replace("_", "").lower()
     holistic_match_score = max(fuzz.partial_ratio(prod_composite, test_composite), fuzz.token_sort_ratio(prod_composite, test_composite))
