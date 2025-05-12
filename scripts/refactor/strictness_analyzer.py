@@ -31,6 +31,7 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 # -------------------- Pydantic Models --------------------
 
+
 class ComplexityMetrics(BaseModel):
     """Model for storing code complexity and test coverage metrics for a single method."""
     complexity: int
