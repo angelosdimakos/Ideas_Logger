@@ -27,8 +27,7 @@ sys.path.insert(0, str(_PROJECT_ROOT))
 from scripts.refactor.test_discovery import normalize_test_name
 
 # -------------------- Logging Setup --------------------
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
-
+logger = logging.getLogger("AssignmentLogic")
 # -------------------- Pydantic Models --------------------
 
 
@@ -252,7 +251,7 @@ def generate_module_report(
 
     return {module: output.dict() for module, output in final_report.modules.items()}
 
-def fuzzy_match(a: str, b: str, threshold: int = 50) -> bool:
+def fuzzy_match(a: str, b: str, threshold: int = 70) -> bool:
     """Fuzzy matching with partial ratio preference for looser matching."""
     partial_score = fuzz.partial_ratio(a, b)
     token_score = fuzz.token_sort_ratio(a, b)
@@ -289,47 +288,57 @@ def should_assign_test_to_module(
     method_names: List[str],
     test_entry: StrictnessEntry,
     test_imports: Dict[str, List[str]],
-    threshold: int = 50
+    fuzzy_threshold: int = 70,  # Increased threshold for stricter matching
+    convention_weight: float = 0.8,
+    fuzzy_weight: float = 0.5
 ) -> bool:
     """
-    Decide if a test should be assigned to a production module using groupwise fuzzy matching.
-
-    Args:
-        prod_file_name: Production file/module name (stemmed, lowercase).
-        method_names: List of method names in the production module.
-        test_entry: Test metadata entry.
-        test_imports: Mapping of test files to their imported modules.
-        threshold: Similarity threshold for fuzzy matching.
-
-    Returns:
-        bool: True if the test should be assigned to this module.
+    Decide if a test should be assigned to a production module using enhanced matching.
     """
-    logger = logging.getLogger("AssignmentLogic")
     test_file_name = Path(test_entry.file).stem.lower()
+    normalized_test_name = normalize_test_name(test_entry.name.lower(), remove_test_prefix=True)
 
-    # 1. Relaxed Import Filter: Only apply if imports explicitly provided
+    # 1. Convention-Based Check (e.g., test_module.py for module.py)
+    if f"test_{prod_file_name}" == test_file_name or f"{prod_file_name}_test" == test_file_name:
+        logger.debug(f"✅ Convention match: prod='{prod_file_name}', test='{test_file_name}'")
+        return True
+
+    # 2. Check if the test file imports the production module (if import data is available)
     imported_modules = test_imports.get(test_file_name, [])
-    if imported_modules and prod_file_name not in imported_modules:
-        logger.debug(f"🛑 Import check failed for prod '{prod_file_name}' and test file '{test_file_name}' (Imports: {imported_modules})")
-        return False
+    if imported_modules and prod_file_name in imported_modules:
+        logger.debug(f"✅ Import match: prod='{prod_file_name}', test='{test_file_name}', imports={imported_modules}")
+        return True
 
-    # 2. Build Composite Strings for Matching
-    prod_tokens = [prod_file_name] + [
-        normalize_test_name(m.lower(), remove_test_prefix=True) for m in method_names
-    ]
-    prod_composite = "".join(prod_tokens).replace("_", "").lower()
+    # 3. Targeted Fuzzy Matching on Parts of Names
+    prod_parts = [prod_file_name] + [m.lower() for m in method_names]
+    test_parts = [test_file_name, normalized_test_name]
 
-    test_tokens = [test_file_name, normalize_test_name(test_entry.name.lower(), remove_test_prefix=True)]
-    test_composite = "".join(test_tokens).replace("_", "").lower()
+    best_match_score = 0
+    for p_part in prod_parts:
+        for t_part in test_parts:
+            score = max(fuzz.partial_ratio(p_part, t_part), fuzz.token_sort_ratio(p_part, t_part))
+            best_match_score = max(best_match_score, score)
 
-    # 3. Fuzzy Match Composite Strings
-    match_score = max(fuzz.partial_ratio(prod_composite, test_composite), fuzz.token_sort_ratio(prod_composite, test_composite))
+    if best_match_score >= fuzzy_threshold:
+        logger.debug(
+            f"🤔 Fuzzy match (parts): prod='{prod_file_name}' (parts: {prod_parts}), "
+            f"test='{test_file_name}' (parts: {test_parts}), Score: {best_match_score}"
+        )
+        return True
 
-    logger.debug(
-        f"🔎 Matching prod='{prod_composite}' with test='{test_composite}' | Score: {match_score} | Threshold: {threshold}"
-    )
+    # 4. More Holistic Fuzzy Matching (as before, but potentially with a higher threshold)
+    prod_composite = "".join([prod_file_name] + [normalize_test_name(m.lower(), remove_test_prefix=True) for m in method_names]).replace("_", "").lower()
+    test_composite = "".join([test_file_name, normalized_test_name]).replace("_", "").lower()
+    holistic_match_score = max(fuzz.partial_ratio(prod_composite, test_composite), fuzz.token_sort_ratio(prod_composite, test_composite))
 
-    return match_score >= threshold
+    if holistic_match_score >= fuzzy_threshold - 10: # Slightly lower threshold for holistic
+        logger.debug(
+            f"🤔 Fuzzy match (holistic): prod='{prod_composite}', test='{test_composite}', Score: {holistic_match_score}"
+        )
+        return True
+
+    logger.debug(f"🛑 No strong match found for prod='{prod_file_name}' and test='{test_entry.name}' ({test_file_name})")
+    return False
 
 
 
