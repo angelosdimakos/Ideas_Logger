@@ -82,7 +82,7 @@ def extract_imports_from_tree(tree) -> List[str]:
 def normalize_test_name(name: str, remove_test_prefix: bool = False) -> str:
     """
     Normalize test function/method names to reduce duplication.
-    
+
     Args:
         name: The original test name, e.g., "TestConfigLoader.test_get_effective_config".
         remove_test_prefix: If True, removes 'test_' prefix for looser matching.
@@ -90,14 +90,22 @@ def normalize_test_name(name: str, remove_test_prefix: bool = False) -> str:
     Returns:
         Normalized name as a lowercase string.
     """
-    # Handle class.method case
-    parts = name.split('.')
-    base_name = parts[-1].lower()
-    
-    if remove_test_prefix and base_name.startswith("test_"):
-        base_name = base_name[5:]  # Remove 'test_' prefix
+    # Handle class.method or module.class.method
+    base_name = name.split('.')[-1].lower()
 
-    return base_name.replace("_", "")
+    if remove_test_prefix:
+        if base_name.startswith("test_"):
+            base_name = base_name[5:]
+        elif base_name.startswith("test"):
+            base_name = base_name[4:]
+
+    # Remove underscores and common suffixes
+    base_name = base_name.replace("_", "")
+    if base_name.endswith("test"):
+        base_name = base_name[:-4]
+
+    return base_name
+
 
 
 

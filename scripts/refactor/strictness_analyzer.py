@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 from pydantic import BaseModel, Field
 from rapidfuzz import fuzz
+from scripts.refactor.test_discovery import normalize_test_name
 
 # -------------------- Logging Setup --------------------
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
@@ -245,9 +246,15 @@ def generate_module_report(
 
     return {module: output.dict() for module, output in final_report.modules.items()}
 
-def fuzzy_match(a: str, b: str, threshold: int = 70) -> bool:
-    """Simple wrapper for fuzzy matching using RapidFuzz."""
-    return fuzz.token_sort_ratio(a, b) >= threshold
+def fuzzy_match(a: str, b: str, threshold: int = 50) -> bool:
+    """Fuzzy matching with partial ratio preference for looser matching."""
+    partial_score = fuzz.partial_ratio(a, b)
+    token_score = fuzz.token_sort_ratio(a, b)
+
+    # Use the higher of the two scores to allow flexibility
+    final_score = max(partial_score, token_score)
+    return final_score >= threshold
+
 
 
 def validate_report_schema(data: Dict[str, Any], report_type: str = "final") -> bool:
@@ -289,24 +296,30 @@ def should_assign_test_to_module(
     Returns:
         bool: True if the test should be assigned to this module.
     """
-    test_name = test_entry.name.lower()
+    test_name_raw = test_entry.name.lower()
     test_file_name = Path(test_entry.file).stem.lower()
 
-    # 1. Import Filter
-    imported_modules = test_imports.get(test_file_name, [])
-    if prod_file_name not in imported_modules:
-        return False  # Skip early if the module isn't even imported
+    # Normalize names for better fuzzy matching
+    test_name = normalize_test_name(test_name_raw, remove_test_prefix=True)
+    prod_name = prod_file_name.replace("_", "").lower()
 
-    # 2. Fuzzy Matching on file and test names
-    if fuzzy_match(prod_file_name, test_name, threshold) or fuzzy_match(prod_file_name, test_file_name, threshold):
+    # 1. Relaxed Import Filter: Only apply if imports explicitly provided
+    imported_modules = test_imports.get(test_file_name, [])
+    if imported_modules and prod_file_name not in imported_modules:
+        return False  # Only block if import info exists and doesn't match
+
+    # 2. Fuzzy Matching on file and test names (normalized)
+    if fuzzy_match(prod_name, test_name, threshold) or fuzzy_match(prod_name, test_file_name, threshold):
         return True
 
-    # 3. Fuzzy Matching on method names
+    # 3. Fuzzy Matching on method names (normalized)
     for method in method_names:
-        if fuzzy_match(method.lower(), test_name, threshold):
+        normalized_method = normalize_test_name(method.lower(), remove_test_prefix=True)
+        if fuzzy_match(normalized_method, test_name, threshold):
             return True
 
     return False
+
 
 
 
