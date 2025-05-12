@@ -56,6 +56,7 @@ catch {
     Write-Warning "Artifact pull failed: $_"
 }
 
+
 Write-Host "Building Docker image..."
 docker build -t ghcr.io/angelosdimakos/ideas_logger:latest .
 
