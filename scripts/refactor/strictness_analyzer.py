@@ -256,7 +256,7 @@ def generate_module_report(
 
     return {module: output.dict() for module, output in final_report.modules.items()}
 
-def fuzzy_match(a: str, b: str, threshold: int = 85) -> bool:
+def fuzzy_match(a: str, b: str, threshold: int = 95) -> bool:
     """Fuzzy matching with partial ratio preference for looser matching."""
     partial_score = fuzz.partial_ratio(a, b)
     token_score = fuzz.token_sort_ratio(a, b)
@@ -292,7 +292,7 @@ def should_assign_test_to_module(
     method_names: List[str],
     test_entry: StrictnessEntry,
     test_imports: Dict[str, List[str]],
-    fuzzy_threshold: int = 85,
+    fuzzy_threshold: int = 95,
 ) -> bool:
     """
     Decide if a test should be assigned to a production module using strict matching.
