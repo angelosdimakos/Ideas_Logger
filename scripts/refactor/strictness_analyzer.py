@@ -215,9 +215,9 @@ def generate_module_report(
 ) -> Dict[str, Any]:
     final_report = FinalReport()
 
-    # FIX: Track assigned tests by a unique combination of test name AND file
-    # This prevents duplicates like "test_method" and "TestClass.test_method"
-    assigned_tests = set()  # Set of tuples (test_name, test_file)
+    # Track assigned tests by normalized test name to prevent duplicates
+    # (with and without class prefix)
+    assigned_tests = set()  # Set of tuples (normalized_test_name, test_file)
 
     for prod_file, file_audit in audit_model.__root__.items():
         if os.path.basename(prod_file) == "__init__.py":
@@ -237,8 +237,12 @@ def generate_module_report(
 
         tests_for_module = []
         for test_entry in strictness_entries:
-            # FIX: Create a unique identifier for each test by combining name and file
-            test_unique_id = (test_entry.name, test_entry.file)
+            # Create a normalized test identifier that will be the same regardless of class prefix
+            test_method_name = test_entry.name.split('.')[-1] if '.' in test_entry.name else test_entry.name
+            normalized_test_name = normalize_test_name(test_method_name, remove_test_prefix=False)
+
+            # Create a unique identifier for each test by combining normalized name and file
+            test_unique_id = (normalized_test_name, test_entry.file)
 
             if test_unique_id in assigned_tests:
                 continue  # Skip if already assigned
@@ -256,7 +260,7 @@ def generate_module_report(
                         severity=round(get_test_severity(test_entry, coverage=avg_cov), 2)
                     )
                 )
-                # FIX: Mark the test uniquely as assigned
+                # Mark the test as assigned using the normalized identifier
                 assigned_tests.add(test_unique_id)
 
         normalized_path = Path(prod_file).as_posix()
@@ -267,7 +271,6 @@ def generate_module_report(
         )
 
     return {module: output.dict() for module, output in final_report.modules.items()}
-
 
 def fuzzy_match(a: str, b: str, threshold: int = 95) -> bool:
     """Fuzzy matching with partial ratio preference for looser matching."""
