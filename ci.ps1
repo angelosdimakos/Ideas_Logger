@@ -1,6 +1,7 @@
 param(
     [string]$Message = "Auto-commit",
-    [switch]$WithGolden
+    [switch]$WithGolden,
+    [string]$VersionPrefix = "v" # Default version prefix
 )
 
 Write-Host "Pulling audit artifacts from latest successful CI run..."
@@ -13,15 +14,27 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
 
 # Workflow and paths
 $workflowName = "Run Tests `& CI Audit (Dockerized)"
-$artifactsDir = "/artifacts"
+$artifactsDir = ".\artifacts"
 
-# Ensure artifacts directory exists and is cleaned
-if (Test-Path $artifactsDir) {
-    Write-Host "Cleaning downloaded artifacts in $artifactsDir..."
-    Remove-Item "$artifactsDir\*" -Recurse -Force
-} else {
+# Get current date/time for versioning
+$timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
+$version = "$VersionPrefix$timestamp"
+$versionedDir = Join-Path $artifactsDir $version
+
+# Ensure artifacts directory exists
+if (-not (Test-Path $artifactsDir)) {
     Write-Host "Creating artifacts directory..."
     New-Item -ItemType Directory -Path $artifactsDir | Out-Null
+}
+
+# Create versioned directory for this run
+Write-Host "Creating versioned artifacts directory: $versionedDir"
+New-Item -ItemType Directory -Path $versionedDir | Out-Null
+
+# Create a latest symlink/directory for easy access to most recent artifacts
+$latestDir = Join-Path $artifactsDir "latest"
+if (Test-Path $latestDir) {
+    Remove-Item $latestDir -Force -Recurse
 }
 
 try {
@@ -33,30 +46,54 @@ try {
     if (-not $run_id) {
         Write-Warning "No CI run found. Skipping artifact download."
     } else {
+        # Document which run_id we're using
+        "$run_id" | Out-File -FilePath (Join-Path $versionedDir "run_id.txt")
+
         Write-Host "Pulling core audit reports..."
-        gh run download $run_id --name combined-report --dir $artifactsDir
-        gh run download $run_id --name ci-severity-report --dir $artifactsDir
+        gh run download $run_id --name combined-report --dir $versionedDir
+        gh run download $run_id --name ci-severity-report --dir $versionedDir
         Write-Host "Downloaded: merged_report.json, ci_severity_report.md"
 
         # Always pull strictness-mapping
         Write-Host "Pulling strictness mapping report..."
-        gh run download $run_id --name strictness-mapping --dir $artifactsDir
+        gh run download $run_id --name strictness-mapping --dir $versionedDir
         Write-Host "Downloaded: strictness_mapping.json"
+
+        # Pull coverage reports if available
+        Write-Host "Pulling coverage reports..."
+        gh run download $run_id --name coverage-reports --dir $versionedDir
+
+        # Pull final strictness report
+        Write-Host "Pulling final strictness report..."
+        gh run download $run_id --name final-strictness-report --dir $versionedDir
 
         if ($WithGolden) {
             Write-Host "Pulling golden regression fixtures..."
-            gh run download $run_id --name lint-report --dir $artifactsDir
-            gh run download $run_id --name docstring-summary --dir $artifactsDir
-            gh run download $run_id --name refactor-audit --dir $artifactsDir
+            gh run download $run_id --name lint-report --dir $versionedDir
+            gh run download $run_id --name docstring-summary --dir $versionedDir
+            gh run download $run_id --name refactor-audit --dir $versionedDir
             Write-Host "Downloaded: linting_report.json, docstring_summary.json, refactor_audit.json"
         }
+
+        # Create "latest" directory with copies of current version
+        Write-Host "Creating 'latest' reference copy..."
+        Copy-Item -Path "$versionedDir\*" -Destination $latestDir -Force -Recurse
+
+        # Create version history file
+        $historyFile = Join-Path $artifactsDir "version_history.csv"
+        if (-not (Test-Path $historyFile)) {
+            "Version,Timestamp,RunID" | Out-File -FilePath $historyFile
+        }
+        "$version,$timestamp,$run_id" | Out-File -FilePath $historyFile -Append
+
+        Write-Host "Artifacts downloaded and versioned as: $version"
     }
 }
 catch {
     Write-Warning "Artifact pull failed: $_"
 }
 
-
+# Continue with the rest of your script if needed
 Write-Host "Building Docker image..."
 docker build -t ghcr.io/angelosdimakos/ideas_logger:latest .
 
