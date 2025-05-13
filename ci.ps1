@@ -54,10 +54,10 @@ try {
         gh run download $run_id --name ci-severity-report --dir $versionedDir
         Write-Host "Downloaded: merged_report.json, ci_severity_report.md"
 
-        # Always pull strictness-mapping
-        Write-Host "Pulling strictness mapping report..."
-        gh run download $run_id --name strictness-mapping --dir $versionedDir
-        Write-Host "Downloaded: strictness_mapping.json"
+        # Always pull test discovery
+        Write-Host "Pulling test discovery report..."
+        gh run download $run_id --name test-discovery --dir $versionedDir
+        Write-Host "Downloaded: test_discovery.json"
 
         # Pull coverage reports if available
         Write-Host "Pulling coverage reports..."

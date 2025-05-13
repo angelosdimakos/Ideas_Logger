@@ -152,6 +152,15 @@ jobs:
           name: final-strictness-report
           path: ./artifacts/final_strictness_report.json
 
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-discovery
+          path: ./artifacts/test_discovery.json
+
+
+
+
 
   report:
     needs: [lint, test, docstring]

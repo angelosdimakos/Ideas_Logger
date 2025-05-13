@@ -4,13 +4,13 @@
 
 | Metric                     | Value    | Visual |
 |----------------------------|----------|--------|
-| Files analyzed             | `122`    |     |
-| Files with issues          | `60`     |     |
+| Files analyzed             | `154`    |     |
+| Files with issues          | `65`     |     |
 | **Top risk file**          | `kg/modules/visualization.py` |     |
-| Methods audited            | `322`    |     |
-| Missing tests              | `108`    | ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░ 🔴 |
-| Missing docstrings         | `248`    | ▓▓▓▓░░░░░░░░░░░░░░░░ 🔴 |
-| Linter issues              | `222`    | ▓▓▓▓▓▓░░░░░░░░░░░░░░ 🔴 |
+| Methods audited            | `340`    |     |
+| Missing tests              | `101`    | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░ 🟡 |
+| Missing docstrings         | `285`    | ▓▓▓░░░░░░░░░░░░░░░░░ 🔴 |
+| Linter issues              | `253`    | ▓▓▓▓▓░░░░░░░░░░░░░░░ 🔴 |
 
 
 
@@ -18,25 +18,25 @@
 
 | File | 🔣 Mypy | 🧼 Lint | 📉 Cx | 📊 Cov | 📈 Score | 🎯 Priority |
 |------|--------|--------|------|--------|----------|-------------|
-| `kg/modules/visualization.py` | 13 | 1 | 4.62 🟢 | 26.3% ▓▓▓▓▓░░░░░░░░░░░░░░░ | 33.6 | 🔥 High |
-| `gui/gui_helpers.py` | 9 | 4 | 2.25 🟢 | 0.0% ░░░░░░░░░░░░░░░░░░░░ | 28.25 | ⚠️ Medium |
-| `refactor/strictness_analyzer.py` | 7 | 0 | 8.0 🟢 | 0.0% ░░░░░░░░░░░░░░░░░░░░ | 24.0 | ⚠️ Medium |
-| `refactor/parsers/docstring_parser.py` | 5 | 5 | 4.5 🟢 | 27.0% ▓▓▓▓▓░░░░░░░░░░░░░░░ | 23.46 | ⚠️ Medium |
-| `utils/file_utils.py` | 5 | 5 | 3.89 🟢 | 73.7% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░ | 21.92 | ⚠️ Medium |
-| `refactor/refactor_guard.py` | 0 | 5 | 12.0 🟡 | 54.5% ▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░ | 20.41 | ⚠️ Medium |
-| `refactor/parsers/json_coverage_parser.py` | 0 | 0 | 17.0 🟡 | 1.4% ░░░░░░░░░░░░░░░░░░░░ | 18.97 | ⚠️ Medium |
-| `refactor/parsers/coverage_parser.py` | 4 | 1 | 7.67 🟢 | 13.4% ▓▓░░░░░░░░░░░░░░░░░░ | 18.9 | ⚠️ Medium |
-| `core/log_manager.py` | 6 | 2 | 2.14 🟢 | 24.6% ▓▓▓▓░░░░░░░░░░░░░░░░ | 18.65 | ⚠️ Medium |
-| `ai/ai_summarizer.py` | 3 | 5 | 3.25 🟢 | 34.2% ▓▓▓▓▓▓░░░░░░░░░░░░░░ | 18.07 | ⚠️ Medium |
+| `kg/modules/visualization.py` | 13 | 1 | 4.62 🟢 | 50.8% ▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░ | 33.11 | 🔥 High |
+| `ai/llm_optimization.py` | 10 | 2 | 9.0 🟢 | 100.0% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ | 32.0 | 🔥 High |
+| `gui/gui_helpers.py` | 9 | 4 | 2.25 🟢 | 27.0% ▓▓▓▓▓░░░░░░░░░░░░░░░ | 27.71 | ⚠️ Medium |
+| `ai/module_idea_generator.py` | 6 | 3 | 7.6 🟢 | 0.0% ░░░░░░░░░░░░░░░░░░░░ | 26.1 | ⚠️ Medium |
+| `refactor/parsers/docstring_parser.py` | 5 | 5 | 4.5 🟢 | 57.0% ▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░ | 22.86 | ⚠️ Medium |
+| `utils/file_utils.py` | 5 | 5 | 3.89 🟢 | 93.0% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ | 21.53 | ⚠️ Medium |
+| `refactor/refactor_guard.py` | 0 | 5 | 12.0 🟡 | 79.7% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░ | 19.91 | ⚠️ Medium |
+| `ai/llm_refactor_advisor.py` | 7 | 0 | 5.0 🟢 | 91.7% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ | 19.17 | ⚠️ Medium |
+| `refactor/parsers/json_coverage_parser.py` | 0 | 0 | 19.0 🟡 | 93.1% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ | 19.14 | ⚠️ Medium |
+| `refactor/parsers/coverage_parser.py` | 4 | 1 | 7.67 🟢 | 29.3% ▓▓▓▓▓░░░░░░░░░░░░░░░ | 18.58 | ⚠️ Medium |
 
 
 ## 📊 Summary Metrics
 
-- Total methods audited: **322**
-- 🚫 Methods missing tests: **108**
-- 🔺 High-complexity methods (≥10): **27**
-- 📚 Methods missing docstrings: **248**
-- 🧼 Linter issues detected: **222**
+- Total methods audited: **340**
+- 🚫 Methods missing tests: **101**
+- 🔺 High-complexity methods (≥10): **29**
+- 📚 Methods missing docstrings: **285**
+- 🧼 Linter issues detected: **253**
 
 
 
@@ -66,13 +66,10 @@
 - `_handle_remaining_nodes`: D205 — 1 blank line required between summary line and description (found 0)
 
 **📉 Complexity & Coverage Issues:**
-- `GraphVisualizer.visualize_graph`: Complexity = 10, Coverage = 1.4%
-- `GraphVisualizer._position_nodes_in_layers`: Complexity = 3, Coverage = 41.7%
+- `GraphVisualizer.visualize_graph`: Complexity = 10, Coverage = 0.0%
 - `GraphVisualizer._handle_remaining_nodes`: Complexity = 6, Coverage = 21.1%
-- `GraphVisualizer._draw_module_rectangles`: Complexity = 8, Coverage = 1.6%
-- `GraphVisualizer._get_node_colors`: Complexity = 3, Coverage = 3.3%
-- `GraphVisualizer._get_complexity_color`: Complexity = 3, Coverage = 37.5%
-- `GraphVisualizer._shorten_label`: Complexity = 3, Coverage = 37.5%
+- `GraphVisualizer._draw_module_rectangles`: Complexity = 8, Coverage = 0.0%
+- `GraphVisualizer._get_node_colors`: Complexity = 3, Coverage = 0.0%
 
 **📚 Function Descriptions:**
 - `__init__`: Initialize the visualizer.
@@ -110,6 +107,62 @@ complexity_scores: Dictionary of complexity scores.
 </details>
 
 <details>
+<summary>🔍 `ai/llm_optimization.py`</summary>
+
+
+**❗ MyPy Errors:**
+- scripts/ai/llm_optimization.py:13: error: Missing type parameters for generic type "dict"  [type-arg]
+- scripts/ai/llm_optimization.py:52: error: Missing type parameters for generic type "dict"  [type-arg]
+- scripts/ai/llm_optimization.py:52: error: Missing type parameters for generic type "list"  [type-arg]
+- scripts/ai/llm_optimization.py:63: error: Need type annotation for "issues" (hint: "issues: list[<type>] = ...")  [var-annotated]
+- scripts/ai/llm_optimization.py:91: error: Missing type parameters for generic type "list"  [type-arg]
+- scripts/ai/llm_optimization.py:91: error: Missing type parameters for generic type "dict"  [type-arg]
+- scripts/ai/llm_optimization.py:138: error: "dict[Any, Any]" has no attribute "persona"  [attr-defined]
+- scripts/ai/llm_optimization.py:144: error: Missing type parameters for generic type "list"  [type-arg]
+- scripts/ai/llm_optimization.py:144: error: Missing type parameters for generic type "dict"  [type-arg]
+- scripts/ai/llm_optimization.py:213: error: Missing type parameters for generic type "dict"  [type-arg]
+
+**🧼 Pydocstyle Issues:**
+- `summarize_file_data_for_llm`: D205 — 1 blank line required between summary line and description (found 0)
+- `compute_severity`: D205 — 1 blank line required between summary line and description (found 0)
+
+**📉 Complexity & Coverage Issues:**
+- `summarize_file_data_for_llm`: Complexity = 7, Coverage = 100.0%
+- `extract_top_issues`: Complexity = 12, Coverage = 100.0%
+- `build_refactor_prompt`: Complexity = 12, Coverage = 100.0%
+- `build_strategic_recommendations_prompt`: Complexity = 7, Coverage = 100.0%
+- `compute_severity`: Complexity = 7, Coverage = 100.0%
+
+**📚 Function Descriptions:**
+- `summarize_file_data_for_llm`: Condense file data to essential information for LLM processing.
+This helps reduce token usage when sending many files.
+  - Args: file_data (dict): The data of the file containing coverage and linting information.
+file_path (str): The path of the file being summarized.
+  - Returns: dict: A summary of the file data including complexity, coverage, and issues.
+- `extract_top_issues`: Extract the most important issues from a file.
+  - Args: file_data (dict): The data of the file containing issues.
+max_issues (int): Maximum number of issues to extract.
+  - Returns: list: A list of the most important issues.
+- `build_refactor_prompt`: Build a prompt for refactoring suggestions, optimized for handling many files.
+  - Args: offenders: List of (file_path, score, errors, lint_issues, complexity, coverage) tuples
+config: Configuration object
+verbose: Whether to include detailed info about each file
+limit: Maximum number of files to include
+  - Returns: str: A prompt for refactoring suggestions
+- `build_strategic_recommendations_prompt`: Build a prompt for strategic recommendations that can handle many files.
+  - Args: severity_data: List of severity data for each file
+summary_metrics: Dictionary of summary metrics
+limit: Maximum number of files to include
+  - Returns: str: A prompt for strategic recommendations
+- `compute_severity`: Compute severity metrics for a file based on its linting errors, mypy errors,
+code complexity, and test coverage.
+  - Args: file_path: Path to the file being analyzed
+content: Dictionary containing analysis data for the file
+  - Returns: dict: A dictionary with severity metrics
+
+</details>
+
+<details>
 <summary>🔍 `gui/gui_helpers.py`</summary>
 
 
@@ -131,14 +184,8 @@ complexity_scores: Dictionary of complexity scores.
 - `display_error`: D200 — One-line docstring should fit on one line with quotes (found 3)
 
 **📉 Complexity & Coverage Issues:**
-- `validate_log_input`: Complexity = 3, Coverage = 0.0%
-- `get_current_date`: Complexity = 1, Coverage = 0.0%
-- `get_current_timestamp`: Complexity = 1, Coverage = 0.0%
 - `clear_text_input`: Complexity = 1, Coverage = 0.0%
 - `update_status_label`: Complexity = 1, Coverage = 0.0%
-- `get_selected_option`: Complexity = 2, Coverage = 0.0%
-- `append_log_entry`: Complexity = 4, Coverage = 0.0%
-- `get_category_options`: Complexity = 3, Coverage = 0.0%
 - `create_status_label`: Complexity = 1, Coverage = 0.0%
 - `create_log_frame`: Complexity = 1, Coverage = 0.0%
 - `log_message`: Complexity = 1, Coverage = 0.0%
@@ -244,71 +291,5 @@ including error details in the output.
 - `format_coverage_data`: Formats the structured coverage data into a readable string grouped by main category.
   - Args: data (list[dict]): List of coverage data entries.
   - Returns: str: A nicely formatted string for displaying coverage stats.
-
-</details>
-
-<details>
-<summary>🔍 `refactor/strictness_analyzer.py`</summary>
-
-
-**❗ MyPy Errors:**
-- scripts/refactor/strictness_analyzer.py:202: error: Incompatible return value type (got "None", expected "Path")  [return-value]
-- scripts/refactor/strictness_analyzer.py:205: error: Incompatible return value type (got "None", expected "Path")  [return-value]
-- scripts/refactor/strictness_analyzer.py:237: error: Incompatible types in assignment (expression has type "Path", variable has type "dict[str, Any]")  [assignment]
-- scripts/refactor/strictness_analyzer.py:240: error: "dict[str, Any]" has no attribute "resolve"  [attr-defined]
-- scripts/refactor/strictness_analyzer.py:245: error: Argument 1 to "map_test_to_prod_path" has incompatible type "dict[str, Any]"; expected "Path"  [arg-type]
-- scripts/refactor/strictness_analyzer.py:278: error: Generator has incompatible item type "object"; expected "bool"  [misc]
-- scripts/refactor/strictness_analyzer.py:345: error: Missing type parameters for generic type "Dict"  [type-arg]
-
-**📉 Complexity & Coverage Issues:**
-- `extract_test_functions`: Complexity = 5, Coverage = 0.0%
-- `analyze_strictness`: Complexity = 7, Coverage = 0.0%
-- `compute_strictness_score`: Complexity = 1, Coverage = 0.0%
-- `attach_coverage_hits`: Complexity = 6, Coverage = 0.0%
-- `map_test_to_prod_path`: Complexity = 11, Coverage = 0.0%
-- `map_tests_to_prod_code`: Complexity = 17, Coverage = 0.0%
-- `scan_test_directory`: Complexity = 4, Coverage = 0.0%
-- `main`: Complexity = 13, Coverage = 0.0%
-
-**📚 Function Descriptions:**
-- `extract_test_functions`: Extract test function names and line ranges from a Python test file.
-  - Args: filepath (Path): The path to the Python test file.
-  - Returns: List[Dict[str, Any]]: A list of dictionaries containing test function names and their line ranges.
-- `analyze_strictness`: Analyze basic strictness heuristics on a test function.
-  - Args: lines (List[str]): The lines of the test function.
-func (Dict[str, Any]): A dictionary containing the test function's metadata.
-  - Returns: Dict[str, Any]: A dictionary containing the analysis results.
-- `compute_strictness_score`: Compute a weighted strictness score using heuristics and coverage hit ratio.
-  - Args: asserts (int): The number of assert statements.
-raises (int): The number of expected exceptions.
-mocks (int): The number of mock objects used.
-branches (int): The number of branches in the code.
-length (int): The length of the test function.
-hit_ratio (float): The coverage hit ratio.
-  - Returns: float: The computed strictness score.
-- `attach_coverage_hits`: Attach line hit counts and recompute score.
-  - Args: results (List[Dict[str, Any]]): The results of the test analysis.
-coverage_data (Dict[str, Dict[str, Any]]): The coverage data mapping.
-  - Returns: None
-- `map_test_to_prod_path`: Map a test file path to its corresponding production code path.
-  - Args: test_path (Path): The path to the test file.
-test_root (Path): The root directory of the test files.
-source_root (Path): The root directory of the production code.
-  - Returns: Path: The corresponding production code path.
-- `map_tests_to_prod_code`: Map test functions to production code they cover.
-  - Args: test_results (List[Dict[str, Any]]): The results of the test analysis.
-test_root (Path): The root directory of the test files.
-source_root (Path): The root directory of the production code.
-coverage_data (Dict[str, Dict[str, Any]]): The coverage data mapping.
-  - Returns: None
-- `scan_test_directory`: Scan test directory and extract test function information.
-  - Args: tests_path (Path): The path to the test directory.
-  - Returns: List[Dict[str, Any]]: A list of dictionaries containing test function information.
-- `main`: Main entry point for the script.
-  - Args: tests_dir (str): The directory containing test files.
-source_dir (str): The directory containing production code.
-coverage_path (str): The path to the coverage data file.
-output_path (Optional[str]): The path to the output file (if any).
-  - Returns: None
 
 </details>
