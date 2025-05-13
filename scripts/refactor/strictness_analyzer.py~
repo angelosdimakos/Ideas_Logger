@@ -323,7 +323,8 @@ def should_assign_test_to_module(
 
     # 2. Strict Import Check
     imported_modules = test_imports.get(test_file_name, [])
-    if imported_modules and prod_file_name in imported_modules:
+    if imported_modules and any(
+            mod.endswith(f".{prod_file_name}") or mod == prod_file_name for mod in imported_modules):
         logger.debug(
             f"✅ Strict import match: prod='{prod_file_name}', test='{test_file_name}', imports={imported_modules}")
         return True
