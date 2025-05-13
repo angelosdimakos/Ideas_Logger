@@ -42,7 +42,7 @@ def test_extract_imports():
 
     assert "os" in imports
     assert "sys" in imports
-    assert "my_module" in imports
+    assert "my_module.submodule" in imports
 
 def test_analyze_strictness_correct_metrics():
     lines = [
