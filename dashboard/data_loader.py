@@ -40,11 +40,14 @@ def load_artifact(path: str) -> Dict[str, Any]:
     else:
         return {}
 
-    # run any specialized decompression
-    if path.endswith("merged_report.json"):
-        blob = decompress_merged(blob)
-    elif path.endswith("final_strictness_report.json"):
-        blob = load_strictness_comp(blob)
+        # run any specialized decompression based on blob content
+    if isinstance(blob, dict):
+        # merged report compressor outputs 'doc' & 'files'
+        if "doc" in blob and "files" in blob:
+            blob = decompress_merged(blob)
+        # strictness report compressor outputs 'modules'
+        elif "modules" in blob:
+            blob = load_strictness_comp(blob)
 
     # filter out excluded top-level entries
     if isinstance(blob, dict):

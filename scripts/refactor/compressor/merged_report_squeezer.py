@@ -1,66 +1,3 @@
-"""merged_report_squeezer.py
-================================
-Bespoke *loss‑less* compressor / decompressor for the **merged_report.json**
-artifact produced by the CI‑audit pipeline.
-
-The original file is ±450 kB of JSON, but ≈60 % of that is the repetitive
-triplet:
-
-```jsonc
-{"description": "…", "args": "…", "returns": "…"}
-```
-
-That exact structure appears for every module docstring, every class
-docstring, every function docstring… hundreds of times.  Hoisting each
-*unique* triplet into a single lookup table and replacing the objects with a
-small integer ID cuts the raw size to ≈90 kB.  A `gzip -9` on top drives the
-file under 12 kB.
-
------------------------------------------------------------------------
-Compression model
------------------------------------------------------------------------
-```text
-root
-├── "doc"   – list[ [descr, args, returns] ]        (lookup‑table)
-└── "files" – dict[str, dict]  # key = file path
-      ├── "d" – docstrings block                     (see below)
-      ├── "cov" – coverage        (verbatim)
-      └── "lint" – linting/errors  (verbatim)
-
-# "d" layout (all keys are *one‑letter* to save space)
-{
-  "m": <id or null>,                    # module docstring
-  "c": [ [class_name, id], … ],         # class docs
-  "f": [ [func_name, id],  … ]          # function docs
-}
-```
-The compressor is *bespoke*: it knows exactly which parts to shrink and which
-ones (coverage & linting) to copy wholesale.
-
------------------------------------------------------------------------
-Public API
------------------------------------------------------------------------
-```
-compress_obj(orig: dict) -> dict  # shrunken structure
-compress(path_in, path_out)       # CLI helper
-
-decompress_obj(blob: dict) -> dict  # original structure
-```
------------------------------------------------------------------------
-CLI usage
------------------------------------------------------------------------
-```bash
-# shrink
-python merged_report_squeezer.py compress merged_report.json merged_report.comp.json
-
-# expand (round‑trip)
-python merged_report_squeezer.py decompress merged_report.comp.json merged_report.round.json
-
-# quick self‑test (compress→decompress in RAM) – exits 0 on success
-python merged_report_squeezer.py selftest merged_report.json
-```
------------------------------------------------------------------------
-"""
 from __future__ import annotations
 
 import argparse
@@ -85,7 +22,7 @@ def _get_or_add(triple: DocTriple, cache: Dict[DocTriple, int], table: List[List
         table.append(list(triple))  # store as list to save a few chars
     return cache[triple]
 
-# ── NEW: utility ──────────────────────────────────────────────────────────────
+
 def _calc_percent(cov_blob: dict[str, Any]) -> float | None:
     """
     Return overall file-coverage percentage if the *complexity* section
@@ -95,10 +32,16 @@ def _calc_percent(cov_blob: dict[str, Any]) -> float | None:
     if not comp:
         return None
 
-    total, covered = 0, 0
+    total = covered = 0
     for stats in comp.values():
-        total   += stats.get("lines", 0)
-        covered += stats.get("covered_lines", 0)
+        lines = stats.get("lines", 0)
+        total += lines
+        cov = stats.get("covered_lines", 0)
+        if isinstance(cov, list):
+            covered += len(cov)
+        else:
+            covered += cov
+
     return round(100 * covered / total, 1) if total else None
 
 
@@ -119,93 +62,46 @@ def compress_obj(original: Dict[str, Any], *, retain_keys: bool = False) -> Dict
     """
     doc_table: List[List[Any]] = []
     cache: Dict[DocTriple, int] = {}
-
     files_blob: Dict[str, Any] = {}
 
     for file_path, report in original.items():
         # -------------------------------------------------- docstrings block
-        ds: Dict[str, Any] = report.get("docstrings", {})
+        ds = report.get("docstrings", {})
         module_doc = ds.get("module_doc", {})
-        module_id = _get_or_add(
-            (
-                module_doc.get("description"),
-                module_doc.get("args"),
-                module_doc.get("returns"),
-            ),
-            cache,
-            doc_table,
-        ) if module_doc else None
+        module_id = (
+            _get_or_add((module_doc.get("description"), module_doc.get("args"), module_doc.get("returns")), cache, doc_table)
+            if module_doc else None
+        )
 
-        # classes
         cls_arr: List[Tuple[str, int]] = []
         for cls in ds.get("classes", []):
-            cls_arr.append(
-                (
-                    cls.get("name", ""),
-                    _get_or_add(
-                        (
-                            cls.get("description"),
-                            cls.get("args"),
-                            cls.get("returns"),
-                        ),
-                        cache,
-                        doc_table,
-                    ),
-                )
-            )
+            cls_arr.append((
+                cls.get("name", ""),
+                _get_or_add((cls.get("description"), cls.get("args"), cls.get("returns")), cache, doc_table)
+            ))
 
-        # functions
         fn_arr: List[Tuple[str, int]] = []
         for fn in ds.get("functions", []):
-            fn_arr.append(
-                (
-                    fn.get("name", ""),
-                    _get_or_add(
-                        (
-                            fn.get("description"),
-                            fn.get("args"),
-                            fn.get("returns"),
-                        ),
-                        cache,
-                        doc_table,
-                    ),
-                )
-            )
+            fn_arr.append((
+                fn.get("name", ""),
+                _get_or_add((fn.get("description"), fn.get("args"), fn.get("returns")), cache, doc_table)
+            ))
 
-        doc_block = {"m": module_id, "c": cls_arr, "f": fn_arr}
-        if retain_keys:
-            doc_block = {
-                "module_doc": module_id,
-                "classes": cls_arr,
-                "functions": fn_arr,
-            }
+        doc_block = ({"m": module_id, "c": cls_arr, "f": fn_arr}
+                     if not retain_keys else
+                     {"module_doc": module_id, "classes": cls_arr, "functions": fn_arr})
 
         # -------------------------------------------------- coverage block + percent calculation
         cov_blob: Dict[str, Any] = report.get("coverage", {})
-        comp = cov_blob.get("complexity", {})
-
-        total, covered = 0, 0
-        for stats in comp.values():
-            total += stats.get("lines", 0)
-            covered_lines = stats.get("covered_lines", 0)
-            if isinstance(covered_lines, list):
-                covered += len(covered_lines)
-            else:
-                covered += covered_lines  # Assume it's already an int or 0
-
-        if total:
-            percent = round(100 * covered / total, 1)
-            cov_blob = {"p": percent, **cov_blob}  # Add 'p' field at the top
+        percent = _calc_percent(cov_blob)
+        if percent is not None:
+            # prepend 'p' key so percent is first
+            cov_blob = {"p": percent, **cov_blob}
 
         # -------------------------------------------------- assemble new report
-        files_blob[file_path] = {
-            "d": doc_block,
-            "cov": cov_blob,
-            "lint": report.get("linting", {}),
-        }
+        files_blob[file_path] = {"d": doc_block, "cov": cov_blob, "lint": report.get("linting", {})}
 
     return {"doc": doc_table, "files": files_blob}
-
 
 
 # ----------------------------------------------------------------------------
@@ -225,23 +121,15 @@ def decompress_obj(blob: Dict[str, Any]) -> Dict[str, Any]:
     rebuilt: Dict[str, Any] = {}
     for file_path, comp in blob["files"].items():
         dblock = comp["d"]
-        module_doc = _expand(dblock["m"])
-        classes = [
-            {"name": name, **_expand(doc_id)}
-            for name, doc_id in dblock["c"]
-        ]
-        functions = [
-            {"name": name, **_expand(doc_id)}
-            for name, doc_id in dblock["f"]
-        ]
+        module_doc = _expand(dblock.get("m"))
+        classes = [{"name": name, **_expand(doc_id)} for name, doc_id in dblock.get("c", [])]
+        functions = [{"name": name, **_expand(doc_id)} for name, doc_id in dblock.get("f", [])]
 
+        cov_blob = comp.get("cov", {}).copy()
+        cov_blob.pop("p", None)
         rebuilt[file_path] = {
-            "docstrings": {
-                "module_doc": module_doc,
-                "classes": classes,
-                "functions": functions,
-            },
-            "coverage": comp.get("cov", {}),
+            "docstrings": {"module_doc": module_doc, "classes": classes, "functions": functions},
+            "coverage": cov_blob,
             "linting": comp.get("lint", {}),
         }
 
@@ -271,7 +159,6 @@ def _dump_json(obj: Dict[str, Any], path: Path, *, pretty: bool = False, gzip_le
 # CLI
 # ----------------------------------------------------------------------------
 
-
 def _cli() -> None:
     p = argparse.ArgumentParser(description="Compress / decompress merged_report.json")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -293,7 +180,7 @@ def _cli() -> None:
     st = sub.add_parser("selftest")
     st.add_argument("infile")
 
-    # NEW: percent viewer
+    # percent viewer
     pv = sub.add_parser("percent", help="Show per-file coverage percentages from compressed report")
     pv.add_argument("infile")
 
@@ -330,10 +217,12 @@ def _cli() -> None:
         print("-" * 65)
         for path, rep in files.items():
             short = os.path.basename(path)
-            pct = rep.get("cov", {}).get("p")
+            cov_blob = rep.get("cov", {})
+            pct = cov_blob.get("p")
+            if pct is None:
+                pct = _calc_percent(cov_blob)
             pct_display = f"{pct:.1f}" if pct is not None else "—"
             print(f"{short:<50} {pct_display:>12}")
-
 
 if __name__ == "__main__":
     _cli()

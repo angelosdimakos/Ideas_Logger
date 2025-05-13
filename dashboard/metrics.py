@@ -21,7 +21,7 @@ def compute_executive_summary(
     unique_tests = set()
     strictness_vals, severity_vals, coverage_vals = [], [], []
 
-    modules = strictness_data.get("modules", {})
+    modules = strictness_data.get("modules", strictness_data)
     for file_path, mod in modules.items():
         if is_excluded(file_path):
             continue
@@ -71,7 +71,8 @@ def get_low_coverage_modules(
     Returns a list of (module, coverage) sorted ascending by coverage.
     """
     pairs: List[Tuple[str, float]] = []
-    for mod, data in strictness_data.get("modules", {}).items():
+    raw_modules = strictness_data.get("modules", strictness_data)
+    for mod, data in raw_modules.items():
         if is_excluded(mod):
             continue
         pairs.append((mod, data.get("module_coverage", 0.0)))
@@ -159,7 +160,8 @@ def build_prod_to_tests_df(strictness_data: Dict[str, Any]) -> pd.DataFrame:
     """
     rows: List[Dict[str, Any]] = []
 
-    for prod, info in strictness_data.get("modules", {}).items():
+    raw_modules = strictness_data.get("modules", strictness_data)
+    for prod, info in raw_modules.items():
         tests = info.get("tests", [])
         if not tests:
             continue
@@ -201,7 +203,9 @@ def severity_distribution(strictness_data: Dict[str, Any]) -> Dict[str, int]:
     severity_thresholds = {"Low": 0.3, "Medium": 0.7}
     test_severities = defaultdict(float)  # Global deduplication
 
-    for module in strictness_data.get("modules", {}).values():
+    # Deduplicate by test_name
+    raw_modules = strictness_data.get("modules", strictness_data)
+    for module in raw_modules.values():
         for t in module.get("tests", []):
             name = t.get("test_name", "unknown")
             sev = t.get("severity", 0.0)

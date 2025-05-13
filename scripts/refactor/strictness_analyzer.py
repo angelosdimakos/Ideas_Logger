@@ -303,11 +303,11 @@ def validate_report_schema(data: Dict[str, Any], report_type: str = "final") -> 
 
 
 def should_assign_test_to_module(
-        prod_file_name: str,
-        method_names: List[str],
-        test_entry: StrictnessEntry,
-        test_imports: Dict[str, List[str]],
-        fuzzy_threshold: int = 95,
+    prod_file_name: str,
+    method_names: List[str],
+    test_entry: StrictnessEntry,
+    test_imports: Dict[str, List[str]],
+    fuzzy_threshold: int = 95,
 ) -> bool:
     """
     Decide if a test should be assigned to a production module using strict matching.
@@ -321,31 +321,43 @@ def should_assign_test_to_module(
         logger.debug(f"✅ Strong convention match: prod='{prod_file_name}', test='{test_file_name}'")
         return True
 
-    # 2. Strict Import Check
+    # 2. Strict Import Check (only if test file name includes prod module name)
     imported_modules = test_imports.get(test_file_name, [])
-    if imported_modules and prod_file_name in imported_modules:
+    if imported_modules and prod_file_name in imported_modules and prod_file_name in test_file_name:
         logger.debug(
-            f"✅ Strict import match: prod='{prod_file_name}', test='{test_file_name}', imports={imported_modules}")
+            f"✅ Strict import match: prod='{prod_file_name}', "
+            f"test='{test_file_name}', imports={imported_modules}"
+        )
         return True
 
-    # 💡 2b. Class Name Fuzzy Check
+    # 2b. Class Name Fuzzy Check
     class_name_raw = test_entry.name.split('.')[0].lower()
     normalized_class_name = normalize_test_name(class_name_raw, remove_test_prefix=True)
     if fuzzy_match(prod_file_name, normalized_class_name, fuzzy_threshold):
         logger.debug(f"✅ Class-based fuzzy match: prod='{prod_file_name}', test_class='{normalized_class_name}'")
         return True
 
-    # 3. Very Strict Fuzzy Matching on Combined Names (last resort)
-    prod_composite = "".join(
-        [prod_file_name] + [normalize_test_name(m.lower(), remove_test_prefix=True) for m in method_names]).replace("_",
-                                                                                                                    "").lower()
-    test_composite = "".join([test_file_name, normalized_test_name]).replace("_", "").lower()
-    holistic_match_score = max(fuzz.partial_ratio(prod_composite, test_composite),
-                               fuzz.token_sort_ratio(prod_composite, test_composite))
-
-    if holistic_match_score >= fuzzy_threshold:
+    # 3. Very Strict Holistic Fuzzy Matching (last resort—but only if filename mentions module)
+    if prod_file_name not in test_file_name:
         logger.debug(
-            f"⚠️ Very strict fuzzy match (holistic): prod='{prod_composite}', test='{test_composite}', Score: {holistic_match_score}"
+            f"🛑 Skipping holistic fuzzy: test file '{test_file_name}' "
+            f"does not include module '{prod_file_name}'"
+        )
+        return False
+
+    prod_composite = "".join(
+        [prod_file_name] +
+        [normalize_test_name(m.lower(), remove_test_prefix=True) for m in method_names]
+    ).replace("_", "").lower()
+    test_composite = "".join([test_file_name, normalized_test_name]).replace("_", "").lower()
+    holistic_score = max(
+        fuzz.partial_ratio(prod_composite, test_composite),
+        fuzz.token_sort_ratio(prod_composite, test_composite)
+    )
+    if holistic_score >= fuzzy_threshold:
+        logger.debug(
+            f"⚠️ Very strict fuzzy match (holistic): prod='{prod_composite}', "
+            f"test='{test_composite}', Score: {holistic_score}"
         )
         return True
 
