@@ -155,8 +155,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-discovery
-          path: ./artifacts/test_discovery.json
+          name: test-report
+          path: ./artifacts/test_report.json
 
 
 

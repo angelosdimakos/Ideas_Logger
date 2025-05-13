@@ -56,8 +56,8 @@ try {
 
         # Always pull test discovery
         Write-Host "Pulling test discovery report..."
-        gh run download $run_id --name test-discovery --dir $versionedDir
-        Write-Host "Downloaded: test_discovery.json"
+        gh run download $run_id --name test-report --dir $versionedDir
+        Write-Host "Downloaded: test_report.json"
 
         # Pull coverage reports if available
         Write-Host "Pulling coverage reports..."
