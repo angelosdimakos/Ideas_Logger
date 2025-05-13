@@ -70,15 +70,16 @@ def extract_test_functions_from_tree(tree, file_stem: str) -> List[dict]:
 
 
 def extract_imports_from_tree(tree) -> List[str]:
-    """Extract top-level imported modules from an AST tree."""
+    """Extract imported modules (flat and from) from AST tree, including full dotted path for project code."""
     imports = set()
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
-                imports.add(alias.name.split('.')[0])
+                imports.add(alias.name)  # Full name
         elif isinstance(node, ast.ImportFrom) and node.module:
-            imports.add(node.module.split('.')[0])
+            imports.add(node.module)  # Full dotted path
     return sorted(imports)
+
 
 def normalize_test_name(name: str, remove_test_prefix: bool = False) -> str:
     """
