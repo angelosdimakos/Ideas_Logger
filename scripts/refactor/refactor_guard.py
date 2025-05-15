@@ -20,7 +20,6 @@ from scripts.refactor.complexity.complexity_analyzer import (
     calculate_function_complexity_map,
 )
 from scripts.refactor.method_line_ranges import extract_method_line_ranges
-from scripts.refactor.parsers.coverage_api_parser import parse_coverage_with_api
 from scripts.refactor.parsers.json_coverage_parser import parse_json_coverage
 
 logger = logging.getLogger(__name__)
@@ -59,10 +58,7 @@ class RefactorGuard:
         if os.path.exists(cov_path) and not force_fallback:
             try:
                 ranges = extract_method_line_ranges(refactored_path)
-                if cov_path.endswith(".json"):
-                    parsed = parse_json_coverage(cov_path, ranges, filepath=refactored_path)
-                else:
-                    parsed = parse_coverage_with_api(cov_path, ranges, filepath=refactored_path)
+                parsed = parse_json_coverage(cov_path, ranges, filepath=refactored_path)
 
                 if len(parsed) == 1:
                     covered = next(iter(parsed.values()))

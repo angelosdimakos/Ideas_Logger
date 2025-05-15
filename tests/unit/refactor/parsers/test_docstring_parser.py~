@@ -226,9 +226,10 @@ def test_analyze_directory_exclude_and_norm(tmp_path: Path, monkeypatch) -> None
     analyzer = dp.DocstringAnalyzer(exclude_dirs=[".venv"])
     result = analyzer.analyze_directory(tmp_path)
 
-    # 🔽 normalise to forward slashes so the test passes on all OSes
-    normalised = {p.replace("\\", "/") for p in result.keys()}
-    assert normalised == {"sub/keep.py"}
+    # only keep.py should appear
+    assert set(result.keys()) == {"sub/keep.py"}
+    # norm was invoked with actual Path object
+    assert keep in called_with
 
 
 # --------------------------------------------------------------------------------------

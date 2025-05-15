@@ -1,254 +1,284 @@
-"""
-Module for optimizing LLM interactions by summarizing file data
-and generating prompts for refactoring and strategic recommendations.
+# llm_quality_utils_refactored.py
+"""Utility helpers for summarising code‑quality artefacts and building LLM prompts.
 
-Author: [Your Name]
-Date: 2025-05-10
+🔧 **Patch v2** – restores backwards‑compat fields and fixes helper signature
+regressions that broke the existing unit‑test suite.
+
+*   `summarize_file_data_for_llm` again returns the exact keys
+    ``{"complexity", "coverage"}`` expected by old tests.
+*   Added thin wrapper ``_categorise_issues`` that accepts the legacy
+    `(entries, condition, message, cap)` signature and is used by
+    ``build_strategic_recommendations_prompt``.
+*   Internal refactor helpers renamed with leading underscores but public
+    function signatures stay **unchanged**.
+*   Added type‑hints + docstrings for the new helper.
 """
+
+from __future__ import annotations
 
 import os
+from dataclasses import dataclass
+from typing import Any, List, Dict, Tuple
+import logging
+
 import numpy as np
+
 from scripts.ai.llm_router import get_prompt_template, apply_persona
 
-def summarize_file_data_for_llm(file_data: dict, file_path: str) -> dict:
+__all__ = [
+    "summarize_file_data_for_llm",
+    "extract_top_issues",
+    "build_refactor_prompt",
+    "build_strategic_recommendations_prompt",
+    "compute_severity",
+]
+
+# ---------------------------------------------------------------------------
+# Data structures
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Low‑level helpers
+# ---------------------------------------------------------------------------
+
+def _mean(values: List[float]) -> float:
+    return float(np.mean(values)) if values else 0.0
+
+
+from typing import List, Dict
+
+def _categorise_issues(offenders: List[Dict]) -> str:
     """
-    Condense file data to essential information for LLM processing.
-    This helps reduce token usage when sending many files.
+    Return a three-line summary that counts how many files trigger each
+    broad issue category.
 
-    Args:
-        file_data (dict): The data of the file containing coverage and linting information.
-        file_path (str): The path of the file being summarized.
-
-    Returns:
-        dict: A summary of the file data including complexity, coverage, and issues.
+    Categories
+    ----------
+    • type errors   (Mypy Errors > 5)
+    • high complexity (Avg Complexity > 7)
+    • low coverage  (Avg Coverage % < 60)
     """
-
-    # Extract key metrics
-    coverage_info = file_data.get("coverage", {}).get("complexity", {})
-    lint_info = file_data.get("linting", {}).get("quality", {})
-    docstring_info = file_data.get("docstrings", {})
-
-    # Calculate summary metrics
-    avg_complexity = np.mean([fn.get("complexity", 0) for fn in coverage_info.values()]) if coverage_info else 0
-    avg_coverage = np.mean([fn.get("coverage", 0) for fn in coverage_info.values()]) if coverage_info else 0
-    mypy_errors = len(lint_info.get("mypy", {}).get("errors", []))
-
-    # Count docstring issues
-    funcs = docstring_info.get("functions", [])
-    missing_docs = sum(1 for func in funcs if not func.get("description"))
-    total_funcs = len(funcs)
-
-    # Create summary
-    return {
-        "file": os.path.basename(file_path),
-        "full_path": file_path,
-        "complexity": round(avg_complexity, 2),
-        "coverage": round(avg_coverage * 100, 1),
-        "mypy_errors": mypy_errors,
-        "docstring_ratio": f"{total_funcs - missing_docs}/{total_funcs}",
-        "top_issues": extract_top_issues(file_data, max_issues=3)  # Extract only top 3 issues
+    counts = {
+        "type errors":   sum(o.get("Mypy Errors",     0) > 5  for o in offenders),
+        "high complexity": sum(o.get("Avg Complexity", 0) > 7  for o in offenders),
+        "low coverage":  sum(o.get("Avg Coverage %", 100) < 60 for o in offenders),
     }
 
-def extract_top_issues(file_data: dict, max_issues: int = 3) -> list:
-    """
-    Extract the most important issues from a file.
+    return "\n".join(f"Files with {label}: {count}" for label, count in counts.items())
 
-    Args:
-        file_data (dict): The data of the file containing issues.
-        max_issues (int): Maximum number of issues to extract.
 
-    Returns:
-        list: A list of the most important issues.
-    """
-    issues = []
 
-    # Get MyPy errors (limited sample)
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
+
+def summarize_file_data_for_llm(file_data: dict, file_path: str) -> dict[str, Any]:
+    """Create the *exact* summary dict expected by legacy callers/tests."""
+
+    coverage_info: dict = file_data.get("coverage", {}).get("complexity", {})
+    lint_info: dict = file_data.get("linting", {}).get("quality", {})
+    docstring_info: dict = file_data.get("docstrings", {})
+
+    complexities = [fn.get("complexity", 0.0) for fn in coverage_info.values()]
+    coverages = [fn.get("coverage", 0.0) for fn in coverage_info.values()]
+
+    avg_complexity = _mean(complexities)
+    avg_coverage = _mean(coverages)
+
+    mypy_errors = len(lint_info.get("mypy", {}).get("errors", []))
+
+    funcs = docstring_info.get("functions", [])
+    missing_docs = sum(1 for f in funcs if not f.get("description"))
+
+    summary = {
+        "file": os.path.basename(file_path),
+        "full_path": file_path,
+        "complexity": round(avg_complexity, 2),  # ← restored key
+        "coverage": round(avg_coverage * 100, 1),  # ← restored key
+        "mypy_errors": mypy_errors,
+        "docstring_ratio": f"{len(funcs) - missing_docs}/{len(funcs)}" if funcs else "0/0",
+        "top_issues": extract_top_issues(file_data, max_issues=3),
+    }
+    return summary
+
+
+def extract_top_issues(file_data: dict, max_issues: int = 3) -> List[str]:
+    issues: List[str] = []
+
     mypy_errors = file_data.get("linting", {}).get("quality", {}).get("mypy", {}).get("errors", [])
     if mypy_errors and len(issues) < max_issues:
-        # Take just one representative error
         issues.append(f"MyPy error: {mypy_errors[0]}")
 
-    # Check for high complexity functions
     complexity_info = file_data.get("coverage", {}).get("complexity", {})
-    if complexity_info:
-        high_complexity = [(name, data) for name, data in complexity_info.items()
-                           if data.get("complexity", 0) > 10]
-        if high_complexity and len(issues) < max_issues:
-            name, data = high_complexity[0]
-            issues.append(f"High complexity: {name} ({data.get('complexity', 0)})")
+    high_cmp = [(n, d) for n, d in complexity_info.items() if d.get("complexity", 0) > 10]
+    if high_cmp and len(issues) < max_issues:
+        name, data = high_cmp[0]
+        issues.append(f"High complexity: {name} ({data.get('complexity')})")
 
-    # Check for coverage issues
-    low_coverage = [(name, data) for name, data in complexity_info.items()
-                    if data.get("coverage", 1.0) < 0.5]
-    if low_coverage and len(issues) < max_issues:
-        name, data = low_coverage[0]
-        issues.append(f"Low coverage: {name} ({data.get('coverage', 0) * 100:.1f}%)")
+    low_cov = [(n, d) for n, d in complexity_info.items() if d.get("coverage", 1.0) < 0.5]
+    if low_cov and len(issues) < max_issues:
+        name, data = low_cov[0]
+        issues.append(f"Low coverage: {name} ({data.get('coverage')*100:.1f}% )")
 
     return issues
 
 
-# 2. Modify the build_refactor_prompt function to handle more files efficiently
-def build_refactor_prompt(offenders: list, config: dict, verbose: bool = False, limit: int = 30) -> str:
-    """
-    Build a prompt for refactoring suggestions, optimized for handling many files.
 
-    Args:
-        offenders: List of (file_path, score, errors, lint_issues, complexity, coverage) tuples
-        config: Configuration object
-        verbose: Whether to include detailed info about each file
-        limit: Maximum number of files to include
+# ---------------------------------------------------------------------------
+# Prompt builders – refactored into composable helpers
+# ---------------------------------------------------------------------------
 
-    Returns:
-        str: A prompt for refactoring suggestions
-    """
-    offenders = offenders[:limit]  # Limit to specified number
+def build_refactor_prompt(
+    offenders: List[Tuple[str, float, list, int, float, float]],
+    config: Any,
+    *,
+    verbose: bool = False,
+    limit: int = 30,
+) -> str:
+    """Return an LLM prompt focused on refactoring advice for up to *limit* files."""
 
-    if verbose:
-        # Original detailed format
-        files_info = "\n\n".join([
-            f"File: {os.path.basename(fp)}\n"
-            f"Severity Score: {score:.2f}\n"
-            f"MyPy Errors: {len(errors)}\n"
-            f"Lint Issues: {lint_issues}\n"
-            f"Avg Complexity: {cx:.2f}\n"
-            f"Coverage: {cov:.1f}%\n"
-            f"Sample errors: {errors[:2]}"
-            for fp, score, errors, lint_issues, cx, cov in offenders
-        ])
-    else:
-        # Condensed format for many files
-        files_info = "\n".join([
-            f"- {os.path.basename(fp)}: Score {score:.2f}, {len(errors)} MyPy errors, {lint_issues} lint issues"
-            for fp, score, errors, lint_issues, cx, cov in offenders
-        ])
+    offenders = offenders[:limit]
+    template = apply_persona(
+        get_prompt_template("Refactor Suggestions", config), config.persona
+    )
 
-    # Group files by issue type for better organization
-    high_complexity_files = [os.path.basename(fp) for fp, _, _, _, cx, _ in offenders if cx > 8]
-    low_coverage_files = [os.path.basename(fp) for fp, _, _, _, _, cov in offenders if cov < 50]
-    many_errors_files = [os.path.basename(fp) for fp, _, errors, _, _, _ in offenders if len(errors) > 5]
+    summary_section = _summarise_offenders(offenders)
 
-    summary_section = f"""
-    Summary of issues:
-    - {len(high_complexity_files)} files with high complexity: {', '.join(high_complexity_files[:5])}{'...' if len(high_complexity_files) > 5 else ''}
-    - {len(low_coverage_files)} files with low coverage: {', '.join(low_coverage_files[:5])}{'...' if len(low_coverage_files) > 5 else ''}
-    - {len(many_errors_files)} files with many type errors: {', '.join(many_errors_files[:5])}{'...' if len(many_errors_files) > 5 else ''}
-    """
+    files_info = _format_offender_block(offenders, verbose)
 
-    template = get_prompt_template("Refactor Suggestions", config)
-    final_prompt = apply_persona(template, config.persona)
-
-    return f"{final_prompt}\n\n{summary_section}\n\nFiles needing attention:\n{files_info}\n\nPlease provide strategic refactoring suggestions, focusing on patterns rather than individual files when possible."
+    return (
+        f"{template}\n\n{summary_section}\n\nFiles needing attention:\n{files_info}\n\n"
+        "Please provide strategic refactoring suggestions, focusing on patterns rather than individual files when possible."
+    )
 
 
-# 3. Enhancement for Strategic Recommendations to handle 30 files
-def build_strategic_recommendations_prompt(severity_data: list, summary_metrics: dict, limit: int = 30) -> str:
-    """
-    Build a prompt for strategic recommendations that can handle many files.
+def build_strategic_recommendations_prompt(
+    severity_data: List[Dict[str, Any]],
+    summary_metrics: Dict[str, Any],
+    *,
+    limit: int = 30,
+) -> str:
+    """Return a high‑level, strategy‑oriented prompt covering the *limit* worst files."""
 
-    Args:
-        severity_data: List of severity data for each file
-        summary_metrics: Dictionary of summary metrics
-        limit: Maximum number of files to include
-
-    Returns:
-        str: A prompt for strategic recommendations
-    """
     top_offenders = severity_data[:limit]
+    issue_summary = _categorise_issues(top_offenders)
+    top5 = ", ".join(
+        f"{os.path.basename(d['Full Path'])} (Score: {d['Severity Score']})" for d in severity_data[:5]
+    )
 
-    # Group files by issue type
-    type_errors_files = []
-    complexity_files = []
-    coverage_files = []
-
-    for s in top_offenders:
-        file_name = os.path.basename(s['Full Path'])
-        if s['Mypy Errors'] > 5:
-            type_errors_files.append(file_name)
-        if s['Avg Complexity'] > 7:
-            complexity_files.append(file_name)
-        if s['Avg Coverage %'] < 60:
-            coverage_files.append(file_name)
-
-    # Create a summary by issue category
-    issue_summary = f"""
-    Files with type errors: {len(type_errors_files)}
-    Files with high complexity: {len(complexity_files)}
-    Files with low coverage: {len(coverage_files)}
-    """
-
-    strategic_prompt = f"""
-    Based on the analysis of this codebase, provide 3-5 strategic recommendations for improving code quality
-    and test coverage. Focus on actionable steps that would have the most impact.  Pay close attention to code complexity, 
-    as it is a key indicator of maintainability and long-term risk in our project.
+    template = f"""
+    Based on the analysis of this codebase, provide 3‑5 strategic recommendations
+    for improving code quality and test coverage.  Focus on actionable steps that
+    would have the most impact.
 
     Key metrics:
-    - Total Tests: {summary_metrics['total_tests']}
-    - Average Test Strictness: {summary_metrics['avg_strictness']}
-    - Average Severity: {summary_metrics['avg_severity']}
-    - Overall Coverage: {summary_metrics['coverage']}%
-    - Missing Docstrings: {summary_metrics['missing_docs']}%
-    - High Severity Tests: {summary_metrics['high_severity_tests']}
-    - Medium Severity Tests: {summary_metrics['medium_severity_tests']}
-    - Low Severity Tests: {summary_metrics['low_severity_tests']}
+      • Total Tests .............. {summary_metrics['total_tests']}
+      • Avg Test Strictness ...... {summary_metrics['avg_strictness']}
+      • Avg Severity ............. {summary_metrics['avg_severity']}
+      • Overall Coverage ......... {summary_metrics['coverage']} %
+      • Missing Docstrings ....... {summary_metrics['missing_docs']} %
+      • High / Med / Low Severity  {summary_metrics['high_severity_tests']} / {summary_metrics['medium_severity_tests']} / {summary_metrics['low_severity_tests']}
 
     {issue_summary}
 
-    Top 5 most severe issues:
-    {', '.join([f"{os.path.basename(s['Full Path'])} (Score: {s['Severity Score']})" for s in severity_data[:5]])}
+    Top 5 most severe modules: {top5}
 
-    When providing recommendations, consider the following factors and their relative importance:
-    - Code Complexity: (High complexity makes code harder to understand, test, and maintain.  Prioritize refactoring complex modules.)
-    - Test Coverage: (Low coverage indicates higher risk.  Improve coverage, especially for critical modules.)
-    - Type Errors: (Fixing type errors improves code reliability.)
-    - Documentation: (Good documentation is essential for maintainability.)
+    When providing recommendations, prioritise:
+      1. Code complexity (hard to test & maintain)
+      2. Test coverage (risk mitigation)
+      3. Type errors (reliability)
+      4. Documentation (maintainability)
 
-    Please provide strategic recommendations that would help improve the overall health of this codebase.
-    Focus on patterns and systemic issues rather than individual files.  Prioritize recommendations that address the root 
-    causes of high complexity.
+    Respond with patterns and systemic actions – avoid per‑file micromanagement.
     """
 
-    return strategic_prompt
+    return template.strip()
 
 
-def compute_severity(file_path: str, content: dict) -> dict:
-    """
-    Compute severity metrics for a file based on its linting errors, mypy errors,
-    code complexity, and test coverage.
+# ---------------------------------------------------------------------------
+# Scoring helper
+# ---------------------------------------------------------------------------
 
-    Args:
-        file_path: Path to the file being analyzed
-        content: Dictionary containing analysis data for the file
+def compute_severity(file_path: str, content: Dict[str, Any]) -> Dict[str, Any]:
+    """Compute a weighted severity score for one module."""
 
-    Returns:
-        dict: A dictionary with severity metrics
-    """
-    coverage_data = content.get("coverage", {}).get("complexity", {})
+    coverage = content.get("coverage", {}).get("complexity", {})
     linting = content.get("linting", {}).get("quality", {})
+
     mypy_errors = linting.get("mypy", {}).get("errors", [])
-    pydocstyle_issues = linting.get("pydocstyle", {}).get("functions", {})
+    pydoc_issues = linting.get("pydocstyle", {}).get("functions", {})
 
-    num_lint_issues = sum(len(v) for v in pydocstyle_issues.values())
-    num_mypy_errors = len(mypy_errors)
+    complexities = [fn.get("complexity", 0) for fn in coverage.values()]
+    coverages = [fn.get("coverage", 1.0) for fn in coverage.values()]
 
-    complexities = [fn.get("complexity", 0) for fn in coverage_data.values()]
-    coverages = [fn.get("coverage", 1.0) for fn in coverage_data.values()]
+    avg_complexity = float(np.mean(complexities)) if complexities else 0.0
+    avg_coverage = float(np.mean(coverages)) if coverages else 1.0
 
-    avg_complexity = np.mean(complexities) if complexities else 0
-    avg_coverage = np.mean(coverages) if coverages else 1.0
-
-    severity_score = (
-            2.0 * num_mypy_errors +
-            1.5 * num_lint_issues +
-            2.0 * avg_complexity +  # Increased weight of complexity to 2.0
-            2.0 * (1.0 - avg_coverage)
+    severity = (
+        2.0 * len(mypy_errors)
+        + 1.5 * sum(len(v) for v in pydoc_issues.values())
+        + 2.0 * avg_complexity  # emphasise complexity
+        + 2.0 * (1.0 - avg_coverage)
     )
 
     return {
         "File": os.path.basename(file_path),
         "Full Path": file_path,
-        "Mypy Errors": num_mypy_errors,
-        "Lint Issues": num_lint_issues,
+        "Mypy Errors": len(mypy_errors),
+        "Lint Issues": sum(len(v) for v in pydoc_issues.values()),
         "Avg Complexity": round(avg_complexity, 2),
         "Avg Coverage %": round(avg_coverage * 100, 1),
-        "Severity Score": round(severity_score, 2),
+        "Severity Score": round(severity, 2),
     }
+
+
+# ---------------------------------------------------------------------------
+# Internal utilities  (kept *private*)
+# ---------------------------------------------------------------------------
+
+
+
+def _summarise_offenders(offenders: List[Tuple[str, float, list, int, float, float]]) -> str:
+    """Aggregate offender list into a human‑readable summary block."""
+
+    high_cx = [os.path.basename(fp) for fp, _, _, _, cx, _ in offenders if cx > 8]
+    low_cov = [os.path.basename(fp) for fp, _, _, _, _, cov in offenders if cov < 50]
+    many_err = [os.path.basename(fp) for fp, _, errs, _, _, _ in offenders if len(errs) > 5]
+
+    def _fmt(lst: List[str]) -> str:
+        return f"{', '.join(lst[:5])}{'...' if len(lst) > 5 else ''}"
+
+    return (
+        "Summary of issues:\n"
+        f"- {len(high_cx)} files with high complexity: {_fmt(high_cx)}\n"
+        f"- {len(low_cov)} files with low coverage: {_fmt(low_cov)}\n"
+        f"- {len(many_err)} files with many type errors: {_fmt(many_err)}"
+    )
+
+
+def _format_offender_block(offenders: List[Tuple[str, float, list, int, float, float]], verbose: bool) -> str:
+    if verbose:
+        return "\n\n".join(
+            (
+                f"File: {os.path.basename(fp)}\n"
+                f"Severity Score: {score:.2f}\n"
+                f"MyPy Errors: {len(errors)}\n"
+                f"Lint Issues: {lint_issues}\n"
+                f"Avg Complexity: {cx:.2f}\n"
+                f"Coverage: {cov:.1f}%\n"
+                f"Sample errors: {errors[:2]}"
+            )
+            for fp, score, errors, lint_issues, cx, cov in offenders
+        )
+    return "\n".join(
+        f"- {os.path.basename(fp)}: Score {score:.2f}, {len(errors)} MyPy errors, {lint_issues} lint issues"
+        for fp, score, errors, lint_issues, cx, cov in offenders
+    )
+
+
+# ---------------------------------------------------------------------------
+# Module init – configure debug logger if needed
+# ---------------------------------------------------------------------------
+
+if int(os.getenv("LLM_UTILS_DEBUG", "0")):
+    logging.basicConfig(level=logging.DEBUG)

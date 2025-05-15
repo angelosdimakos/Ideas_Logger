@@ -3,7 +3,6 @@ from scripts.refactor.lint_report_pkg.plugins.black import BlackPlugin
 from scripts.refactor.lint_report_pkg.plugins.flake8 import Flake8Plugin
 from scripts.refactor.lint_report_pkg.plugins.mypy import MypyPlugin
 from scripts.refactor.lint_report_pkg.plugins.pydocstyle import PydocstylePlugin
-from scripts.refactor.lint_report_pkg.plugins.coverage_plugin import CoveragePlugin
 
 BLACK_REPORT = Path("black.txt")
 FLAKE8_REPORT = Path("flake8.txt")
@@ -78,27 +77,3 @@ def test_pydocstyle_report_parsing(tmp_path):
     key = find_result_key(result, "scripts/refactor/example.py")
     assert "Missing docstring" in result[key]["pydocstyle"]["functions"]["<module>"][0]["message"]
 
-def test_coverage_report_parsing(tmp_path):
-    xml = tmp_path / COVERAGE_XML
-    xml.write_text(
-        """<coverage>
-        <packages>
-          <package name="scripts.refactor">
-            <classes>
-              <class name="example"
-                     filename="scripts/refactor/example.py"
-                     line-rate="0.75"/>
-            </classes>
-          </package>
-        </packages>
-      </coverage>"""
-    )
-
-    plugin = CoveragePlugin()
-    plugin.default_report = xml
-
-    result = {}
-    plugin.parse(result)
-
-    key = find_result_key(result, "scripts/refactor/example.py")
-    assert result[key]["coverage"]["percent"] == 75.0

@@ -1,10 +1,24 @@
 import json
 from pathlib import Path
+import sys
+from textwrap import dedent
+from types import SimpleNamespace
+from unittest import mock
+
 import pytest
+
 from scripts.refactor.strictness_analyzer import (
+    ComplexityMetrics,
+    StrictnessEntry,
+    StrictnessReport,
+    weighted_coverage,
+    get_test_severity,
+    fuzzy_match,
+    should_assign_test_to_module,
+    validate_report_schema,
     load_audit_report,
-    generate_module_report,
-    StrictnessReport
+    load_test_report,
+    generate_module_report
 )
 
 # -------------------- Fixtures --------------------
@@ -99,3 +113,102 @@ def test_module_report_generation(test_report_path, audit_report_path):
     for test in tests:
         assert 0.0 <= test["strictness"] <= 1.0, "Strictness out of expected bounds."
         assert 0.0 <= test["severity"] <= 1.0, "Severity out of expected bounds."
+
+# ─────────────────────────────── weighted_coverage ───────────────────────────────
+def test_weighted_coverage_varied_loc() -> None:
+    funcs = {
+        "a": ComplexityMetrics(coverage=0.0, complexity=1, hits=0, lines=10, covered_lines=[], missing_lines=list(range(10)), loc=10),
+        "b": ComplexityMetrics(coverage=1.0, complexity=1, hits=1, lines=1,  covered_lines=[1], missing_lines=[], loc=1),
+    }
+    # Expected weighted = (0*10 + 1*1) / 11 ≈ 0.09
+    assert round(weighted_coverage(funcs), 2) == 0.09
+
+
+# ─────────────────────────────── get_test_severity ───────────────────────────────
+def test_get_test_severity_no_coverage() -> None:
+    entry = StrictnessEntry(name="t", file="x", strictness_score=0.8)
+    assert get_test_severity(entry, coverage=None) == 0.8
+
+def test_get_test_severity_blend() -> None:
+    entry = StrictnessEntry(name="t", file="x", strictness_score=0.6)
+    # High coverage should *lower* severity
+    assert get_test_severity(entry, coverage=0.9, alpha=0.7) < 0.6
+    # Low coverage should *raise* severity (up to cap)
+    assert get_test_severity(entry, coverage=0.1, alpha=0.7) > 0.6
+
+
+# ───────────────────────────────── fuzzy_match ───────────────────────────────────
+def test_fuzzy_match_threshold() -> None:
+    assert fuzzy_match("paths", "test_paths", threshold=80)
+    assert not fuzzy_match("paths", "utilities", threshold=80)
+
+
+# ───────────────────── should_assign_test_to_module branches ─────────────────────
+@pytest.fixture
+def dummy_entry():
+    return lambda name, file="tests/unit/test_paths.py": StrictnessEntry(
+        name=name, file=file, strictness_score=0.1
+    )
+
+def test_assign_by_filename_convention(dummy_entry):
+    assert should_assign_test_to_module("paths", [], dummy_entry("test_paths_config"), {}, 90)
+
+def test_assign_by_imports(dummy_entry):
+    imports = {"test_paths": ["paths"]}
+    assert should_assign_test_to_module("paths", [], dummy_entry("unrelated"), imports, 90)
+
+def test_assign_by_class_name_fuzzy(dummy_entry):
+    entry = dummy_entry("TestPaths.Test_case")
+    assert should_assign_test_to_module("paths", [], entry, {}, 80)
+
+def test_reject_without_any_match(dummy_entry):
+    entry = dummy_entry("completely_unrelated",
+                        file="tests/unit/test_misc.py")  # <-- no 'paths' in stem
+    assert not should_assign_test_to_module("paths", [], entry, {}, 95)
+
+
+# ───────────────────────────── validate_report_schema ────────────────────────────
+def test_validate_audit_schema_ok() -> None:
+    minimal = {"dummy.py": {"complexity": {}}}
+    assert validate_report_schema(minimal, "audit")
+
+def test_validate_final_schema_bad() -> None:
+    # module_coverage expects a float; the string "bad" cannot be coerced
+    invalid = {
+        "modules": {
+            "foo.py": {
+                "module_coverage": "bad",   # <- forces ValidationError
+                "methods": [],
+                "tests": []
+            }
+        }
+    }
+    assert not validate_report_schema(invalid, "final")
+
+
+# ─────────────────────── loader error handling (happy path) ───────────────────────
+def test_loaders_error_branches(tmp_path, monkeypatch):
+    # Make Path.exists return False → should exit(1)
+    monkeypatch.setattr(Path, "exists", lambda self: False)
+    with pytest.raises(SystemExit):
+        load_audit_report("nope.json")
+    with pytest.raises(SystemExit):
+        load_test_report("nope.json")
+
+
+# ───────────────────────── duplicate-test prevention ─────────────────────────────
+def test_duplicate_test_assignment_is_prevented(tmp_path):
+    from scripts.refactor.strictness_analyzer import generate_module_report, AuditReport
+
+    audit_json = {"foo.py": {"complexity": {}}}
+    audit = AuditReport.parse_obj(audit_json)
+    # same test referenced twice (one with class prefix)
+    tests = [
+        StrictnessEntry(name="TestFoo.test_bar", file="tests/unit/test_foo.py", strictness_score=0.1),
+        StrictnessEntry(name="test_bar",            file="tests/unit/test_foo.py", strictness_score=0.1),
+    ]
+    imports = {"test_foo": ["foo"]}
+
+    rep = generate_module_report(audit, tests, imports)
+    tests_out = rep["foo.py"]["tests"]
+    assert len(tests_out) == 1    # ← duplicate pruned

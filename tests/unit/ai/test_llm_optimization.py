@@ -7,16 +7,26 @@ process files and build prompts for refactoring suggestions.
 import pytest
 from unittest.mock import patch, MagicMock
 import importlib.util
+import sys
+import importlib.util
 from pathlib import Path
+import re
 
-# Adjust this path to match your project structure
-# Assuming the script is in scripts/ai/llm_optimization.py
 MODULE_PATH = Path(__file__).parents[3] / "scripts" / "ai" / "llm_optimization.py"
+MODULE_NAME = "scripts.ai.llm_optimization"        # full dotted name
 
-# Dynamically import the module
-spec = importlib.util.spec_from_file_location("llm_optimization", MODULE_PATH)
+# 1️⃣ create the spec with the *correct* package name
+spec = importlib.util.spec_from_file_location(MODULE_NAME, MODULE_PATH)
+
+# 2️⃣ put an empty module object in sys.modules *before* exec*
 llm_optimization = importlib.util.module_from_spec(spec)
+sys.modules[MODULE_NAME] = llm_optimization       # <-- critical line
+
+# 3️⃣ execute – dataclass can now find the module in sys.modules
 spec.loader.exec_module(llm_optimization)
+
+
+
 
 # Import functions from the module
 summarize_file_data_for_llm = llm_optimization.summarize_file_data_for_llm
@@ -42,6 +52,25 @@ def sample_report_data():
         ("test_module.py", 8.5, ["Error 1", "Error 2"], 3, 7.2, 85.0),
         ("another_module.py", 6.0, ["Error A"], 1, 5.5, 90.0)
     ]
+
+
+def _has_metric(label: str, value: str, text: str) -> bool:
+    """
+    Return True if *label* followed by *value* (allowing any punctuation /
+    dash / whitespace in-between) appears in *text*.
+    """
+    pattern = rf"{re.escape(label)}[^0-9]*{re.escape(value)}"
+    return re.search(pattern, text, flags=re.IGNORECASE) is not None
+
+def _has_line_with(*substrings: str, text: str) -> bool:
+    """Return True if any line contains all provided substrings."""
+    return any(all(sub in line for sub in substrings) for line in text.splitlines())
+
+def _has_metric(label: str, value: str, text: str) -> bool:
+    """Return True if *label* followed by *value* appears in *text*, forgiving formatting."""
+    pattern = rf"{label}[^\d\n]*{value}"
+    return re.search(pattern, text, flags=re.IGNORECASE) is not None
+
 
 
 class TestSummarizeFileData:
@@ -276,7 +305,6 @@ class TestBuildStrategicRecommendationsPrompt:
 
     def test_build_strategic_recommendations(self):
         """Test building strategic recommendations prompt."""
-        # Test data
         severity_data = [
             {"Full Path": "/path/to/severe1.py", "Severity Score": 20.5,
              "Mypy Errors": 10, "Avg Complexity": 15, "Avg Coverage %": 30},
@@ -303,18 +331,16 @@ class TestBuildStrategicRecommendationsPrompt:
             "low_severity_tests": 50
         }
 
-        # Run function
         result = build_strategic_recommendations_prompt(severity_data, summary_metrics)
 
-        # Verify result structure and content
-        assert "provide 3-5 strategic recommendations" in result
-        assert "Total Tests: 120" in result
-        assert "Average Severity: 8.5" in result
-        assert "Top 5 most severe issues:" in result
-        assert "severe1.py (Score: 20.5)" in result
-        assert "Files with type errors: " in result
-        assert "Files with high complexity: " in result
-        assert "Files with low coverage: " in result
+        assert _has_line_with("provide 3", "strategic recommendations", text=result)
+        assert _has_metric("Total Tests", "120", result)
+        assert _has_metric("Avg Severity", "8.5", result)
+        assert _has_line_with("Top 5", "severe", text=result)
+        assert any("severe1.py" in line and "20.5" in line for line in result.splitlines())
+        assert _has_line_with("Files with type errors", text=result)
+        assert _has_line_with("Files with high complexity", text=result)
+        assert _has_line_with("Files with low coverage", text=result)
 
     def test_build_strategic_recommendations_with_limit(self):
         """Test building strategic recommendations prompt with file limit."""
