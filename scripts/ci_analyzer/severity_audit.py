@@ -14,6 +14,7 @@ from scripts.ci_analyzer.drilldown import generate_top_offender_drilldowns
 from scripts.ci_analyzer.metrics_summary import generate_metrics_summary
 from scripts.ci_analyzer.visuals import risk_emoji, render_bar
 
+
 def format_priority(score: float) -> str:
     """
     Format the priority level based on the severity score.
@@ -31,6 +32,7 @@ def format_priority(score: float) -> str:
     else:  # Low priority for scores 15 and below
         return "✅ Low"
 
+
 def generate_header_block(severity_df, report_data: Dict[str, Dict]) -> str:
     """
     Generate a header block for the CI code quality audit report.
@@ -43,10 +45,16 @@ def generate_header_block(severity_df, report_data: Dict[str, Dict]) -> str:
         str: A Markdown formatted string representing the header block.
     """
     total_files = len(report_data)  # Total number of files in the report
-    files_with_issues = severity_df.query("`Mypy Errors` > 0 or `Lint Issues` > 0").shape[0] if not severity_df.empty else 0  # Count files with issues
+    files_with_issues = (
+        severity_df.query("`Mypy Errors` > 0 or `Lint Issues` > 0").shape[0]
+        if not severity_df.empty
+        else 0
+    )  # Count files with issues
 
     # Handle empty DataFrame case
-    worst_file = severity_df.iloc[0]["File"] if not severity_df.empty else "None"  # Get the worst file from the severity DataFrame
+    worst_file = (
+        severity_df.iloc[0]["File"] if not severity_df.empty else "None"
+    )  # Get the worst file from the severity DataFrame
 
     # Compute metrics for visual bars
     total_methods = 0  # Initialize total methods count
@@ -57,20 +65,31 @@ def generate_header_block(severity_df, report_data: Dict[str, Dict]) -> str:
     for content in report_data.values():  # Iterate over report data
         complexity = content.get("coverage", {}).get("complexity", {})  # Get complexity data
         total_methods += len(complexity)  # Update total methods count
-        missing_tests += sum(1 for m in complexity.values() if m.get("coverage", 1.0) == 0)  # Update missing tests count
+        missing_tests += sum(
+            1 for m in complexity.values() if m.get("coverage", 1.0) == 0
+        )  # Update missing tests count
 
         missing_docstrings += sum(  # Update missing docstrings count
-            1 for f in content.get("docstrings", {}).get("functions", [])
+            1
+            for f in content.get("docstrings", {}).get("functions", [])
             if not f.get("description") or not f.get("args") or not f.get("returns")
         )
 
         lint = content.get("linting", {}).get("quality", {})  # Get linting data
         linter_issues += len(lint.get("mypy", {}).get("errors", []))  # Update linter issues count
-        linter_issues += sum(len(v) for v in lint.get("pydocstyle", {}).get("functions", {}).values())  # Update linter issues count
+        linter_issues += sum(
+            len(v) for v in lint.get("pydocstyle", {}).get("functions", {}).values()
+        )  # Update linter issues count
 
-    pct_docs = 100 * (1 - missing_docstrings / total_methods) if total_methods else 100  # Calculate percentage of documented methods
-    pct_tests = 100 * (1 - missing_tests / total_methods) if total_methods else 100  # Calculate percentage of tested methods
-    pct_lint = 100 * (1 - linter_issues / total_methods) if total_methods else 100  # Calculate percentage of lint-free methods
+    pct_docs = (
+        100 * (1 - missing_docstrings / total_methods) if total_methods else 100
+    )  # Calculate percentage of documented methods
+    pct_tests = (
+        100 * (1 - missing_tests / total_methods) if total_methods else 100
+    )  # Calculate percentage of tested methods
+    pct_lint = (
+        100 * (1 - linter_issues / total_methods) if total_methods else 100
+    )  # Calculate percentage of lint-free methods
 
     return f"""# 📊 CI Code Quality Audit Report
 
@@ -109,8 +128,8 @@ def generate_severity_table(severity_df) -> str:
 
     top_df = severity_df.head(10)
     for _, row in top_df.iterrows():
-        cov_bar = render_bar(row['Avg Coverage %'])
-        cx_emoji = risk_emoji(100 - row['Avg Complexity'])  # invert: lower is better
+        cov_bar = render_bar(row["Avg Coverage %"])
+        cx_emoji = risk_emoji(100 - row["Avg Complexity"])  # invert: lower is better
         table += (
             f"| `{row['File']}` | {row['Mypy Errors']} | {row['Lint Issues']} | "
             f"{row['Avg Complexity']} {cx_emoji} | {row['Avg Coverage %']}% {cov_bar} | "

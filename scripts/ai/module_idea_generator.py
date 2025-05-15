@@ -10,8 +10,12 @@ from scripts.config.config_manager import ConfigManager
 from scripts.ai.llm_router import get_prompt_template, apply_persona
 
 
-def suggest_new_modules(artifact_path: str, config: ConfigManager, subcategory: str = "Architecture Planning",
-                        path_filter: str | None = None) -> tuple[str, str]:
+def suggest_new_modules(
+    artifact_path: str,
+    config: ConfigManager,
+    subcategory: str = "Architecture Planning",
+    path_filter: str | None = None,
+) -> tuple[str, str]:
     with open(artifact_path, "r", encoding="utf-8") as f:
         report = json.load(f)
 
@@ -76,7 +80,9 @@ Module Suggestions:
 {suggestions}
 """
     prototype_prompt_final = apply_persona(prototype_prompt.strip(), config.persona)
-    prototype_code = summarizer.summarize_entry(prototype_prompt_final, subcategory="Module Prototype")
+    prototype_code = summarizer.summarize_entry(
+        prototype_prompt_final, subcategory="Module Prototype"
+    )
 
     return suggestions, prototype_code
 
@@ -112,8 +118,12 @@ def extract_filenames_from_code(code: str) -> list[str]:
     return [match.group(1).strip() for match in re.finditer(r"# Filename:\s*([^\n]+\.py)", code)]
 
 
-def export_prototypes_to_files(prototype_code: str, output_dir: str = "prototypes", suggestions: str = "",
-                               is_test: bool = False):
+def export_prototypes_to_files(
+    prototype_code: str,
+    output_dir: str = "prototypes",
+    suggestions: str = "",
+    is_test: bool = False,
+):
     """
     Export code or test stubs to filesystem based on '# Filename' comments.
     """
@@ -136,7 +146,7 @@ def export_prototypes_to_files(prototype_code: str, output_dir: str = "prototype
             continue
 
         # Adjust for tests
-        if is_test and not os.path.basename(filename).startswith('test_'):
+        if is_test and not os.path.basename(filename).startswith("test_"):
             dirname = os.path.dirname(filename)
             base = os.path.basename(filename)
             filename = os.path.join(dirname, f"test_{base}") if dirname else f"test_{base}"
@@ -169,26 +179,26 @@ def validate_test_coverage(module_dir: str, test_dir: str) -> list[str]:
     # Traverse module files and collect public functions and methods
     for module_file in Path(module_dir).rglob("*.py"):
         module_name = module_file.stem
-        tree = ast.parse(module_file.read_text(encoding='utf-8'))
+        tree = ast.parse(module_file.read_text(encoding="utf-8"))
         for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef) and not node.name.startswith('_'):
+            if isinstance(node, ast.FunctionDef) and not node.name.startswith("_"):
                 module_functions[f"{module_name}.{node.name}"] = False
             elif isinstance(node, ast.ClassDef):
                 class_name = node.name
                 for item in node.body:
-                    if isinstance(item, ast.FunctionDef) and not item.name.startswith('_'):
+                    if isinstance(item, ast.FunctionDef) and not item.name.startswith("_"):
                         module_functions[f"{module_name}.{class_name}.{item.name}"] = False
 
     tested_names: set[str] = set()
     # Scan test files for test function definitions
     for test_file in Path(test_dir).rglob("test_*.py"):
-        content = test_file.read_text(encoding='utf-8')
-        for match in re.finditer(r'def\s+test_(\w+)', content):
+        content = test_file.read_text(encoding="utf-8")
+        for match in re.finditer(r"def\s+test_(\w+)", content):
             tested_names.add(match.group(1))
 
     # Mark tested modules
     for full_name in list(module_functions.keys()):
-        func_name = full_name.split('.')[-1]
+        func_name = full_name.split(".")[-1]
         if func_name in tested_names:
             module_functions[full_name] = True
 
@@ -211,15 +221,27 @@ def validate_test_coverage(module_dir: str, test_dir: str) -> list[str]:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate module and test stubs based on architecture report.")
+    parser = argparse.ArgumentParser(
+        description="Generate module and test stubs based on architecture report."
+    )
     parser.add_argument("input", help="Path to merged_report.json")
     parser.add_argument("--to", help="Optional path to save suggestions (Markdown).")
-    parser.add_argument("--prototype", action="store_true", help="Generate and export prototype .py stubs.")
-    parser.add_argument("--proto-dir", help="Directory to save prototype .py files. Defaults to 'prototypes/'.")
+    parser.add_argument(
+        "--prototype", action="store_true", help="Generate and export prototype .py stubs."
+    )
+    parser.add_argument(
+        "--proto-dir", help="Directory to save prototype .py files. Defaults to 'prototypes/'."
+    )
     parser.add_argument("--tests", action="store_true", help="Generate pytest test stubs.")
-    parser.add_argument("--test-dir", help="Directory to save test stubs. Defaults to 'prototypes_tests/'.")
-    parser.add_argument("--filter", help="Only include modules matching this substring in the path.")
-    parser.add_argument("--validate-tests", action="store_true", help="Validate test coverage after generation.")
+    parser.add_argument(
+        "--test-dir", help="Directory to save test stubs. Defaults to 'prototypes_tests/'."
+    )
+    parser.add_argument(
+        "--filter", help="Only include modules matching this substring in the path."
+    )
+    parser.add_argument(
+        "--validate-tests", action="store_true", help="Validate test coverage after generation."
+    )
     args = parser.parse_args()
 
     config = ConfigManager.load_config()

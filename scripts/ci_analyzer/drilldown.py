@@ -25,14 +25,18 @@ def generate_top_offender_drilldowns(severity_df, report_data: dict, top_n: int 
         md += f"\n<details>\n<summary>🔍 `{filepath}`</summary>\n\n"
 
         # MyPy Errors
-        mypy_errors = content.get("linting", {}).get("quality", {}).get("mypy", {}).get("errors", [])
+        mypy_errors = (
+            content.get("linting", {}).get("quality", {}).get("mypy", {}).get("errors", [])
+        )
         if mypy_errors:
             md += "\n**❗ MyPy Errors:**\n"
             for err in mypy_errors:
                 md += f"- {err}\n"  # List each MyPy error
 
         # Pydocstyle Issues
-        pydoc_issues = content.get("linting", {}).get("quality", {}).get("pydocstyle", {}).get("functions", {})
+        pydoc_issues = (
+            content.get("linting", {}).get("quality", {}).get("pydocstyle", {}).get("functions", {})
+        )
         if pydoc_issues:
             md += "\n**🧼 Pydocstyle Issues:**\n"
             for fn_name, issues in pydoc_issues.items():

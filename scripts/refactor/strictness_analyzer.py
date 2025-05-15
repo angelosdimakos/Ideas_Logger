@@ -36,6 +36,7 @@ logger = logging.getLogger("AssignmentLogic")
 
 class ComplexityMetrics(BaseModel):
     """Model for storing code complexity and test coverage metrics for a single method."""
+
     complexity: int
     coverage: float
     hits: int
@@ -47,16 +48,19 @@ class ComplexityMetrics(BaseModel):
 
 class FileAudit(BaseModel):
     """Model for storing audit data for a specific file."""
+
     complexity: Dict[str, ComplexityMetrics] = Field(default_factory=dict)
 
 
 class AuditReport(BaseModel):
     """Top-level model for the audit report."""
+
     __root__: Dict[str, FileAudit]
 
 
 class StrictnessEntry(BaseModel):
     """Model for storing test strictness evaluation data."""
+
     name: str
     file: str
     strictness_score: float
@@ -65,12 +69,14 @@ class StrictnessEntry(BaseModel):
 
 class StrictnessReport(BaseModel):
     """Top-level model for the strictness report."""
+
     tests: List[StrictnessEntry]
     imports: Dict[str, List[str]] = Field(default_factory=dict)  # filename -> list of imports
 
 
 class MethodOutput(BaseModel):
     """Standardized output model for method data in the final report."""
+
     name: str
     coverage: float
     complexity: int
@@ -78,6 +84,7 @@ class MethodOutput(BaseModel):
 
 class TestOutput(BaseModel):
     """Standardized output model for test data in the final report."""
+
     test_name: str
     strictness: float
     severity: float
@@ -85,6 +92,7 @@ class TestOutput(BaseModel):
 
 class ModuleOutput(BaseModel):
     """Standardized output model for module data in the final report."""
+
     module_coverage: float
     methods: List[MethodOutput] = Field(default_factory=list)
     tests: List[TestOutput] = Field(default_factory=list)
@@ -92,10 +100,12 @@ class ModuleOutput(BaseModel):
 
 class FinalReport(BaseModel):
     """Top-level model for the final merged report."""
+
     modules: Dict[str, ModuleOutput] = Field(default_factory=dict)
 
 
 # -------------------- Helper Functions --------------------
+
 
 def weighted_coverage(func_dict: Dict[str, ComplexityMetrics]) -> float:
     """
@@ -117,9 +127,7 @@ def weighted_coverage(func_dict: Dict[str, ComplexityMetrics]) -> float:
 
 
 def get_test_severity(
-        test_entry: StrictnessEntry,
-        coverage: Optional[float] = None,
-        alpha: float = 0.7
+    test_entry: StrictnessEntry, coverage: Optional[float] = None, alpha: float = 0.7
 ) -> float:
     """
     Compute severity with implicit weighting from coverage.
@@ -133,7 +141,11 @@ def get_test_severity(
     Returns:
         float: Adjusted severity score.
     """
-    base_severity = test_entry.severity_score if test_entry.severity_score is not None else test_entry.strictness_score
+    base_severity = (
+        test_entry.severity_score
+        if test_entry.severity_score is not None
+        else test_entry.strictness_score
+    )
 
     if coverage is None:
         return base_severity  # Fall back to pure severity if no coverage info.
@@ -145,6 +157,7 @@ def get_test_severity(
 
 
 # -------------------- Loaders --------------------
+
 
 def load_audit_report(audit_path: str) -> AuditReport:
     """
@@ -208,10 +221,11 @@ def load_test_report(test_report_path: str) -> List[StrictnessEntry]:
 
 # -------------------- Report Generator --------------------
 
+
 def generate_module_report(
-        audit_model: AuditReport,
-        strictness_entries: List[StrictnessEntry],
-        test_imports: Dict[str, List[str]]
+    audit_model: AuditReport,
+    strictness_entries: List[StrictnessEntry],
+    test_imports: Dict[str, List[str]],
 ) -> Dict[str, Any]:
     final_report = FinalReport()
 
@@ -228,17 +242,16 @@ def generate_module_report(
         avg_cov = weighted_coverage(method_metrics) if method_metrics else 0.0
 
         methods = [
-            MethodOutput(
-                name=name,
-                coverage=round(m.coverage, 2),
-                complexity=m.complexity
-            ) for name, m in method_metrics.items()
+            MethodOutput(name=name, coverage=round(m.coverage, 2), complexity=m.complexity)
+            for name, m in method_metrics.items()
         ]
 
         tests_for_module = []
         for test_entry in strictness_entries:
             # Create a normalized test identifier that will be the same regardless of class prefix
-            test_method_name = test_entry.name.split('.')[-1] if '.' in test_entry.name else test_entry.name
+            test_method_name = (
+                test_entry.name.split(".")[-1] if "." in test_entry.name else test_entry.name
+            )
             normalized_test_name = normalize_test_name(test_method_name, remove_test_prefix=False)
 
             # Create a unique identifier for each test by combining normalized name and file
@@ -248,16 +261,13 @@ def generate_module_report(
                 continue  # Skip if already assigned
 
             if should_assign_test_to_module(
-                    prod_file_name,
-                    list(method_metrics.keys()),
-                    test_entry,
-                    test_imports
+                prod_file_name, list(method_metrics.keys()), test_entry, test_imports
             ):
                 tests_for_module.append(
                     TestOutput(
                         test_name=test_entry.name,
                         strictness=round(test_entry.strictness_score, 2),
-                        severity=round(get_test_severity(test_entry, coverage=avg_cov), 2)
+                        severity=round(get_test_severity(test_entry, coverage=avg_cov), 2),
                     )
                 )
                 # Mark the test as assigned using the normalized identifier
@@ -265,12 +275,11 @@ def generate_module_report(
 
         normalized_path = Path(prod_file).as_posix()
         final_report.modules[normalized_path] = ModuleOutput(
-            module_coverage=round(avg_cov, 2),
-            methods=methods,
-            tests=tests_for_module
+            module_coverage=round(avg_cov, 2), methods=methods, tests=tests_for_module
         )
 
     return {module: output.dict() for module, output in final_report.modules.items()}
+
 
 def fuzzy_match(a: str, b: str, threshold: int = 95) -> bool:
     """Fuzzy matching with partial ratio preference for looser matching."""
@@ -318,7 +327,9 @@ def should_assign_test_to_module(
 
     # 1. Strong Convention-Based Check
     if f"test_{prod_file_name}" == test_file_name or f"{prod_file_name}_test" == test_file_name:
-        logger.debug(f"✅ Strong convention match: prod='{prod_file_name}', test='{test_file_name}'")
+        logger.debug(
+            f"✅ Strong convention match: prod='{prod_file_name}', test='{test_file_name}'"
+        )
         return True
 
     # 2. Strict Import Check (only if test file name includes prod module name)
@@ -331,10 +342,12 @@ def should_assign_test_to_module(
         return True
 
     # 2b. Class Name Fuzzy Check
-    class_name_raw = test_entry.name.split('.')[0].lower()
+    class_name_raw = test_entry.name.split(".")[0].lower()
     normalized_class_name = normalize_test_name(class_name_raw, remove_test_prefix=True)
     if fuzzy_match(prod_file_name, normalized_class_name, fuzzy_threshold):
-        logger.debug(f"✅ Class-based fuzzy match: prod='{prod_file_name}', test_class='{normalized_class_name}'")
+        logger.debug(
+            f"✅ Class-based fuzzy match: prod='{prod_file_name}', test_class='{normalized_class_name}'"
+        )
         return True
 
     # 3. Very Strict Holistic Fuzzy Matching (last resort—but only if filename mentions module)
@@ -345,14 +358,18 @@ def should_assign_test_to_module(
         )
         return False
 
-    prod_composite = "".join(
-        [prod_file_name] +
-        [normalize_test_name(m.lower(), remove_test_prefix=True) for m in method_names]
-    ).replace("_", "").lower()
+    prod_composite = (
+        "".join(
+            [prod_file_name]
+            + [normalize_test_name(m.lower(), remove_test_prefix=True) for m in method_names]
+        )
+        .replace("_", "")
+        .lower()
+    )
     test_composite = "".join([test_file_name, normalized_test_name]).replace("_", "").lower()
     holistic_score = max(
         fuzz.partial_ratio(prod_composite, test_composite),
-        fuzz.token_sort_ratio(prod_composite, test_composite)
+        fuzz.token_sort_ratio(prod_composite, test_composite),
     )
     if holistic_score >= fuzzy_threshold:
         logger.debug(
@@ -361,13 +378,17 @@ def should_assign_test_to_module(
         )
         return True
 
-    logger.debug(f"🛑 No strong match found for prod='{prod_file_name}' and test='{test_entry.name}' ({test_file_name})")
+    logger.debug(
+        f"🛑 No strong match found for prod='{prod_file_name}' and test='{test_entry.name}' ({test_file_name})"
+    )
     return False
 
 
 def main(test_report_path: str, audit_path: str, output_path: Optional[str] = None) -> None:
     logging.info("📚 Loading precomputed strictness report...")
-    strictness_report = StrictnessReport.parse_obj(json.load(Path(test_report_path).open("r", encoding="utf-8")))
+    strictness_report = StrictnessReport.parse_obj(
+        json.load(Path(test_report_path).open("r", encoding="utf-8"))
+    )
     test_results = strictness_report.tests
     test_imports = strictness_report.imports
     logging.info(f"✅ Loaded {len(test_results)} test evaluations.")

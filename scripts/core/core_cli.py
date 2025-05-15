@@ -11,6 +11,7 @@ from scripts.core.core import ZephyrusLoggerCore
 app = typer.Typer()
 core = ZephyrusLoggerCore(".")
 
+
 @app.command()
 def log(main: str, sub: str, entry: str) -> None:
     """
@@ -26,6 +27,7 @@ def log(main: str, sub: str, entry: str) -> None:
     else:
         typer.echo("❌ Failed to save entry.")
 
+
 @app.command()
 def summarize(main: str, sub: str) -> None:
     """
@@ -40,6 +42,7 @@ def summarize(main: str, sub: str) -> None:
     else:
         typer.echo("⚠️  Not enough entries or summarization failed.")
 
+
 @app.command()
 def search(query: str, top_k: int = 5, kind: str = "summary") -> None:
     """
@@ -50,9 +53,14 @@ def search(query: str, top_k: int = 5, kind: str = "summary") -> None:
         top_k (int): The number of top results to return.
         kind (str): The type of search ('summary' or 'raw').
     """
-    results = core.search_summaries(query, top_k) if kind == "summary" else core.search_raw_logs(query, top_k)
+    results = (
+        core.search_summaries(query, top_k)
+        if kind == "summary"
+        else core.search_raw_logs(query, top_k)
+    )
     for i, res in enumerate(results):
         typer.echo(f"{i+1}. {res}")
+
 
 if __name__ == "__main__":
     app()

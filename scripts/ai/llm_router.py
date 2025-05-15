@@ -6,6 +6,7 @@ It includes functions to get prompt templates based on subcategories and modify 
 
 from scripts.config.config_manager import ConfigManager
 
+
 def get_prompt_template(subcategory: str, config=None) -> str:
     """
     Retrieve a prompt string for a given subcategory from the configuration.
@@ -19,7 +20,10 @@ def get_prompt_template(subcategory: str, config=None) -> str:
         str: The prompt string for the specified subcategory.
     """
     config = config or ConfigManager.load_config()  # Load config if not provided
-    return config.prompts_by_subcategory.get(subcategory, config.prompts_by_subcategory["_default"])  # Return specific or default prompt
+    return config.prompts_by_subcategory.get(
+        subcategory, config.prompts_by_subcategory["_default"]
+    )  # Return specific or default prompt
+
 
 def apply_persona(prompt: str, persona: str) -> str:
     """

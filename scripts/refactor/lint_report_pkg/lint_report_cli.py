@@ -28,6 +28,7 @@ import scripts.refactor.lint_report_pkg.quality_checker as quality_checker  # ty
 
 ENC = "utf-8"
 
+
 def enrich_refactor_audit(audit_path: str) -> None:
     """
     Enrich *audit_path* with lint, coverage, and optional docstring data.
@@ -67,7 +68,6 @@ if __name__ == "__main__":
         default="refactor_audit.json",
         help="Path to audit JSON file.",
     )
-
 
     args = parser.parse_args()
     enrich_refactor_audit(args.audit)

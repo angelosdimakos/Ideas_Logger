@@ -49,6 +49,7 @@ def _calc_percent(cov_blob: dict[str, Any]) -> float | None:
 # Compression
 # ----------------------------------------------------------------------------
 
+
 def compress_obj(original: Dict[str, Any], *, retain_keys: bool = False) -> Dict[str, Any]:
     """Return a *compact* structure with docstrings hoisted into a lookup table.
 
@@ -69,27 +70,44 @@ def compress_obj(original: Dict[str, Any], *, retain_keys: bool = False) -> Dict
         ds = report.get("docstrings", {})
         module_doc = ds.get("module_doc", {})
         module_id = (
-            _get_or_add((module_doc.get("description"), module_doc.get("args"), module_doc.get("returns")), cache, doc_table)
-            if module_doc else None
+            _get_or_add(
+                (module_doc.get("description"), module_doc.get("args"), module_doc.get("returns")),
+                cache,
+                doc_table,
+            )
+            if module_doc
+            else None
         )
 
         cls_arr: List[Tuple[str, int]] = []
         for cls in ds.get("classes", []):
-            cls_arr.append((
-                cls.get("name", ""),
-                _get_or_add((cls.get("description"), cls.get("args"), cls.get("returns")), cache, doc_table)
-            ))
+            cls_arr.append(
+                (
+                    cls.get("name", ""),
+                    _get_or_add(
+                        (cls.get("description"), cls.get("args"), cls.get("returns")),
+                        cache,
+                        doc_table,
+                    ),
+                )
+            )
 
         fn_arr: List[Tuple[str, int]] = []
         for fn in ds.get("functions", []):
-            fn_arr.append((
-                fn.get("name", ""),
-                _get_or_add((fn.get("description"), fn.get("args"), fn.get("returns")), cache, doc_table)
-            ))
+            fn_arr.append(
+                (
+                    fn.get("name", ""),
+                    _get_or_add(
+                        (fn.get("description"), fn.get("args"), fn.get("returns")), cache, doc_table
+                    ),
+                )
+            )
 
-        doc_block = ({"m": module_id, "c": cls_arr, "f": fn_arr}
-                     if not retain_keys else
-                     {"module_doc": module_id, "classes": cls_arr, "functions": fn_arr})
+        doc_block = (
+            {"m": module_id, "c": cls_arr, "f": fn_arr}
+            if not retain_keys
+            else {"module_doc": module_id, "classes": cls_arr, "functions": fn_arr}
+        )
 
         # -------------------------------------------------- coverage block + percent calculation
         cov_blob: Dict[str, Any] = report.get("coverage", {})
@@ -107,6 +125,7 @@ def compress_obj(original: Dict[str, Any], *, retain_keys: bool = False) -> Dict
 # ----------------------------------------------------------------------------
 # Decompression
 # ----------------------------------------------------------------------------
+
 
 def decompress_obj(blob: Dict[str, Any]) -> Dict[str, Any]:
     """Rebuild the full merged_report structure from the compact *blob*."""
@@ -140,6 +159,7 @@ def decompress_obj(blob: Dict[str, Any]) -> Dict[str, Any]:
 # File helpers (optional gzip)
 # ----------------------------------------------------------------------------
 
+
 def _load_json(path: Path) -> Dict[str, Any]:
     data = path.read_bytes()
     if path.suffix == ".gz":
@@ -147,7 +167,9 @@ def _load_json(path: Path) -> Dict[str, Any]:
     return json.loads(data.decode())
 
 
-def _dump_json(obj: Dict[str, Any], path: Path, *, pretty: bool = False, gzip_level: int | None = None) -> None:
+def _dump_json(
+    obj: Dict[str, Any], path: Path, *, pretty: bool = False, gzip_level: int | None = None
+) -> None:
     txt = json.dumps(obj, indent=2 if pretty else None, separators=(",", ":"))
     b = txt.encode()
     if gzip_level is not None:
@@ -159,6 +181,7 @@ def _dump_json(obj: Dict[str, Any], path: Path, *, pretty: bool = False, gzip_le
 # CLI
 # ----------------------------------------------------------------------------
 
+
 def _cli() -> None:
     p = argparse.ArgumentParser(description="Compress / decompress merged_report.json")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -168,7 +191,9 @@ def _cli() -> None:
     pc.add_argument("infile")
     pc.add_argument("outfile")
     pc.add_argument("--pretty", action="store_true", help="pretty‑print JSON (debug)")
-    pc.add_argument("--gzip", type=int, nargs="?", const=9, help="gzip level (default 9) → .gz suffix")
+    pc.add_argument(
+        "--gzip", type=int, nargs="?", const=9, help="gzip level (default 9) → .gz suffix"
+    )
 
     # decompress
     pd = sub.add_parser("decompress")
@@ -223,6 +248,7 @@ def _cli() -> None:
                 pct = _calc_percent(cov_blob)
             pct_display = f"{pct:.1f}" if pct is not None else "—"
             print(f"{short:<50} {pct_display:>12}")
+
 
 if __name__ == "__main__":
     _cli()

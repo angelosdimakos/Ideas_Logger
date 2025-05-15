@@ -1,9 +1,9 @@
 """
 Summary Engine Module
 ===============================
-This module provides the SummaryEngine class, which is responsible 
-for generating summaries from log entries using AI summarization. 
-It integrates with the log manager and summary tracker to manage 
+This module provides the SummaryEngine class, which is responsible
+for generating summaries from log entries using AI summarization.
+It integrates with the log manager and summary tracker to manage
 the summarization process.
 """
 
@@ -17,12 +17,13 @@ from scripts.core.summary_tracker import SummaryTracker
 
 logger = logging.getLogger(__name__)
 
+
 class SummaryEngine:
     """
     A class to manage the summarization of log entries.
 
-    This class utilizes an AI summarizer to generate summaries from 
-    batches of log entries, coordinating with the log manager and 
+    This class utilizes an AI summarizer to generate summaries from
+    batches of log entries, coordinating with the log manager and
     summary tracker.
 
     Attributes:

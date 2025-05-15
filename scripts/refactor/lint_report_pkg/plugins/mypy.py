@@ -6,7 +6,6 @@ This module provides a plugin for the MyPy type checker, implementing the ToolPl
 It includes functionality to run MyPy on code and parse its output for type checking errors.
 """
 
-
 from pathlib import Path
 from typing import Dict, Any
 
@@ -23,6 +22,7 @@ class MypyPlugin(ToolPlugin):
         name (str): The name of the plugin.
         default_report (Path): The default report file path.
     """
+
     name: str = "mypy"
     default_report: Path = Path("mypy.txt")
 

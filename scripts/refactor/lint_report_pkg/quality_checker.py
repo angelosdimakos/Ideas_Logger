@@ -17,6 +17,7 @@ from scripts.refactor.lint_report_pkg.core import all_plugins
 
 ENC = "utf-8"
 
+
 def merge_into_refactor_guard(audit_path: str = "refactor_audit.json") -> None:
     """
     Enrich *audit_path* with quality data produced by every plugin.
@@ -50,7 +51,9 @@ def merge_into_refactor_guard(audit_path: str = "refactor_audit.json") -> None:
         report_path = base_dir / plugin.default_report.name
         plugin.default_report = report_path
 
-        existing = report_path.read_text(encoding=ENC, errors="ignore") if report_path.exists() else ""
+        existing = (
+            report_path.read_text(encoding=ENC, errors="ignore") if report_path.exists() else ""
+        )
         if not existing.strip():
             safe_print(f"[~] Generating report for {plugin.name}")
             plugin.run()
@@ -62,8 +65,7 @@ def merge_into_refactor_guard(audit_path: str = "refactor_audit.json") -> None:
     # Merge quality results with flexible key matching
     for file_key, qdata in q_by_file.items():
         matched_key = next(
-            (k for k in audit_norm if k.endswith(file_key) or norm(k) == norm(file_key)),
-            file_key
+            (k for k in audit_norm if k.endswith(file_key) or norm(k) == norm(file_key)), file_key
         )
         audit_norm.setdefault(matched_key, {}).setdefault("quality", {}).update(qdata)
 
@@ -81,6 +83,7 @@ def merge_into_refactor_guard(audit_path: str = "refactor_audit.json") -> None:
             (base_dir / name).unlink()
         except FileNotFoundError:
             pass
+
 
 def merge_reports(file_a: str, file_b: str) -> Dict[str, Any]:
     """

@@ -6,7 +6,6 @@ This module provides a plugin for the pydocstyle tool, implementing the ToolPlug
 It includes functionality to run pydocstyle on code and parse its output for docstring issues.
 """
 
-
 from pathlib import Path
 from typing import Dict, Any
 import re
@@ -24,6 +23,7 @@ class PydocstylePlugin(ToolPlugin):
         name (str): The name of the plugin.
         default_report (Path): The default report file path.
     """
+
     name: str = "pydocstyle"
     default_report: Path = Path("pydocstyle.txt")
 
@@ -53,7 +53,7 @@ class PydocstylePlugin(ToolPlugin):
         for location, detail in paired:
             match = re.match(
                 r"^(.*\.py):(\d+)\s+in\s+(?:public|private)?\s*(function|method|class|module)\s+`?([^\s:`]+)`?:?$",
-                location
+                location,
             )
             if not match:
                 continue
@@ -69,6 +69,6 @@ class PydocstylePlugin(ToolPlugin):
             code, message = code_match.groups()
 
             entry = {"code": code, "message": message.strip()}
-            dst.setdefault(key, {}).setdefault("pydocstyle", {}).setdefault("functions", {}).setdefault(label,
-                                                                                                        []).append(
-                entry)
+            dst.setdefault(key, {}).setdefault("pydocstyle", {}).setdefault(
+                "functions", {}
+            ).setdefault(label, []).append(entry)

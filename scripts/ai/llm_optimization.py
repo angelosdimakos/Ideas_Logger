@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
-from typing import Any, List, Dict, Tuple
+from typing import Any, List, Dict, Tuple, Union
 import logging
 
 import numpy as np
@@ -32,6 +32,7 @@ __all__ = [
     "build_strategic_recommendations_prompt",
     "compute_severity",
 ]
+
 
 # ---------------------------------------------------------------------------
 # Data structures
@@ -47,6 +48,7 @@ def _mean(values: List[float]) -> float:
 
 from typing import List, Dict
 
+
 def _categorise_issues(offenders: List[Dict]) -> str:
     """
     Return a three-line summary that counts how many files trigger each
@@ -54,18 +56,17 @@ def _categorise_issues(offenders: List[Dict]) -> str:
 
     Categories
     ----------
-    • type errors   (Mypy Errors > 5)
-    • high complexity (Avg Complexity > 7)
-    • low coverage  (Avg Coverage % < 60)
+    • type errors   (Mypy Errors > 5)
+    • high complexity (Avg Complexity > 7)
+    • low coverage  (Avg Coverage % < 60)
     """
     counts = {
-        "type errors":   sum(o.get("Mypy Errors",     0) > 5  for o in offenders),
-        "high complexity": sum(o.get("Avg Complexity", 0) > 7  for o in offenders),
-        "low coverage":  sum(o.get("Avg Coverage %", 100) < 60 for o in offenders),
+        "type errors": sum(o.get("Mypy Errors", 0) > 5 for o in offenders),
+        "high complexity": sum(o.get("Avg Complexity", 0) > 7 for o in offenders),
+        "low coverage": sum(o.get("Avg Coverage %", 100) < 60 for o in offenders),
     }
 
     return "\n".join(f"Files with {label}: {count}" for label, count in counts.items())
-
 
 
 # ---------------------------------------------------------------------------
@@ -118,10 +119,9 @@ def extract_top_issues(file_data: dict, max_issues: int = 3) -> List[str]:
     low_cov = [(n, d) for n, d in complexity_info.items() if d.get("coverage", 1.0) < 0.5]
     if low_cov and len(issues) < max_issues:
         name, data = low_cov[0]
-        issues.append(f"Low coverage: {name} ({data.get('coverage')*100:.1f}% )")
+        issues.append(f"Low coverage: {name} ({data.get('coverage') * 100:.1f}% )")
 
     return issues
-
 
 
 # ---------------------------------------------------------------------------
@@ -129,11 +129,11 @@ def extract_top_issues(file_data: dict, max_issues: int = 3) -> List[str]:
 # ---------------------------------------------------------------------------
 
 def build_refactor_prompt(
-    offenders: List[Tuple[str, float, list, int, float, float]],
-    config: Any,
-    *,
-    verbose: bool = False,
-    limit: int = 30,
+        offenders: List[Tuple[str, float, list, int, float, float]],
+        config: Any,
+        *,
+        verbose: bool = False,
+        limit: int = 30,
 ) -> str:
     """Return an LLM prompt focused on refactoring advice for up to *limit* files."""
 
@@ -153,35 +153,91 @@ def build_refactor_prompt(
 
 
 def build_strategic_recommendations_prompt(
-    severity_data: List[Dict[str, Any]],
-    summary_metrics: Dict[str, Any],
-    *,
-    limit: int = 30,
+        severity_data: List[Dict[str, Any]],
+        summary_metrics: Union[Dict[str, Any], str],
+        *,
+        limit: int = 30,
 ) -> str:
     """Return a high‑level, strategy‑oriented prompt covering the *limit* worst files."""
 
     top_offenders = severity_data[:limit]
     issue_summary = _categorise_issues(top_offenders)
-    top5 = ", ".join(
-        f"{os.path.basename(d['Full Path'])} (Score: {d['Severity Score']})" for d in severity_data[:5]
-    )
+
+    # Extract specific issue patterns
+    high_complexity_files = [d for d in severity_data if d.get("Avg Complexity", 0) > 7]
+    low_coverage_files = [d for d in severity_data if d.get("Avg Coverage %", 100) < 60]
+    mypy_error_files = [d for d in severity_data if d.get("Mypy Errors", 0) > 0]
+
+    # Get the top 5 files for detailed examination
+    top5_details = []
+    for d in severity_data[:5]:
+        file_name = os.path.basename(d['Full Path'])
+        score = d['Severity Score']
+        complexity = d.get('Avg Complexity', 'N/A')
+        coverage = d.get('Avg Coverage %', 'N/A')
+        mypy_errors = d.get('Mypy Errors', 0)
+
+        top5_details.append(
+            f"• {file_name} - Score: {score}, Complexity: {complexity}, "
+            f"Coverage: {coverage}%, MyPy Errors: {mypy_errors}"
+        )
+
+    top5_text = "\n".join(top5_details)
+
+    # Calculate distribution of issues
+    total_files = len(severity_data)
+    high_complexity_pct = len(high_complexity_files) / total_files * 100 if total_files else 0
+    low_coverage_pct = len(low_coverage_files) / total_files * 100 if total_files else 0
+    mypy_error_pct = len(mypy_error_files) / total_files * 100 if total_files else 0
+
+    # Find repeated patterns in file names (potential modules that need attention)
+    file_prefixes = {}
+    for d in severity_data:
+        file_name = os.path.basename(d['Full Path'])
+        # Get the module name (remove extension and look at first part)
+        prefix = file_name.split('.')[0].split('_')[0]
+        if prefix not in file_prefixes:
+            file_prefixes[prefix] = []
+        file_prefixes[prefix].append(d['Severity Score'])
+
+    # Find modules with multiple problematic files
+    problem_modules = {k: len(v) for k, v in file_prefixes.items() if len(v) > 1}
+    problem_modules_text = ", ".join(
+        [f"{k} ({v} files)" for k, v in sorted(problem_modules.items(), key=lambda x: x[1], reverse=True)[:3]])
+
+    # Handle the case where summary_metrics is a string instead of a dictionary
+    if isinstance(summary_metrics, str):
+        metrics_text = summary_metrics
+    else:
+        # If it's a dictionary, format it as expected
+        metrics_text = f"""
+      • Total Tests .............. {summary_metrics.get('total_tests', 'N/A')}
+      • Avg Test Strictness ...... {summary_metrics.get('avg_strictness', 'N/A')}
+      • Avg Severity ............. {summary_metrics.get('avg_severity', 'N/A')}
+      • Overall Coverage ......... {summary_metrics.get('coverage', 'N/A')} %
+      • Missing Docstrings ....... {summary_metrics.get('missing_docs', 'N/A')} %
+      • High / Med / Low Severity  {summary_metrics.get('high_severity_tests', 'N/A')} / {summary_metrics.get('medium_severity_tests', 'N/A')} / {summary_metrics.get('low_severity_tests', 'N/A')}
+        """
 
     template = f"""
     Based on the analysis of this codebase, provide 3‑5 strategic recommendations
-    for improving code quality and test coverage.  Focus on actionable steps that
+    for improving code quality and test coverage. Focus on actionable steps that
     would have the most impact.
 
     Key metrics:
-      • Total Tests .............. {summary_metrics['total_tests']}
-      • Avg Test Strictness ...... {summary_metrics['avg_strictness']}
-      • Avg Severity ............. {summary_metrics['avg_severity']}
-      • Overall Coverage ......... {summary_metrics['coverage']} %
-      • Missing Docstrings ....... {summary_metrics['missing_docs']} %
-      • High / Med / Low Severity  {summary_metrics['high_severity_tests']} / {summary_metrics['medium_severity_tests']} / {summary_metrics['low_severity_tests']}
+{metrics_text}
+
+    Issue distribution:
+    • {high_complexity_pct:.1f}% of files have high complexity
+    • {low_coverage_pct:.1f}% of files have low test coverage
+    • {mypy_error_pct:.1f}% of files have type errors
 
     {issue_summary}
 
-    Top 5 most severe modules: {top5}
+    Problem modules with multiple files: {problem_modules_text}
+
+    Top 5 most severe modules:
+{top5_text}
 
     When providing recommendations, prioritise:
       1. Code complexity (hard to test & maintain)
@@ -189,7 +245,14 @@ def build_strategic_recommendations_prompt(
       3. Type errors (reliability)
       4. Documentation (maintainability)
 
-    Respond with patterns and systemic actions – avoid per‑file micromanagement.
+    Respond with SPECIFIC recommendations tied to the actual issues found in this 
+    codebase. Name problematic files and modules directly. Don't give generic advice - be
+    precise about what needs fixing and why. Avoid boilerplate recommendations that could
+    apply to any codebase. Focus on the actual patterns identified in this analysis.
+
+    For example, if you see that visualization.py has high complexity, low coverage, and many
+    type errors, suggest specific refactoring approaches relevant to visualization code, not
+    just generic "break down large functions" advice.
     """
 
     return template.strip()
@@ -215,10 +278,10 @@ def compute_severity(file_path: str, content: Dict[str, Any]) -> Dict[str, Any]:
     avg_coverage = float(np.mean(coverages)) if coverages else 1.0
 
     severity = (
-        2.0 * len(mypy_errors)
-        + 1.5 * sum(len(v) for v in pydoc_issues.values())
-        + 2.0 * avg_complexity  # emphasise complexity
-        + 2.0 * (1.0 - avg_coverage)
+            2.0 * len(mypy_errors)
+            + 1.5 * sum(len(v) for v in pydoc_issues.values())
+            + 2.0 * avg_complexity  # emphasise complexity
+            + 2.0 * (1.0 - avg_coverage)
     )
 
     return {
@@ -235,7 +298,6 @@ def compute_severity(file_path: str, content: Dict[str, Any]) -> Dict[str, Any]:
 # ---------------------------------------------------------------------------
 # Internal utilities  (kept *private*)
 # ---------------------------------------------------------------------------
-
 
 
 def _summarise_offenders(offenders: List[Tuple[str, float, list, int, float, float]]) -> str:

@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict
 
+
 def compress_obj(original: Dict[str, Any]) -> Dict[str, Any]:
     """Compress a strictness report into a minimal 'modules' mapping."""
     # Support both wrapped (with 'modules') and bare module maps
@@ -20,16 +21,18 @@ def compress_obj(original: Dict[str, Any]) -> Dict[str, Any]:
                 {
                     "name": m.get("name", ""),
                     "coverage": round(m.get("coverage", 0), 2),
-                    "complexity": int(m.get("complexity", 0))
-                } for m in data.get("methods", [])
+                    "complexity": int(m.get("complexity", 0)),
+                }
+                for m in data.get("methods", [])
             ],
             "tests": [
                 {
                     "test_name": t.get("test_name", ""),
                     "strictness": round(t.get("strictness", 0), 2),
-                    "severity": round(t.get("severity", 0), 2)
-                } for t in data.get("tests", [])
-            ]
+                    "severity": round(t.get("severity", 0), 2),
+                }
+                for t in data.get("tests", [])
+            ],
         }
         compressed["modules"][module] = compressed_module
     return compressed
@@ -92,13 +95,14 @@ def _load_json(path: Path) -> Dict[str, Any]:
 
 def _dump_json(obj: Dict[str, Any], path: Path, pretty: bool = False) -> None:
     path.write_text(
-        json.dumps(obj, indent=2 if pretty else None, separators=(",", ":")),
-        encoding="utf-8"
+        json.dumps(obj, indent=2 if pretty else None, separators=(",", ":")), encoding="utf-8"
     )
 
 
 def _cli() -> None:
-    p = argparse.ArgumentParser(description="Compress / decompress strictness report with self-test.")
+    p = argparse.ArgumentParser(
+        description="Compress / decompress strictness report with self-test."
+    )
     sub = p.add_subparsers(dest="cmd", required=True)
 
     pc = sub.add_parser("compress")
@@ -131,6 +135,7 @@ def _cli() -> None:
         else:
             print("✗ Round-trip FAILED", file=sys.stderr)
             sys.exit(1)
+
 
 if __name__ == "__main__":
     _cli()

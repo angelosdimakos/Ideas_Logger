@@ -35,7 +35,9 @@ def generate_metrics_summary(report_data: dict) -> str:
 
         lint = content.get("linting", {}).get("quality", {})
         linter_issues += len(lint.get("mypy", {}).get("errors", []))  # Count MyPy errors
-        linter_issues += sum(len(v) for v in lint.get("pydocstyle", {}).get("functions", {}).values())  # Count Pydocstyle issues
+        linter_issues += sum(
+            len(v) for v in lint.get("pydocstyle", {}).get("functions", {}).values()
+        )  # Count Pydocstyle issues
 
     return f"""## 📊 Summary Metrics
 

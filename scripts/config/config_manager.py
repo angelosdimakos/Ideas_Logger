@@ -21,6 +21,7 @@ from scripts.utils.file_utils import safe_read_json
 
 logger = logging.getLogger(__name__)
 
+
 class AppConfig(BaseModel):
     """
     Configuration model for application settings.

@@ -6,6 +6,7 @@ from typing import Dict, Any, Optional
 # Setup centralized logging immediately
 logger = logging.getLogger(__name__)
 
+
 def setup_logging() -> None:
     """
     Configure centralized logging.
@@ -27,12 +28,14 @@ def setup_logging() -> None:
     )
     logger.debug("Centralized logging configured at level %s", level_str)  # Log debug message
 
+
 setup_logging()
 
 # Base directory setup
 BASE_DIR: Path = Path(__file__).resolve().parents[2]  # Get the base directory of the project
 CONFIG_DIR: Path = BASE_DIR / "config"  # Define the config directory path
 CONFIG_FILE_PATH: Path = CONFIG_DIR / "config.json"  # Define the path to the config file
+
 
 def load_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]:
     """
@@ -51,28 +54,38 @@ def load_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]:
         JSONDecodeError: If the configuration file contains invalid JSON.
     """
     if not config_path.exists():  # Check if the config file exists
-        logger.warning(f"Config file '{config_path}' not found. Using defaults.")  # Log warning if file not found
+        logger.warning(
+            f"Config file '{config_path}' not found. Using defaults."
+        )  # Log warning if file not found
         return {}  # Return empty dictionary if file not found
 
     try:
         with config_path.open("r", encoding="utf-8") as f:  # Open the config file in read mode
             data = json.load(f)  # Load the config data from the file
-        logger.debug(f"Successfully loaded config from '{config_path}'. Keys: {list(data.keys())}")  # Log debug message
+        logger.debug(
+            f"Successfully loaded config from '{config_path}'. Keys: {list(data.keys())}"
+        )  # Log debug message
         logger.debug("Full config dump:\n" + json.dumps(data, indent=2))  # Log the full config dump
 
         if data.get("test_mode", False):  # Check if test mode is enabled
             logger.setLevel(logging.DEBUG)  # Set the logger level to DEBUG if test mode is enabled
             logger.debug("Test mode enabled: setting logger level to DEBUG.")  # Log debug message
         else:
-            logger.setLevel(logging.INFO)  # Set the logger level to INFO if test mode is not enabled
+            logger.setLevel(
+                logging.INFO
+            )  # Set the logger level to INFO if test mode is not enabled
 
         return data  # Return the loaded config data
 
     except json.JSONDecodeError as e:  # Catch JSON decode errors
-        logger.error(f"Failed to parse config file '{config_path}': {e}. Using defaults.")  # Log error message
+        logger.error(
+            f"Failed to parse config file '{config_path}': {e}. Using defaults."
+        )  # Log error message
         return {}  # Return empty dictionary if JSON decode error occurs
     except OSError as e:  # Catch OS errors
-        logger.error(f"I/O error while loading config file '{config_path}': {e}. Using defaults.")  # Log error message
+        logger.error(
+            f"I/O error while loading config file '{config_path}': {e}. Using defaults."
+        )  # Log error message
         return {}  # Return empty dictionary if OS error occurs
 
 
@@ -94,7 +107,9 @@ def get_config_value(config: Dict[str, Any], key: str, default: Any) -> Any:
         KeyError: If the key is not found and no default is provided.
     """
     if key not in config:  # Check if the key is not in the config
-        logger.warning(f"Missing key '{key}' in config. Using default value: {default}")  # Log warning if key not found
+        logger.warning(
+            f"Missing key '{key}' in config. Using default value: {default}"
+        )  # Log warning if key not found
         return default  # Return the default value if key not found
     return config[key]  # Return the config value if key found
 
@@ -115,7 +130,9 @@ def get_absolute_path(relative_path: str) -> Path:
     try:
         return BASE_DIR / relative_path  # Build the absolute path
     except (TypeError, ValueError, OSError) as e:  # Catch exceptions
-        logger.error(f"Failed to resolve absolute path for '{relative_path}': {e}")  # Log error message
+        logger.error(
+            f"Failed to resolve absolute path for '{relative_path}': {e}"
+        )  # Log error message
         raise  # Re-raise the exception
 
 
@@ -160,15 +177,25 @@ def get_effective_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]
                 "\u26a0\ufe0f Test mode is active. Overriding config paths with test equivalents."
             )  # Log warning if test mode is enabled
 
-            config["logs_dir"] = Path(config.get("test_logs_dir", "tests/mock_data/logs"))  # Override logs dir
+            config["logs_dir"] = Path(
+                config.get("test_logs_dir", "tests/mock_data/logs")
+            )  # Override logs dir
             config["vector_store_dir"] = Path(
                 config.get("test_vector_store_dir", "tests/mock_data/vector_store")
             )  # Override vector store dir
-            config["export_dir"] = Path(config.get("test_export_dir", "tests/mock_data/exports"))  # Override export dir
+            config["export_dir"] = Path(
+                config.get("test_export_dir", "tests/mock_data/exports")
+            )  # Override export dir
 
-            config["raw_log_path"] = config["logs_dir"] / "zephyrus_log.json"  # Override raw log path
-            config["correction_summaries_path"] = config["logs_dir"] / "correction_summaries.json"  # Override correction summaries path
-            config["summary_tracker_path"] = config["logs_dir"] / "summary_tracker.json"  # Override summary tracker path
+            config["raw_log_path"] = (
+                config["logs_dir"] / "zephyrus_log.json"
+            )  # Override raw log path
+            config["correction_summaries_path"] = (
+                config["logs_dir"] / "correction_summaries.json"
+            )  # Override correction summaries path
+            config["summary_tracker_path"] = (
+                config["logs_dir"] / "summary_tracker.json"
+            )  # Override summary tracker path
     except TypeError as e:  # Catch type errors
         logger.error("Invalid directory paths in test config override: %s", e)  # Log error message
 

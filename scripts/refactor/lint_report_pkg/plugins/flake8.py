@@ -18,16 +18,14 @@ class Flake8Plugin(ToolPlugin):
     def run(self) -> int:
         # Force color off and safe config
         return run_cmd(
-            ["flake8", "--color=never", "--config=.flake8", "scripts"],
-            self.default_report
+            ["flake8", "--color=never", "--config=.flake8", "scripts"], self.default_report
         )
 
     def parse(self, dst: Dict[str, Dict[str, Any]]) -> None:
         # Read + clean up flake8 output
         raw_lines = read_report(self.default_report).splitlines()
         clean_lines = [
-            _ANSI.sub("", line).strip().replace("\\", "/")
-            for line in raw_lines if line.strip()
+            _ANSI.sub("", line).strip().replace("\\", "/") for line in raw_lines if line.strip()
         ]
 
         for line in clean_lines:
@@ -37,9 +35,11 @@ class Flake8Plugin(ToolPlugin):
             fp, ln, col, code, msg = m.groups()
             key = norm(fp)
             issues = dst.setdefault(key, {}).setdefault("flake8", {"issues": []})["issues"]
-            issues.append({
-                "line": int(ln),
-                "column": int(col),
-                "code": code,
-                "message": msg,
-            })
+            issues.append(
+                {
+                    "line": int(ln),
+                    "column": int(col),
+                    "code": code,
+                    "message": msg,
+                }
+            )

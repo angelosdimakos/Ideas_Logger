@@ -43,6 +43,7 @@ from scripts.core.summary_engine import SummaryEngine
 
 logger = logging.getLogger(__name__)
 
+
 class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
     """
     High-level façade that ties together logging, summarizing, and search functionalities.
@@ -67,7 +68,8 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
            md_logger (MarkdownLogger): Instance of the markdown logger.
            summary_tracker (SummaryTracker): Instance of the summary tracker.
            summary_engine (SummaryEngine): Instance of the summary engine.
-       """
+    """
+
     # ------------------------------------------------------------------
     # 🗂  Static schema / defaults
     # ------------------------------------------------------------------
@@ -108,7 +110,9 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
         EnvironmentBootstrapper(self.paths).bootstrap()  # Bootstrap environment
 
         # 2) Core runtime collaborators
-        self.BATCH_SIZE: int = max(1, int(get_config_value(self.config, "batch_size", 5)))  # Get batch size from config
+        self.BATCH_SIZE: int = max(
+            1, int(get_config_value(self.config, "batch_size", 5))
+        )  # Get batch size from config
         self.ai_summarizer = AISummarizer()  # Instantiate AI summarizer
         self.log_manager = LogManager(
             self.paths.json_log_file,
@@ -131,11 +135,16 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
         )  # Instantiate summary engine
 
         # 3) Validate / rebuild tracker once on start-up
-        if get_config_value(self.config, "force_summary_tracker_rebuild", False) or not self.summary_tracker.validate():
+        if (
+            get_config_value(self.config, "force_summary_tracker_rebuild", False)
+            or not self.summary_tracker.validate()
+        ):
             logger.warning("[INIT] Rebuilding summary tracker from scratch …")
             self.summary_tracker.rebuild()  # Rebuild summary tracker
             if not self.summary_tracker.validate():
-                raise RuntimeError("SummaryTracker rebuild failed validation – data is inconsistent.")
+                raise RuntimeError(
+                    "SummaryTracker rebuild failed validation – data is inconsistent."
+                )
 
     # ------------------------------------------------------------------
     # ✍️  Public logging helpers
@@ -154,9 +163,15 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
         """
         date_str = datetime.now().strftime(self.DATE_FORMAT)  # Get current date string
         try:
-            self.log_manager.append_entry(date_str, main_category, subcategory, entry)  # Append entry to log
-            md_ok = self.md_logger.log(date_str, main_category, subcategory, entry)  # Log to markdown
-            self.summary_tracker.update(main_category, subcategory, new_entries=1)  # Update summary tracker
+            self.log_manager.append_entry(
+                date_str, main_category, subcategory, entry
+            )  # Append entry to log
+            md_ok = self.md_logger.log(
+                date_str, main_category, subcategory, entry
+            )  # Log to markdown
+            self.summary_tracker.update(
+                main_category, subcategory, new_entries=1
+            )  # Update summary tracker
             return md_ok  # Return markdown export success
         except Exception as exc:  # pylint: disable=broad-except
             logger.error("Failed to save entry: %s", exc, exc_info=True)  # Log error
@@ -179,7 +194,9 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
         Returns:
             bool: The success flag.
         """
-        return self.summary_engine.summarize(main_category, subcategory)  # Summarize using summary engine
+        return self.summary_engine.summarize(
+            main_category, subcategory
+        )  # Summarize using summary engine
 
     # backwards-compat shim for unit-tests that still pass a *date* arg
     def generate_summary(self, _date_str: str, main_category: str, subcategory: str) -> bool:
@@ -188,7 +205,9 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
 
         Force a batch summarisation for *main_category → subcategory*.
         """
-        return self.generate_global_summary(main_category, subcategory)  # Call generate_global_summary
+        return self.generate_global_summary(
+            main_category, subcategory
+        )  # Call generate_global_summary
 
     # ------------------------------------------------------------------
     # 🔍  Search helpers (gracefully degrade when FAISS indexers are stubbed)
@@ -210,7 +229,9 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
             try:
                 return indexer.search(query, top_k=top_k)  # type: ignore[attr-defined]  # Perform search
             except Exception as exc:  # pragma: no cover
-                logger.error("Search via %s failed: %s", indexer_attr, exc, exc_info=True)  # Log error
+                logger.error(
+                    "Search via %s failed: %s", indexer_attr, exc, exc_info=True
+                )  # Log error
         return []  # Return empty list if search fails
 
     def search_summaries(self, query: str, top_k: int = 5) -> List[Any]:
@@ -256,5 +277,7 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
         try:
             return read_json(filepath)  # Read JSON file
         except Exception as exc:  # pylint: disable=broad-except
-            logger.error("Failed to read JSON from %s: %s", filepath, exc, exc_info=True)  # Log error
+            logger.error(
+                "Failed to read JSON from %s: %s", filepath, exc, exc_info=True
+            )  # Log error
             return {}  # Return empty dictionary if read fails

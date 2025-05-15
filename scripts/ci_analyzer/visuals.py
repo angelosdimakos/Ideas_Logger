@@ -35,4 +35,6 @@ def render_bar(score: float, width: int = 20) -> str:
         str: A string representing the filled and unfilled sections of the bar.
     """
     filled = int((score / 100.0) * width)  # Calculate how many sections of the bar should be filled
-    return "▓" * filled + "░" * (width - filled)  # Return the filled and unfilled sections of the bar
+    return "▓" * filled + "░" * (
+        width - filled
+    )  # Return the filled and unfilled sections of the bar

@@ -22,6 +22,7 @@ class BlackPlugin(ToolPlugin):
         name (str): The name of the plugin.
         default_report (Path): The default report file path.
     """
+
     name = "black"
     default_report = Path("black.txt")
 

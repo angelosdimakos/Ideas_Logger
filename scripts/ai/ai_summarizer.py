@@ -35,7 +35,9 @@ class AISummarizer:
         and preparing prompts by subcategory.
         """
         config: Dict[str, Any] = load_config()  # Load configuration settings from external source
-        self.model: str = get_config_value(config, "llm_model", "mistral")  # Set the model, defaulting to 'mistral'
+        self.model: str = get_config_value(
+            config, "llm_model", "mistral"
+        )  # Set the model, defaulting to 'mistral'
         self.prompts_by_subcategory: Dict[str, Any] = get_config_value(
             config, "prompts_by_subcategory", {}
         )  # Load prompts categorized by subcategory
@@ -83,8 +85,12 @@ class AISummarizer:
         full_prompt: str = f"{prompt}\n\n{entry_text}"  # Combine prompt with entry text
 
         try:
-            logger.debug("[AI] Single-entry prompt:\n%s", full_prompt)  # Log the full prompt for debugging
-            response = ollama.generate(model=self.model, prompt=full_prompt)  # Generate summary using the LLM
+            logger.debug(
+                "[AI] Single-entry prompt:\n%s", full_prompt
+            )  # Log the full prompt for debugging
+            response = ollama.generate(
+                model=self.model, prompt=full_prompt
+            )  # Generate summary using the LLM
             result: str = response.get("response")
             return (
                 result.strip() if isinstance(result, str) else self._fallback_summary(full_prompt)
@@ -101,7 +107,7 @@ class AISummarizer:
         Args:
             entries (List[str]): The list of text entries to summarize.
             subcategory (Optional[str], optional): The subcategory to use for the prompt.
-        
+
         Returns:
             str: The generated summary or a fallback message if summarization fails.
         """
@@ -112,11 +118,17 @@ class AISummarizer:
         prompt_intro: str = self.prompts_by_subcategory.get(
             subcategory, self.prompts_by_subcategory.get("_default", "Summarize these points:")
         ).strip()  # Select prompt based on subcategory or use default
-        combined_text: str = "\n".join(f"- {entry}" for entry in entries)  # Combine entries into a single string
-        full_prompt: str = f"{prompt_intro}\n\n{combined_text}"  # Combine prompt with combined entries
+        combined_text: str = "\n".join(
+            f"- {entry}" for entry in entries
+        )  # Combine entries into a single string
+        full_prompt: str = (
+            f"{prompt_intro}\n\n{combined_text}"  # Combine prompt with combined entries
+        )
 
         try:
-            response = ollama.generate(model=self.model, prompt=full_prompt)  # Generate summary using the LLM
+            response = ollama.generate(
+                model=self.model, prompt=full_prompt
+            )  # Generate summary using the LLM
             result: str = response.get("response")
             return (
                 result.strip() if isinstance(result, str) else self._fallback_summary(full_prompt)

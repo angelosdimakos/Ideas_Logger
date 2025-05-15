@@ -1,8 +1,8 @@
 """
 Markdown Logger Module
 ===============================
-This module provides the MarkdownLogger class, which is responsible 
-for logging entries to Markdown files. It handles the creation and 
+This module provides the MarkdownLogger class, which is responsible
+for logging entries to Markdown files. It handles the creation and
 updating of Markdown files in the specified export directory.
 """
 
@@ -13,11 +13,12 @@ from scripts.utils.file_utils import sanitize_filename
 
 logger = logging.getLogger(__name__)
 
+
 class MarkdownLogger:
     """
     A class to log entries to Markdown files.
 
-    This class manages the logging of entries into Markdown format, 
+    This class manages the logging of entries into Markdown format,
     creating new files or updating existing ones as necessary.
 
     Attributes:

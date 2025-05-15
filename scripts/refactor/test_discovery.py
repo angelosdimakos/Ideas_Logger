@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 # -------------------- Pydantic Models --------------------
 
+
 class StrictnessEntry(BaseModel):
     name: str
     file: str
@@ -33,6 +34,7 @@ class StrictnessReport(BaseModel):
 
 # -------------------- Analysis Logic --------------------
 
+
 def parse_ast_tree(filepath: Path):
     """Parse a Python file into an AST tree."""
     with open(filepath, "r", encoding="utf-8") as f:
@@ -50,23 +52,26 @@ def extract_test_functions_from_tree(tree, file_stem: str) -> List[dict]:
                     start = method.lineno
                     end = getattr(method, "end_lineno", start)
                     full_name = f"{node.name}.{method.name}"
-                    functions.append({
-                        "name": full_name,  # ✅ Preserve original name here
-                        "start": start,
-                        "end": end,
-                        "path": file_stem
-                    })
+                    functions.append(
+                        {
+                            "name": full_name,  # ✅ Preserve original name here
+                            "start": start,
+                            "end": end,
+                            "path": file_stem,
+                        }
+                    )
         elif isinstance(node, ast.FunctionDef) and node.name.startswith("test"):
             start = node.lineno
             end = getattr(node, "end_lineno", start)
-            functions.append({
-                "name": node.name,  # ✅ Preserve original name here
-                "start": start,
-                "end": end,
-                "path": file_stem
-            })
+            functions.append(
+                {
+                    "name": node.name,  # ✅ Preserve original name here
+                    "start": start,
+                    "end": end,
+                    "path": file_stem,
+                }
+            )
     return functions
-
 
 
 def extract_imports_from_tree(tree) -> List[str]:
@@ -93,7 +98,7 @@ def normalize_test_name(name: str, remove_test_prefix: bool = False) -> str:
         Normalized name as a lowercase string.
     """
     # Handle class.method or module.class.method
-    base_name = name.split('.')[-1].lower()
+    base_name = name.split(".")[-1].lower()
 
     if remove_test_prefix:
         if base_name.startswith("test_"):
@@ -109,23 +114,16 @@ def normalize_test_name(name: str, remove_test_prefix: bool = False) -> str:
     return base_name
 
 
-
-
-
-
 def analyze_strictness(lines: List[str], func: dict) -> StrictnessEntry:
     """Analyze the strictness of a test function based on its content."""
-    segment = lines[func["start"] - 1: func["end"]]
+    segment = lines[func["start"] - 1 : func["end"]]
     joined = "\n".join(segment)
 
     asserts = sum(1 for line in segment if "assert" in line)
     mocks = joined.count("mock") + joined.count("MagicMock")
     raises = joined.count("pytest.raises") + joined.count("self.assertRaises")
 
-    branches = sum(
-        1 for line in segment
-        if line.strip().startswith(("if ", "for ", "while "))
-    )
+    branches = sum(1 for line in segment if line.strip().startswith(("if ", "for ", "while ")))
 
     length = max(1, func["end"] - func["start"] + 1)
     strictness = round((asserts * 1.5 + raises + 0.3 * mocks + 0.5 * branches) / length, 2)
@@ -141,7 +139,7 @@ def analyze_strictness(lines: List[str], func: dict) -> StrictnessEntry:
         raises=raises,
         branches=branches,
         length=length,
-        strictness_score=strictness
+        strictness_score=strictness,
     )
 
 
@@ -168,13 +166,14 @@ def scan_test_directory(tests_path: Path) -> StrictnessReport:
     return StrictnessReport(tests=results, imports=imports_map)
 
 
-
 # -------------------- CLI Entry Point --------------------
 
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Static analysis of test strictness using Pydantic.")
+    parser = argparse.ArgumentParser(
+        description="Static analysis of test strictness using Pydantic."
+    )
     parser.add_argument("--tests", required=True, help="Path to test suite directory or file.")
     parser.add_argument("--output", help="Path to save the strictness report (JSON).")
     args = parser.parse_args()

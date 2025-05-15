@@ -82,7 +82,10 @@ class RefactorGuard:
         return fallback
 
     def analyze_module(
-        self, original_path: Optional[str], refactored_path: str, test_file_path: Optional[str] = None
+        self,
+        original_path: Optional[str],
+        refactored_path: str,
+        test_file_path: Optional[str] = None,
     ) -> Dict[str, Any]:
         result: Dict[str, Any] = {
             "method_diff": {},
@@ -90,7 +93,11 @@ class RefactorGuard:
             "complexity": {},
         }
 
-        if not original_path or not os.path.exists(original_path) or os.path.abspath(original_path) == os.path.abspath(refactored_path):
+        if (
+            not original_path
+            or not os.path.exists(original_path)
+            or os.path.abspath(original_path) == os.path.abspath(refactored_path)
+        ):
             orig_infos = {}
         else:
             orig_infos = {c.class_name: c for c in extract_class_methods(original_path)}
@@ -187,7 +194,7 @@ class RefactorGuard:
 def print_human_readable(
     summary: Dict[str, Dict[str, Any]],
     guard: RefactorGuard,
-    args: Optional[argparse.Namespace] = None
+    args: Optional[argparse.Namespace] = None,
 ) -> None:
     """Print a human-readable summary of the analysis results."""
     max_complexity = guard.config.get("max_complexity", 10)

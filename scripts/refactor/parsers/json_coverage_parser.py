@@ -14,9 +14,7 @@ def _load_files(json_path: str) -> Dict[str, Any]:
     return {Path(k).as_posix(): v for k, v in raw.items()}
 
 
-def _best_suffix_match(
-    files: Dict[str, Any], requested: str
-) -> Optional[Dict[str, Any]]:
+def _best_suffix_match(files: Dict[str, Any], requested: str) -> Optional[Dict[str, Any]]:
     """
     Find the file-entry whose tail components best match *requested*.
     Returns the matching coverage dict or **None** if nothing plausible found.

@@ -13,6 +13,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Dict, Any, List
 
+
 # ── 1. Plugin base class ───────────────────────────────────────────────────
 class ToolPlugin(ABC):
     """

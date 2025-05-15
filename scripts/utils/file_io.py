@@ -12,6 +12,7 @@ _COMPRESSED_READERS: dict[str, callable[[str | os.PathLike], IO[bytes]]] = {
     ".xz": lzma.open,
 }
 
+
 def load_json_any(path: str | os.PathLike) -> Dict[str, Any]:
     """
     Load .json or compressed .json.{gz,bz2,xz} transparently.

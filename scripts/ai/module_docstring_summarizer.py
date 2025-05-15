@@ -12,7 +12,10 @@ from scripts.ai.ai_summarizer import AISummarizer
 from scripts.config.config_manager import ConfigManager
 from scripts.ai.llm_router import get_prompt_template, apply_persona
 
-def summarize_module(file_path: str, doc_entries: list, summarizer: AISummarizer, config: ConfigManager) -> str:
+
+def summarize_module(
+    file_path: str, doc_entries: list, summarizer: AISummarizer, config: ConfigManager
+) -> str:
     """
     Summarize the module's docstrings using the provided summarizer.
 
@@ -34,10 +37,17 @@ def summarize_module(file_path: str, doc_entries: list, summarizer: AISummarizer
         desc = (entry.get("description") or "").strip()  # Get and clean the description
         summaries.append(f"- `{name}`: {desc}")  # Format summary entry
     joined = "\n".join(summaries)  # Join all summaries into a single string
-    prompt = get_prompt_template("Module Functionality", config)  # Get the prompt template for the summarization
+    prompt = get_prompt_template(
+        "Module Functionality", config
+    )  # Get the prompt template for the summarization
     full_prompt = f"{prompt}\n\n{joined}"  # Combine prompt with the summary entries
-    final_prompt = apply_persona(full_prompt, config.persona)  # Apply persona adjustments to the prompt
-    return summarizer.summarize_entry(final_prompt, subcategory="Module Functionality")  # Generate and return the summary
+    final_prompt = apply_persona(
+        full_prompt, config.persona
+    )  # Apply persona adjustments to the prompt
+    return summarizer.summarize_entry(
+        final_prompt, subcategory="Module Functionality"
+    )  # Generate and return the summary
+
 
 def run(input_path: str, output_path: str | None = None, path_filter: str | None = None) -> None:
     """
@@ -61,13 +71,19 @@ def run(input_path: str, output_path: str | None = None, path_filter: str | None
         funcs = data.get("docstrings", {}).get("functions", [])  # Get functions' docstrings
         if not funcs:
             continue  # Skip if no functions have docstrings
-        summary = summarize_module(file_path, funcs, summarizer, config)  # Summarize the module's docstrings
+        summary = summarize_module(
+            file_path, funcs, summarizer, config
+        )  # Summarize the module's docstrings
         summaries[file_path] = summary  # Store the summary for the file
 
     if output_path:
         out_path = Path(output_path)
-        lines = [f"## {path}\n\n{summary}\n" for path, summary in summaries.items()]  # Prepare output format
-        out_path.write_text("\n".join(lines), encoding="utf-8")  # Write summaries to the output file
+        lines = [
+            f"## {path}\n\n{summary}\n" for path, summary in summaries.items()
+        ]  # Prepare output format
+        out_path.write_text(
+            "\n".join(lines), encoding="utf-8"
+        )  # Write summaries to the output file
         print(f"✅ Written to {output_path}")
     else:
         for path, summary in summaries.items():
@@ -75,7 +91,9 @@ def run(input_path: str, output_path: str | None = None, path_filter: str | None
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Summarize Python module functionality from docstrings.")
+    parser = argparse.ArgumentParser(
+        description="Summarize Python module functionality from docstrings."
+    )
     parser.add_argument("input", help="Path to merged_report.json")
     parser.add_argument("--to", help="Path to write Markdown summary to")
     parser.add_argument("--filter", help="Only include modules with this substring in the path")

@@ -24,11 +24,7 @@ for file in _PLUGIN_DIR.glob("*.py"):
     try:
         mod: ModuleType = import_module(f"{__name__}.{file.stem}")
         for obj in vars(mod).values():
-            if (
-                isinstance(obj, type)
-                and issubclass(obj, ToolPlugin)
-                and obj is not ToolPlugin
-            ):
+            if isinstance(obj, type) and issubclass(obj, ToolPlugin) and obj is not ToolPlugin:
                 plugin = obj()
                 _PLUGINS.append(plugin)
                 print(f"[plugin loader] ✅ Loaded: {plugin.name} ({plugin.__class__.__name__})")
