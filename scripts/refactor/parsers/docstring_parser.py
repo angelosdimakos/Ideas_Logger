@@ -95,8 +95,13 @@ class DocstringAnalyzer:
         if tree is None:
             return {}
 
+        docstring = None
+        if isinstance(tree, ast.Module) and tree.body:
+            first_node = tree.body[0]
+            if isinstance(first_node, (ast.Expr,)) and isinstance(first_node.value, ast.Str):
+                docstring = first_node.value.s
         result = {
-            "module_doc": split_docstring_sections(ast.get_docstring(tree)),
+            "module_doc": split_docstring_sections(docstring),
             "classes": [],
             "functions": [],
         }

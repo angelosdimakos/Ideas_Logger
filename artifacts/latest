@@ -2497,6 +2497,54 @@
       "strictness_score": 0.28
     },
     {
+      "name": "test_extract_filenames_from_code",
+      "file": "test_module_idea generator",
+      "start": 43,
+      "end": 50,
+      "asserts": 2,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 8,
+      "strictness_score": 0.38
+    },
+    {
+      "name": "test_export_prototypes_to_files_creates_files",
+      "file": "test_module_idea generator",
+      "start": 52,
+      "end": 60,
+      "asserts": 1,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 9,
+      "strictness_score": 0.17
+    },
+    {
+      "name": "test_validate_test_coverage_detects_missing",
+      "file": "test_module_idea generator",
+      "start": 63,
+      "end": 71,
+      "asserts": 1,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 9,
+      "strictness_score": 0.17
+    },
+    {
+      "name": "test_suggest_new_modules_integration",
+      "file": "test_module_idea generator",
+      "start": 77,
+      "end": 98,
+      "asserts": 2,
+      "mocks": 9,
+      "raises": 0,
+      "branches": 0,
+      "length": 22,
+      "strictness_score": 0.26
+    },
+    {
       "name": "TestModuleDocstringSummarizer.sample_report",
       "file": "test_module_docstring_summarizer",
       "start": 22,
@@ -5676,6 +5724,15 @@
       "pytest",
       "re",
       "sys",
+      "unittest.mock"
+    ],
+    "test_module_idea generator": [
+      "json",
+      "os",
+      "pathlib",
+      "pytest",
+      "scripts.ai.module_idea_generator",
+      "tempfile",
       "unittest.mock"
     ],
     "test_module_docstring_summarizer": [
