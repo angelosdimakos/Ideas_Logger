@@ -17,13 +17,9 @@ import sys
 
 def setup_logging(log_level="INFO"):
     """
-    Sets up application-wide logging configuration.
-
-    Initializes the root logger with the specified log level, clears existing handlers,
-    and adds a console handler with a standard log message format.
-
-    Args:
-        log_level (str): Logging level as a string (e.g., "INFO", "DEBUG"). Defaults to "INFO".
+    Configures the root logger with a specified log level and standardized console output.
+    
+    Initializes application-wide logging by setting the root logger's level, clearing any existing handlers, and adding a console handler with a consistent log message format. If an invalid log level is provided, defaults to INFO.
     """
     # Create a root logger
     logger = logging.getLogger()  # Get the root logger

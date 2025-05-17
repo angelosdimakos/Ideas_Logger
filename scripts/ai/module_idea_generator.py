@@ -16,6 +16,19 @@ def suggest_new_modules(
     subcategory: str = "Architecture Planning",
     path_filter: str | None = None,
 ) -> tuple[str, str]:
+    """
+    Generates new module or package suggestions and corresponding Python prototype code based on an architecture report.
+    
+    Reads a JSON report of documented functions, filters them by an optional path substring, and summarizes their docstrings. Uses an AI summarizer to propose new modules/packages with justifications and then generates Python code stubs for the suggested modules, adhering to strict naming conventions.
+    
+    Args:
+        artifact_path: Path to the JSON architecture report.
+        subcategory: Optional subcategory for prompt context.
+        path_filter: Optional substring to filter file paths.
+    
+    Returns:
+        A tuple containing the textual module suggestions and the generated Python prototype code.
+    """
     with open(artifact_path, "r", encoding="utf-8") as f:
         report = json.load(f)
 
@@ -89,7 +102,13 @@ Module Suggestions:
 
 def generate_test_stubs(prototype_code: str, config: ConfigManager) -> str:
     """
-    Generate pytest test stubs for given module prototypes.
+    Generates pytest unit test stubs for the provided module prototype code.
+    
+    Args:
+        prototype_code: The Python module prototype code for which to generate tests.
+    
+    Returns:
+        A string containing pytest test stubs formatted with appropriate filenames and code blocks.
     """
     summarizer = AISummarizer()
     prompt = f"""
@@ -114,7 +133,15 @@ Module Prototypes:
 
 
 def extract_filenames_from_code(code: str) -> list[str]:
-    """Extract filenames from code blocks based on filename comments."""
+    """
+    Extracts Python filenames from code by searching for '# Filename: <filename.py>' comments.
+    
+    Args:
+    	code: The code string to search for filename comments.
+    
+    Returns:
+    	A list of extracted Python filenames.
+    """
     return [match.group(1).strip() for match in re.finditer(r"# Filename:\s*([^\n]+\.py)", code)]
 
 
@@ -125,7 +152,9 @@ def export_prototypes_to_files(
     is_test: bool = False,
 ):
     """
-    Export code or test stubs to filesystem based on '# Filename' comments.
+    Writes generated code or test stubs to files based on embedded '# Filename' comments.
+    
+    Scans code blocks for filename annotations, adjusts names for test files if needed, adds required imports, and writes each code block to the appropriate file within the specified output directory.
     """
     output_dir_path = Path(output_dir)
     output_dir_path.mkdir(parents=True, exist_ok=True)
@@ -173,7 +202,16 @@ def export_prototypes_to_files(
 
 
 def validate_test_coverage(module_dir: str, test_dir: str) -> list[str]:
-    """Verify that all public functions and methods have corresponding pytest tests."""
+    """
+    Checks that all public functions and methods in the given module directory have corresponding pytest tests in the specified test directory.
+    
+    Args:
+        module_dir: Path to the directory containing module source files.
+        test_dir: Path to the directory containing pytest test files.
+    
+    Returns:
+        A list of fully qualified names for public functions and methods that lack corresponding tests.
+    """
     module_functions: dict[str, bool] = {}
 
     # Traverse module files and collect public functions and methods

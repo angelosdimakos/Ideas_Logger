@@ -22,8 +22,23 @@ class MetricCalculator(ABC):
     """
 
     def __init__(self, name: str):
+        """
+        Initializes the MetricCalculator with a specified metric name.
+        
+        Args:
+            name: The name identifying the metric.
+        """
         self.name = name
 
     @abstractmethod
     def calculate_metric(self, nodes: List[Any] = None) -> Dict[str, float]:
+        """
+        Calculates metric values based on the provided code nodes.
+        
+        Args:
+            nodes: Optional list of code nodes to analyze. If not provided, the metric may be calculated using default or previously set data.
+        
+        Returns:
+            A dictionary mapping metric names to their computed float values.
+        """
         pass

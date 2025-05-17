@@ -9,15 +9,9 @@ logger = logging.getLogger(__name__)
 
 def setup_logging() -> None:
     """
-    Configure centralized logging.
-
-    This function sets up the logging level, format, and handlers for the application.
-
-    Returns:
-        None
-
-    Raises:
-        None
+    Configures centralized logging for the application.
+    
+    Sets the logging level to INFO, applies a standard log message format, and directs output to the console.
     """
     level_str = "INFO"  # Set the logging level to INFO
     numeric_level = getattr(logging, level_str.upper(), logging.INFO)  # Convert level to numeric
@@ -39,19 +33,15 @@ CONFIG_FILE_PATH: Path = CONFIG_DIR / "config.json"  # Define the path to the co
 
 def load_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]:
     """
-    Safely load the configuration file from the specified path.
-
-    If the config file does not exist or has errors, return an empty dictionary.
-
+    Loads a JSON configuration file from the specified path, returning its contents as a dictionary.
+    
+    If the file does not exist, cannot be read, or contains invalid JSON, returns an empty dictionary. Adjusts the logger level to DEBUG if "test_mode" is enabled in the configuration; otherwise, sets it to INFO.
+    
     Args:
-        config_path (Optional[Path]): The path to the config file. If None, defaults to CONFIG_FILE_PATH.
-
+        config_path: Path to the configuration file. Defaults to CONFIG_FILE_PATH.
+    
     Returns:
-        Dict[str, Any]: The loaded configuration dictionary, or an empty dictionary if loading fails.
-
-    Raises:
-        FileNotFoundError: If the configuration file cannot be found.
-        JSONDecodeError: If the configuration file contains invalid JSON.
+        A dictionary containing the configuration, or an empty dictionary if loading fails.
     """
     if not config_path.exists():  # Check if the config file exists
         logger.warning(
@@ -91,20 +81,9 @@ def load_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]:
 
 def get_config_value(config: Dict[str, Any], key: str, default: Any) -> Any:
     """
-    Retrieve a configuration value by its key from the provided config dictionary.
-
-    If the key is not found in the config, a warning is logged and the default value is returned.
-
-    Args:
-        config (Dict[str, Any]): The configuration dictionary.
-        key (str): The key of the value to retrieve.
-        default (Any): The default value to return if the key is not found.
-
-    Returns:
-        Any: The retrieved configuration value or the default value.
-
-    Raises:
-        KeyError: If the key is not found and no default is provided.
+    Retrieves a value from the configuration dictionary by key, returning a default if missing.
+    
+    Logs a warning if the key is not present in the configuration.
     """
     if key not in config:  # Check if the key is not in the config
         logger.warning(
@@ -116,16 +95,16 @@ def get_config_value(config: Dict[str, Any], key: str, default: Any) -> Any:
 
 def get_absolute_path(relative_path: str) -> Path:
     """
-    Build an absolute path from a project-root-relative path.
-
+    Resolves an absolute path by joining the project base directory with a relative path.
+    
     Args:
-        relative_path (str): The relative path to convert.
-
+        relative_path: The path relative to the project root.
+    
     Returns:
-        Path: The absolute path derived from the project root.
-
+        The absolute Path object corresponding to the given relative path.
+    
     Raises:
-        ValueError: If the relative path is invalid.
+        TypeError, ValueError, or OSError if the path cannot be constructed.
     """
     try:
         return BASE_DIR / relative_path  # Build the absolute path
@@ -138,16 +117,12 @@ def get_absolute_path(relative_path: str) -> Path:
 
 def is_test_mode(config: Optional[Dict[str, Any]] = None) -> bool:
     """
-    Check if 'test_mode' is enabled in the configuration.
-
-    Args:
-        config (Optional[Dict[str, Any]]): The configuration dictionary. If None, defaults to loading the config.
-
+    Determines whether test mode is enabled in the configuration.
+    
+    If no configuration is provided, loads the default configuration.
+    
     Returns:
-        bool: True if 'test_mode' is enabled, False otherwise.
-
-    Raises:
-        RuntimeError: If the configuration cannot be loaded.
+        True if "test_mode" is set to True in the configuration; otherwise, False.
     """
     if config is None:  # Check if config is None
         config = load_config()  # Load the config if None
@@ -156,19 +131,15 @@ def is_test_mode(config: Optional[Dict[str, Any]] = None) -> bool:
 
 def get_effective_config(config_path: Path = CONFIG_FILE_PATH) -> Dict[str, Any]:
     """
-    Load the configuration from the specified path and override paths with test-safe ones if 'test_mode' is enabled.
-
-    This function first attempts to load the configuration from the given path. If 'test_mode' is active, it modifies certain paths in the configuration to point to test-safe equivalents, ensuring that tests do not interfere with production data.
-
+    Loads the configuration and overrides paths with test-safe equivalents if test mode is enabled.
+    
+    If 'test_mode' is set in the configuration, certain directory and file paths are replaced with test-specific values to prevent interference with production data.
+    
     Args:
-        config_path (Optional[Path]): The path to the config file. If None, defaults to CONFIG_FILE_PATH.
-
+        config_path: Path to the configuration file. Defaults to CONFIG_FILE_PATH.
+    
     Returns:
-        Dict[str, Any]: The effective configuration dictionary, with test-safe paths if applicable.
-
-    Raises:
-        FileNotFoundError: If the configuration file cannot be found.
-        JSONDecodeError: If the configuration file contains invalid JSON.
+        The effective configuration dictionary, with test-safe paths if test mode is active.
     """
     config = load_config(config_path)  # Load the config
     try:
