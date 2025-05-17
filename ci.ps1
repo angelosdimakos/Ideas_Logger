@@ -34,8 +34,10 @@ New-Item -ItemType Directory -Path $versionedDir | Out-Null
 # Create a latest symlink/directory for easy access to most recent artifacts
 $latestDir = Join-Path $artifactsDir "latest"
 if (Test-Path $latestDir) {
+    Write-Host "Removing previous 'latest' directory..."
     Remove-Item $latestDir -Force -Recurse
 }
+New-Item -ItemType Directory -Path $latestDir | Out-Null
 
 try {
     $run_id = gh run list --workflow "$workflowName" `
@@ -108,26 +110,50 @@ git push
 Write-Host "Compressing latest reports..."
 
 $latestStrictness = Join-Path $latestDir "final_strictness_report.json"
-$latestMerged     = Join-Path $latestDir "merged_report.json"
+$latestMerged = Join-Path $latestDir "merged_report.json"
 
 $compressedStrictness = Join-Path $artifactsDir "final_strictness_report.comp.json"
-$compressedMerged     = Join-Path $artifactsDir "merged_report.comp.json"
+$compressedMerged = Join-Path $artifactsDir "merged_report.comp.json"
 
+# Check if the source files exist before attempting to compress
 if (Test-Path $latestStrictness) {
     Write-Host "Compressing strictness report..."
-    python scripts/refactor/compressor/strictness_report_squeezer.py compress `
+    try {
+        $strictnessResult = python scripts/refactor/compressor/strictness_report_squeezer.py compress `
            $latestStrictness `
            $compressedStrictness
+
+        if (Test-Path $compressedStrictness) {
+            Write-Host "Successfully compressed strictness report to: $compressedStrictness"
+        } else {
+            Write-Warning "Compression command executed but output file was not created: $compressedStrictness"
+        }
+    } catch {
+        Write-Warning "Error compressing strictness report: $_"
+    }
+} else {
+    Write-Warning "Source strictness report not found: $latestStrictness"
 }
 
 if (Test-Path $latestMerged) {
     Write-Host "Compressing merged report..."
-    python scripts/refactor/compressor/merged_report_squeezer.py compress `
+    try {
+        $mergedResult = python scripts/refactor/compressor/merged_report_squeezer.py compress `
            $latestMerged `
            $compressedMerged
+
+        if (Test-Path $compressedMerged) {
+            Write-Host "Successfully compressed merged report to: $compressedMerged"
+        } else {
+            Write-Warning "Compression command executed but output file was not created: $compressedMerged"
+        }
+    } catch {
+        Write-Warning "Error compressing merged report: $_"
+    }
+} else {
+    Write-Warning "Source merged report not found: $latestMerged"
 }
 
-Write-Host "Compression completed. Compressed reports saved to root artifacts directory."
-
+Write-Host "Compression completed. Compressed reports should be saved to root artifacts directory."
 
 Write-Host "Done."
