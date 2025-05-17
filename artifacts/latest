@@ -5077,6 +5077,126 @@
       "strictness_score": 0.6
     },
     {
+      "name": "test_rebuild_tracker_validates_true",
+      "file": "test_gui_controller",
+      "start": 44,
+      "end": 50,
+      "asserts": 3,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 7,
+      "strictness_score": 0.64
+    },
+    {
+      "name": "test_get_tracker_status_valid",
+      "file": "test_gui_controller",
+      "start": 53,
+      "end": 57,
+      "asserts": 1,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 5,
+      "strictness_score": 0.3
+    },
+    {
+      "name": "test_get_tracker_status_invalid",
+      "file": "test_gui_controller",
+      "start": 60,
+      "end": 64,
+      "asserts": 1,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 5,
+      "strictness_score": 0.3
+    },
+    {
+      "name": "test_get_coverage_data",
+      "file": "test_gui_controller",
+      "start": 67,
+      "end": 72,
+      "asserts": 2,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 6,
+      "strictness_score": 0.5
+    },
+    {
+      "name": "test_get_logs_reads_file",
+      "file": "test_gui_controller",
+      "start": 75,
+      "end": 84,
+      "asserts": 1,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 10,
+      "strictness_score": 0.15
+    },
+    {
+      "name": "test_create_button",
+      "file": "test_widget_factory",
+      "start": 6,
+      "end": 11,
+      "asserts": 3,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 6,
+      "strictness_score": 0.75
+    },
+    {
+      "name": "test_create_label",
+      "file": "test_widget_factory",
+      "start": 13,
+      "end": 18,
+      "asserts": 3,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 6,
+      "strictness_score": 0.75
+    },
+    {
+      "name": "test_create_entry",
+      "file": "test_widget_factory",
+      "start": 20,
+      "end": 23,
+      "asserts": 1,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 4,
+      "strictness_score": 0.38
+    },
+    {
+      "name": "test_create_frame",
+      "file": "test_widget_factory",
+      "start": 25,
+      "end": 29,
+      "asserts": 2,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 5,
+      "strictness_score": 0.6
+    },
+    {
+      "name": "test_create_notebook",
+      "file": "test_widget_factory",
+      "start": 31,
+      "end": 34,
+      "asserts": 1,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 4,
+      "strictness_score": 0.38
+    },
+    {
       "name": "test_validate_log_input",
       "file": "test_gui_helpers",
       "start": 44,
@@ -5207,6 +5327,30 @@
       "branches": 0,
       "length": 2,
       "strictness_score": 0.0
+    },
+    {
+      "name": "test_initializes_styles",
+      "file": "test_style_manager",
+      "start": 5,
+      "end": 19,
+      "asserts": 7,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 15,
+      "strictness_score": 0.7
+    },
+    {
+      "name": "test_update_style_applies_changes",
+      "file": "test_style_manager",
+      "start": 21,
+      "end": 25,
+      "asserts": 1,
+      "mocks": 0,
+      "raises": 0,
+      "branches": 0,
+      "length": 5,
+      "strictness_score": 0.3
     },
     {
       "name": "DummyActionController.__init__",
@@ -6329,11 +6473,22 @@
       "scripts.gui.gui_controller",
       "unittest.mock"
     ],
+    "test_widget_factory": [
+      "pytest",
+      "scripts.gui.widget_factory",
+      "tests.fixtures.tkinter_fixtures",
+      "tkinter.ttk"
+    ],
     "test_gui_helpers": [
       "pytest",
       "scripts.gui.gui_helpers",
       "scripts.utils.file_utils",
       "tkinter.messagebox"
+    ],
+    "test_style_manager": [
+      "pytest",
+      "scripts.gui.style_manager",
+      "tests.fixtures.tkinter_fixtures"
     ],
     "test_panels": [
       "pytest",

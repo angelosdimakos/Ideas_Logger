@@ -4,12 +4,12 @@
 
 | Metric                     | Value    | Visual |
 |----------------------------|----------|--------|
-| Files analyzed             | `154`    |     |
-| Files with issues          | `65`     |     |
+| Files analyzed             | `160`    |     |
+| Files with issues          | `67`     |     |
 | **Top risk file**          | `kg/modules/visualization.py` |     |
-| Methods audited            | `340`    |     |
-| Missing tests              | `101`    | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░ 🟡 |
-| Missing docstrings         | `285`    | ▓▓▓░░░░░░░░░░░░░░░░░ 🔴 |
+| Methods audited            | `352`    |     |
+| Missing tests              | `76`    | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░ 🟡 |
+| Missing docstrings         | `299`    | ▓▓▓░░░░░░░░░░░░░░░░░ 🔴 |
 | Linter issues              | `253`    | ▓▓▓▓▓░░░░░░░░░░░░░░░ 🔴 |
 
 
@@ -19,23 +19,23 @@
 | File | 🔣 Mypy | 🧼 Lint | 📉 Cx | 📊 Cov | 📈 Score | 🎯 Priority |
 |------|--------|--------|------|--------|----------|-------------|
 | `kg/modules/visualization.py` | 13 | 1 | 4.62 🟢 | 50.8% ▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░ | 33.11 | 🔥 High |
-| `ai/llm_optimization.py` | 10 | 2 | 9.0 🟢 | 100.0% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ | 32.0 | 🔥 High |
+| `ai/llm_optimization.py` | 10 | 2 | 7.33 🟢 | 99.4% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ | 30.34 | 🔥 High |
 | `gui/gui_helpers.py` | 9 | 4 | 2.25 🟢 | 27.0% ▓▓▓▓▓░░░░░░░░░░░░░░░ | 27.71 | ⚠️ Medium |
-| `ai/module_idea_generator.py` | 6 | 3 | 7.6 🟢 | 0.0% ░░░░░░░░░░░░░░░░░░░░ | 26.1 | ⚠️ Medium |
-| `refactor/parsers/docstring_parser.py` | 5 | 5 | 4.5 🟢 | 57.0% ▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░ | 22.86 | ⚠️ Medium |
+| `ai/module_idea_generator.py` | 6 | 3 | 7.6 🟢 | 63.8% ▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░ | 24.82 | ⚠️ Medium |
+| `refactor/parsers/docstring_parser.py` | 5 | 5 | 5.0 🟢 | 93.6% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ | 22.63 | ⚠️ Medium |
 | `utils/file_utils.py` | 5 | 5 | 3.89 🟢 | 93.0% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ | 21.53 | ⚠️ Medium |
-| `refactor/refactor_guard.py` | 0 | 5 | 12.0 🟡 | 79.7% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░ | 19.91 | ⚠️ Medium |
+| `refactor/refactor_guard.py` | 0 | 5 | 11.83 🟡 | 60.3% ▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░ | 20.13 | ⚠️ Medium |
 | `ai/llm_refactor_advisor.py` | 7 | 0 | 5.0 🟢 | 91.7% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ | 19.17 | ⚠️ Medium |
-| `refactor/parsers/json_coverage_parser.py` | 0 | 0 | 19.0 🟡 | 93.1% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ | 19.14 | ⚠️ Medium |
-| `refactor/parsers/coverage_parser.py` | 4 | 1 | 7.67 🟢 | 29.3% ▓▓▓▓▓░░░░░░░░░░░░░░░ | 18.58 | ⚠️ Medium |
+| `unified_code_assistant/prompt_builder.py` | 5 | 2 | 6.0 🟢 | 100.0% ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ | 19.0 | ⚠️ Medium |
+| `refactor/refactor_guard_cli.py` | 2 | 3 | 8.0 🟢 | 51.0% ▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░ | 17.48 | ⚠️ Medium |
 
 
 ## 📊 Summary Metrics
 
-- Total methods audited: **340**
-- 🚫 Methods missing tests: **101**
-- 🔺 High-complexity methods (≥10): **29**
-- 📚 Methods missing docstrings: **285**
+- Total methods audited: **352**
+- 🚫 Methods missing tests: **76**
+- 🔺 High-complexity methods (≥10): **27**
+- 📚 Methods missing docstrings: **299**
 - 🧼 Linter issues detected: **253**
 
 
@@ -111,54 +111,67 @@ complexity_scores: Dictionary of complexity scores.
 
 
 **❗ MyPy Errors:**
-- scripts/ai/llm_optimization.py:13: error: Missing type parameters for generic type "dict"  [type-arg]
-- scripts/ai/llm_optimization.py:52: error: Missing type parameters for generic type "dict"  [type-arg]
-- scripts/ai/llm_optimization.py:52: error: Missing type parameters for generic type "list"  [type-arg]
-- scripts/ai/llm_optimization.py:63: error: Need type annotation for "issues" (hint: "issues: list[<type>] = ...")  [var-annotated]
-- scripts/ai/llm_optimization.py:91: error: Missing type parameters for generic type "list"  [type-arg]
-- scripts/ai/llm_optimization.py:91: error: Missing type parameters for generic type "dict"  [type-arg]
-- scripts/ai/llm_optimization.py:138: error: "dict[Any, Any]" has no attribute "persona"  [attr-defined]
-- scripts/ai/llm_optimization.py:144: error: Missing type parameters for generic type "list"  [type-arg]
-- scripts/ai/llm_optimization.py:144: error: Missing type parameters for generic type "dict"  [type-arg]
-- scripts/ai/llm_optimization.py:213: error: Missing type parameters for generic type "dict"  [type-arg]
+- scripts/ai/llm_optimization.py:52: error: Missing type parameters for generic type "Dict"  [type-arg]
+- scripts/ai/llm_optimization.py:76: error: Missing type parameters for generic type "dict"  [type-arg]
+- scripts/ai/llm_optimization.py:79: error: Missing type parameters for generic type "dict"  [type-arg]
+- scripts/ai/llm_optimization.py:80: error: Missing type parameters for generic type "dict"  [type-arg]
+- scripts/ai/llm_optimization.py:81: error: Missing type parameters for generic type "dict"  [type-arg]
+- scripts/ai/llm_optimization.py:106: error: Missing type parameters for generic type "dict"  [type-arg]
+- scripts/ai/llm_optimization.py:132: error: Missing type parameters for generic type "list"  [type-arg]
+- scripts/ai/llm_optimization.py:194: error: Need type annotation for "file_prefixes" (hint: "file_prefixes: dict[<type>, <type>] = ...")  [var-annotated]
+- scripts/ai/llm_optimization.py:303: error: Missing type parameters for generic type "list"  [type-arg]
+- scripts/ai/llm_optimization.py:321: error: Missing type parameters for generic type "list"  [type-arg]
 
 **🧼 Pydocstyle Issues:**
-- `summarize_file_data_for_llm`: D205 — 1 blank line required between summary line and description (found 0)
-- `compute_severity`: D205 — 1 blank line required between summary line and description (found 0)
+- `_categorise_issues`: D205 — 1 blank line required between summary line and description (found 0)
+- `extract_top_issues`: D103 — Missing docstring in public function
 
 **📉 Complexity & Coverage Issues:**
+- `_categorise_issues`: Complexity = 9, Coverage = 100.0%
 - `summarize_file_data_for_llm`: Complexity = 7, Coverage = 100.0%
-- `extract_top_issues`: Complexity = 12, Coverage = 100.0%
-- `build_refactor_prompt`: Complexity = 12, Coverage = 100.0%
-- `build_strategic_recommendations_prompt`: Complexity = 7, Coverage = 100.0%
-- `compute_severity`: Complexity = 7, Coverage = 100.0%
+- `extract_top_issues`: Complexity = 11, Coverage = 100.0%
+- `build_strategic_recommendations_prompt`: Complexity = 15, Coverage = 95.0%
+- `compute_severity`: Complexity = 9, Coverage = 100.0%
+- `_summarise_offenders`: Complexity = 7, Coverage = 100.0%
+- `_format_offender_block`: Complexity = 6, Coverage = 100.0%
 
 **📚 Function Descriptions:**
-- `summarize_file_data_for_llm`: Condense file data to essential information for LLM processing.
-This helps reduce token usage when sending many files.
-  - Args: file_data (dict): The data of the file containing coverage and linting information.
-file_path (str): The path of the file being summarized.
-  - Returns: dict: A summary of the file data including complexity, coverage, and issues.
-- `extract_top_issues`: Extract the most important issues from a file.
-  - Args: file_data (dict): The data of the file containing issues.
-max_issues (int): Maximum number of issues to extract.
-  - Returns: list: A list of the most important issues.
-- `build_refactor_prompt`: Build a prompt for refactoring suggestions, optimized for handling many files.
-  - Args: offenders: List of (file_path, score, errors, lint_issues, complexity, coverage) tuples
-config: Configuration object
-verbose: Whether to include detailed info about each file
-limit: Maximum number of files to include
-  - Returns: str: A prompt for refactoring suggestions
-- `build_strategic_recommendations_prompt`: Build a prompt for strategic recommendations that can handle many files.
-  - Args: severity_data: List of severity data for each file
-summary_metrics: Dictionary of summary metrics
-limit: Maximum number of files to include
-  - Returns: str: A prompt for strategic recommendations
-- `compute_severity`: Compute severity metrics for a file based on its linting errors, mypy errors,
-code complexity, and test coverage.
-  - Args: file_path: Path to the file being analyzed
-content: Dictionary containing analysis data for the file
-  - Returns: dict: A dictionary with severity metrics
+- `_mean`: None
+  - Args: None
+  - Returns: None
+- `_categorise_issues`: Return a three-line summary that counts how many files trigger each
+broad issue category.
+Categories
+----------
+• type errors   (Mypy Errors > 5)
+• high complexity (Avg Complexity > 7)
+• low coverage  (Avg Coverage % < 60)
+  - Args: None
+  - Returns: None
+- `summarize_file_data_for_llm`: Create the *exact* summary dict expected by legacy callers/tests.
+  - Args: None
+  - Returns: None
+- `extract_top_issues`: None
+  - Args: None
+  - Returns: None
+- `build_refactor_prompt`: Return an LLM prompt focused on refactoring advice for up to *limit* files.
+  - Args: None
+  - Returns: None
+- `build_strategic_recommendations_prompt`: Return a high‑level, strategy‑oriented prompt covering the *limit* worst files.
+  - Args: None
+  - Returns: None
+- `compute_severity`: Compute a weighted severity score for one module.
+  - Args: None
+  - Returns: None
+- `_summarise_offenders`: Aggregate offender list into a human‑readable summary block.
+  - Args: None
+  - Returns: None
+- `_fmt`: None
+  - Args: None
+  - Returns: None
+- `_format_offender_block`: None
+  - Args: None
+  - Returns: None
 
 </details>
 
