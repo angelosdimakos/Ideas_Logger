@@ -9,15 +9,9 @@ from scripts.config.config_manager import ConfigManager
 
 def get_prompt_template(subcategory: str, config=None) -> str:
     """
-    Retrieve a prompt string for a given subcategory from the configuration.
-    Falls back to the default if not found.
-
-    Args:
-        subcategory (str): The subcategory for which to retrieve the prompt.
-        config: Optional configuration object.
-
-    Returns:
-        str: The prompt string for the specified subcategory.
+    Retrieves the prompt template for a specified subcategory from the configuration.
+    
+    If the subcategory is not found, returns the default prompt template.
     """
     config = config or ConfigManager.load_config()  # Load config if not provided
     return config.prompts_by_subcategory.get(
@@ -27,14 +21,16 @@ def get_prompt_template(subcategory: str, config=None) -> str:
 
 def apply_persona(prompt: str, persona: str) -> str:
     """
-    Optionally tweak the prompt based on the specified persona.
-
+    Appends persona-specific instructions to a prompt to tailor the AI's response style.
+    
+    If the persona is "reviewer", "mentor", or "planner", a corresponding instruction is added to the prompt. If the persona is "default" or unrecognized, the prompt is returned unchanged.
+    
     Args:
-        prompt (str): The original prompt string.
-        persona (str): The persona to apply to the prompt.
-
+        prompt: The original prompt string.
+        persona: The persona to apply ("default", "reviewer", "mentor", or "planner").
+    
     Returns:
-        str: The modified prompt string with persona adjustments.
+        The prompt string with persona-specific instructions appended if applicable.
     """
     persona_mods = {
         "default": "",

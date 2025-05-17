@@ -20,6 +20,17 @@ from scripts.config.config_manager import ConfigManager
 file_limit = 30
 
 def init_artifacts_dir(default_dir: str = "artifacts") -> str:
+    """
+    Returns the directory to use for artifacts, preferring the given default if it exists.
+    
+    If the specified default directory does not exist, returns the current directory instead.
+    
+    Args:
+        default_dir: The preferred directory for artifacts.
+    
+    Returns:
+        The path to the artifacts directory.
+    """
     return default_dir if os.path.isdir(default_dir) else "."
 
 artifacts_dir = init_artifacts_dir()

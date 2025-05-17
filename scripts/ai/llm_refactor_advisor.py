@@ -13,13 +13,13 @@ from scripts.ai.ai_summarizer import AISummarizer
 
 def load_audit(path: str) -> dict:
     """
-    Load a JSON audit report from the specified file path.
-
+    Loads and returns audit data from a JSON file at the given path.
+    
     Args:
-        path (str): The path to the JSON audit file.
-
+        path: Path to the JSON audit report file.
+    
     Returns:
-        dict: The loaded audit data.
+        Parsed audit data as a dictionary.
     """
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)  # Load and return JSON data from the specified file
@@ -27,14 +27,16 @@ def load_audit(path: str) -> dict:
 
 def extract_top_offenders(report_data: dict, top_n: int = 5) -> list:
     """
-    Extract the top offenders from the report data based on various metrics.
-
+    Identifies and ranks the top offending files in an audit report based on code quality metrics.
+    
+    Processes the report data to compute a composite score for each file using MyPy errors, linting issues, average code complexity, and average test coverage. Applies special weighting for "app/views.py" to prioritize its score. Returns a list of the top N files sorted by descending score, with each entry containing the file path, score, error and lint counts, average complexity, and average coverage.
+    
     Args:
-        report_data (dict): The report data containing file information.
-        top_n (int): The number of top offenders to return.
-
+        report_data: Audit report data mapping file paths to their metrics.
+        top_n: Number of top offenders to return.
+    
     Returns:
-        list: A sorted list of top offenders with their metrics.
+        A list of tuples for the top offenders, each containing file path, score, error count, lint issue count, average complexity, and average coverage.
     """
     rows = []
     for fp, content in report_data.items():
@@ -86,17 +88,18 @@ def build_refactor_prompt(
     limit: int = None,
 ) -> str:
     """
-    Build a refactor prompt for the AI assistant based on identified offenders.
-
+    Constructs a prompt for an AI assistant summarizing top risky files for refactoring.
+    
+    Generates a ranked list of offender files with their associated metrics and formats it into a prompt using a template and persona from the configuration. Optionally limits the number of offenders included and adds detailed file paths if verbose is True.
+    
     Args:
-        offenders (list): A list of top offenders with their metrics.
-        config: Configuration object containing persona information.
-        subcategory (str): The subcategory for the prompt.
-        verbose (bool): If True, include more detailed information.
-        limit (int, optional): The maximum number of offenders to include in the prompt. Defaults to None (include all).
-
+        offenders: List of tuples containing file path, score, MyPy errors, lint issues, code complexity, and coverage.
+        subcategory: Prompt template subcategory to use.
+        verbose: If True, includes full file paths in the prompt.
+        limit: Maximum number of offenders to include; includes all if None.
+    
     Returns:
-        str: The constructed prompt for the AI assistant.
+        The formatted prompt string for the AI assistant.
     """
     prompt = get_prompt_template(subcategory, config)
     prompt += "\n\nHere is a ranked list of risky files:\n"

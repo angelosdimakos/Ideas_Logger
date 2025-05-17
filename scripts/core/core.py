@@ -90,17 +90,15 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
     # ------------------------------------------------------------------
     def __init__(self, script_dir: Union[str, Path]):
         """
-        Initializes the ZephyrusLoggerCore with necessary configurations and collaborators.
-
+        Initializes ZephyrusLoggerCore with configuration, environment setup, and core components.
+        
+        Loads configuration, resolves file system paths, ensures required directories and files exist, and instantiates collaborators for logging, summarization, and summary tracking. Validates the summary tracker on startup, rebuilding it if necessary or configured to do so.
+        
         Args:
-            script_dir (Union[str, Path]): The directory of the script, used to resolve paths.
-
-        This constructor performs the following actions:
-        1) Loads the effective configuration and resolves all required paths using ZephyrusPaths.
-        2) Ensures the necessary on-disk environment (directories and baseline files) is set up.
-        3) Instantiates core runtime collaborators including AISummarizer, LogManager, MarkdownLogger,
-           SummaryTracker, and SummaryEngine, with configurations like batch size and timestamp format.
-        4) Validates the SummaryTracker and optionally rebuilds it if configured to do so or if validation fails.
+            script_dir: Path to the script directory used for resolving application paths.
+        
+        Raises:
+            RuntimeError: If the summary tracker fails validation after a rebuild.
         """
         self.script_dir = Path(script_dir)  # Store script directory
         self.config = get_effective_config()  # Load effective configuration
@@ -151,15 +149,17 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
     # ------------------------------------------------------------------
     def save_entry(self, main_category: str, subcategory: str, entry: str) -> bool:
         """
-        Saves a new log entry to the JSON log and Markdown export (if enabled).
-
+        Saves a new log entry to both the JSON log and Markdown export.
+        
+        Adds the entry under the specified main category and subcategory, updates the summary tracker, and returns whether the Markdown export succeeded.
+        
         Args:
-            main_category (str): The main category of the log entry.
-            subcategory (str): The subcategory of the log entry.
-            entry (str): The content of the log entry.
-
+            main_category: The primary category for the log entry.
+            subcategory: The subcategory for the log entry.
+            entry: The content of the log entry.
+        
         Returns:
-            bool: True if the Markdown export succeeded, False otherwise.
+            True if the entry was successfully exported to Markdown; False otherwise.
         """
         date_str = datetime.now().strftime(self.DATE_FORMAT)  # Get current date string
         try:
@@ -185,14 +185,14 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
     # ------------------------------------------------------------------
     def generate_global_summary(self, main_category: str, subcategory: str) -> bool:
         """
-        Force a batch summarisation for *main_category → subcategory*.
-
+        Generates a batch summary for the specified main category and subcategory.
+        
         Args:
-            main_category (str): The main category.
-            subcategory (str): The subcategory.
-
+            main_category: The primary category to summarize.
+            subcategory: The subcategory within the main category.
+        
         Returns:
-            bool: The success flag.
+            True if the batch summarization succeeds; otherwise, False.
         """
         return self.summary_engine.summarize(
             main_category, subcategory
@@ -201,9 +201,17 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
     # backwards-compat shim for unit-tests that still pass a *date* arg
     def generate_summary(self, _date_str: str, main_category: str, subcategory: str) -> bool:
         """
-        Backwards-compatibility shim for unit-tests that still pass a *date* arg.
-
-        Force a batch summarisation for *main_category → subcategory*.
+        Generates a summary for the specified main category and subcategory.
+        
+        This method ignores the date argument and delegates to generate_global_summary for backward compatibility.
+        
+        Args:
+            _date_str: Ignored legacy date argument.
+            main_category: The main category to summarize.
+            subcategory: The subcategory to summarize.
+        
+        Returns:
+            True if the summary generation succeeds, False otherwise.
         """
         return self.generate_global_summary(
             main_category, subcategory
@@ -214,15 +222,17 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
     # ------------------------------------------------------------------
     def _safe_search(self, indexer_attr: str, query: str, top_k: int) -> List[Any]:
         """
-        Perform a search against a FAISS indexer safely, ignoring any exceptions.
-
+        Safely performs a search on a specified FAISS indexer attribute of the summary tracker.
+        
+        If the indexer or its search method is unavailable, or if an exception occurs during search, returns an empty list.
+        
         Args:
-            indexer_attr (str): The attribute name of the SummaryIndexer instance to query.
-            query (str): The search query.
-            top_k (int): The number of results to return.
-
+            indexer_attr: Name of the summary tracker attribute representing the FAISS indexer.
+            query: The search query string.
+            top_k: Maximum number of results to return.
+        
         Returns:
-            List[Any]: A list of search results, possibly empty.
+            A list of search results, or an empty list if the search fails.
         """
         indexer = getattr(self.summary_tracker, indexer_attr, None)  # Get indexer attribute
         if indexer and hasattr(indexer, "search"):  # Check if indexer has search method
@@ -236,27 +246,27 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
 
     def search_summaries(self, query: str, top_k: int = 5) -> List[Any]:
         """
-        Performs a vector search over summary entries using the FAISS index.
-
+        Searches summary entries for the most relevant matches to a query using vector similarity.
+        
         Args:
-            query (str): The search query.
-            top_k (int, optional): The number of top results to return. Defaults to 5.
-
+        	query: The search query string.
+        	top_k: Maximum number of results to return.
+        
         Returns:
-            List[Any]: A list of the top-k search results.
+        	A list of the top-k most relevant summary search results, or an empty list if search fails.
         """
         return self._safe_search("summary_indexer", query, top_k)  # Search summaries
 
     def search_raw_logs(self, query: str, top_k: int = 5) -> List[Any]:
         """
-        Performs a vector search over raw log entries using the FAISS index.
-
+        Searches raw log entries for the most relevant matches to a query using vector similarity.
+        
         Args:
-            query (str): The search query.
-            top_k (int, optional): The number of top results to return. Defaults to 5.
-
+        	query: The search query string.
+        	top_k: Maximum number of results to return.
+        
         Returns:
-            List[Any]: A list of the top-k search results.
+        	A list of the top-k most relevant raw log entries matching the query.
         """
         return self._safe_search("raw_indexer", query, top_k)  # Search raw logs
 
@@ -267,12 +277,9 @@ class ZephyrusLoggerCore:  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def _safe_read_json(filepath: Path) -> Dict[str, Any]:
         """
-        Robustly reads a JSON file into a dictionary, returning an empty dict if any errors occur.
-
-        This helper is used internally, e.g. when loading the tracker's state from disk.
-
-        :param filepath: Path to the JSON file to read.
-        :return: The deserialised JSON data as a dictionary.
+        Safely reads a JSON file and returns its contents as a dictionary.
+        
+        If the file cannot be read or parsed, returns an empty dictionary instead of raising an exception.
         """
         try:
             return read_json(filepath)  # Read JSON file

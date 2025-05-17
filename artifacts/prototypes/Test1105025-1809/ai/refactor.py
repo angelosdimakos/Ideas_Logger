@@ -17,14 +17,21 @@ class RefactoringSuggestions:
             Generates a list of refactoring suggestions for each offending function or method.
     """
     def __init__(self, top_offenders: List[str], issues: Dict[str, List[str]]):
+        """
+        Initializes the RefactoringSuggestions instance with top offenders and their associated issues.
+        
+        Args:
+            top_offenders: List of function or method names identified as top offenders.
+            issues: Dictionary mapping function or method names to lists of their identified issues.
+        """
         self.top_offenders = top_offenders
         self.issues = issues
 
     def generate_refactor_suggestions(self) -> Dict[str, List[str]]:
         """
-        Generates a list of refactoring suggestions for each offending function or method.
-
+        Generates refactoring suggestions for each top offending function or method.
+        
         Returns:
-            A dictionary mapping function/method names to their respective lists of suggested refactoring actions.
+            A dictionary mapping each function or method name to a list of suggested refactoring actions.
         """
         pass

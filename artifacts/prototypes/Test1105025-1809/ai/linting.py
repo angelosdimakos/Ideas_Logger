@@ -19,26 +19,26 @@ class Linter:
             Generates a list of suggested linting actions based on the identified issues.
     """
     def __init__(self, coding_standards: Dict[str, List[str]]):
+        """
+        Initializes the Linter with specified coding standards.
+        
+        Args:
+            coding_standards: A dictionary mapping file extensions to lists of coding standards.
+        """
         self.coding_standards = coding_standards
         self.issues = []
 
     def lint(self, file_path: str) -> None:
         """
-        Performs linting checks on the specified file and adds any identified issues to the issues list.
-
-        Parameters:
-            file_path (str): The path to the file to be linted.
-
-        Returns:
-            None
+        Performs linting checks on the specified file and records any identified issues.
         """
         pass
 
     def suggest_linting_actions(self) -> List[str]:
         """
-        Generates a list of suggested linting actions based on the identified issues.
-
+        Generates suggested linting actions based on the issues identified during linting.
+        
         Returns:
-            A list of suggested linting actions.
+            A list of recommended actions to address the detected linting issues.
         """
         pass

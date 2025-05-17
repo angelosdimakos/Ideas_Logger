@@ -18,15 +18,23 @@ class TestCaseGenerator:
             Generates a list of test functions and their expected outputs for the given function.
     """
     def __init__(self, function: Callable, summary: str, severity: int):
+        """
+        Initializes a TestCaseGenerator with the target function, its summary, and severity level.
+        
+        Args:
+            function: The function or method for which test cases will be generated.
+            summary: A brief description of the function's behavior and expected outcomes.
+            severity: An integer indicating the function's complexity or impact.
+        """
         self.function = function
         self.summary = summary
         self.severity = severity
 
     def generate_test_cases(self) -> Tuple[List[Callable], List[Tuple[str, str]]]:
         """
-        Generates a list of test functions and their expected outputs for the given function.
-
+        Generates test functions and corresponding input-output pairs for the target function.
+        
         Returns:
-            A tuple containing a list of test functions and a list of tuples representing each test case's input and expected output.
+            A tuple containing a list of test functions and a list of (input, expected output) pairs.
         """
         pass

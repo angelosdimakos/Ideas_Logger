@@ -9,11 +9,12 @@ import re
 from typing import Dict[str, Any], List[Dict[str, Any]]
 
 def analyze_docstrings(module_path: str) -> List[Dict[str, Any]]:
-    """Analyze the docstrings in the given module and return suggestions for improvement.
-
+    """
+    Analyzes docstrings in a specified module and suggests improvements.
+    
     Args:
-        module_path (str): The path to the module containing the docstrings to be analyzed.
-
+        module_path: Path to the module whose docstrings will be analyzed.
+    
     Returns:
-        List[Dict[str, Any]]: A list of dictionaries, each representing a suggested improvement to a docstring.
+        A list of dictionaries, each containing a suggestion for improving a docstring in the module.
     """
