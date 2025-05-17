@@ -236,7 +236,7 @@ jobs:
         run: |
           echo "📊 Generating coverage documentation..."
           mkdir -p docs
-          python scripts/doc_generation/generate_coverage_docs.py \
+          python scripts/doc_generation/coverage_doc_generation.py \
             --coverage artifacts/coverage-reports/coverage.json \
             --output docs/coverage
 
@@ -244,7 +244,7 @@ jobs:
         run: |
           echo "📈 Generating code quality documentation..."
           mkdir -p docs
-          python scripts/doc_generation/generate_quality_docs.py \
+          python scripts/doc_generation/quality_doc_generation.py \
             --report artifacts/combined-report/merged_report.json \
             --output docs/quality
 
