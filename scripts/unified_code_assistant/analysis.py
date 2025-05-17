@@ -8,25 +8,22 @@ from scripts.ci_analyzer.metrics_summary import generate_metrics_summary
 def analyze_report(report_data: Dict[str, Any], top_n: int = 20, path_filter: Optional[str] = None) -> Dict[str, Any]:
     """
     Analyze the report data to extract top offenders, severity data, and metrics.
-
-    Args:
-        report_data (Dict): The parsed analysis report.
-        top_n (int): Number of top files to consider.
-        path_filter (Optional[str]): Optional path substring to filter files.
-
-    Returns:
-        Dict[str, Any]: Dict containing top offenders, severity info, and summary metrics.
     """
-    top_offenders = advisor.extract_top_offenders(report_data, top_n=top_n)
+    raw_offenders = advisor.extract_top_offenders(report_data, top_n=top_n)
+
+    # Apply path filter early to stay consistent
+    top_offenders = [
+        offender for offender in raw_offenders
+        if not path_filter or path_filter in offender[0]
+    ]
 
     severity_data = [
         optim.compute_severity(fp, report_data[fp])
         for fp, *_ in top_offenders
-        if not path_filter or path_filter in fp
     ]
 
     metrics = generate_metrics_summary(report_data)
-    if isinstance(metrics, str):
+    if isinstance(metrics, str):  # fallback in case of error
         metrics = {
             "total_tests": "N/A",
             "avg_strictness": "N/A",

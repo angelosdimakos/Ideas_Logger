@@ -55,69 +55,6 @@ def test_extract_code_snippets():
     finally:
         os.remove(file_path)
 
-def test_get_issue_locations():
-    mock_report = {
-        "file.py": {
-            "mypy": {
-                "errors": [{"line": 10, "message": "Type error"}]
-            },
-            "lint": {
-                "issues": [{"line": 12, "message": "Style issue", "severity": "warning"}]
-            },
-            "complexity": {
-                "functions": [{"line_number": 15, "complexity": 12, "name": "complex_func"}]
-            }
-        }
-    }
-
-    issues = get_issue_locations("file.py", mock_report)
-    assert len(issues) == 3
-
-    expected = {
-        ('mypy', 10),
-        ('lint', 12),
-        ('complexity', 15)
-    }
-    result = {(issue['type'], issue['line_number']) for issue in issues}
-    assert result == expected
-
-def test_build_contextual_prompt():
-    top_offenders = [
-        ("file_a.py", None, [1, 2], 3, 5, 0.75),
-        ("file_b.py", None, [], 1, 4, 0.9)
-    ]
-    summary_metrics = {"coverage": "80%"}
-    prompt = build_contextual_prompt("How do I improve this?", top_offenders, summary_metrics, "mentor")
-    assert "file_a.py" in prompt
-    assert "coverage" in prompt
-    assert "How do I improve this?" in prompt
-
-def test_build_enhanced_contextual_prompt():
-    top_offenders = [
-        ("module1.py", None, [1, 2], 2, 3, 0.8)
-    ]
-    summary_metrics = {"coverage": "85%"}
-    module_summaries = {"module1.py": "Handles user input."}
-    file_issues = {
-        "module1.py": {
-            "mypy_errors": ["error1"],
-            "lint_issues": ["lint1"]
-        }
-    }
-    file_recommendations = {"module1.py": "Refactor large function."}
-    prompt = build_enhanced_contextual_prompt(
-        "What should we fix first?",
-        top_offenders,
-        summary_metrics,
-        module_summaries,
-        file_issues,
-        file_recommendations,
-        "planner"
-    )
-    assert "module1.py" in prompt
-    assert "Refactor large function." in prompt
-    assert "What should we fix first?" in prompt
-
 
 
 def test_analyze_report():

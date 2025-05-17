@@ -1,5 +1,3 @@
-# utils.py
-
 import json
 import logging
 from pathlib import Path
@@ -41,16 +39,26 @@ def _format_snippet(lines: List[str], line_num: int, context_lines: int) -> str:
         for i in range(start, end)
     )
 
-def get_issue_locations(file_path: str, report_data: Dict[str, Any]) -> List[Dict[str, Any]]:
-    if file_path not in report_data:
-        return []
-    file_data = report_data[file_path]
-    return (
-        _extract_mypy_issues(file_data) +
-        _extract_lint_issues(file_data) +
-        _extract_complexity_issues(file_data)
-    )
+def get_issue_locations(file_path: str, report_data: Dict[str, Any]) -> Dict[str, List[Dict[str, Any]]]:
+    """
+    Extract and categorize issues for a given file path from the report data.
 
+    Returns a dict with keys:
+      - 'mypy_errors': List of mypy issue dicts
+      - 'lint_issues': List of lint issue dicts
+      - 'complexity_issues': List of complexity issue dicts
+    """
+    if file_path not in report_data:
+        return {'mypy_errors': [], 'lint_issues': [], 'complexity_issues': []}
+    file_data = report_data[file_path]
+    mypy_list = _extract_mypy_issues(file_data)
+    lint_list = _extract_lint_issues(file_data)
+    complexity_list = _extract_complexity_issues(file_data)
+    return {
+        'mypy_errors': mypy_list,
+        'lint_issues': lint_list,
+        'complexity_issues': complexity_list
+    }
 def _extract_mypy_issues(file_data: Dict[str, Any]) -> List[Dict[str, Any]]:
     return [
         {

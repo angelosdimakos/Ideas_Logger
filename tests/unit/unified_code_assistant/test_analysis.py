@@ -1,4 +1,3 @@
-# tests/unit/ai/unified_code_assistant/test_analysis.py
 import json
 import tempfile
 import os
@@ -72,14 +71,15 @@ def test_get_issue_locations():
     }
 
     issues = get_issue_locations("file.py", mock_report)
-    assert len(issues) == 3
+    all_issues = sum(issues.values(), [])
+    assert len(all_issues) == 3
 
     expected = {
         ('mypy', 10),
         ('lint', 12),
         ('complexity', 15)
     }
-    result = {(issue['type'], issue['line_number']) for issue in issues}
+    result = {(issue['type'], issue['line_number']) for issue in all_issues}
     assert result == expected
 
 def test_build_contextual_prompt():
@@ -90,7 +90,7 @@ def test_build_contextual_prompt():
     summary_metrics = {"coverage": "80%"}
     prompt = build_contextual_prompt("How do I improve this?", top_offenders, summary_metrics, "mentor")
     assert "file_a.py" in prompt
-    assert "coverage" in prompt
+    assert "coverage" in prompt.lower()
     assert "How do I improve this?" in prompt
 
 def test_build_enhanced_contextual_prompt():
@@ -102,7 +102,8 @@ def test_build_enhanced_contextual_prompt():
     file_issues = {
         "module1.py": {
             "mypy_errors": ["error1"],
-            "lint_issues": ["lint1"]
+            "lint_issues": ["lint1"],
+            "complexity_issues": []
         }
     }
     file_recommendations = {"module1.py": "Refactor large function."}
@@ -118,7 +119,6 @@ def test_build_enhanced_contextual_prompt():
     assert "module1.py" in prompt
     assert "Refactor large function." in prompt
     assert "What should we fix first?" in prompt
-
 
 def test_analyze_report():
     report_data = {

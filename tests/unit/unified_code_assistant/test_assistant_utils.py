@@ -52,12 +52,26 @@ def test_get_issue_locations():
     }
 
     issues = get_issue_locations("file.py", mock_report)
-    assert len(issues) == 3
 
-    expected = {
-        ('mypy', 10),
-        ('lint', 12),
-        ('complexity', 15)
-    }
-    result = {(issue['type'], issue['line_number']) for issue in issues}
-    assert result == expected
+    assert set(issues.keys()) == {"mypy_errors", "lint_issues", "complexity_issues"}
+
+    assert issues["mypy_errors"] == [{
+        "type": "mypy",
+        "line_number": 10,
+        "message": "Type error",
+        "severity": "error"
+    }]
+
+    assert issues["lint_issues"] == [{
+        "type": "lint",
+        "line_number": 12,
+        "message": "Style issue",
+        "severity": "warning"
+    }]
+
+    assert issues["complexity_issues"] == [{
+        "type": "complexity",
+        "line_number": 15,
+        "message": "High complexity (12) in function complex_func",
+        "severity": "warning"
+    }]

@@ -1,20 +1,16 @@
-# File: scripts/dashboard/ai_integration.py
-
-"""
-Module: scripts/dashboard/ai_integration.py
-Encapsulates all AI-related prompts, summaries, and LLM integrations
-for the CI Audit Dashboard.
-"""
-
 import os
 from typing import Any, Dict, List, Tuple
 
 from scripts.ai.llm_router import get_prompt_template, apply_persona
-from scripts.ai.chat_refactor import build_contextual_prompt
 from scripts.ai.module_docstring_summarizer import summarize_module
 from scripts.unified_code_assistant.analysis import analyze_report
-from scripts.unified_code_assistant.strategy import generate_strategy
-from scripts.unified_code_assistant.prompt_builder import build_contextual_prompt
+from scripts.unified_code_assistant.prompt_builder import build_contextual_prompt, build_enhanced_contextual_prompt
+from scripts.unified_code_assistant.assistant_utils import get_issue_locations
+from scripts.unified_code_assistant.module_summarizer import summarize_modules
+from scripts.ai.llm_refactor_advisor import build_refactor_prompt
+from scripts.unified_code_assistant import cli_entrypoint
+import tempfile
+import json
 
 class AIIntegration:
     def __init__(self, config, summarizer):
@@ -38,15 +34,12 @@ class AIIntegration:
         suggestion = self.summarizer.summarize_entry(prompt, subcategory="Refactor Advisor")
         return suggestion, analysis["top_offenders"]
 
-    def generate_strategic_recommendations(self, severity_data, summary_metrics, low_cov_context):
-        prompt = generate_strategy(
-            severity_data=severity_data,
-            summary_metrics=summary_metrics,
-            limit=summary_metrics.get("limit", 30),
-            persona=self.config.persona,
-            summarizer=self.summarizer
-        )
-        return prompt  # already string output
+    def generate_strategic_recommendations(self, merged_data, limit: int = 30):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            json.dump(merged_data, f)
+            f.flush()
+            args = ["assistant", f.name, "--mode", "strategic", "--top", str(limit), "--persona", self.config.persona]
+            return cli_entrypoint.call_cli_for_output(args)
 
     def chat_general(self, user_query, merged_data):
         analysis = analyze_report(merged_data)
@@ -54,15 +47,44 @@ class AIIntegration:
         return self.summarizer.summarize_entry(prompt, subcategory="Risk Advisor Chat")
 
     def chat_code(self, file_path, complexity_info, lint_info, user_query):
-        details = (
-            f"Analyze the file '{os.path.basename(file_path)}' with the following:\n"
-            f"- MyPy Errors: {len(lint_info.get('mypy', {}).get('errors', []))}\n"
-            f"- Pydocstyle Issues: {sum(len(v) for v in lint_info.get('pydocstyle', {}).get('functions', {}).values())}\n"
-            f"- Function Count: {len(complexity_info)}\n\n"
-            f"User Question: {user_query}"
+        offender_tuple = (file_path, None, [], 1, 5, 0.8)
+        report_data = {
+            file_path: {
+                "coverage": {"complexity": complexity_info},
+                "linting": {"quality": lint_info}
+            }
+        }
+
+        file_issues = {
+            file_path: get_issue_locations(file_path, report_data)
+        }
+
+        module_summaries = {
+            file_path: "Module summary not available"
+        }
+
+        refactor_prompt = build_refactor_prompt(
+            [offender_tuple],
+            self.config,
+            subcategory="Refactor Advisor",
+            verbose=False,
+            limit=1
         )
-        return self.summarizer.summarize_entry(details, subcategory="Code Analysis")
+        file_recommendations = {
+            file_path: self.summarizer.summarize_entry(refactor_prompt, subcategory="Tooling & Automation")
+        }
+
+        contextual_prompt = build_enhanced_contextual_prompt(
+            user_query,
+            [offender_tuple],
+            summary_metrics={"coverage": "unknown"},
+            module_summaries=module_summaries,
+            file_issues=file_issues,
+            file_recommendations=file_recommendations,
+            persona=self.config.persona
+        )
+
+        return self.summarizer.summarize_entry(contextual_prompt, subcategory="Code Analysis")
 
     def chat_doc(self, module_path, funcs):
         return summarize_module(module_path, funcs, self.summarizer, self.config)
-
