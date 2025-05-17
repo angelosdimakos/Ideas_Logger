@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Production service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    image: ghcr.io/angelosdimakos/ideas_logger:prod
+    volumes:
+      - ./data:/app/data
+    environment:
+      - ENV=production
+
+  # Test service
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    image: ghcr.io/angelosdimakos/ideas_logger:test
+    volumes:
+      - ./data:/app/data
+    command: ["tests/", "-v"]
+
+  # Development service
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: ghcr.io/angelosdimakos/ideas_logger:dev
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      # Exclude node_modules, venv, etc. from volume mounts
+      - /app/.venv
+      - /app/__pycache__
+    environment:
+      - ENV=development
+    # Keep container running
+    tty: true

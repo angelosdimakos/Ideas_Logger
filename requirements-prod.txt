@@ -1,0 +1,7 @@
+# Production dependencies only
+numpy==1.25.0
+pydantic==1.10.2
+ollama==0.1.0
+# Use CPU-only torch to reduce size significantly
+torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+

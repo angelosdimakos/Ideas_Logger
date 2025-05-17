@@ -31,50 +31,50 @@ class AppConfig(BaseModel):
     and plugin management. Ignores any extra fields not explicitly defined.
     """
 
-    mode: str
-    use_gui: bool
-    interface_theme: str
-    batch_size: int
-    autosave_interval: int
-    log_level: str
-    summarization: bool
-    llm_provider: str
-    llm_model: str
-    openai_model: str
-    api_keys: dict[str, str]
-    embedding_model: str
-    faiss_top_k: int
-    force_summary_tracker_rebuild: bool
-    vector_store_dir: str
-    faiss_index_path: str
-    faiss_metadata_path: str
-    logs_dir: str
-    export_dir: str
-    correction_summaries_path: str
-    raw_log_path: str
-    raw_log_index_path: str
-    raw_log_metadata_path: str
-    log_format: str
-    markdown_export: bool
-    default_tags: list[str]
-    use_templates: bool
-    persona: str
-    category_structure: dict[str, list[str]]
-    prompts_by_subcategory: dict[str, str]
-    test_mode: bool
-    test_logs_dir: str
-    test_vector_store_dir: str
-    test_export_dir: str
-    test_correction_summaries_path: str
-    test_raw_log_path: str
-    test_summary_tracker_path: str
-    remote_sync: bool
-    plugin_dir: str
-    enable_debug_logging: bool
-    strict_offline_mode: bool
+    mode: str  # Application mode (e.g., test, prod)
+    use_gui: bool  # Whether to use the graphical user interface
+    interface_theme: str  # Theme for the graphical user interface
+    batch_size: int  # Batch size for processing data
+    autosave_interval: int  # Interval for autosaving data
+    log_level: str  # Logging level (e.g., DEBUG, INFO, WARNING, ERROR)
+    summarization: bool  # Whether to enable summarization
+    llm_provider: str  # Provider for the language model
+    llm_model: str  # Model for the language model
+    openai_model: str  # Model for OpenAI
+    api_keys: dict[str, str]  # API keys for various services
+    embedding_model: str  # Model for embeddings
+    faiss_top_k: int  # Top k for Faiss
+    force_summary_tracker_rebuild: bool  # Whether to force rebuild of summary tracker
+    vector_store_dir: str  # Directory for vector store
+    faiss_index_path: str  # Path to Faiss index
+    faiss_metadata_path: str  # Path to Faiss metadata
+    logs_dir: str  # Directory for logs
+    export_dir: str  # Directory for exports
+    correction_summaries_path: str  # Path to correction summaries
+    raw_log_path: str  # Path to raw log
+    raw_log_index_path: str  # Path to raw log index
+    raw_log_metadata_path: str  # Path to raw log metadata
+    log_format: str  # Format for logs
+    markdown_export: bool  # Whether to export in Markdown format
+    default_tags: list[str]  # Default tags for data
+    use_templates: bool  # Whether to use templates
+    persona: str  # Persona for the application
+    category_structure: dict[str, list[str]]  # Structure for categories
+    prompts_by_subcategory: dict[str, str]  # Prompts for subcategories
+    test_mode: bool  # Whether to enable test mode
+    test_logs_dir: str  # Directory for test logs
+    test_vector_store_dir: str  # Directory for test vector store
+    test_export_dir: str  # Directory for test exports
+    test_correction_summaries_path: str  # Path to test correction summaries
+    test_raw_log_path: str  # Path to test raw log
+    test_summary_tracker_path: str  # Path to test summary tracker
+    remote_sync: bool  # Whether to enable remote sync
+    plugin_dir: str  # Directory for plugins
+    enable_debug_logging: bool  # Whether to enable debug logging
+    strict_offline_mode: bool  # Whether to enable strict offline mode
 
     class Config:
-        extra = "ignore"
+        extra = "ignore"  # Ignore extra fields not explicitly defined
 
 
 class ConfigManager:
@@ -86,52 +86,52 @@ class ConfigManager:
     Handles missing or invalid config files by returning default settings and logs relevant events.
     """
 
-    _config: Optional[AppConfig] = None
-    _config_timestamp: Optional[float] = None
+    _config: Optional[AppConfig] = None  # Cached configuration
+    _config_timestamp: Optional[float] = None  # Timestamp for cached configuration
 
     # Default values for standalone AppConfig
     _DEFAULTS = {
-        "mode": "test",
-        "use_gui": False,
-        "interface_theme": "dark",
-        "batch_size": 5,
-        "autosave_interval": 10,
-        "log_level": "DEBUG",
-        "summarization": True,
-        "llm_provider": "ollama",
-        "llm_model": "mistral",
-        "openai_model": "gpt-4",
-        "api_keys": {"openai": "test-key"},
-        "embedding_model": "all-MiniLM-L6-v2",
-        "faiss_top_k": 5,
-        "force_summary_tracker_rebuild": True,
-        "vector_store_dir": "test_vector_store_dir",
-        "faiss_index_path": "test_faiss_index_path",
-        "faiss_metadata_path": "test_faiss_metadata_path",
-        "logs_dir": "test_logs_dir",
-        "export_dir": "test_export_dir",
-        "correction_summaries_path": "test_correction_summaries_path",
-        "raw_log_path": "test_raw_log_path",
-        "raw_log_index_path": "test_raw_log_index_path",
-        "raw_log_metadata_path": "test_raw_log_metadata_path",
-        "log_format": "json",
-        "markdown_export": True,
-        "default_tags": ["test"],
-        "use_templates": True,
-        "persona": "test_persona",
-        "category_structure": {"Test": ["Subtest"]},
-        "prompts_by_subcategory": {"Subtest": "Test prompt"},
-        "test_mode": True,
-        "test_logs_dir": "test_test_logs_dir",
-        "test_vector_store_dir": "test_test_vector_store_dir",
-        "test_export_dir": "test_test_export_dir",
-        "test_correction_summaries_path": "test_test_correction_summaries_path",
-        "test_raw_log_path": "test_test_raw_log_path",
-        "test_summary_tracker_path": "test_test_summary_tracker_path",
-        "remote_sync": False,
-        "plugin_dir": "test_plugin_dir",
-        "enable_debug_logging": True,
-        "strict_offline_mode": True,
+        "mode": "test",  # Default mode
+        "use_gui": False,  # Default GUI usage
+        "interface_theme": "dark",  # Default interface theme
+        "batch_size": 5,  # Default batch size
+        "autosave_interval": 10,  # Default autosave interval
+        "log_level": "DEBUG",  # Default logging level
+        "summarization": True,  # Default summarization
+        "llm_provider": "ollama",  # Default LLM provider
+        "llm_model": "mistral",  # Default LLM model
+        "openai_model": "gpt-4",  # Default OpenAI model
+        "api_keys": {"openai": "test-key"},  # Default API keys
+        "embedding_model": "all-MiniLM-L6-v2",  # Default embedding model
+        "faiss_top_k": 5,  # Default Faiss top k
+        "force_summary_tracker_rebuild": True,  # Default force rebuild of summary tracker
+        "vector_store_dir": "test_vector_store_dir",  # Default vector store directory
+        "faiss_index_path": "test_faiss_index_path",  # Default Faiss index path
+        "faiss_metadata_path": "test_faiss_metadata_path",  # Default Faiss metadata path
+        "logs_dir": "test_logs_dir",  # Default logs directory
+        "export_dir": "test_export_dir",  # Default export directory
+        "correction_summaries_path": "test_correction_summaries_path",  # Default correction summaries path
+        "raw_log_path": "test_raw_log_path",  # Default raw log path
+        "raw_log_index_path": "test_raw_log_index_path",  # Default raw log index path
+        "raw_log_metadata_path": "test_raw_log_metadata_path",  # Default raw log metadata path
+        "log_format": "json",  # Default log format
+        "markdown_export": True,  # Default Markdown export
+        "default_tags": ["test"],  # Default tags
+        "use_templates": True,  # Default template usage
+        "persona": "test_persona",  # Default persona
+        "category_structure": {"Test": ["Subtest"]},  # Default category structure
+        "prompts_by_subcategory": {"Subtest": "Test prompt"},  # Default prompts for subcategories
+        "test_mode": True,  # Default test mode
+        "test_logs_dir": "test_test_logs_dir",  # Default test logs directory
+        "test_vector_store_dir": "test_test_vector_store_dir",  # Default test vector store directory
+        "test_export_dir": "test_test_export_dir",  # Default test export directory
+        "test_correction_summaries_path": "test_test_correction_summaries_path",  # Default test correction summaries path
+        "test_raw_log_path": "test_test_raw_log_path",  # Default test raw log path
+        "test_summary_tracker_path": "test_test_summary_tracker_path",  # Default test summary tracker path
+        "remote_sync": False,  # Default remote sync
+        "plugin_dir": "test_plugin_dir",  # Default plugin directory
+        "enable_debug_logging": True,  # Default debug logging
+        "strict_offline_mode": True,  # Default strict offline mode
     }
 
     # Pre-instantiated default config for type-safety

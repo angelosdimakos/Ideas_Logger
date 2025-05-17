@@ -83,15 +83,10 @@ def test_write_and_read_json():
 
 
 def test_make_backup_creates_timestamped_copy():
-    """
-    Unit tests for file utility functions in scripts.utils.file_utils,
-    covering filename sanitization, timestamp formatting, directory creation,
-    JSON read/write operations, backup creation, and zipping of Python files.
-    Tests ensure correct functionality, error handling, and proper file operations using mock data and temporary paths.
-    """
     data = {"backup": True}
     write_json(MOCK_JSON_PATH, data)
     backup_path = make_backup(MOCK_JSON_PATH)
+    assert backup_path is not None, "make_backup returned None"
     assert os.path.exists(backup_path)
     assert os.path.basename(backup_path).startswith("test_file_backup_")
 

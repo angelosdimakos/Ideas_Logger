@@ -8,6 +8,9 @@ import pytest
 import numpy as np
 from unittest.mock import MagicMock, patch
 from typing import Any
+import types
+import sys
+import importlib
 
 
 # ===========================
@@ -28,19 +31,33 @@ def mock_ollama() -> None:
 # 🧬 MOCK TRANSFORMERS
 # ===========================
 @pytest.fixture(autouse=True)
-def mock_sentence_transformer(monkeypatch: Any) -> None:
+def mock_sentence_transformer():
     """
-    Mocks the sentence transformer for testing.
+    Provide a fully-mocked SentenceTransformer for *all* tests:
 
-    Args:
-        monkeypatch (Any): The monkeypatch object to use for patching.
+    • Registers a fake ``sentence_transformers`` package in ``sys.modules``
+    • Exposes the same mock on ``scripts.indexers.base_indexer`` so that
+      helpers can patch it with ``patch("scripts.indexers.base_indexer.SentenceTransformer")``.
     """
+    # ---- build the fake model ----
     mock_model = MagicMock()
-    mock_model.encode.side_effect = lambda texts, **kwargs: np.array([[0.1] * 384 for _ in texts])
-    monkeypatch.setattr(
-        "scripts.indexers.base_indexer.SentenceTransformer", lambda *a, **kw: mock_model
-    )
+    mock_model.encode.side_effect = lambda texts, **kw: np.array([[0.1] * 384 for _ in texts])
 
+    # ---- create fake external package ----
+    fake_pkg = types.ModuleType("sentence_transformers")
+    fake_pkg.SentenceTransformer = lambda *a, **kw: mock_model
+
+    # Make *every* import of sentence_transformers resolve to our fake module
+    sys.modules["sentence_transformers"] = fake_pkg
+
+    # Also expose the attribute on BaseIndexer early, so tests that patch it can find it
+    base_indexer = importlib.import_module("scripts.indexers.base_indexer")
+    base_indexer.SentenceTransformer = fake_pkg.SentenceTransformer
+
+    yield
+
+    # ---- optional cleanup (rarely necessary in autouse fixture) ----
+    # sys.modules.pop("sentence_transformers", None)
 
 # ===========================
 # 🔒 MOCKED AI SUMMARIZER
@@ -73,3 +90,4 @@ def mock_failed_summarizer() -> Any:
             raise Exception("Simulated failure")
 
     return FailingSummarizer()
+

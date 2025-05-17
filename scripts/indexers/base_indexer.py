@@ -16,7 +16,6 @@ Intended for use as a base class for specialized indexers in the Zephyrus projec
 from typing import List, Dict, Any
 import pickle
 import faiss
-from sentence_transformers import SentenceTransformer
 from scripts.config.config_loader import get_config_value
 from scripts.config.config_manager import ConfigManager
 import logging
@@ -45,6 +44,7 @@ class BaseIndexer:
         Raises:
             ValueError: If `index_name` is not "summary" or "raw".
         """
+
         if index_name == "summary":
             self.summaries_path = paths.correction_summaries_file
             self.index_path = paths.faiss_index_path
@@ -59,9 +59,20 @@ class BaseIndexer:
         model_name = get_config_value(
             ConfigManager.load_config(), "embedding_model", "all-MiniLM-L6-v2"
         )
-        self.embedding_model: SentenceTransformer = SentenceTransformer(model_name)
+        self.embedding_model = self._load_model()
         self.index = None
         self.metadata: List[Dict[str, Any]] = []
+
+    def _load_model(self):
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError:
+            raise ImportError("sentence-transformers is not installed.")
+
+        model_name = get_config_value(
+            ConfigManager.load_config(), "embedding_model", "all-MiniLM-L6-v2"
+        )
+        return SentenceTransformer(model_name)
 
     def load_index(self) -> None:
         """

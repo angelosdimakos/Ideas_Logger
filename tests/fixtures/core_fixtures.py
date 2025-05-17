@@ -6,9 +6,9 @@ the logger core, summary tracker, and indexers.
 """
 import pytest
 import numpy as np
-from unittest.mock import MagicMock
 from pathlib import Path
 from typing import Any
+from unittest.mock import MagicMock
 
 
 # ===========================
@@ -100,3 +100,4 @@ def stub_indexers(
         "scripts.indexers.summary_indexer.SummaryIndexer.__init__", mock_init_summary
     )
     monkeypatch.setattr("scripts.indexers.raw_log_indexer.RawLogIndexer.__init__", mock_init_raw)
+

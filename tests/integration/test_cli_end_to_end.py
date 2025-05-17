@@ -1,6 +1,7 @@
 import subprocess
 import json
 from pathlib import Path
+import sys
 import pytest
 
 
@@ -62,7 +63,7 @@ def test_cli_end_to_end(cli_test_setup):
 
     # Run the CLI directly as a subprocess to simulate actual usage
     cmd = [
-        "python",
+        sys.executable,
         str(cli_path),
         "--original",
         str(cli_test_setup["original"]),

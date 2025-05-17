@@ -1,0 +1,32 @@
+FROM python:3.11-slim-bookworm
+
+# Install development and GUI dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential git curl ca-certificates \
+        procps tk tcl \
+        libx11-6 libxext6 libxrender1 libxtst6 \
+        xvfb xauth vim less libgomp1 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+ARG USER_UID=1001
+ARG USER_GID=1001
+RUN groupadd -g "${USER_GID}" myuser && \
+    useradd -u "${USER_UID}" -g myuser -m myuser
+
+USER myuser
+WORKDIR /app
+
+# Set environment
+ENV PATH="/home/myuser/.local/bin:$PATH" \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH=/app
+
+# Install dev and prod dependencies directly
+COPY --chown=myuser:myuser requirements*.txt ./
+RUN pip install --no-cache-dir -r requirements-prod.txt -r requirements-dev.txt \
+    && pip install --no-cache-dir ipython jupyter
+
+CMD ["bash"]

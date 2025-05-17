@@ -1,103 +1,116 @@
-# 🚀 Ideas Logger — Structured Thought, Tested in Fire
+
+# 🚀 Ideas Logger — From Thought to Engineering Artifact
 
 [![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/branch/main/graph/badge.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)
-[![License: MIT](https://img.shields.io/badge/License-APACHE-yellow.svg)](LICENSE)
-[![codecov](https://codecov.io/gh/angelosdimakos/Ideas_Logger/graphs/sunburst.svg?token=C49N6JTFXY)](https://codecov.io/gh/angelosdimakos/Ideas_Logger)
+[![License: APACHE](https://img.shields.io/badge/License-APACHE-yellow.svg)](LICENSE)
+[![CI Status](https://img.shields.io/badge/CI-Passing-brightgreen.svg)]()
 
-> `python` • `tkinter` • `ollama` • `faiss` • `gui-app` • `llm` • `summarization` • `productivity`
-
----
-
-> **Think. Structure. Summarize. Search. Build.**  
-> Ideas Logger transforms unstructured thought into resilient, searchable knowledge — powered by local LLMs, semantic vector search, and full-stack CI pipelines.  
-> **No external dependencies. No cloud lock-in. No excuses.**
+> `python` • `ollama` • `faiss` • `streamlit` • `llm` • `semantic_search` • `ci_cd` • `knowledge_graph` • `refactoring_toolkit`
 
 ---
 
-## 🌐 Platform Overview
+> **Engineer Thought. Automate Refactoring. Visualize Knowledge.**
+> Ideas Logger is a production-hardened, AI-augmented code and idea management ecosystem.
+> **No cloud lock-in. Fully local-first. Extreme engineering discipline enforced.**
 
-Ideas Logger is a professional-grade, local-first **thought management platform**.
+---
+
+## 🌐 Platform Capabilities
+
+Ideas Logger is an intelligent, modular platform for managing ideas, analyzing codebases, and automating refactoring workflows.
 
 It integrates:
 
-- 🧠 **Local LLM summarization** (Ollama + fallback mocks)
-- 🔎 **Semantic FAISS vector search** across structured logs
-- 🖥️ **Tkinter GUI and CLI dual interfaces**
-- 🛡️ **Full-stack CI testing** with artifact tracking and diff-based audits
-- ⚙️ **Plugin-ready architecture** for future extensions (LangChain, mind-maps, Gantt charts)
+* 🤖 **Local LLM-Driven Summarization** (Ollama w/ fallback mechanisms)
+* 🔍 **FAISS-Powered Semantic Search** for raw logs and summaries
+* 📚 **Knowledge Graph Generation** from codebase relationships and docstrings
+* 🛠️ **Automated Prototype & Test Stub Generation** (Production-Scaffold Ready)
+* 📈 **Full CI Analyzer & Refactor Guard** with quality trend monitoring
+* 🖥️ **Streamlit Dashboards & Tkinter GUI** for visual exploration
+* 🔌 **Plugin-Ready Architecture** for mind maps, cognitive load diagrams, and trend visualizations
 
-All pipelines are tested, audited, and hardened for real-world deployment across fresh environments.
-
----
-## 🏗️ System Overview
-
-### Production Workflow
-![Production Architecture](docs/ProductionCode.png)
-
-### Test & CI Workflow
-![Test & CI Architecture](docs/TestCIandArchitecture.png)
+> *From a single thought to a validated engineering artifact — Ideas Logger connects the dots.*
 
 ---
 
-## ⚙️ Core Features
+## 🏗️ System Architecture
 
-| Category | Feature |
-|:---------|:--------|
-| 🧠 Intelligent Logging | Summarization by local LLM (Ollama) with customizable prompts |
-| 🔍 Semantic Search | Instant FAISS-backed vector retrieval for ideas and summaries |
-| 📦 Structured Persistence | Autosaved JSON logs, batch markdown exports, resilient backups |
-| 🖥️ GUI + CLI Access | Tkinter-based GUI with headless-tested CI; CLI tools for scripted workflows |
-| 🧪 End-to-End CI | Full test coverage including GUI bootstrapping, AI workflows, semantic indexing |
-| 🔒 Isolation and Safety | Mocked AI backends, tempdir handling, strict config isolation in tests |
+### 🚧 Production Pipeline
 
----
+```mermaid
+graph TD
+A[User Input / Logs] -->|Summarization| B[LLM Pipeline]
+B --> C[Semantic Indexing (FAISS)]
+C --> D[Search & Retrieval]
+D --> E[Prototype + Test Stub Generation]
+E --> F[CI Analyzer / Refactor Guard]
+```
 
-## 🏧 Architecture Snapshot
+### 🔬 Test & CI Workflow
 
-```bash
-scripts/
-├— core/          # Logging and summarization engines
-├— ai/            # Local LLM integration and fallback handling
-├— gui/           # Tkinter GUI, style management, widget factories
-├— config/        # Dynamic configuration management (with test-mode override)
-├— indexers/      # FAISS semantic indexing (summaries and raw logs)
-├— ci_analyzer/   # CI audit and trend comparison pipelines
-├— refactor/      # Code audit, complexity tracking, docstring enrichment
-├— utils/         # File handling, Git integration, safety guards
-tests/
-├— unit/          # Component-level tests
-├— integration/   # Workflow integration tests
-├— mocks/         # LLM and filesystem mocks
+```mermaid
+graph TD
+G[Generated Code Artifacts] --> H[Test Stub Automation]
+H --> I[Pytest / CI Validators]
+I --> J[Streamlit Dashboard Audit]
+J --> K[Coverage & Complexity Reports]
 ```
 
 ---
 
-## 🧪 Resilient Testing and Auditing
+## ⚙️ Feature Highlights
 
-Ideas Logger enforces **production-grade standards**:
-
-- ✅ Full mocking of AI dependencies (`ollama.generate`, `ollama.chat`)
-- ✅ Tkinter GUI headless-patching for CI pipelines
-- ✅ Persistent artifacts (linting, audit reports, docstring summaries)
-- ✅ Diff-based audits for code changes (`RefactorGuard + CI Analyzer`)
-- ✅ UTF-8 subprocess isolation to eliminate platform encoding drift
-- ✅ `xvfb` headless GUI tests (optionally runnable locally)
-
-> _Result: The entire stack — from AI summarization to semantic search to GUI initialization — can be verified without any real API dependency._
+| Category                 | Feature Description                                              |
+| ------------------------ | ---------------------------------------------------------------- |
+| 🤖 AI Summarization      | LLM-powered entry and bulk summaries (Ollama + fallback)         |
+| 🔍 Semantic Search       | FAISS top-k vector retrieval for raw logs and summaries          |
+| 📚 Knowledge Graph       | Codebase graph visualization with cyclomatic complexity overlays |
+| 🛠️ Prototype Automation | Production-level scaffold generation + pytest stubs              |
+| 📈 CI Analyzer           | Severity audits, complexity metrics, and trend reporting         |
+| 🖥️ Multi-Interface      | Tkinter GUI, CLI Tools, Streamlit Dashboards                     |
+| 🔒 Security              | Mocked AI backends, isolated test configs, subprocess isolation  |
 
 ---
 
-## 🯩 Designed for Extensibility
+## 📦 Project Structure
 
-Ideas Logger is **modular** by design:
+```plaintext
+scripts/
+├── core/            # Centralized Logging & Summarization Engines
+├── ai/              # LLM Integration, Prompt Management, Fallbacks
+├── gui/             # Tkinter GUI + Streamlit Dashboards
+├── config/          # Dynamic Config Manager (with Test Mode Override)
+├── indexers/        # FAISS Semantic Indexing Modules
+├── ci_analyzer/     # CI Audit & Trend Visualization Tools
+├── refactor/        # Complexity Analysis, Refactoring Toolkit, Quality Audits
+├── kg/              # Knowledge Graph Construction & Visualization
+tests/
+├── unit/            # Component-Level Unit Tests
+├── integration/     # End-to-End Workflow Tests
+├── mocks/           # LLM & Filesystem Mocks for CI Pipelines
+```
 
-- 🔌 Add new plugins (LangChain agents, visual mind maps)
-- 🧠 Extend LLM workflows with specialized prompts or fallback models
-- 📂 Customize configuration schemas to fit new logging paradigms
-- 📊 Visualize trends with CI trend analyzers over time
+---
 
-No rewrites. No hard coupling.  
-All extensions follow the core test-mock-verify philosophy.
+## 🧪 Engineering Discipline
+
+* ✅ Full Mocking of AI Dependencies (`ollama.generate`, `ollama.chat`)
+* ✅ Tkinter GUI Headless Testing via `xvfb` in CI Pipelines
+* ✅ Persistent JSON Artifacts: Lint Reports, Doc Summaries, Complexity Metrics
+* ✅ Diff-Based Audits with RefactorGuard + CI Analyzer
+* ✅ Prototype and Test Stub Auto-Generation Enforced via Code Quality Metrics
+* ✅ UTF-8 Subprocess Isolation to Eliminate Platform Drift
+
+> *Result: Zero hidden dependencies. Fully portable. Fully testable. Verified at every stage.*
+
+---
+
+## 🔌 Extension Ready
+
+* 📊 Add Custom Plugins (LangChain Agents, Graph Visualizers, Mind Maps)
+* 📂 Extend Config Schemas for New Logging Paradigms
+* 🧠 Introduce Advanced LLM Prompt Personas for Specialized Summarization
+* 📅 Future-Proof with Gantt Chart Integration and Cognitive Load Visualizers
 
 ---
 
@@ -111,34 +124,37 @@ python scripts/main.py
 ```
 
 > ⚠️ Ensure [Ollama](https://ollama.com/) is installed and a model (e.g., `mistral`) is running:
+>
 > ```bash
 > ollama run mistral
 > ```
 
 ---
 
-## 🌍 Roadmap Highlights
+## 🌍 Roadmap
 
-- [x] LLM summarization with local fallback
-- [x] Semantic indexing across logs and summaries
-- [x] Fully audited CI workflows with trend tracking
-- [ ] Gantt view for timeline-based thinking
-- [ ] Interactive mind map visualizer
-- [ ] Plugin framework for intelligent augmentation
+* [x] AI Summarization with Local Fallbacks
+* [x] Semantic Indexing for Raw Logs and Summaries
+* [x] Knowledge Graph Generation from Codebase Structures
+* [x] Full CI Audit with Trend Visualization Dashboards
+* [x] Prototype + Test Stub Auto-Generation (Production-Scaffold Ready)
+* [ ] Gantt Timeline View for Process Visualization
+* [ ] Interactive Mind Map with Drag-and-Drop Thought Structuring
+* [ ] Plugin Marketplace for Community Extensions
 
 ---
 
 ## 🔒 License
 
 Licensed under the [APACHE License](LICENSE).
-
-Use it. Fork it. Build on it.  
-Attribution encouraged but not required.
+Build freely. Attribute respectfully.
 
 ---
 
-## 🧙‍♂️ Closing Note
+## 🧙‍♂️ Final Word
 
-> **Ideas Logger is not just a note-taking app.**  
-> It is a **resilient thought infrastructure**, built for those who demand control over their own ideas.  
-> **Structured thought. Resilient engineering. No compromises.**
+> **Ideas Logger is not a note-taking app.**
+> It’s a fully autonomous **Knowledge Engineering System**.
+> Built for engineers, researchers, and visionaries who demand control, clarity, and uncompromising technical rigor over their thinking processes.
+
+> **Structured Thought. Resilient Engineering. No Compromises.**

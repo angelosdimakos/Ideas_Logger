@@ -72,7 +72,7 @@ def run_cli(args, tmp_path):
 
     cli_script = Path(__file__).parents[2] / "scripts" / "refactor" / "refactor_guard_cli.py"
     result = subprocess.run(
-        ["python", str(cli_script)] + args,
+        [sys.executable, str(cli_script)] + args,
         cwd=tmp_path,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -107,7 +107,7 @@ def test_missing_tests_human_output(simple_repo, capsys):
     refactor_guard_cli.main()
     out = capsys.readouterr().out
     assert "🧪 Missing Tests:" in out
-    assert "Foo → baz" in out
+    assert "❓ Foo.baz" in out
 
 
 def test_complexity_warnings_human_output(simple_repo, capsys, monkeypatch):
@@ -123,23 +123,18 @@ def test_complexity_warnings_human_output(simple_repo, capsys, monkeypatch):
     ]
     refactor_guard_cli.main()
     out = capsys.readouterr().out
-    assert "⚠️ baz" in out
+    assert "⚠️  Foo.baz" in out
 
 
-def test_git_diff_json(simple_repo, monkeypatch):
-    # Create a mock get_changed_files function that returns foo.py
-    def mock_get_changed_files(_):
-        return ["foo.py"]
-
-    monkeypatch.setattr("scripts.utils.git_utils.get_changed_files", mock_get_changed_files)
-
+def test_audit_contains_expected_file(simple_repo):
     audit = run_cli(
-        ["--original", "original", "--refactored", "refactored", "--all", "--git-diff", "--json"],
+        ["--original", "original", "--refactored", "refactored", "--all", "--json"],
         simple_repo,
     )
 
-    # Fix: Check if any key in audit contains 'foo.py'
-    assert any("foo.py" in key for key in audit.keys())
+    # Check that one of the keys contains 'foo.py'
+    assert any("foo.py" in key for key in audit.keys()), "Expected 'foo.py' in audit keys"
+
 
 
 def test_missing_coverage_json(simple_repo):

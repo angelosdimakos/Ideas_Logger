@@ -1,0 +1,6644 @@
+{
+  "paths.py": {
+    "method_diff": {
+      "ZephyrusPaths": {
+        "missing": [],
+        "added": [
+          "_resolve_path",
+          "from_config"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "ZephyrusPaths._resolve_path": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          42
+        ],
+        "missing_lines": []
+      },
+      "ZephyrusPaths.from_config": {
+        "complexity": 2,
+        "coverage": 0.8571,
+        "hits": 17,
+        "lines": 19,
+        "covered_lines": [
+          57,
+          58,
+          61,
+          63,
+          64,
+          65,
+          70,
+          74,
+          77,
+          80,
+          81,
+          82,
+          84,
+          87,
+          90,
+          93,
+          97
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "main.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "bootstrap": {
+        "complexity": 8,
+        "coverage": 0.5652,
+        "hits": 12,
+        "lines": 21,
+        "covered_lines": [
+          39,
+          42,
+          43,
+          44,
+          46,
+          47,
+          49,
+          51,
+          52,
+          55,
+          56,
+          61,
+          62,
+          74
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "dev_commit.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "get_current_branch": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          19,
+          26
+        ],
+        "missing_lines": []
+      },
+      "get_modified_files": {
+        "complexity": 3,
+        "coverage": 1.0,
+        "hits": 5,
+        "lines": 5,
+        "covered_lines": [
+          36,
+          37,
+          40,
+          41,
+          42
+        ],
+        "missing_lines": []
+      },
+      "is_valid_branch_name": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          55
+        ],
+        "missing_lines": []
+      },
+      "generate_suggested_branch_name": {
+        "complexity": 4,
+        "coverage": 1.0,
+        "hits": 11,
+        "lines": 11,
+        "covered_lines": [
+          65,
+          66,
+          68,
+          69,
+          70,
+          71,
+          73,
+          75,
+          76,
+          77,
+          78
+        ],
+        "missing_lines": []
+      },
+      "switch_to_new_branch": {
+        "complexity": 7,
+        "coverage": 0.875,
+        "hits": 19,
+        "lines": 22,
+        "covered_lines": [
+          87,
+          88,
+          93,
+          94,
+          95,
+          97,
+          98,
+          101,
+          102,
+          104,
+          105,
+          106,
+          107,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "indexers/base_indexer.py": {
+    "method_diff": {
+      "BaseIndexer": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "_load_model",
+          "load_index",
+          "search",
+          "build_index",
+          "save_index"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "BaseIndexer.__init__": {
+        "complexity": 3,
+        "coverage": 0.7647,
+        "hits": 10,
+        "lines": 13,
+        "covered_lines": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          57,
+          59,
+          62,
+          63,
+          64
+        ],
+        "missing_lines": []
+      },
+      "BaseIndexer._load_model": {
+        "complexity": 3,
+        "coverage": 0.6667,
+        "hits": 4,
+        "lines": 6,
+        "covered_lines": [
+          67,
+          68,
+          72,
+          75
+        ],
+        "missing_lines": []
+      },
+      "BaseIndexer.load_index": {
+        "complexity": 7,
+        "coverage": 0.8571,
+        "hits": 9,
+        "lines": 10,
+        "covered_lines": [
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          95,
+          96,
+          97
+        ],
+        "missing_lines": []
+      },
+      "BaseIndexer.search": {
+        "complexity": 6,
+        "coverage": 0.9444,
+        "hits": 14,
+        "lines": 14,
+        "covered_lines": [
+          117,
+          118,
+          119,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134
+        ],
+        "missing_lines": []
+      },
+      "BaseIndexer.build_index": {
+        "complexity": 5,
+        "coverage": 0.7333,
+        "hits": 10,
+        "lines": 13,
+        "covered_lines": [
+          150,
+          151,
+          152,
+          154,
+          156,
+          157,
+          158,
+          159,
+          160,
+          161,
+          162
+        ],
+        "missing_lines": []
+      },
+      "BaseIndexer.save_index": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 4,
+        "lines": 4,
+        "covered_lines": [
+          174,
+          176,
+          177,
+          178
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "indexers/summary_indexer.py": {
+    "method_diff": {
+      "SummaryIndexer": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "load_entries",
+          "_process_categories",
+          "_process_subcategories",
+          "_process_batches",
+          "load_index",
+          "save_index",
+          "rebuild_index",
+          "build_index_from_logs",
+          "rebuild"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "SummaryIndexer.__init__": {
+        "complexity": 4,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 8,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "SummaryIndexer.load_entries": {
+        "complexity": 9,
+        "coverage": 0.8333,
+        "hits": 13,
+        "lines": 16,
+        "covered_lines": [
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          72,
+          73,
+          74,
+          75,
+          76,
+          80
+        ],
+        "missing_lines": []
+      },
+      "SummaryIndexer._process_categories": {
+        "complexity": 4,
+        "coverage": 0.8571,
+        "hits": 4,
+        "lines": 5,
+        "covered_lines": [
+          85,
+          86,
+          87,
+          92
+        ],
+        "missing_lines": []
+      },
+      "SummaryIndexer._process_subcategories": {
+        "complexity": 4,
+        "coverage": 0.8571,
+        "hits": 4,
+        "lines": 5,
+        "covered_lines": [
+          102,
+          103,
+          104,
+          114
+        ],
+        "missing_lines": []
+      },
+      "SummaryIndexer._process_batches": {
+        "complexity": 6,
+        "coverage": 0.9,
+        "hits": 7,
+        "lines": 8,
+        "covered_lines": [
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          150
+        ],
+        "missing_lines": []
+      },
+      "SummaryIndexer.load_index": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          159
+        ],
+        "missing_lines": []
+      },
+      "SummaryIndexer.save_index": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          167
+        ],
+        "missing_lines": []
+      },
+      "SummaryIndexer.rebuild_index": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 2,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "SummaryIndexer.build_index_from_logs": {
+        "complexity": 5,
+        "coverage": 0.6154,
+        "hits": 7,
+        "lines": 11,
+        "covered_lines": [
+          186,
+          187,
+          188,
+          192,
+          193,
+          194,
+          195,
+          196
+        ],
+        "missing_lines": []
+      },
+      "SummaryIndexer.rebuild": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 4,
+        "lines": 4,
+        "covered_lines": [
+          206,
+          207,
+          208,
+          209
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "indexers/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "indexers/raw_log_indexer.py": {
+    "method_diff": {
+      "RawLogIndexer": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "load_entries",
+          "_process_categories",
+          "_process_subcategories",
+          "_process_entries",
+          "build_index_from_logs",
+          "rebuild"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "RawLogIndexer.__init__": {
+        "complexity": 4,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 6,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "RawLogIndexer.load_entries": {
+        "complexity": 9,
+        "coverage": 0.7778,
+        "hits": 12,
+        "lines": 16,
+        "covered_lines": [
+          65,
+          66,
+          67,
+          68,
+          71,
+          72,
+          73,
+          78,
+          79,
+          80,
+          81,
+          82,
+          86
+        ],
+        "missing_lines": []
+      },
+      "RawLogIndexer._process_categories": {
+        "complexity": 4,
+        "coverage": 0.8571,
+        "hits": 4,
+        "lines": 5,
+        "covered_lines": [
+          103,
+          104,
+          105,
+          114
+        ],
+        "missing_lines": []
+      },
+      "RawLogIndexer._process_subcategories": {
+        "complexity": 4,
+        "coverage": 0.8571,
+        "hits": 4,
+        "lines": 5,
+        "covered_lines": [
+          137,
+          138,
+          139,
+          149
+        ],
+        "missing_lines": []
+      },
+      "RawLogIndexer._process_entries": {
+        "complexity": 5,
+        "coverage": 0.9091,
+        "hits": 8,
+        "lines": 9,
+        "covered_lines": [
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          189,
+          201
+        ],
+        "missing_lines": []
+      },
+      "RawLogIndexer.build_index_from_logs": {
+        "complexity": 4,
+        "coverage": 0.7143,
+        "hits": 5,
+        "lines": 7,
+        "covered_lines": [
+          213,
+          214,
+          215,
+          216,
+          217,
+          218
+        ],
+        "missing_lines": []
+      },
+      "RawLogIndexer.rebuild": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          232,
+          233,
+          234,
+          235
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "utils/file_utils.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "sanitize_filename": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          40
+        ],
+        "missing_lines": []
+      },
+      "get_timestamp": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          45
+        ],
+        "missing_lines": []
+      },
+      "_to_path": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          55
+        ],
+        "missing_lines": []
+      },
+      "safe_path": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          60,
+          61,
+          62
+        ],
+        "missing_lines": []
+      },
+      "write_json": {
+        "complexity": 4,
+        "coverage": 1.0,
+        "hits": 6,
+        "lines": 6,
+        "covered_lines": [
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72
+        ],
+        "missing_lines": []
+      },
+      "read_json": {
+        "complexity": 4,
+        "coverage": 1.0,
+        "hits": 6,
+        "lines": 6,
+        "covered_lines": [
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82
+        ],
+        "missing_lines": []
+      },
+      "safe_read_json": {
+        "complexity": 2,
+        "coverage": 0.75,
+        "hits": 3,
+        "lines": 4,
+        "covered_lines": [
+          86,
+          87,
+          90
+        ],
+        "missing_lines": []
+      },
+      "make_backup": {
+        "complexity": 5,
+        "coverage": 0.6923,
+        "hits": 8,
+        "lines": 11,
+        "covered_lines": [
+          99,
+          100,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108
+        ],
+        "missing_lines": []
+      },
+      "zip_python_files": {
+        "complexity": 16,
+        "coverage": 0.9302,
+        "hits": 26,
+        "lines": 27,
+        "covered_lines": [
+          137,
+          138,
+          141,
+          142,
+          144,
+          145,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          155,
+          157,
+          158,
+          159,
+          161,
+          162,
+          163,
+          164,
+          165,
+          166,
+          168,
+          169,
+          170
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "utils/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "utils/zip_util.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "main": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 6,
+        "lines": 6,
+        "covered_lines": [
+          20,
+          23,
+          30,
+          37,
+          45,
+          46,
+          47
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "utils/git_utils.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "get_changed_files": {
+        "complexity": 6,
+        "coverage": 0.7,
+        "hits": 7,
+        "lines": 10,
+        "covered_lines": [
+          29,
+          30,
+          32,
+          41,
+          42,
+          44,
+          56
+        ],
+        "missing_lines": []
+      },
+      "interactive_commit_flow": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 16,
+        "lines": 16,
+        "covered_lines": [
+          71,
+          73,
+          74,
+          75,
+          77,
+          81,
+          82,
+          83,
+          84,
+          85,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92
+        ],
+        "missing_lines": []
+      },
+      "get_current_branch": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          101,
+          103
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "utils/file_io.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "load_json_any": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 7,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "utils/link_summaries_to_raw_logs.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "flatten_raw_entries": {
+        "complexity": 4,
+        "coverage": 0.8571,
+        "hits": 8,
+        "lines": 8,
+        "covered_lines": [
+          31,
+          33,
+          34,
+          35,
+          36,
+          37,
+          39,
+          40
+        ],
+        "missing_lines": []
+      },
+      "inject_entries_into_summaries": {
+        "complexity": 14,
+        "coverage": 0.8889,
+        "hits": 26,
+        "lines": 30,
+        "covered_lines": [
+          53,
+          56,
+          57,
+          62,
+          63,
+          65,
+          66,
+          68,
+          72,
+          73,
+          75,
+          76,
+          80,
+          81,
+          82,
+          85,
+          86,
+          87,
+          88,
+          94,
+          96,
+          99,
+          100,
+          103,
+          104,
+          106
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "kg/generate_codebase_kg.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "main": {
+        "complexity": 3,
+        "coverage": 0.9412,
+        "hits": 13,
+        "lines": 13,
+        "covered_lines": [
+          39,
+          42,
+          43,
+          46,
+          49,
+          52,
+          55,
+          57,
+          59,
+          62,
+          65,
+          66,
+          67
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "kg/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "kg/modules/visualization.py": {
+    "method_diff": {
+      "GraphVisualizer": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "visualize_graph",
+          "_position_nodes_in_layers",
+          "_handle_remaining_nodes",
+          "_draw_module_rectangles",
+          "_get_node_colors",
+          "_get_complexity_color",
+          "_shorten_label"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "GraphVisualizer.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          19
+        ],
+        "missing_lines": []
+      },
+      "GraphVisualizer.visualize_graph": {
+        "complexity": 10,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 25,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "GraphVisualizer._position_nodes_in_layers": {
+        "complexity": 3,
+        "coverage": 0.8571,
+        "hits": 9,
+        "lines": 10,
+        "covered_lines": [
+          104,
+          105,
+          106,
+          108,
+          109,
+          110,
+          111,
+          115,
+          117
+        ],
+        "missing_lines": []
+      },
+      "GraphVisualizer._handle_remaining_nodes": {
+        "complexity": 6,
+        "coverage": 0.2105,
+        "hits": 3,
+        "lines": 9,
+        "covered_lines": [
+          128,
+          129,
+          130
+        ],
+        "missing_lines": []
+      },
+      "GraphVisualizer._draw_module_rectangles": {
+        "complexity": 8,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 18,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "GraphVisualizer._get_node_colors": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 9,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "GraphVisualizer._get_complexity_color": {
+        "complexity": 3,
+        "coverage": 1.0,
+        "hits": 5,
+        "lines": 5,
+        "covered_lines": [
+          244,
+          245,
+          246,
+          247,
+          249
+        ],
+        "missing_lines": []
+      },
+      "GraphVisualizer._shorten_label": {
+        "complexity": 3,
+        "coverage": 1.0,
+        "hits": 5,
+        "lines": 5,
+        "covered_lines": [
+          262,
+          263,
+          264,
+          265,
+          267
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "kg/modules/data_extractors.py": {
+    "method_diff": {
+      "DataRelationExtractor": {
+        "missing": [],
+        "added": [
+          "extract_data_relations",
+          "_add_data_node"
+        ]
+      },
+      "FunctionExtractor": {
+        "missing": [],
+        "added": [
+          "extract_parameters_and_returns"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "DataRelationExtractor.extract_data_relations": {
+        "complexity": 8,
+        "coverage": 1.0,
+        "hits": 11,
+        "lines": 11,
+        "covered_lines": [
+          59,
+          60,
+          62,
+          65,
+          66,
+          67,
+          70,
+          71,
+          72,
+          74,
+          75
+        ],
+        "missing_lines": []
+      },
+      "DataRelationExtractor._add_data_node": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          93,
+          94
+        ],
+        "missing_lines": []
+      },
+      "FunctionExtractor.extract_parameters_and_returns": {
+        "complexity": 10,
+        "coverage": 0.925,
+        "hits": 22,
+        "lines": 22,
+        "covered_lines": [
+          111,
+          112,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          134,
+          135,
+          136,
+          138
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "kg/modules/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "kg/modules/analysis.py": {
+    "method_diff": {
+      "ComplexityAnalyzer": {
+        "missing": [],
+        "added": [
+          "analyze_density"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "ComplexityAnalyzer.analyze_density": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 9,
+        "lines": 9,
+        "covered_lines": [
+          40,
+          41,
+          44,
+          45,
+          46,
+          49,
+          50,
+          53,
+          61
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "kg/modules/utils.py": {
+    "method_diff": {
+      "DocMapNormalizer": {
+        "missing": [],
+        "added": [
+          "normalize_keys"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "load_json_file": {
+        "complexity": 6,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 12,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "safe_get": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "DocMapNormalizer.normalize_keys": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "kg/modules/graph_builder.py": {
+    "method_diff": {
+      "KnowledgeGraphBuilder": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "build_knowledge_graph",
+          "_build_graph"
+        ]
+      },
+      "CodebaseAnalyzer": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "analyze",
+          "visualize",
+          "export_graph"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "KnowledgeGraphBuilder.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          26
+        ],
+        "missing_lines": []
+      },
+      "KnowledgeGraphBuilder.build_knowledge_graph": {
+        "complexity": 4,
+        "coverage": 1.0,
+        "hits": 4,
+        "lines": 4,
+        "covered_lines": [
+          39,
+          40,
+          41,
+          43
+        ],
+        "missing_lines": []
+      },
+      "KnowledgeGraphBuilder._build_graph": {
+        "complexity": 17,
+        "coverage": 0.8378,
+        "hits": 40,
+        "lines": 46,
+        "covered_lines": [
+          55,
+          56,
+          58,
+          59,
+          60,
+          63,
+          64,
+          65,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          76,
+          79,
+          80,
+          81,
+          82,
+          85,
+          86,
+          87,
+          88,
+          89,
+          92,
+          93,
+          94,
+          95,
+          96,
+          98,
+          101,
+          107,
+          113,
+          114,
+          115,
+          116,
+          117,
+          119
+        ],
+        "missing_lines": []
+      },
+      "CodebaseAnalyzer.__init__": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 3,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "CodebaseAnalyzer.analyze": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 8,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "CodebaseAnalyzer.visualize": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 4,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "CodebaseAnalyzer.export_graph": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 6,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/refactor_guard_cli.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "_ensure_utf8_stdout": {
+        "complexity": 5,
+        "coverage": 0.2727,
+        "hits": 2,
+        "lines": 7,
+        "covered_lines": [
+          38,
+          39
+        ],
+        "missing_lines": []
+      },
+      "_parse_args": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 14,
+        "lines": 14,
+        "covered_lines": [
+          50,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65
+        ],
+        "missing_lines": []
+      },
+      "handle_full_scan": {
+        "complexity": 24,
+        "coverage": 0.2099,
+        "hits": 12,
+        "lines": 49,
+        "covered_lines": [
+          69,
+          70,
+          71,
+          73,
+          76,
+          86,
+          88,
+          89,
+          90,
+          91,
+          93,
+          124
+        ],
+        "missing_lines": []
+      },
+      "handle_single_file": {
+        "complexity": 12,
+        "coverage": 0.1613,
+        "hits": 3,
+        "lines": 21,
+        "covered_lines": [
+          128,
+          132,
+          133
+        ],
+        "missing_lines": []
+      },
+      "main": {
+        "complexity": 9,
+        "coverage": 0.7931,
+        "hits": 16,
+        "lines": 19,
+        "covered_lines": [
+          156,
+          157,
+          158,
+          159,
+          161,
+          162,
+          163,
+          167,
+          168,
+          170,
+          172,
+          173,
+          176,
+          177,
+          179,
+          180
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "refactor/ast_extractor.py": {
+    "method_diff": {
+      "ClassMethodInfo": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "add_method",
+          "__repr__"
+        ]
+      },
+      "ClassMethodExtractor": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "visit_ClassDef",
+          "generic_visit"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "ClassMethodInfo.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          35,
+          36
+        ],
+        "missing_lines": []
+      },
+      "ClassMethodInfo.add_method": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          46
+        ],
+        "missing_lines": []
+      },
+      "ClassMethodInfo.__repr__": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "extract_class_methods": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 10,
+        "lines": 10,
+        "covered_lines": [
+          70,
+          71,
+          72,
+          74,
+          75,
+          78,
+          97,
+          101,
+          102,
+          103
+        ],
+        "missing_lines": []
+      },
+      "compare_class_methods": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 5,
+        "lines": 5,
+        "covered_lines": [
+          119,
+          120,
+          122,
+          123,
+          125
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/strictness_analyzer.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "scan_test_directory": {
+        "complexity": 6,
+        "coverage": 0.8889,
+        "hits": 11,
+        "lines": 12,
+        "covered_lines": [
+          324,
+          325,
+          327,
+          330,
+          332,
+          333,
+          334,
+          335,
+          336,
+          337,
+          339
+        ],
+        "missing_lines": []
+      },
+      "extract_test_functions": {
+        "complexity": 5,
+        "coverage": 1.0,
+        "hits": 11,
+        "lines": 11,
+        "covered_lines": [
+          59,
+          60,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70
+        ],
+        "missing_lines": []
+      },
+      "analyze_strictness": {
+        "complexity": 7,
+        "coverage": 1.0,
+        "hits": 8,
+        "lines": 8,
+        "covered_lines": [
+          84,
+          85,
+          87,
+          88,
+          89,
+          90,
+          92,
+          94
+        ],
+        "missing_lines": []
+      },
+      "attach_coverage_hits": {
+        "complexity": 11,
+        "coverage": 0.8542,
+        "hits": 32,
+        "lines": 36,
+        "covered_lines": [
+          112,
+          114,
+          115,
+          116,
+          119,
+          122,
+          123,
+          124,
+          125,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          134,
+          135,
+          136,
+          143,
+          144,
+          145,
+          147,
+          148,
+          149,
+          150,
+          152,
+          161,
+          162,
+          164,
+          165,
+          166,
+          168
+        ],
+        "missing_lines": []
+      },
+      "compute_strictness_score": {
+        "complexity": 7,
+        "coverage": 0.6429,
+        "hits": 15,
+        "lines": 20,
+        "covered_lines": [
+          180,
+          181,
+          182,
+          183,
+          185,
+          186,
+          188,
+          189,
+          190,
+          192,
+          194,
+          197,
+          198,
+          206,
+          208
+        ],
+        "missing_lines": []
+      },
+      "map_test_to_prod_path": {
+        "complexity": 11,
+        "coverage": 0.5806,
+        "hits": 13,
+        "lines": 21,
+        "covered_lines": [
+          224,
+          226,
+          230,
+          231,
+          232,
+          235,
+          238,
+          239,
+          244,
+          255,
+          256,
+          257,
+          258
+        ],
+        "missing_lines": []
+      },
+      "map_tests_to_prod_code": {
+        "complexity": 11,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 22,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "main": {
+        "complexity": 15,
+        "coverage": 0.5854,
+        "hits": 20,
+        "lines": 33,
+        "covered_lines": [
+          344,
+          345,
+          346,
+          348,
+          352,
+          353,
+          355,
+          356,
+          357,
+          364,
+          372,
+          373,
+          374,
+          376,
+          377,
+          379,
+          389,
+          390,
+          391,
+          392
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/method_line_ranges.py": {
+    "method_diff": {
+      "MethodRangeVisitor": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "visit_ClassDef",
+          "visit_FunctionDef",
+          "visit_AsyncFunctionDef",
+          "_record_range"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "MethodRangeVisitor.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          36,
+          37
+        ],
+        "missing_lines": []
+      },
+      "MethodRangeVisitor.visit_ClassDef": {
+        "complexity": 5,
+        "coverage": 1.0,
+        "hits": 9,
+        "lines": 9,
+        "covered_lines": [
+          46,
+          47,
+          50,
+          51,
+          52,
+          55,
+          56,
+          57,
+          59
+        ],
+        "missing_lines": []
+      },
+      "MethodRangeVisitor.visit_FunctionDef": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          68
+        ],
+        "missing_lines": []
+      },
+      "MethodRangeVisitor.visit_AsyncFunctionDef": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          77
+        ],
+        "missing_lines": []
+      },
+      "MethodRangeVisitor._record_range": {
+        "complexity": 5,
+        "coverage": 0.8333,
+        "hits": 7,
+        "lines": 8,
+        "covered_lines": [
+          87,
+          89,
+          90,
+          93,
+          94,
+          96,
+          97
+        ],
+        "missing_lines": []
+      },
+      "extract_method_line_ranges": {
+        "complexity": 3,
+        "coverage": 0.8,
+        "hits": 7,
+        "lines": 8,
+        "covered_lines": [
+          116,
+          120,
+          121,
+          122,
+          124,
+          125,
+          126
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/merge_audit_reports.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "normalize_path": {
+        "complexity": 3,
+        "coverage": 1.0,
+        "hits": 8,
+        "lines": 8,
+        "covered_lines": [
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          37,
+          39
+        ],
+        "missing_lines": []
+      },
+      "load_and_normalize": {
+        "complexity": 4,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          52,
+          53,
+          54
+        ],
+        "missing_lines": []
+      },
+      "merge_reports": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 9,
+        "lines": 9,
+        "covered_lines": [
+          67,
+          68,
+          69,
+          71,
+          72,
+          74,
+          75,
+          81,
+          82
+        ],
+        "missing_lines": []
+      },
+      "main": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 7,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/refactor_guard.py": {
+    "method_diff": {
+      "AnalysisError": {
+        "missing": [],
+        "added": []
+      },
+      "RefactorGuard": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "attach_coverage_hits",
+          "analyze_tests",
+          "analyze_module",
+          "analyze_directory_recursive"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "RefactorGuard.__init__": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          37,
+          43
+        ],
+        "missing_lines": []
+      },
+      "RefactorGuard.attach_coverage_hits": {
+        "complexity": 3,
+        "coverage": 1.0,
+        "hits": 5,
+        "lines": 5,
+        "covered_lines": [
+          46,
+          47,
+          48,
+          49,
+          50
+        ],
+        "missing_lines": []
+      },
+      "RefactorGuard.analyze_tests": {
+        "complexity": 15,
+        "coverage": 0.2895,
+        "hits": 8,
+        "lines": 24,
+        "covered_lines": [
+          55,
+          56,
+          57,
+          59,
+          83,
+          84,
+          85,
+          86
+        ],
+        "missing_lines": []
+      },
+      "RefactorGuard.analyze_module": {
+        "complexity": 17,
+        "coverage": 0.9,
+        "hits": 23,
+        "lines": 26,
+        "covered_lines": [
+          91,
+          97,
+          98,
+          100,
+          102,
+          104,
+          105,
+          106,
+          110,
+          111,
+          112,
+          114,
+          116,
+          117,
+          121,
+          124,
+          125,
+          126,
+          127,
+          128,
+          136,
+          138,
+          148
+        ],
+        "missing_lines": []
+      },
+      "RefactorGuard.analyze_directory_recursive": {
+        "complexity": 14,
+        "coverage": 0.7551,
+        "hits": 24,
+        "lines": 29,
+        "covered_lines": [
+          153,
+          154,
+          155,
+          157,
+          158,
+          159,
+          163,
+          164,
+          166,
+          167,
+          170,
+          171,
+          172,
+          175,
+          176,
+          177,
+          178,
+          179,
+          181,
+          182,
+          183,
+          184,
+          186,
+          188
+        ],
+        "missing_lines": []
+      },
+      "print_human_readable": {
+        "complexity": 21,
+        "coverage": 0.8367,
+        "hits": 22,
+        "lines": 23,
+        "covered_lines": [
+          197,
+          199,
+          200,
+          202,
+          203,
+          204,
+          205,
+          206,
+          208,
+          209,
+          211,
+          212,
+          213,
+          219,
+          220,
+          221,
+          222,
+          224,
+          225,
+          226,
+          227,
+          228
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/code_generation/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "refactor/code_generation/code_cli.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "_safe_import": {
+        "complexity": 4,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 5,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "_core": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "_ctrl": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "log": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 8,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "summarize": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 2,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "kg_build": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "kg_query": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 2,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "generate_function": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 4,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "search": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 3,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "coverage": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "rebuild_index": {
+        "complexity": 5,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 7,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "ci_report": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 4,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "ci_trends": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 5,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "git_new_branch": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 0,
+        "lines": 0,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "pipe": {
+        "complexity": 4,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 11,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/parsers/json_coverage_parser.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "parse_json_coverage": {
+        "complexity": 19,
+        "coverage": 0.931,
+        "hits": 42,
+        "lines": 44,
+        "covered_lines": [
+          28,
+          30,
+          31,
+          33,
+          34,
+          37,
+          39,
+          40,
+          42,
+          43,
+          44,
+          46,
+          48,
+          49,
+          51,
+          53,
+          54,
+          55,
+          58,
+          60,
+          61,
+          62,
+          67,
+          82,
+          83,
+          85,
+          86,
+          87,
+          89,
+          90,
+          91,
+          92,
+          95,
+          96,
+          97,
+          98,
+          100,
+          103,
+          104,
+          105,
+          107,
+          115
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/parsers/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "refactor/parsers/docstring_parser.py": {
+    "method_diff": {
+      "DocstringAnalyzer": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "should_exclude",
+          "extract_docstrings",
+          "analyze_directory"
+        ]
+      },
+      "DocstringAuditCLI": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "parse_args",
+          "run"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "split_docstring_sections": {
+        "complexity": 9,
+        "coverage": 1.0,
+        "hits": 20,
+        "lines": 20,
+        "covered_lines": [
+          36,
+          37,
+          38,
+          40,
+          41,
+          42,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          55,
+          56,
+          57,
+          59
+        ],
+        "missing_lines": []
+      },
+      "DocstringAnalyzer.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          70
+        ],
+        "missing_lines": []
+      },
+      "DocstringAnalyzer.should_exclude": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          82,
+          83
+        ],
+        "missing_lines": []
+      },
+      "DocstringAnalyzer.extract_docstrings": {
+        "complexity": 4,
+        "coverage": 0.6923,
+        "hits": 8,
+        "lines": 11,
+        "covered_lines": [
+          89,
+          90,
+          91,
+          95,
+          98,
+          104,
+          128,
+          129
+        ],
+        "missing_lines": []
+      },
+      "DocstringAnalyzer.analyze_directory": {
+        "complexity": 7,
+        "coverage": 0.8667,
+        "hits": 8,
+        "lines": 9,
+        "covered_lines": [
+          142,
+          143,
+          144,
+          145,
+          146,
+          149,
+          150,
+          152
+        ],
+        "missing_lines": []
+      },
+      "DocstringAuditCLI.__init__": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 2,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "DocstringAuditCLI.parse_args": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 7,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "DocstringAuditCLI.run": {
+        "complexity": 12,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 12,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/parsers/coverage_api_parser.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "_canonical": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          30
+        ],
+        "missing_lines": []
+      },
+      "_best_suffix_match": {
+        "complexity": 5,
+        "coverage": 0.2632,
+        "hits": 4,
+        "lines": 11,
+        "covered_lines": [
+          48,
+          49,
+          50,
+          58
+        ],
+        "missing_lines": []
+      },
+      "parse_coverage_with_api": {
+        "complexity": 17,
+        "coverage": 0.75,
+        "hits": 8,
+        "lines": 10,
+        "covered_lines": [
+          83,
+          84,
+          85,
+          87,
+          88,
+          91,
+          97,
+          98
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/parsers/coverage_parser.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "_best_xml_candidate": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 5,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "parse_coverage_xml_to_method_hits": {
+        "complexity": 19,
+        "coverage": 0.878,
+        "hits": 26,
+        "lines": 29,
+        "covered_lines": [
+          100,
+          101,
+          103,
+          104,
+          105,
+          106,
+          108,
+          110,
+          113,
+          114,
+          115,
+          118,
+          119,
+          122,
+          123,
+          124,
+          125,
+          128,
+          129,
+          131,
+          134,
+          135,
+          137,
+          138,
+          139,
+          141,
+          147
+        ],
+        "missing_lines": []
+      },
+      "parse_coverage_to_method_hits": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 4,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/compressor/merged_report_squeezer.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "_get_or_add": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 4,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "_calc_percent": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 8,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "compress_obj": {
+        "complexity": 8,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 30,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "decompress_obj": {
+        "complexity": 6,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 10,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "_load_json": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 4,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "_dump_json": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 5,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "_cli": {
+        "complexity": 8,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 45,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/compressor/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "refactor/compressor/strictness_squeezer.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "_ensure_idx": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 7,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "compress_obj": {
+        "complexity": 6,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 12,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "decompress_obj": {
+        "complexity": 8,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 13,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "_cli": {
+        "complexity": 5,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 27,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/compressor/strictness_loader.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "_read": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 4,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "load": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "to_dataframe": {
+        "complexity": 7,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 8,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/lint_report_pkg/path_utils.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "norm": {
+        "complexity": 3,
+        "coverage": 1.0,
+        "hits": 5,
+        "lines": 5,
+        "covered_lines": [
+          29,
+          30,
+          31,
+          32,
+          33
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/lint_report_pkg/core.py": {
+    "method_diff": {
+      "ToolPlugin": {
+        "missing": [],
+        "added": [
+          "name",
+          "default_report",
+          "run",
+          "parse"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "ToolPlugin.name": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "ToolPlugin.default_report": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "ToolPlugin.run": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "ToolPlugin.parse": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "all_plugins": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          59
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/lint_report_pkg/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "register": {
+        "complexity": 1,
+        "coverage": 0.3125,
+        "hits": 5,
+        "lines": 16,
+        "covered_lines": [],
+        "missing_lines": [
+          15,
+          16,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27
+        ]
+      },
+      "_discover_plugins": {
+        "complexity": 3,
+        "coverage": 0.4167,
+        "hits": 5,
+        "lines": 12,
+        "covered_lines": [],
+        "missing_lines": [
+          33,
+          37,
+          38,
+          39,
+          42,
+          43,
+          44
+        ]
+      }
+    }
+  },
+  "refactor/lint_report_pkg/lint_report_cli.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "enrich_refactor_audit": {
+        "complexity": 2,
+        "coverage": 0.6667,
+        "hits": 5,
+        "lines": 7,
+        "covered_lines": [
+          41,
+          46,
+          53,
+          54,
+          55
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/lint_report_pkg/quality_checker.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "merge_into_refactor_guard": {
+        "complexity": 16,
+        "coverage": 0.8478,
+        "hits": 28,
+        "lines": 34,
+        "covered_lines": [
+          29,
+          32,
+          36,
+          37,
+          43,
+          44,
+          45,
+          46,
+          49,
+          50,
+          51,
+          53,
+          54,
+          55,
+          56,
+          57,
+          59,
+          60,
+          63,
+          64,
+          68,
+          71,
+          72,
+          75,
+          76,
+          79,
+          80,
+          81
+        ],
+        "missing_lines": []
+      },
+      "merge_reports": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 5,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/lint_report_pkg/helpers.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "safe_print": {
+        "complexity": 3,
+        "coverage": 0.5,
+        "hits": 2,
+        "lines": 4,
+        "covered_lines": [
+          27,
+          28
+        ],
+        "missing_lines": []
+      },
+      "run_cmd": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          48,
+          49,
+          53
+        ],
+        "missing_lines": []
+      },
+      "read_report": {
+        "complexity": 4,
+        "coverage": 0.5,
+        "hits": 3,
+        "lines": 6,
+        "covered_lines": [
+          70,
+          72,
+          73
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/lint_report_pkg/quality_registry.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "register": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 2,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "run_all": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 2,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/lint_report_pkg/plugins/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "refactor/lint_report_pkg/plugins/flake8.py": {
+    "method_diff": {
+      "Flake8Plugin": {
+        "missing": [],
+        "added": [
+          "run",
+          "parse"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "Flake8Plugin.run": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "Flake8Plugin.parse": {
+        "complexity": 5,
+        "coverage": 1.0,
+        "hits": 10,
+        "lines": 10,
+        "covered_lines": [
+          27,
+          28,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/lint_report_pkg/plugins/coverage_plugin.py": {
+    "method_diff": {
+      "CoveragePlugin": {
+        "missing": [],
+        "added": [
+          "run",
+          "parse"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "CoveragePlugin.run": {
+        "complexity": 2,
+        "coverage": 0.5,
+        "hits": 2,
+        "lines": 4,
+        "covered_lines": [
+          27,
+          30
+        ],
+        "missing_lines": []
+      },
+      "CoveragePlugin.parse": {
+        "complexity": 11,
+        "coverage": 0.5,
+        "hits": 13,
+        "lines": 26,
+        "covered_lines": [
+          33,
+          36,
+          50,
+          51,
+          52,
+          53,
+          54,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/lint_report_pkg/plugins/mypy.py": {
+    "method_diff": {
+      "MypyPlugin": {
+        "missing": [],
+        "added": [
+          "run",
+          "parse"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "MypyPlugin.run": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "MypyPlugin.parse": {
+        "complexity": 4,
+        "coverage": 1.0,
+        "hits": 5,
+        "lines": 5,
+        "covered_lines": [
+          45,
+          46,
+          47,
+          48,
+          49
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/lint_report_pkg/plugins/black.py": {
+    "method_diff": {
+      "BlackPlugin": {
+        "missing": [],
+        "added": [
+          "run",
+          "parse"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "BlackPlugin.run": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "BlackPlugin.parse": {
+        "complexity": 3,
+        "coverage": 1.0,
+        "hits": 4,
+        "lines": 4,
+        "covered_lines": [
+          44,
+          45,
+          46,
+          47
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/lint_report_pkg/plugins/pydocstyle.py": {
+    "method_diff": {
+      "PydocstylePlugin": {
+        "missing": [],
+        "added": [
+          "run",
+          "parse"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "PydocstylePlugin.run": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "PydocstylePlugin.parse": {
+        "complexity": 6,
+        "coverage": 0.8182,
+        "hits": 14,
+        "lines": 16,
+        "covered_lines": [
+          49,
+          50,
+          52,
+          54,
+          55,
+          59,
+          62,
+          63,
+          64,
+          66,
+          67,
+          70,
+          72,
+          73
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/complexity/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "refactor/complexity/complexity_summary.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "analyze_complexity": {
+        "complexity": 8,
+        "coverage": 1.0,
+        "hits": 20,
+        "lines": 20,
+        "covered_lines": [
+          36,
+          37,
+          38,
+          39,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          54,
+          56,
+          57,
+          58
+        ],
+        "missing_lines": []
+      },
+      "run_analysis": {
+        "complexity": 10,
+        "coverage": 0.9787,
+        "hits": 29,
+        "lines": 29,
+        "covered_lines": [
+          76,
+          77,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          88,
+          89,
+          90,
+          91,
+          93,
+          94,
+          95,
+          96,
+          97,
+          99,
+          101,
+          102,
+          103,
+          105,
+          106,
+          107,
+          108,
+          109,
+          111
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "refactor/complexity/complexity_analyzer.py": {
+    "method_diff": {
+      "ComplexityVisitor": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "visit_ClassDef",
+          "visit_FunctionDef",
+          "visit_AsyncFunctionDef",
+          "_compute_and_record",
+          "get_scores"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "ComplexityVisitor.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          65,
+          66
+        ],
+        "missing_lines": []
+      },
+      "ComplexityVisitor.visit_ClassDef": {
+        "complexity": 5,
+        "coverage": 0.8235,
+        "hits": 8,
+        "lines": 9,
+        "covered_lines": [
+          78,
+          79,
+          82,
+          83,
+          84,
+          87,
+          88,
+          91
+        ],
+        "missing_lines": []
+      },
+      "ComplexityVisitor.visit_FunctionDef": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          103
+        ],
+        "missing_lines": []
+      },
+      "ComplexityVisitor.visit_AsyncFunctionDef": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          115
+        ],
+        "missing_lines": []
+      },
+      "ComplexityVisitor._compute_and_record": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 5,
+        "lines": 5,
+        "covered_lines": [
+          128,
+          148,
+          149,
+          150,
+          151
+        ],
+        "missing_lines": []
+      },
+      "ComplexityVisitor.get_scores": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          160
+        ],
+        "missing_lines": []
+      },
+      "calculate_function_complexity_map": {
+        "complexity": 4,
+        "coverage": 1.0,
+        "hits": 10,
+        "lines": 10,
+        "covered_lines": [
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          184,
+          185,
+          186
+        ],
+        "missing_lines": []
+      },
+      "calculate_module_complexity": {
+        "complexity": 4,
+        "coverage": 1.0,
+        "hits": 9,
+        "lines": 9,
+        "covered_lines": [
+          200,
+          201,
+          202,
+          203,
+          204,
+          205,
+          206,
+          209,
+          210
+        ],
+        "missing_lines": []
+      },
+      "calculate_cyclomatic_complexity_for_module": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          225,
+          231
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "core/core_cli.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "log": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 3,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "summarize": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 3,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "search": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 3,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "core/core.py": {
+    "method_diff": {
+      "ZephyrusLoggerCore": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "save_entry",
+          "generate_global_summary",
+          "generate_summary",
+          "_safe_search",
+          "search_summaries",
+          "search_raw_logs",
+          "_safe_read_json"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "ZephyrusLoggerCore.__init__": {
+        "complexity": 4,
+        "coverage": 0.875,
+        "hits": 13,
+        "lines": 14,
+        "covered_lines": [
+          103,
+          104,
+          105,
+          108,
+          111,
+          112,
+          113,
+          121,
+          122,
+          123,
+          134,
+          135,
+          136,
+          137
+        ],
+        "missing_lines": []
+      },
+      "ZephyrusLoggerCore.save_entry": {
+        "complexity": 3,
+        "coverage": 0.7143,
+        "hits": 5,
+        "lines": 7,
+        "covered_lines": [
+          155,
+          156,
+          157,
+          158,
+          159,
+          160
+        ],
+        "missing_lines": []
+      },
+      "ZephyrusLoggerCore.generate_global_summary": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          182
+        ],
+        "missing_lines": []
+      },
+      "ZephyrusLoggerCore.generate_summary": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          191
+        ],
+        "missing_lines": []
+      },
+      "ZephyrusLoggerCore._safe_search": {
+        "complexity": 5,
+        "coverage": 0.7143,
+        "hits": 4,
+        "lines": 5,
+        "covered_lines": [
+          208,
+          209,
+          210,
+          211
+        ],
+        "missing_lines": []
+      },
+      "ZephyrusLoggerCore.search_summaries": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          227
+        ],
+        "missing_lines": []
+      },
+      "ZephyrusLoggerCore.search_raw_logs": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          240
+        ],
+        "missing_lines": []
+      },
+      "ZephyrusLoggerCore._safe_read_json": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 4,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "core/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "core/markdown_logger.py": {
+    "method_diff": {
+      "MarkdownLogger": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "log"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "MarkdownLogger.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          34
+        ],
+        "missing_lines": []
+      },
+      "MarkdownLogger.log": {
+        "complexity": 5,
+        "coverage": 0.8947,
+        "hits": 13,
+        "lines": 15,
+        "covered_lines": [
+          49,
+          50,
+          51,
+          52,
+          53,
+          55,
+          56,
+          57,
+          58,
+          60,
+          62,
+          64,
+          65
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "core/environment_bootstrapper.py": {
+    "method_diff": {
+      "EnvironmentBootstrapper": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "bootstrap",
+          "_make_directories",
+          "_initialize_files"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "EnvironmentBootstrapper.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          41,
+          42
+        ],
+        "missing_lines": []
+      },
+      "EnvironmentBootstrapper.bootstrap": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          49,
+          50
+        ],
+        "missing_lines": []
+      },
+      "EnvironmentBootstrapper._make_directories": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          56,
+          57,
+          58
+        ],
+        "missing_lines": []
+      },
+      "EnvironmentBootstrapper._initialize_files": {
+        "complexity": 6,
+        "coverage": 0.6667,
+        "hits": 7,
+        "lines": 10,
+        "covered_lines": [
+          65,
+          69,
+          70,
+          72,
+          75,
+          79,
+          80,
+          81
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "core/summary_tracker.py": {
+    "method_diff": {
+      "SummaryTracker": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "_safe_load_tracker",
+          "_safe_init_summary_indexer",
+          "_safe_init_raw_indexer",
+          "get_summarized_count",
+          "update",
+          "_save",
+          "rebuild",
+          "validate",
+          "get_coverage_data"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "SummaryTracker.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 5,
+        "lines": 5,
+        "covered_lines": [
+          51,
+          52,
+          53,
+          54,
+          55
+        ],
+        "missing_lines": []
+      },
+      "SummaryTracker._safe_load_tracker": {
+        "complexity": 5,
+        "coverage": 0.8,
+        "hits": 4,
+        "lines": 5,
+        "covered_lines": [
+          64,
+          65,
+          66,
+          68,
+          71
+        ],
+        "missing_lines": []
+      },
+      "SummaryTracker._safe_init_summary_indexer": {
+        "complexity": 3,
+        "coverage": 0.5,
+        "hits": 2,
+        "lines": 4,
+        "covered_lines": [
+          80,
+          81
+        ],
+        "missing_lines": []
+      },
+      "SummaryTracker._safe_init_raw_indexer": {
+        "complexity": 3,
+        "coverage": 0.5,
+        "hits": 2,
+        "lines": 4,
+        "covered_lines": [
+          93,
+          94
+        ],
+        "missing_lines": []
+      },
+      "SummaryTracker.get_summarized_count": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          110
+        ],
+        "missing_lines": []
+      },
+      "SummaryTracker.update": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 4,
+        "lines": 4,
+        "covered_lines": [
+          124,
+          127,
+          130,
+          131,
+          132
+        ],
+        "missing_lines": []
+      },
+      "SummaryTracker._save": {
+        "complexity": 3,
+        "coverage": 0.6667,
+        "hits": 2,
+        "lines": 3,
+        "covered_lines": [
+          138,
+          139
+        ],
+        "missing_lines": []
+      },
+      "SummaryTracker.rebuild": {
+        "complexity": 14,
+        "coverage": 0.9333,
+        "hits": 21,
+        "lines": 21,
+        "covered_lines": [
+          147,
+          149,
+          150,
+          153,
+          154,
+          155,
+          156,
+          159,
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          169,
+          170,
+          171,
+          173,
+          174,
+          175,
+          176
+        ],
+        "missing_lines": []
+      },
+      "SummaryTracker.validate": {
+        "complexity": 13,
+        "coverage": 0.8261,
+        "hits": 13,
+        "lines": 17,
+        "covered_lines": [
+          188,
+          192,
+          193,
+          194,
+          196,
+          197,
+          198,
+          199,
+          204,
+          206,
+          215,
+          220,
+          221,
+          225
+        ],
+        "missing_lines": []
+      },
+      "SummaryTracker.get_coverage_data": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 12,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "core/log_manager.py": {
+    "method_diff": {
+      "LogManager": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "_safe_read_or_create_json",
+          "read_logs",
+          "update_logs",
+          "append_entry",
+          "get_unsummarized_batch",
+          "update_correction_summaries"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "LogManager.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 6,
+        "lines": 6,
+        "covered_lines": [
+          45,
+          46,
+          47,
+          48,
+          49,
+          50
+        ],
+        "missing_lines": []
+      },
+      "LogManager._safe_read_or_create_json": {
+        "complexity": 5,
+        "coverage": 0.4286,
+        "hits": 3,
+        "lines": 7,
+        "covered_lines": [
+          63,
+          69,
+          70
+        ],
+        "missing_lines": []
+      },
+      "LogManager.read_logs": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          83
+        ],
+        "missing_lines": []
+      },
+      "LogManager.update_logs": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          95,
+          96,
+          97
+        ],
+        "missing_lines": []
+      },
+      "LogManager.append_entry": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          110,
+          126
+        ],
+        "missing_lines": []
+      },
+      "LogManager.get_unsummarized_batch": {
+        "complexity": 5,
+        "coverage": 0.8947,
+        "hits": 10,
+        "lines": 11,
+        "covered_lines": [
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152
+        ],
+        "missing_lines": []
+      },
+      "LogManager.update_correction_summaries": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          173,
+          174,
+          177
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "core/summary_engine.py": {
+    "method_diff": {
+      "SummaryEngine": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "_get_summary",
+          "summarize"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "SummaryEngine.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 7,
+        "lines": 7,
+        "covered_lines": [
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66
+        ],
+        "missing_lines": []
+      },
+      "SummaryEngine._get_summary": {
+        "complexity": 8,
+        "coverage": 0.7778,
+        "hits": 7,
+        "lines": 9,
+        "covered_lines": [
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          89
+        ],
+        "missing_lines": []
+      },
+      "SummaryEngine.summarize": {
+        "complexity": 5,
+        "coverage": 0.8824,
+        "hits": 15,
+        "lines": 17,
+        "covered_lines": [
+          102,
+          103,
+          107,
+          111,
+          112,
+          116,
+          117,
+          118,
+          120,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "gui/style_manager.py": {
+    "method_diff": {
+      "StyleManager": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "initialize_styles",
+          "update_style"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "StyleManager.__init__": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 10,
+        "covered_lines": [],
+        "missing_lines": [
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37
+        ]
+      },
+      "StyleManager.initialize_styles": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 20,
+        "covered_lines": [],
+        "missing_lines": [
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58
+        ]
+      },
+      "StyleManager.update_style": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 12,
+        "covered_lines": [],
+        "missing_lines": [
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71
+        ]
+      }
+    }
+  },
+  "gui/gui_controller.py": {
+    "method_diff": {
+      "GUIController": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "log_entry",
+          "force_summarize_all",
+          "search_summaries",
+          "search_raw_logs",
+          "rebuild_tracker",
+          "get_tracker_status",
+          "get_coverage_data",
+          "get_logs"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "GUIController.__init__": {
+        "complexity": 5,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 19,
+        "covered_lines": [],
+        "missing_lines": [
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48
+        ]
+      },
+      "GUIController.log_entry": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 16,
+        "covered_lines": [],
+        "missing_lines": [
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65
+        ]
+      },
+      "GUIController.force_summarize_all": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 11,
+        "covered_lines": [],
+        "missing_lines": [
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77
+        ]
+      },
+      "GUIController.search_summaries": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 14,
+        "covered_lines": [],
+        "missing_lines": [
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92
+        ]
+      },
+      "GUIController.search_raw_logs": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 14,
+        "covered_lines": [],
+        "missing_lines": [
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107
+        ]
+      },
+      "GUIController.rebuild_tracker": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 7,
+        "covered_lines": [],
+        "missing_lines": [
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115
+        ]
+      },
+      "GUIController.get_tracker_status": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 6,
+        "covered_lines": [],
+        "missing_lines": [
+          117,
+          118,
+          119,
+          120,
+          121,
+          122
+        ]
+      },
+      "GUIController.get_coverage_data": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 5,
+        "covered_lines": [],
+        "missing_lines": [
+          124,
+          125,
+          126,
+          127,
+          128
+        ]
+      },
+      "GUIController.get_logs": {
+        "complexity": 4,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 10,
+        "covered_lines": [],
+        "missing_lines": [
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139
+        ]
+      }
+    }
+  },
+  "gui/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "gui/app.py": {
+    "method_diff": {
+      "ZephyrusLoggerApp": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "_create_status_bar",
+          "run"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "ZephyrusLoggerApp.__init__": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 26,
+        "covered_lines": [],
+        "missing_lines": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41
+        ]
+      },
+      "ZephyrusLoggerApp._create_status_bar": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 9,
+        "covered_lines": [],
+        "missing_lines": [
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51
+        ]
+      },
+      "ZephyrusLoggerApp.run": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 3,
+        "covered_lines": [],
+        "missing_lines": [
+          53,
+          54,
+          55
+        ]
+      }
+    }
+  },
+  "gui/gui_logging.py": {
+    "method_diff": {
+      "GUILogHandler": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "emit",
+          "append_message"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "GUILogHandler.__init__": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 6,
+        "covered_lines": [],
+        "missing_lines": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ]
+      },
+      "GUILogHandler.emit": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 12,
+        "covered_lines": [],
+        "missing_lines": [
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34
+        ]
+      },
+      "GUILogHandler.append_message": {
+        "complexity": 4,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 17,
+        "covered_lines": [],
+        "missing_lines": [
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52
+        ]
+      }
+    }
+  },
+  "gui/gui_helpers.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "validate_log_input": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 9,
+        "covered_lines": [],
+        "missing_lines": [
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35
+        ]
+      },
+      "get_current_date": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 8,
+        "covered_lines": [],
+        "missing_lines": [
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45
+        ]
+      },
+      "get_current_timestamp": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 5,
+        "covered_lines": [],
+        "missing_lines": [
+          48,
+          49,
+          50,
+          51,
+          52
+        ]
+      },
+      "clear_text_input": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 8,
+        "covered_lines": [],
+        "missing_lines": [
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62
+        ]
+      },
+      "update_status_label": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 10,
+        "covered_lines": [],
+        "missing_lines": [
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74
+        ]
+      },
+      "get_selected_option": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 12,
+        "covered_lines": [],
+        "missing_lines": [
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88
+        ]
+      },
+      "append_log_entry": {
+        "complexity": 4,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 25,
+        "covered_lines": [],
+        "missing_lines": [
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115
+        ]
+      },
+      "get_category_options": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 15,
+        "covered_lines": [],
+        "missing_lines": [
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132
+        ]
+      },
+      "create_status_label": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 14,
+        "covered_lines": [],
+        "missing_lines": [
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148
+        ]
+      },
+      "create_log_frame": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 16,
+        "covered_lines": [],
+        "missing_lines": [
+          151,
+          152,
+          153,
+          154,
+          155,
+          156,
+          157,
+          158,
+          159,
+          160,
+          161,
+          162,
+          163,
+          164,
+          165,
+          166
+        ]
+      },
+      "log_message": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 13,
+        "covered_lines": [],
+        "missing_lines": [
+          169,
+          170,
+          171,
+          172,
+          173,
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181
+        ]
+      },
+      "create_dropdown_menu": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 20,
+        "covered_lines": [],
+        "missing_lines": [
+          184,
+          185,
+          186,
+          187,
+          188,
+          189,
+          190,
+          191,
+          192,
+          193,
+          194,
+          195,
+          196,
+          197,
+          198,
+          199,
+          200,
+          201,
+          202,
+          203
+        ]
+      },
+      "create_button": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 25,
+        "covered_lines": [],
+        "missing_lines": [
+          206,
+          207,
+          208,
+          209,
+          210,
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230
+        ]
+      },
+      "show_messagebox": {
+        "complexity": 4,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 15,
+        "covered_lines": [],
+        "missing_lines": [
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244,
+          245,
+          246,
+          247
+        ]
+      },
+      "create_text_entry": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 15,
+        "covered_lines": [],
+        "missing_lines": [
+          250,
+          251,
+          252,
+          253,
+          254,
+          255,
+          256,
+          257,
+          258,
+          259,
+          260,
+          261,
+          262,
+          263,
+          264
+        ]
+      },
+      "format_summary_results": {
+        "complexity": 7,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 28,
+        "covered_lines": [],
+        "missing_lines": [
+          267,
+          268,
+          269,
+          270,
+          271,
+          272,
+          273,
+          274,
+          275,
+          276,
+          277,
+          278,
+          279,
+          280,
+          281,
+          282,
+          283,
+          284,
+          285,
+          286,
+          287,
+          288,
+          289,
+          290,
+          291,
+          292,
+          293,
+          294
+        ]
+      },
+      "format_raw_results": {
+        "complexity": 6,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 27,
+        "covered_lines": [],
+        "missing_lines": [
+          297,
+          298,
+          299,
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306,
+          307,
+          308,
+          309,
+          310,
+          311,
+          312,
+          313,
+          314,
+          315,
+          316,
+          317,
+          318,
+          319,
+          320,
+          321,
+          322,
+          323
+        ]
+      },
+      "display_message": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 5,
+        "covered_lines": [],
+        "missing_lines": [
+          326,
+          327,
+          328,
+          329,
+          330
+        ]
+      },
+      "display_error": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 5,
+        "covered_lines": [],
+        "missing_lines": [
+          333,
+          334,
+          335,
+          336,
+          337
+        ]
+      },
+      "format_coverage_data": {
+        "complexity": 4,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 26,
+        "covered_lines": [],
+        "missing_lines": [
+          340,
+          341,
+          342,
+          343,
+          344,
+          345,
+          346,
+          347,
+          348,
+          349,
+          350,
+          351,
+          352,
+          353,
+          354,
+          355,
+          356,
+          357,
+          358,
+          359,
+          360,
+          361,
+          362,
+          363,
+          364,
+          365
+        ]
+      }
+    }
+  },
+  "gui/gui.py": {
+    "method_diff": {
+      "ZephyrusLoggerGUI": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "_setup_gui_logging",
+          "_build_widgets",
+          "_update_coverage_display",
+          "_populate_category_dropdown",
+          "_update_main_category",
+          "_log_entry",
+          "_manual_summarize",
+          "_search_summary",
+          "_search_raw",
+          "_rebuild_tracker",
+          "_show_coverage",
+          "run"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "ZephyrusLoggerGUI.__init__": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 21,
+        "covered_lines": [],
+        "missing_lines": [
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53
+        ]
+      },
+      "ZephyrusLoggerGUI._setup_gui_logging": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 11,
+        "covered_lines": [],
+        "missing_lines": [
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65
+        ]
+      },
+      "ZephyrusLoggerGUI._build_widgets": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 83,
+        "covered_lines": [],
+        "missing_lines": [
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149
+        ]
+      },
+      "ZephyrusLoggerGUI._update_coverage_display": {
+        "complexity": 5,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 26,
+        "covered_lines": [],
+        "missing_lines": [
+          151,
+          152,
+          153,
+          154,
+          155,
+          156,
+          157,
+          158,
+          159,
+          160,
+          161,
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          171,
+          172,
+          173,
+          174,
+          175,
+          176
+        ]
+      },
+      "ZephyrusLoggerGUI._populate_category_dropdown": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 14,
+        "covered_lines": [],
+        "missing_lines": [
+          178,
+          179,
+          180,
+          181,
+          182,
+          183,
+          184,
+          185,
+          186,
+          187,
+          188,
+          189,
+          190,
+          191
+        ]
+      },
+      "ZephyrusLoggerGUI._update_main_category": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 17,
+        "covered_lines": [],
+        "missing_lines": [
+          193,
+          194,
+          195,
+          196,
+          197,
+          198,
+          199,
+          200,
+          201,
+          202,
+          203,
+          204,
+          205,
+          206,
+          207,
+          208,
+          209
+        ]
+      },
+      "ZephyrusLoggerGUI._log_entry": {
+        "complexity": 4,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 19,
+        "covered_lines": [],
+        "missing_lines": [
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229
+        ]
+      },
+      "ZephyrusLoggerGUI._manual_summarize": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 14,
+        "covered_lines": [],
+        "missing_lines": [
+          231,
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244
+        ]
+      },
+      "ZephyrusLoggerGUI._search_summary": {
+        "complexity": 5,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 17,
+        "covered_lines": [],
+        "missing_lines": [
+          246,
+          247,
+          248,
+          249,
+          250,
+          251,
+          252,
+          253,
+          254,
+          255,
+          256,
+          257,
+          258,
+          259,
+          260,
+          261,
+          262
+        ]
+      },
+      "ZephyrusLoggerGUI._search_raw": {
+        "complexity": 5,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 17,
+        "covered_lines": [],
+        "missing_lines": [
+          264,
+          265,
+          266,
+          267,
+          268,
+          269,
+          270,
+          271,
+          272,
+          273,
+          274,
+          275,
+          276,
+          277,
+          278,
+          279,
+          280
+        ]
+      },
+      "ZephyrusLoggerGUI._rebuild_tracker": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 20,
+        "covered_lines": [],
+        "missing_lines": [
+          282,
+          283,
+          284,
+          285,
+          286,
+          287,
+          288,
+          289,
+          290,
+          291,
+          292,
+          293,
+          294,
+          295,
+          296,
+          297,
+          298,
+          299,
+          300,
+          301
+        ]
+      },
+      "ZephyrusLoggerGUI._show_coverage": {
+        "complexity": 3,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 12,
+        "covered_lines": [],
+        "missing_lines": [
+          303,
+          304,
+          305,
+          306,
+          307,
+          308,
+          309,
+          310,
+          311,
+          312,
+          313,
+          314
+        ]
+      },
+      "ZephyrusLoggerGUI.run": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 7,
+        "covered_lines": [],
+        "missing_lines": [
+          316,
+          317,
+          318,
+          319,
+          320,
+          321,
+          322
+        ]
+      }
+    }
+  },
+  "gui/widget_factory.py": {
+    "method_diff": {
+      "WidgetFactory": {
+        "missing": [],
+        "added": [
+          "create_button",
+          "create_label",
+          "create_entry",
+          "create_frame",
+          "create_notebook"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "WidgetFactory.create_button": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 17,
+        "covered_lines": [],
+        "missing_lines": [
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40
+        ]
+      },
+      "WidgetFactory.create_label": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 16,
+        "covered_lines": [],
+        "missing_lines": [
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58
+        ]
+      },
+      "WidgetFactory.create_entry": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 13,
+        "covered_lines": [],
+        "missing_lines": [
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73
+        ]
+      },
+      "WidgetFactory.create_frame": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 13,
+        "covered_lines": [],
+        "missing_lines": [
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88
+        ]
+      },
+      "WidgetFactory.create_notebook": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 12,
+        "covered_lines": [],
+        "missing_lines": [
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102
+        ]
+      }
+    }
+  },
+  "gui/tabs/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "gui/tabs/main_tab.py": {
+    "method_diff": {
+      "MainTab": {
+        "missing": [],
+        "added": [
+          "setup_tab",
+          "on_show"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "MainTab.setup_tab": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 10,
+        "lines": 10,
+        "covered_lines": [
+          41,
+          42,
+          45,
+          46,
+          49,
+          50,
+          53,
+          54,
+          57,
+          58
+        ],
+        "missing_lines": []
+      },
+      "MainTab.on_show": {
+        "complexity": 5,
+        "coverage": 0.75,
+        "hits": 8,
+        "lines": 8,
+        "covered_lines": [
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "gui/panels/action_panel.py": {
+    "method_diff": {
+      "ActionPanel": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "initialize_ui",
+          "on_summarize",
+          "on_rebuild",
+          "refresh"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "ActionPanel.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 4,
+        "lines": 4,
+        "covered_lines": [
+          38,
+          39,
+          40,
+          41
+        ],
+        "missing_lines": []
+      },
+      "ActionPanel.initialize_ui": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 6,
+        "lines": 6,
+        "covered_lines": [
+          51,
+          52,
+          55,
+          58,
+          61,
+          64
+        ],
+        "missing_lines": []
+      },
+      "ActionPanel.on_summarize": {
+        "complexity": 5,
+        "coverage": 0.7778,
+        "hits": 6,
+        "lines": 7,
+        "covered_lines": [
+          73,
+          74,
+          75,
+          76,
+          77,
+          78
+        ],
+        "missing_lines": []
+      },
+      "ActionPanel.on_rebuild": {
+        "complexity": 5,
+        "coverage": 0.7778,
+        "hits": 6,
+        "lines": 7,
+        "covered_lines": [
+          89,
+          90,
+          91,
+          92,
+          93,
+          94
+        ],
+        "missing_lines": []
+      },
+      "ActionPanel.refresh": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 0,
+        "lines": 0,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "gui/panels/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "gui/panels/log_panel.py": {
+    "method_diff": {
+      "LogPanel": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "initialize_ui",
+          "refresh"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "LogPanel.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          35,
+          36,
+          37
+        ],
+        "missing_lines": []
+      },
+      "LogPanel.initialize_ui": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 4,
+        "lines": 4,
+        "covered_lines": [
+          47,
+          48,
+          51,
+          52
+        ],
+        "missing_lines": []
+      },
+      "LogPanel.refresh": {
+        "complexity": 5,
+        "coverage": 0.8,
+        "hits": 7,
+        "lines": 8,
+        "covered_lines": [
+          62,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "gui/panels/entry_panel.py": {
+    "method_diff": {
+      "EntryPanel": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "initialize_ui",
+          "on_submit",
+          "refresh"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "EntryPanel.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 4,
+        "lines": 4,
+        "covered_lines": [
+          38,
+          39,
+          40,
+          41
+        ],
+        "missing_lines": []
+      },
+      "EntryPanel.initialize_ui": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 6,
+        "lines": 6,
+        "covered_lines": [
+          51,
+          52,
+          55,
+          56,
+          59,
+          62
+        ],
+        "missing_lines": []
+      },
+      "EntryPanel.on_submit": {
+        "complexity": 6,
+        "coverage": 0.6,
+        "hits": 7,
+        "lines": 11,
+        "covered_lines": [
+          74,
+          75,
+          76,
+          77,
+          80,
+          81,
+          83
+        ],
+        "missing_lines": []
+      },
+      "EntryPanel.refresh": {
+        "complexity": 1,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 1,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "gui/panels/coverage_panel.py": {
+    "method_diff": {
+      "CoveragePanel": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "initialize_ui",
+          "refresh"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "CoveragePanel.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          36,
+          37,
+          38
+        ],
+        "missing_lines": []
+      },
+      "CoveragePanel.initialize_ui": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 9,
+        "lines": 9,
+        "covered_lines": [
+          48,
+          49,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58
+        ],
+        "missing_lines": []
+      },
+      "CoveragePanel.refresh": {
+        "complexity": 7,
+        "coverage": 0.7778,
+        "hits": 10,
+        "lines": 12,
+        "covered_lines": [
+          68,
+          72,
+          73,
+          75,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "gui/base/base_tab.py": {
+    "method_diff": {
+      "BaseTab": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "setup_tab",
+          "on_show"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "BaseTab.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          33,
+          34,
+          35
+        ],
+        "missing_lines": []
+      },
+      "BaseTab.setup_tab": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 0,
+        "lines": 0,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "BaseTab.on_show": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 0,
+        "lines": 0,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "gui/base/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "gui/base/base_panel.py": {
+    "method_diff": {
+      "BasePanel": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "initialize_ui",
+          "refresh"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "BasePanel.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          33,
+          34,
+          35
+        ],
+        "missing_lines": []
+      },
+      "BasePanel.initialize_ui": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 0,
+        "lines": 0,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "BasePanel.refresh": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 0,
+        "lines": 0,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "ai/ai_summarizer.py": {
+    "method_diff": {
+      "AISummarizer": {
+        "missing": [],
+        "added": [
+          "__init__",
+          "_fallback_summary",
+          "summarize_entry",
+          "summarize_entries_bulk"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "AISummarizer.__init__": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          37,
+          38,
+          39,
+          42
+        ],
+        "missing_lines": []
+      },
+      "AISummarizer._fallback_summary": {
+        "complexity": 3,
+        "coverage": 0.6667,
+        "hits": 4,
+        "lines": 6,
+        "covered_lines": [
+          55,
+          56,
+          57,
+          60,
+          61
+        ],
+        "missing_lines": []
+      },
+      "AISummarizer.summarize_entry": {
+        "complexity": 3,
+        "coverage": 0.75,
+        "hits": 6,
+        "lines": 8,
+        "covered_lines": [
+          80,
+          83,
+          85,
+          86,
+          87,
+          88,
+          89
+        ],
+        "missing_lines": []
+      },
+      "AISummarizer.summarize_entries_bulk": {
+        "complexity": 6,
+        "coverage": 1.0,
+        "hits": 11,
+        "lines": 11,
+        "covered_lines": [
+          108,
+          109,
+          110,
+          112,
+          115,
+          116,
+          118,
+          119,
+          120,
+          121,
+          124,
+          125,
+          126
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "ai/module_docstring_summarizer.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "summarize_module": {
+        "complexity": 4,
+        "coverage": 1.0,
+        "hits": 12,
+        "lines": 12,
+        "covered_lines": [
+          28,
+          29,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40
+        ],
+        "missing_lines": []
+      },
+      "run": {
+        "complexity": 10,
+        "coverage": 0.7667,
+        "hits": 15,
+        "lines": 20,
+        "covered_lines": [
+          51,
+          52,
+          53,
+          55,
+          56,
+          58,
+          59,
+          61,
+          62,
+          63,
+          64,
+          65,
+          67,
+          73,
+          74
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "ai/llm_router.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "get_prompt_template": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          21,
+          22
+        ],
+        "missing_lines": []
+      },
+      "apply_persona": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          35,
+          41
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "ai/ai_cli.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "cli": {
+        "complexity": 7,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 33,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "ai/llm_refactor_advisor.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "load_audit": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          23,
+          24
+        ],
+        "missing_lines": []
+      },
+      "extract_top_offenders": {
+        "complexity": 9,
+        "coverage": 1.0,
+        "hits": 13,
+        "lines": 13,
+        "covered_lines": [
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          47,
+          48,
+          50,
+          52,
+          53
+        ],
+        "missing_lines": []
+      },
+      "build_refactor_prompt": {
+        "complexity": 4,
+        "coverage": 0.75,
+        "hits": 8,
+        "lines": 10,
+        "covered_lines": [
+          71,
+          72,
+          75,
+          78,
+          79,
+          80,
+          82,
+          83
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "ai/llm_optimization.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "summarize_file_data_for_llm": {
+        "complexity": 7,
+        "coverage": 1.0,
+        "hits": 10,
+        "lines": 10,
+        "covered_lines": [
+          27,
+          28,
+          29,
+          32,
+          33,
+          34,
+          37,
+          38,
+          39,
+          42
+        ],
+        "missing_lines": []
+      },
+      "extract_top_issues": {
+        "complexity": 12,
+        "coverage": 1.0,
+        "hits": 15,
+        "lines": 15,
+        "covered_lines": [
+          63,
+          66,
+          67,
+          69,
+          72,
+          73,
+          74,
+          76,
+          77,
+          78,
+          81,
+          83,
+          84,
+          85,
+          87
+        ],
+        "missing_lines": []
+      },
+      "build_refactor_prompt": {
+        "complexity": 12,
+        "coverage": 1.0,
+        "hits": 11,
+        "lines": 11,
+        "covered_lines": [
+          104,
+          106,
+          108,
+          120,
+          126,
+          127,
+          128,
+          130,
+          137,
+          138,
+          140
+        ],
+        "missing_lines": []
+      },
+      "build_strategic_recommendations_prompt": {
+        "complexity": 7,
+        "coverage": 1.0,
+        "hits": 15,
+        "lines": 15,
+        "covered_lines": [
+          156,
+          159,
+          160,
+          161,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          173,
+          179,
+          210
+        ],
+        "missing_lines": []
+      },
+      "compute_severity": {
+        "complexity": 7,
+        "coverage": 1.0,
+        "hits": 12,
+        "lines": 12,
+        "covered_lines": [
+          225,
+          226,
+          227,
+          228,
+          230,
+          231,
+          233,
+          234,
+          236,
+          237,
+          239,
+          246
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "ai/chat_refactor.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "load_report": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          22,
+          23
+        ],
+        "missing_lines": []
+      },
+      "build_contextual_prompt": {
+        "complexity": 8,
+        "coverage": 1.0,
+        "hits": 12,
+        "lines": 12,
+        "covered_lines": [
+          37,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          53,
+          63
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "ai/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "config/logging_setup.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "setup_logging": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          21,
+          22,
+          23,
+          28
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "config/constants.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "config/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "config/config_loader.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "setup_logging": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          21,
+          22,
+          23,
+          28
+        ],
+        "missing_lines": []
+      },
+      "load_config": {
+        "complexity": 7,
+        "coverage": 0.6364,
+        "hits": 7,
+        "lines": 11,
+        "covered_lines": [
+          53,
+          54,
+          55,
+          57,
+          58,
+          59,
+          60,
+          61,
+          63,
+          64,
+          65,
+          67,
+          69
+        ],
+        "missing_lines": []
+      },
+      "get_config_value": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 3,
+        "lines": 3,
+        "covered_lines": [
+          96,
+          97,
+          98,
+          99
+        ],
+        "missing_lines": []
+      },
+      "get_absolute_path": {
+        "complexity": 3,
+        "coverage": 0.5,
+        "hits": 2,
+        "lines": 4,
+        "covered_lines": [
+          115,
+          116
+        ],
+        "missing_lines": []
+      },
+      "is_test_mode": {
+        "complexity": 2,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 3,
+        "covered_lines": [],
+        "missing_lines": []
+      },
+      "get_effective_config": {
+        "complexity": 4,
+        "coverage": 0.9091,
+        "hits": 10,
+        "lines": 11,
+        "covered_lines": [
+          156,
+          157,
+          158,
+          159,
+          163,
+          164,
+          167,
+          169,
+          170,
+          171,
+          175
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "config/config_manager.py": {
+    "method_diff": {
+      "AppConfig": {
+        "missing": [],
+        "added": []
+      },
+      "Config": {
+        "missing": [],
+        "added": []
+      },
+      "ConfigManager": {
+        "missing": [],
+        "added": [
+          "_default_config",
+          "load_config",
+          "get_value",
+          "reset",
+          "validate_config_paths"
+        ]
+      }
+    },
+    "missing_tests": [],
+    "complexity": {
+      "ConfigManager._default_config": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 1,
+        "lines": 1,
+        "covered_lines": [
+          142
+        ],
+        "missing_lines": []
+      },
+      "ConfigManager.load_config": {
+        "complexity": 11,
+        "coverage": 0.9,
+        "hits": 18,
+        "lines": 20,
+        "covered_lines": [
+          162,
+          164,
+          170,
+          171,
+          172,
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          186,
+          187,
+          188,
+          189,
+          192,
+          193,
+          194,
+          196,
+          198
+        ],
+        "missing_lines": []
+      },
+      "ConfigManager.get_value": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          213,
+          214
+        ],
+        "missing_lines": []
+      },
+      "ConfigManager.reset": {
+        "complexity": 1,
+        "coverage": 1.0,
+        "hits": 2,
+        "lines": 2,
+        "covered_lines": [
+          219,
+          220,
+          221
+        ],
+        "missing_lines": []
+      },
+      "ConfigManager.validate_config_paths": {
+        "complexity": 4,
+        "coverage": 0.0,
+        "hits": 0,
+        "lines": 5,
+        "covered_lines": [],
+        "missing_lines": []
+      }
+    }
+  },
+  "ci_analyzer/visuals.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "risk_emoji": {
+        "complexity": 3,
+        "coverage": 0.25,
+        "hits": 4,
+        "lines": 16,
+        "covered_lines": [],
+        "missing_lines": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          22
+        ]
+      },
+      "render_bar": {
+        "complexity": 1,
+        "coverage": 0.6923,
+        "hits": 9,
+        "lines": 13,
+        "covered_lines": [],
+        "missing_lines": [
+          26,
+          27,
+          33,
+          34
+        ]
+      }
+    }
+  },
+  "ci_analyzer/__init__.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {}
+  },
+  "ci_analyzer/severity_audit.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "format_priority": {
+        "complexity": 3,
+        "coverage": 1.0,
+        "hits": 5,
+        "lines": 5,
+        "covered_lines": [
+          27,
+          28,
+          29,
+          30,
+          32
+        ],
+        "missing_lines": []
+      },
+      "generate_header_block": {
+        "complexity": 9,
+        "coverage": 1.0,
+        "hits": 19,
+        "lines": 19,
+        "covered_lines": [
+          45,
+          46,
+          49,
+          52,
+          53,
+          54,
+          55,
+          57,
+          58,
+          59,
+          60,
+          62,
+          67,
+          68,
+          69,
+          71,
+          72,
+          73,
+          75
+        ],
+        "missing_lines": []
+      },
+      "generate_severity_table": {
+        "complexity": 3,
+        "coverage": 1.0,
+        "hits": 12,
+        "lines": 12,
+        "covered_lines": [
+          101,
+          102,
+          103,
+          106,
+          107,
+          108,
+          110,
+          111,
+          112,
+          113,
+          114,
+          119
+        ],
+        "missing_lines": []
+      },
+      "main": {
+        "complexity": 2,
+        "coverage": 1.0,
+        "hits": 12,
+        "lines": 12,
+        "covered_lines": [
+          129,
+          130,
+          131,
+          132,
+          133,
+          135,
+          136,
+          138,
+          140,
+          147,
+          148,
+          149
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "ci_analyzer/metrics_summary.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "generate_metrics_summary": {
+        "complexity": 10,
+        "coverage": 1.0,
+        "hits": 19,
+        "lines": 19,
+        "covered_lines": [
+          18,
+          19,
+          20,
+          21,
+          22,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          32,
+          33,
+          34,
+          36,
+          37,
+          38,
+          40
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "ci_analyzer/severity_index.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "compute_severity": {
+        "complexity": 7,
+        "coverage": 1.0,
+        "hits": 12,
+        "lines": 12,
+        "covered_lines": [
+          22,
+          23,
+          24,
+          25,
+          27,
+          28,
+          30,
+          31,
+          33,
+          34,
+          37,
+          44
+        ],
+        "missing_lines": []
+      },
+      "compute_severity_index": {
+        "complexity": 4,
+        "coverage": 1.0,
+        "hits": 5,
+        "lines": 5,
+        "covered_lines": [
+          63,
+          66,
+          67,
+          71,
+          72
+        ],
+        "missing_lines": []
+      }
+    }
+  },
+  "ci_analyzer/drilldown.py": {
+    "method_diff": {},
+    "missing_tests": [],
+    "complexity": {
+      "generate_top_offender_drilldowns": {
+        "complexity": 13,
+        "coverage": 1.0,
+        "hits": 35,
+        "lines": 35,
+        "covered_lines": [
+          20,
+          21,
+          23,
+          24,
+          25,
+          28,
+          29,
+          30,
+          31,
+          32,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          63,
+          65
+        ],
+        "missing_lines": []
+      }
+    }
+  }
+}

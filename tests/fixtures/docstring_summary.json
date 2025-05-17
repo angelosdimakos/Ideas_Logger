@@ -1,0 +1,3521 @@
+{
+  "fix_imports.py": {
+    "module_doc": {
+      "description": "Fix import statements in the specific problematic test files.\nThis script directly applies the needed fixes to the four test files\nthat are failing in the pytest output.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "fix_test_chat_refactor",
+        "description": "Fix imports in test_chat_refactor.py",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "fix_test_llm_router",
+        "description": "Fix imports in test_llm_router.py",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "fix_test_module_docstring_summarizer",
+        "description": "Fix imports in test_module_docstring_summarizer.py",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "fix_test_refactor_advisor",
+        "description": "Fix imports in test_refactor_advisor.py",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "apply_replacements",
+        "description": "Apply specific replacements to a file.",
+        "args": "file_path: Path to the file to modify\nreplacements: List of (old_text, new_text) tuples",
+        "returns": null
+      },
+      {
+        "name": "main",
+        "description": "Fix all problematic test files.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/paths.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "ZephyrusPaths",
+        "description": "Dataclass for managing and resolving all Zephyrus project file and directory paths.\nProvides methods to construct absolute paths for logs, exports, configuration, and vector store files,\nwith support for test mode path overrides based on the loaded configuration.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "_resolve_path",
+        "description": "Resolve an absolute Path for a given config key, falling back to the provided default if the key is missing.",
+        "args": "config (dict): The configuration dictionary.\nkey (str): The configuration key to look up.\ndefault (Any): The default value to use if the key is not present.",
+        "returns": "Path: The resolved absolute path."
+      },
+      {
+        "name": "from_config",
+        "description": "Constructs a ZephyrusPaths instance by resolving all required file and directory paths from the loaded configuration.\nAutomatically applies test mode path overrides if enabled.",
+        "args": "script_dir (Path): The directory containing the current script.",
+        "returns": "ZephyrusPaths: An instance with all paths resolved according to the configuration."
+      }
+    ]
+  },
+  "scripts/main.py": {
+    "module_doc": {
+      "description": "main.py\nThis module provides the entrypoint for the Zephyrus Logger application.\nIt initializes the logging system, loads the application configuration, and\nsets up the GUI or CLI depending on the mode specified in the configuration.\nKey features include:\n- Logging setup\n- Config loading\n- GUI or CLI setup\n- Controller and GUI instance initialization\nThis is the main entrypoint for the Zephyrus Logger application.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "bootstrap",
+        "description": "Bootstraps the Zephyrus Logger application.",
+        "args": "start_gui (bool, optional): Whether to launch the GUI. Defaults to True.",
+        "returns": "Tuple[GUIController, ZephyrusLoggerGUI | None]: The controller and GUI instance (None if headless).\nRaises:\nException: Propagates any fatal errors encountered during initialization."
+      }
+    ]
+  },
+  "scripts/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/dev_commit.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "get_current_branch",
+        "description": "Returns the name of the current Git branch.",
+        "args": null,
+        "returns": "str: The current branch name."
+      },
+      {
+        "name": "get_modified_files",
+        "description": "Returns a list of files modified (but not yet committed) in the current Git working directory.",
+        "args": null,
+        "returns": "list[str]: List of modified file paths."
+      },
+      {
+        "name": "is_valid_branch_name",
+        "description": "Checks if the provided branch name is valid according to Git naming conventions.",
+        "args": "name (str): The branch name to validate.",
+        "returns": "bool: True if the branch name is valid, False otherwise."
+      },
+      {
+        "name": "generate_suggested_branch_name",
+        "description": "Generates a suggested branch name based on modified files and the current date.",
+        "args": null,
+        "returns": "str: A suggested branch name in the format 'fix/<keywords>-<date>'."
+      },
+      {
+        "name": "switch_to_new_branch",
+        "description": "Prompts the user to create and switch to a new Git branch.\nSuggests a branch name based on modified files and validates user input.\nExits the script if the branch name is invalid or if Git fails to create or push the branch.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/indexers/base_indexer.py": {
+    "module_doc": {
+      "description": "base_indexer.py\nThis module defines the BaseIndexer class, which provides core functionality for building, saving, loading, and searching FAISS vector indexes over log and summary data.\nCore features include:\n- Initializing index and metadata paths based on project configuration and index type (summary or raw).\n- Building a FAISS index from text data using SentenceTransformer embeddings.\n- Saving and loading both the FAISS index and associated metadata.\n- Performing semantic search over indexed data, returning the most relevant results with similarity scores.\n- Supporting flexible configuration and robust error handling for index operations.\nIntended for use as a base class for specialized indexers in the Zephyrus project, enabling fast and flexible semantic search over structured logs and summaries.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "BaseIndexer",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the BaseIndexer object.\nSets the paths to the summaries file, FAISS index file, and metadata file based on the\nprovided `index_name` and the `ZephyrusPaths` object.  If `index_name` is \"summary\",\nthe paths are set to the correction summaries file, FAISS index file, and metadata file.\nIf `index_name` is \"raw\", the paths are set to the JSON log file, raw log index file,\nand raw log metadata file.  In all other cases, a ValueError is raised.\nAlso, loads the SentenceTransformer model specified by the \"embedding_model\"\nconfiguration key, or defaults to \"all-MiniLM-L6-v2\" if the key is missing.",
+        "args": "paths (ZephyrusPaths): The paths configuration for the indexer.\nindex_name (str): The name of the index to create, either \"summary\" or \"raw\".\nRaises:\nValueError: If `index_name` is not \"summary\" or \"raw\".",
+        "returns": null
+      },
+      {
+        "name": "_load_model",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "load_index",
+        "description": "Loads the FAISS index and associated metadata from their respective files.\nThis method reads the index from the file specified by `self.index_path` and loads\nthe metadata from the file specified by `self.metadata_path`. If either file does not\nexist, a FileNotFoundError is raised.\nRaises:\nFileNotFoundError: If the index file or metadata file is not found.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "search",
+        "description": "Searches the FAISS index for the given query and returns the top-k most relevant results.",
+        "args": "query (str): The search query.\ntop_k (int, optional): The number of top results to return. Defaults to 5.",
+        "returns": "List[Dict[str, Any]]: A list of dictionaries containing the search results. Each dictionary includes the\nfollowing keys:\n- \"date\"\n- \"main_category\"\n- \"subcategory\"\n- \"timestamp\"\n- \"similarity\" (the similarity score, computed as 1.0 / (1.0 + distance))"
+      },
+      {
+        "name": "build_index",
+        "description": "Builds a FAISS index from provided texts and metadata.",
+        "args": "texts (List[str]): A list of texts to encode and index.\nmeta (List[Dict[str, Any]]): Metadata per text entry.\nfail_on_empty (bool): Raise ValueError if input is empty (useful for tests).",
+        "returns": "bool: True if successful, False otherwise."
+      },
+      {
+        "name": "save_index",
+        "description": "Saves the FAISS index to a file, and the associated metadata.\nThis method must be called after `build_index` or `load_index` has been called.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/indexers/summary_indexer.py": {
+    "module_doc": {
+      "description": "summary_indexer.py\nThis module defines the SummaryIndexer class for building and managing a FAISS vector index over summarized entries from correction_summaries.json.\nCore features include:\n- Loading and parsing summarized entries organized by date, main category, and subcategory.\n- Extracting summary texts and associated metadata for semantic indexing.\n- Building, saving, loading, and rebuilding a FAISS index for semantic search across all summarized corrections.\n- Robust error handling and logging for file I/O and data processing.\n- Designed for use in the Zephyrus project to enable fast, flexible semantic search over all summarized log data.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "SummaryIndexer",
+        "description": "Builds a FAISS index from summarized entries in correction_summaries.json.\nCore features include loading and parsing summarized entries, extracting summary texts,\nand managing the FAISS index for semantic search.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes a SummaryIndexer object.",
+        "args": "paths (ZephyrusPaths): An instance containing the necessary file paths.\nautoload (bool, optional): Flag indicating whether to load the index automatically. Defaults to True.",
+        "returns": null
+      },
+      {
+        "name": "load_entries",
+        "description": "Loads summarized entries from the correction_summaries.json file.",
+        "args": null,
+        "returns": "Tuple[List[str], List[Dict[str, Any]]]: Summarized entry texts and metadata."
+      },
+      {
+        "name": "_process_categories",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_process_subcategories",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_process_batches",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "load_index",
+        "description": "Load the FAISS index and associated metadata from their respective files.\nRaises:\nFileNotFoundError: If the index file or metadata file is not found.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "save_index",
+        "description": "Save the FAISS index and associated metadata to their respective files.\nThis method delegates to the BaseIndexer implementation.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "rebuild_index",
+        "description": "Rebuild the FAISS index from the summarized entries.\nThis method invokes building index from logs and saving it.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "build_index_from_logs",
+        "description": "Loads entries from file and rebuilds FAISS index.",
+        "args": null,
+        "returns": "bool: Whether the index was successfully rebuilt."
+      },
+      {
+        "name": "rebuild",
+        "description": "Rebuild the summary index from scratch.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/indexers/__init__.py": {
+    "module_doc": {
+      "description": "The `indexers` module provides classes and utilities for building, managing, and searching vector indexes over log and summary data.\nCore features include:\n- Construction of FAISS indexes for both raw log entries and summarized corrections.\n- Support for semantic search using SentenceTransformer embeddings.\n- Management of index and metadata persistence for efficient retrieval.\n- Utilities for rebuilding, updating, and searching indexes across different data granularities.\nThis module enables fast and flexible semantic search over structured and unstructured idea logs, supporting downstream applications such as idea retrieval, analytics, and intelligent querying.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/indexers/raw_log_indexer.py": {
+    "module_doc": {
+      "description": "This module defines the RawLogIndexer class for building and managing a FAISS vector index\nover raw log entries from zephyrus_log.json.\nCore features:\n- Loading and parsing raw log entries by date, main category, and subcategory.\n- Extracting entry content and metadata for semantic indexing.\n- Building, saving, loading, and rebuilding a FAISS index for full-text vector search.\n- Robust error handling and logging for file I/O and data processing.\n- Designed for use in the Zephyrus project to enable fast, flexible semantic search.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "RawLogIndexer",
+        "description": "Builds a FAISS index from raw entries in zephyrus_log.json.\nUsed for full-text vector search across all logged ideas (not just summaries).\nAttributes:\nlog_path (str): The path to the JSON log file.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the RawLogIndexer with the specified paths and optionally loads the index.",
+        "args": "paths (ZephyrusPaths): The paths configuration for the indexer.\nautoload (bool): Whether to automatically load the index on initialization.\nDefaults to True.\nRaises:\nFileNotFoundError: If the index files are not found during autoload.",
+        "returns": null
+      },
+      {
+        "name": "load_entries",
+        "description": "Loads raw entries from the zephyrus_log.json file.",
+        "args": null,
+        "returns": "Tuple[List[str], List[Dict[str, Any]]]: A tuple containing a list of entry contents\nand a list of metadata dictionaries.\nRaises:\nFileNotFoundError: If the log file does not exist.\njson.JSONDecodeError: If the JSON file is malformed."
+      },
+      {
+        "name": "_process_categories",
+        "description": "Processes categories for a given date, updating the texts and metadata.",
+        "args": "date (str): The date of the entries being processed.\ncategories (Dict[str, Any]): A dictionary of main categories.\ntexts (List[str]): The list to append entry contents to.\nmeta (List[Dict[str, Any]]): The list to append entry metadata to.",
+        "returns": "Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists."
+      },
+      {
+        "name": "_process_subcategories",
+        "description": "Processes subcategories within a main category for a given date.",
+        "args": "date (str): The date of the entries being processed.\nmain_cat (str): The main category of the entries.\nsubcats (Dict[str, Any]): A dictionary of subcategories.\ntexts (List[str]): The list to append entry contents to.\nmeta (List[Dict[str, Any]]): The list to append entry metadata to.",
+        "returns": "Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists."
+      },
+      {
+        "name": "_process_entries",
+        "description": "Processes a list of entries for a given date, main category, and subcategory.",
+        "args": "date (str): The date of the entries being processed.\nmain_cat (str): The main category of the entries.\nsubcat (str): The subcategory of the entries.\nentries (List[Any]): A list of entries to process.\ntexts (List[str]): The list to append entry contents to.\nmeta (List[Dict[str, Any]]): The list to append entry metadata to.",
+        "returns": "Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists."
+      },
+      {
+        "name": "build_index_from_logs",
+        "description": "Loads entries from file and rebuilds FAISS index.",
+        "args": null,
+        "returns": "bool: Whether the index was successfully rebuilt.\nRaises:\nException: If an error occurs while building the index."
+      },
+      {
+        "name": "rebuild",
+        "description": "Rebuilds the raw log index from scratch.\nThis method loads entries from the log file, rebuilds the FAISS index, and saves the new index.\nRaises:\nException: If an error occurs while rebuilding the index.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/utils/file_utils.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "sanitize_filename",
+        "description": "Return *name* stripped of illegal chars and truncated to 100 chars.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "get_timestamp",
+        "description": "Current time as ``YYYY‑MM‑DD_HH‑MM‑SS``.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_to_path",
+        "description": "Internal: coerce *p* to ``Path`` exactly once.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "safe_path",
+        "description": "Ensure ``path.parent`` exists; return ``Path``.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "write_json",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "read_json",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "safe_read_json",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "make_backup",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "zip_python_files",
+        "description": "Zip all ``.py`` files under *root_dir* (recursively), excluding any directory whose\nname appears in *exclude_dirs* (case‑sensitive match against each path part).\nIf *exclude_dirs* is ``None`` we default to::{.python}\n{\".venv\", \"__pycache__\", \".git\", \"node_modules\"}",
+        "args": "output_path: Destination ``.zip`` path (created/overwritten).\nroot_dir:    Directory to start searching; ``'.'`` by default.\nexclude_dirs: Folder names to skip entirely.",
+        "returns": null
+      }
+    ]
+  },
+  "scripts/utils/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/utils/zip_util.py": {
+    "module_doc": {
+      "description": "zip_util.py\nThis module provides the main entry point for the zip_util utility,\nwhich zips all .py files in a project, excluding specified directories.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "main",
+        "description": "Parses command-line arguments to zip all .py files in a project, excluding specified directories.\nCalls the internal utility to create the zip archive and logs the output path.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/utils/git_utils.py": {
+    "module_doc": {
+      "description": "git_utils.py\nThis module provides utility functions for working with Git, including:\n- Getting changed Python files compared to a specified branch.\n- Running an interactive commit flow to create and push a new branch.\nIntended for use in CI workflows and scripts to automate code quality and coverage reporting.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "get_changed_files",
+        "description": "Returns a list of changed Python files compared to the specified Git base branch.\nRuns 'git diff --name-only' to identify changed files and filters for those ending with '.py'.\nHandles compatibility with different Python versions and returns an empty list if the Git command fails.",
+        "args": "base (str): The Git base branch or commit to compare against. Defaults to 'origin/main'.",
+        "returns": "List[str]: A list of changed Python file paths."
+      },
+      {
+        "name": "interactive_commit_flow",
+        "description": "Guides the user through an interactive Git commit and push process.\nPrompts the user to either push changes to the default branch or create and push to a new branch, handling all Git commands interactively.",
+        "args": "default_branch (str): The branch to push to by default. Defaults to \"main\".",
+        "returns": "None"
+      },
+      {
+        "name": "get_current_branch",
+        "description": "Returns the name of the current Git branch as a string.\nExecutes a Git command to determine the active branch in the local repository.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/utils/link_summaries_to_raw_logs.py": {
+    "module_doc": {
+      "description": "Module for processing raw logs and injecting entries into correction summaries.\nThis module provides functionality to flatten raw log entries based on categories and inject those entries into correction summaries.\nFunctions:\n- flatten_raw_entries: Flattens raw log entries for a specified category and subcategory.\n- inject_entries_into_summaries: Injects raw log entries into correction summaries based on batch labels.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "flatten_raw_entries",
+        "description": "Flatten raw log entries for a given main category and subcategory across all dates,\nsorted chronologically.",
+        "args": "raw_logs (dict): Raw logs as loaded from zephyrus_log.json.\nmain_cat (str): The main category.\nsubcat (str): The subcategory.",
+        "returns": "list: A list of entries (each is a dict) for the given category/subcategory in chronological order."
+      },
+      {
+        "name": "inject_entries_into_summaries",
+        "description": "Injects corresponding raw log entries into each batch of correction summaries based on batch labels.\nLoads configuration to determine file paths, reads raw logs and correction summaries, and for each batch in the summaries,\ninjects the relevant raw entries by extracting their content fields. Updates the summaries file in place.",
+        "args": null,
+        "returns": "None"
+      }
+    ]
+  },
+  "scripts/kg/generate_codebase_kg.py": {
+    "module_doc": {
+      "description": "generate_codebase_kg.py\nBuilds Knowledge Graphs for a Python codebase using docstring summaries.\nAnalyzes module complexity (density, degree, busyness).\nColors graphs based on complexity.\nUsage:\n- Load JSON docstring summary\n- Build Parent Graph (subpackages)\n- Build Child Graphs (per subpackage)\n- Analyze complexity\n- Visualize with color-coding",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "main",
+        "description": "Main entry point for the script.\nParses command-line arguments and initializes the CodebaseAnalyzer.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/kg/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/kg/modules/visualization.py": {
+    "module_doc": {
+      "description": "Visualization tools for knowledge graphs.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "GraphVisualizer",
+        "description": "Handles visualization of knowledge graphs with complexity information.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initialize the visualizer.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "visualize_graph",
+        "description": "Visualize the graph with complexity scores.",
+        "args": "graph: The graph to visualize.\ncomplexity_scores: A dictionary of complexity scores for nodes.\ntitle: The title of the visualization.",
+        "returns": null
+      },
+      {
+        "name": "_position_nodes_in_layers",
+        "description": "Position nodes in horizontal layers by type.",
+        "args": "layers: Dictionary of node types and their nodes.",
+        "returns": "Dictionary of node positions."
+      },
+      {
+        "name": "_handle_remaining_nodes",
+        "description": "Add positions for any nodes that weren't positioned in the initial layout.\nThis modifies the pos dictionary in-place.",
+        "args": "pos: Dictionary of node positions to update.",
+        "returns": null
+      },
+      {
+        "name": "_draw_module_rectangles",
+        "description": "Draw colored rectangles around modules based on complexity.",
+        "args": "ax: Matplotlib axes to draw on.\nmodules: Dictionary of module nodes.\npos: Dictionary of node positions.\ncomplexity_scores: Dictionary of complexity scores.",
+        "returns": null
+      },
+      {
+        "name": "_get_node_colors",
+        "description": "Get node colors based on node type and module complexity.",
+        "args": "graph: The knowledge graph.\ncomplexity_scores: Dictionary of complexity scores.",
+        "returns": "List of colors for each node."
+      },
+      {
+        "name": "_get_complexity_color",
+        "description": "Get the color representation based on the complexity score.",
+        "args": "score: The complexity score.",
+        "returns": "The color corresponding to the complexity score."
+      },
+      {
+        "name": "_shorten_label",
+        "description": "Shorten a label for display purposes.",
+        "args": "name: The label to shorten.",
+        "returns": "The shortened label."
+      }
+    ]
+  },
+  "scripts/kg/modules/data_extractors.py": {
+    "module_doc": {
+      "description": "Data extractors for analyzing Python docstrings and extracting relationships.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "DataRelationExtractor",
+        "description": "Extracts data relations from module docstrings.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "FunctionExtractor",
+        "description": "Extracts function parameters and return values from docstrings.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "extract_data_relations",
+        "description": "Extract data relations from module docstrings using pattern matching.",
+        "args": "graph: The directed graph to which data relations will be added.\nmodule_node: The module node identifier.\ndescription: The module description from which to extract relations.",
+        "returns": null
+      },
+      {
+        "name": "_add_data_node",
+        "description": "Add a data node and its relation to the graph.",
+        "args": "graph: The directed graph to which the node will be added.\nmodule_node: The module node identifier.\ndata_node: The data node identifier.\nrelation: The type of relation to the data node.\nconfidence: The confidence level of the relation.",
+        "returns": null
+      },
+      {
+        "name": "extract_parameters_and_returns",
+        "description": "Extract parameters and return values from a function entry.",
+        "args": "fn_entry: A dictionary containing function metadata.",
+        "returns": "A tuple containing lists of parameters and return values."
+      }
+    ]
+  },
+  "scripts/kg/modules/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/kg/modules/analysis.py": {
+    "module_doc": {
+      "description": "Complexity Analysis for Knowledge Graphs\n===============================\nThis module provides tools for analyzing the complexity of knowledge graphs.\nIt includes metrics for density, degree, busyness, and overall complexity scores.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "ComplexityAnalyzer",
+        "description": "Analyzes graph complexity using various metrics.\nAttributes:\nNone\nMethods:\nanalyze_density: Analyzes the density and complexity of a given graph.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "analyze_density",
+        "description": "Analyze the density and complexity of a given graph.",
+        "args": "graph (nx.Graph): The graph to analyze.\nname (str): An optional name for the graph.",
+        "returns": "Dict[str, Any]: A dictionary containing various metrics of the graph's complexity.\nRaises:\nNone"
+      }
+    ]
+  },
+  "scripts/kg/modules/utils.py": {
+    "module_doc": {
+      "description": "Utility functions for the codebase analysis and graph generation.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "DocMapNormalizer",
+        "description": "Handles normalization of module path keys in docmap dictionaries.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "load_json_file",
+        "description": "Load and parse a JSON file.",
+        "args": "file_path: Path to the JSON file.",
+        "returns": "The parsed JSON content or empty dict on error."
+      },
+      {
+        "name": "safe_get",
+        "description": "Safely get a value from a dictionary.",
+        "args": "data: Dictionary to get value from.\nkey: Key to lookup.\ndefault: Default value if key not found.",
+        "returns": "The value from the dictionary or default."
+      },
+      {
+        "name": "normalize_keys",
+        "description": "Normalize all keys to use forward slashes for consistency.",
+        "args": "docmap: A dictionary mapping module paths to their respective data.",
+        "returns": "A new dictionary with normalized keys."
+      }
+    ]
+  },
+  "scripts/kg/modules/graph_builder.py": {
+    "module_doc": {
+      "description": "Knowledge graph construction and management tools.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "KnowledgeGraphBuilder",
+        "description": "Builds knowledge graphs from docmap data.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "CodebaseAnalyzer",
+        "description": "Main class for analyzing and visualizing codebase knowledge graphs.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initialize with normalized docmap data.",
+        "args": "docmap: A dictionary mapping module paths to their data attributes.",
+        "returns": null
+      },
+      {
+        "name": "build_knowledge_graph",
+        "description": "Constructs a knowledge graph from the docmap data, optionally filtering by prefix.",
+        "args": "focus_prefix: Optional prefix to filter modules.",
+        "returns": "A directed graph representing the relationships between modules and their data."
+      },
+      {
+        "name": "_build_graph",
+        "description": "Build the knowledge graph from the filtered docmap.",
+        "args": "docmap: A filtered dictionary mapping module paths to their data attributes.",
+        "returns": "A directed graph representing the relationships."
+      },
+      {
+        "name": "__init__",
+        "description": "Initialize the analyzer with JSON data.",
+        "args": "json_path: Path to the docstring summary JSON file\nfocus_prefix: Prefix to filter modules",
+        "returns": null
+      },
+      {
+        "name": "analyze",
+        "description": "Analyze the codebase and build knowledge graph.",
+        "args": null,
+        "returns": "Tuple containing the graph and complexity report"
+      },
+      {
+        "name": "visualize",
+        "description": "Visualize the knowledge graph with complexity indicators.",
+        "args": "graph: The knowledge graph\ndensity_report: Complexity metrics report",
+        "returns": null
+      },
+      {
+        "name": "export_graph",
+        "description": "Export the graph to a file.",
+        "args": "graph: The knowledge graph\nformat_type: Export format ('graphml' or 'gexf')",
+        "returns": "Filename of the exported graph"
+      }
+    ]
+  },
+  "scripts/refactor/refactor_guard_cli.py": {
+    "module_doc": {
+      "description": "RefactorGuard CLI – audit Python refactors from the command line.\nCore features\n─────────────\n* directory-wide or single-file analysis\n* Git-diff-only mode\n* merge / enrich existing JSON reports\n* optional coverage integration",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "_ensure_utf8_stdout",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_parse_args",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "handle_full_scan",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "handle_single_file",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "main",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/__init__.py": {
+    "module_doc": {
+      "description": "The `refactor` module provides tools for analyzing, comparing, and validating Python code refactoring.\nCore functionality includes:\n- Comparing original and refactored Python modules or directories to detect changes in class and method definitions.\n- Analyzing cyclomatic complexity of functions and methods to ensure maintainability.\n- Identifying missing or insufficient test coverage for public methods.\n- Integrating with code coverage data to enrich analysis results.\n- Supporting configuration for complexity thresholds and file/directory ignore patterns.\nThis module is intended to help developers and teams maintain code quality and test coverage during refactoring processes.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/refactor/ast_extractor.py": {
+    "module_doc": {
+      "description": "ast_extractor.py\nThis module provides utilities for analyzing Python source files using the AST (Abstract Syntax Tree) to extract class and method information.\nCore features include:\n- Extracting all classes and their methods from a Python file, including method start and end line numbers.\n- Supporting nested class and method extraction.\n- Comparing two sets of class methods to identify missing or newly added methods after refactoring.\n- Providing a ClassMethodInfo class to encapsulate class and method metadata for further analysis.\nIntended for use in code analysis, refactoring tools, and automated quality checks.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "ClassMethodInfo",
+        "description": "Holds information about methods in a single class.\nAttributes:\nclass_name (str): Name of the class.\nmethods (Dict[str, Tuple[int, int]]): Mapping from method name to a tuple of (start_lineno, end_lineno).",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "ClassMethodExtractor",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes ClassMethodInfo with the class name and an empty methods dictionary.",
+        "args": "class_name (str): The name of the class.",
+        "returns": null
+      },
+      {
+        "name": "add_method",
+        "description": "Record a method with its start and end line numbers.",
+        "args": "name (str): The name of the method.\nlinenos (Tuple[int, int]): A tuple containing the start and end line numbers of the method.",
+        "returns": null
+      },
+      {
+        "name": "__repr__",
+        "description": "Returns a string representation of the ClassMethodInfo instance.",
+        "args": null,
+        "returns": "str: A string representation of the class and its methods."
+      },
+      {
+        "name": "extract_class_methods",
+        "description": "Extracts all classes and their methods from a Python file, including method start and end line numbers.",
+        "args": "file_path (str): Path to the Python source file.",
+        "returns": "List[ClassMethodInfo]: A list of ClassMethodInfo instances containing class and method data."
+      },
+      {
+        "name": "__init__",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "visit_ClassDef",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "generic_visit",
+        "description": "Visit all child nodes, to catch nested class definitions.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "compare_class_methods",
+        "description": "Compare two ClassMethodInfo objects and return which methods are missing in the refactored version and which are newly added.",
+        "args": "original (ClassMethodInfo): The original class method info.\nrefactored (ClassMethodInfo): The refactored class method info.",
+        "returns": "Dict[str, List[str]]: A dictionary with keys 'missing' and 'added', each mapping to a sorted list of method names."
+      }
+    ]
+  },
+  "scripts/refactor/method_line_ranges.py": {
+    "module_doc": {
+      "description": "method_line_ranges.py\nThis module provides utilities for extracting the start and end line numbers of all functions and methods in a Python source file using the AST (Abstract Syntax Tree).\nCore features include:\n- The MethodRangeVisitor class, which traverses the AST to collect line ranges for top-level functions, class methods, and methods in nested classes.\n- The extract_method_line_ranges function, which parses a Python file and returns a dictionary mapping each function or method (as \"function\" or \"Class.method\") to its (start_lineno, end_lineno) tuple.\n- Handles both synchronous and asynchronous functions, and supports Python versions with or without the end_lineno attribute.\n- Designed for use in code analysis, refactoring tools, and coverage mapping.\nIntended to facilitate precise mapping of code structure for downstream analysis and tooling.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "MethodRangeVisitor",
+        "description": "Collects start and end line numbers for each function or async method,\nkeyed by 'ClassName.method' for methods or just 'function' for top-level functions.\nNested classes are also visited.\nAttributes:\nranges (Dict[str, Tuple[int, int]]): A dictionary mapping functions or methods to their line ranges.\ncurrent_class (Optional[str]): The name of the current class being visited.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the MethodRangeVisitor with an empty dictionary for ranges\nand a placeholder for the current class name.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "visit_ClassDef",
+        "description": "Visits a class definition node and collects line ranges for its methods.",
+        "args": "node (ast.ClassDef): The class definition node to visit.",
+        "returns": null
+      },
+      {
+        "name": "visit_FunctionDef",
+        "description": "Visits a function definition node and records its line range.",
+        "args": "node (ast.FunctionDef): The function definition node to visit.",
+        "returns": null
+      },
+      {
+        "name": "visit_AsyncFunctionDef",
+        "description": "Visits an asynchronous function definition node and records its line range.",
+        "args": "node (ast.AsyncFunctionDef): The asynchronous function definition node to visit.",
+        "returns": null
+      },
+      {
+        "name": "_record_range",
+        "description": "Records the line range for a function or asynchronous function node.",
+        "args": "node (Union[ast.FunctionDef, ast.AsyncFunctionDef]): The function or asynchronous function node to record.",
+        "returns": null
+      },
+      {
+        "name": "extract_method_line_ranges",
+        "description": "Parses a Python file and returns a dict mapping each function or method\nto its (start_lineno, end_lineno).",
+        "args": "file_path (str): Path to the Python source file.",
+        "returns": "Dict[str, Tuple[int, int]]: A dict mapping functions or methods to their line ranges.\nRaises:\nFileNotFoundError: If the file cannot be found.\nIOError: If the file cannot be read.\nSyntaxError: If the file cannot be parsed."
+      }
+    ]
+  },
+  "scripts/refactor/merge_audit_reports.py": {
+    "module_doc": {
+      "description": "merge_audit_reports.py – bespoke normalizer\nMerges docstring, coverage/complexity, and linting JSON reports into a unified output.\nUses **custom normalization logic per input source** to ensure accurate matching.\nAuthor: Your Name\nVersion: 1.0",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "normalize_path",
+        "description": "Normalize any report path by stripping everything up to and including the project 'scripts' directory\nand converting to a forward‑slash relative path.",
+        "args": "path (str): The original file path.",
+        "returns": "str: The normalized relative path."
+      },
+      {
+        "name": "load_and_normalize",
+        "description": "Load JSON and normalize its keys using a common path normalizer.",
+        "args": "path (Path): The path to the JSON file.",
+        "returns": "Dict[str, Any]: A dictionary with normalized keys and their corresponding values."
+      },
+      {
+        "name": "merge_reports",
+        "description": "Merge docstring, coverage, and linting reports into a single JSON output.",
+        "args": "doc_path (Path): Path to the docstring JSON file.\ncov_path (Path): Path to the coverage JSON file.\nlint_path (Path): Path to the linting JSON file.\noutput_path (Path): Path where the merged output will be saved.",
+        "returns": null
+      },
+      {
+        "name": "main",
+        "description": "Main entry point for the script.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/refactor_guard.py": {
+    "module_doc": {
+      "description": "RefactorGuard: analyse refactors and (optionally) enrich the results with line‑coverage\ninformation coming from a ``.coverage`` SQLite DB or a JSON export produced by Coverage.py.\nAdds support for both `.coverage` and `coverage.json` formats. Automatically switches\nparsers based on the extension.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "AnalysisError",
+        "description": "Raised when an error occurs during analysis.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "RefactorGuard",
+        "description": "Analyse / validate Python refactors.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "attach_coverage_hits",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "analyze_tests",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "analyze_module",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_simple_name",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "analyze_directory_recursive",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "print_human_readable",
+        "description": "Print a human-readable summary of the analysis results.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/code_generation/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/refactor/code_generation/code_cli.py": {
+    "module_doc": {
+      "description": "Zephyrus unified CLI (v2)\n==========================\nA single command‑line entry point that surfaces **all existing back‑end capabilities discovered in the parsed *docstring_summary.json*.  The CLI now covers four pillars:\n1.  **Idea Logger**       – capture & retrieve raw notes\n2.  **Summariser**        – AI docstring‑style summaries\n3.  **Knowledge‑Graph**   – build / query graph (stub until impl.)\n4.  **RefactorGuard**     – guarded code generation / refactoring\n5.  **CI Analytics**      – code‑quality reports + metric trends\n6.  **Developer helpers** – Git branch suggester\nIt is built with **Typer** and keeps zero logic inside: every verb delegates to functions/classes already present in the codebase, or – where a module is still future work – a soft stub prints a helpful TODO but does not break the flow.\nInstall & run:\n--------------\n$ poetry install  # or pip install -e .[cli]\n$ zephyrus --help\nExamples:\n---------\n• Log + summarise + KG update + guarded implementation + CI report one‑liner:\nzephyrus pipe         --note \"Graph prompts reduce hallucinations\"         --main Research --sub LLMs         --refactor \"def add(a: int, b: int) -> int\"         --ci-report\n• Stand‑alone guarded function generation:\nzephyrus generate \"def slugify(text: str) -> str\"\npyproject entry‑point:\n----------------------\n[tool.poetry.scripts]\nzephyrus = \"scripts.cli.cli:app\"",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "_safe_import",
+        "description": "Dynamically import a module.",
+        "args": "path (str): Module path.\nstub_attrs (Optional[dict]): Stub attributes.",
+        "returns": "module: Imported module."
+      },
+      {
+        "name": "_core",
+        "description": "Get the core logger instance.",
+        "args": null,
+        "returns": "core_mod.ZephyrusLoggerCore: Core logger instance."
+      },
+      {
+        "name": "_ctrl",
+        "description": "Get the GUI controller instance.",
+        "args": null,
+        "returns": "ctrl_mod.GUIController: GUI controller instance."
+      },
+      {
+        "name": "log",
+        "description": "Write a raw idea; (optionally) summarise immediately.",
+        "args": "note (str): Raw idea text.\nmain (str): Main category.\nsub (str): Sub‑category.\nsummarize_immediately (bool): Whether to summarise immediately.",
+        "returns": null
+      },
+      {
+        "name": "summarize",
+        "description": "Summarise *all* unsummarised entries.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "kg_build",
+        "description": "Build the knowledge graph.",
+        "args": "since (Optional[str]): Only build from notes after YYYY‑MM‑DD.",
+        "returns": null
+      },
+      {
+        "name": "kg_query",
+        "description": "Query the knowledge graph.",
+        "args": "entity (str): Entity or node label.",
+        "returns": null
+      },
+      {
+        "name": "generate_function",
+        "description": "Generate a function using RefactorGuard.",
+        "args": "signature (str): Python signature e.g. 'add(a: int, b: int) -> int'.\ncontext_entity (Optional[str]): KG entity to give as context.\ntests (Optional[Path]): Optional pytest file used as acceptance guard.\nmax_tokens (int): Token limit for LLM.",
+        "returns": null
+      },
+      {
+        "name": "search",
+        "description": "Search for entries.",
+        "args": "query (str): Search query.\nmode (str): Search mode (summary | raw).\nk (int): Number of results to return.",
+        "returns": null
+      },
+      {
+        "name": "coverage",
+        "description": "Get coverage data.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "rebuild_index",
+        "description": "Rebuild the index.",
+        "args": "index (str): Index to rebuild (summary | raw | all).",
+        "returns": null
+      },
+      {
+        "name": "ci_report",
+        "description": "Generate a CI report.",
+        "args": "audit (Path): Audit file.\nout (Path): Output file.",
+        "returns": null
+      },
+      {
+        "name": "ci_trends",
+        "description": "Get CI trends.",
+        "args": "audit (Path): Audit file.\nhistory (Path): History file.",
+        "returns": null
+      },
+      {
+        "name": "git_new_branch",
+        "description": "Switch to a new Git branch.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "pipe",
+        "description": "Complete flow: log → summarise → KG build → optional guarded generation → optional CI report.",
+        "args": "note (str): Idea text.\nmain (str): Main category.\nsub (str): Sub‑category.\nrefactor (Optional[str]): Signature for guarded generation.\nci_report (bool): Whether to run CI report at the end.",
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/parsers/json_coverage_parser.py": {
+    "module_doc": {
+      "description": "JSON Coverage Parser\n===============================\nThis module provides functionality to parse coverage data from a specified JSON file.\nIt includes methods for matching coverage data with requested files and handling potential mismatches.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "parse_json_coverage",
+        "description": "Parse JSON coverage data from the specified path and return coverage information.\nParameters:\n----------\njson_path: str\nPath to the JSON coverage data file.\nmethod_ranges: Dict[str, Tuple[int, int]]\nA dictionary mapping method names to their line ranges.\nfilepath: str\nThe path of the file for which coverage is being analyzed.",
+        "args": null,
+        "returns": "-------\nDict[str, Any]\nA dictionary containing coverage information for the specified file."
+      }
+    ]
+  },
+  "scripts/refactor/parsers/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/refactor/parsers/docstring_parser.py": {
+    "module_doc": {
+      "description": "Docstring Parser\n===============================\nThis module scans a Python project directory for missing or partial docstrings.\nIt outputs structured JSON and markdown-style reports with description, args, and return sections.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "DocstringAnalyzer",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "DocstringAuditCLI",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "split_docstring_sections",
+        "description": "Split a docstring into its sections: description, args, and returns.",
+        "args": "docstring (Optional[str]): The docstring to split.",
+        "returns": "Dict[str, Optional[str]]: A dictionary containing the sections: description, args, and returns."
+      },
+      {
+        "name": "__init__",
+        "description": "Initialize the DocstringAnalyzer with directories to exclude.",
+        "args": "exclude_dirs (List[str]): A list of directories to exclude from analysis.",
+        "returns": null
+      },
+      {
+        "name": "should_exclude",
+        "description": "Determine if a given path should be excluded from analysis.",
+        "args": "path (Path): The path to check.",
+        "returns": "bool: True if the path should be excluded, False otherwise."
+      },
+      {
+        "name": "extract_docstrings",
+        "description": "Extract docstrings from a Python file, recursively.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "visit_node",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "analyze_directory",
+        "description": "Analyze all Python files in the given directory and its subdirectories.",
+        "args": "root (Path): The path to the directory to analyze.",
+        "returns": "Dict[str, Dict[str, Any]]: A dictionary with normalized file paths as keys and\ndictionaries with docstring information as values."
+      },
+      {
+        "name": "__init__",
+        "description": "Initialize the command-line interface for the docstring audit.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "parse_args",
+        "description": "Parse command-line arguments.",
+        "args": null,
+        "returns": "argparse.Namespace: The parsed command-line arguments."
+      },
+      {
+        "name": "run",
+        "description": "Run the docstring audit.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/parsers/coverage_api_parser.py": {
+    "module_doc": {
+      "description": "Coverage API Parser\n===============================\nThis module provides functionality to parse coverage data from a specified path.\nIt includes methods for handling file paths and matching coverage data with requested files.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "_canonical",
+        "description": "Return the canonical path for the given path.\nParameters:\n----------\np: str | Path\nThe path to be canonicalized.",
+        "args": null,
+        "returns": "-------\nstr\nThe canonical path."
+      },
+      {
+        "name": "_best_suffix_match",
+        "description": "Find the best suffix match for the target path among the given candidates.\nParameters:\n----------\ntarget: str\nThe target path.\ncandidates: List[str]\nA list of candidate paths.",
+        "args": null,
+        "returns": "-------\nstr | None\nThe best suffix match, or None if no match is found."
+      },
+      {
+        "name": "parse_coverage_with_api",
+        "description": "Parse coverage data from the specified path and return coverage information.\nParameters:\n----------\ncoverage_path: str\nPath to the coverage data file.\nmethod_ranges: Dict[str, Tuple[int, int]]\nA dictionary mapping method names to their line ranges.\nfilepath: str\nThe path of the file for which coverage is being analyzed.",
+        "args": null,
+        "returns": "-------\nDict[str, Any]\nA dictionary containing coverage information for the specified file."
+      }
+    ]
+  },
+  "scripts/refactor/parsers/coverage_parser.py": {
+    "module_doc": {
+      "description": "coverage_parser.py  – patched 🇺🇸 2025-05-04\n────────────────────────────────────────────\nUtilities for mapping **coverage-xml** line hits → per-method statistics.\nKey fixes\n~~~~~~~~~\n1.  Robust path-matching:\n• considers every XML entry whose *basename* matches the source file\n• picks the best candidate by shared-suffix length and “inside-repo” bonus\n• handles mixed `\\ /` path separators.\n2.  Decorator-aware ranges:\n• walks *up* from the reported `start_lineno` while preceding lines\nare also executed – so decorated functions show 100 % when hit.\n3.  No more noise from 1-liners:\n• functions with fewer than ``MIN_LINES`` statements are skipped.\n4.  Pure-stdlib – no extra deps.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "_best_xml_candidate",
+        "description": "Choose the XML file path that *most* closely matches ``source``.\n• Highest score = longest common suffix (# of matching path components)\n• Tie-breaker: prefer a path that lives inside ``repo_root`` (if given)",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "score",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "parse_coverage_xml_to_method_hits",
+        "description": "Map line-level coverage (from *coverage_plugin.py* XML) to per-method statistics.\nParameters\n----------\ncoverage_xml_path\nPath to the ``coverage xml`` report that ``coverage_plugin.py`` (or pytest-cov)\nemits (usually called ``coverage.xml``).\nmethod_ranges\n``{method_name: (start_lineno, end_lineno)}`` – *inclusive*\nline-number ranges extracted earlier (e.g. via `ast`).\nsource_file_path\nThe Python source file the `method_ranges` refer to.  We match only\nthe **basename** so that ``foo/bar.py`` and ``./bar.py`` both succeed.\nReturns\n-------\nDict[str, Dict[str, Any]]\n``{method_name: {\"coverage\": float, \"hits\": int, \"lines\": int}}`` –\nwhere *coverage* is a ratio in [0, 1].",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "parse_coverage_to_method_hits",
+        "description": "Smart wrapper that picks XML or JSON parsing automatically.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/lint_report_pkg/path_utils.py": {
+    "module_doc": {
+      "description": "Path Utilities for Quality Audit Modules\n===============================\nThis module provides common path helper functions used across quality and audit modules.\nIt includes functions for normalizing paths relative to the repository root.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "norm",
+        "description": "Return a *repository-relative* normalized path.\nIf the file lives outside the repo, fall back to “last-two components”\nto avoid collisions yet stay platform-agnostic.",
+        "args": "p (str | os.PathLike): The path to normalize.",
+        "returns": "str: The normalized repository-relative path."
+      }
+    ]
+  },
+  "scripts/refactor/lint_report_pkg/core.py": {
+    "module_doc": {
+      "description": "Core Module for Lint Report Package\n=====================================\nThis module provides the base class for tool plugins and functions for plugin discovery.\nIt includes the abstract base class ToolPlugin that all plugins must implement.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "ToolPlugin",
+        "description": "Abstract base class for tool plugins.\nSubclasses must implement `name`, `default_report`, `run`, and `parse`.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "name",
+        "description": "Unique plugin identifier (e.g., \"black\").",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "default_report",
+        "description": "Filesystem path where the tool writes its report (txt/xml).",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "run",
+        "description": "Execute the tool, writing output to `default_report`; return exit code.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "parse",
+        "description": "Read `default_report` and merge quality findings into `dst`.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "all_plugins",
+        "description": "Return the list of ToolPlugin instances auto-registered via plugins package.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/lint_report_pkg/__init__.py": {
+    "module_doc": {
+      "description": "Plugin-based quality-checker package.\n`core.merge_into_refactor_guard()` is the only public entry-point most\ncode ever needs.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "register",
+        "description": "Decorator used by each plugin module to register it in the plugin registry.",
+        "args": "name (str): The name to register the plugin under.",
+        "returns": "Callable[[Type], Type]: A decorator that registers the class in the plugin registry."
+      },
+      {
+        "name": "_inner",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_discover_plugins",
+        "description": "Discovers and imports all plugin modules in the 'plugins' directory.\nThis function automatically imports all Python files in the 'plugins' directory,\nexcluding those that start with an underscore.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/lint_report_pkg/lint_report_cli.py": {
+    "module_doc": {
+      "description": "Lint Report CLI\n===============================\nThis script enriches a RefactorGuard audit file with linting, coverage, and docstring analysis data.\nKey points:\n- Zero-setup: If the audit JSON is missing, an empty one is created for plugins to populate.\n- No --reports argument: Each plugin runs its own tool and saves its report next to the audit file.\n- Optional docstring merge: If a docstring summary JSON is present, it is injected under a top-level \"docstrings\" key in the audit file.\nTypical usage:\n$ python lint_report_cli.py --audit refactor_audit.json\n$ python lint_report_cli.py --audit refactor_audit.json --docstrings docstring_summary.json",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "enrich_refactor_audit",
+        "description": "Enrich *audit_path* with lint, coverage, and optional docstring data.\nParameters:\n----------\naudit_path: str\nPath to the RefactorGuard audit JSON file.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/lint_report_pkg/quality_checker.py": {
+    "module_doc": {
+      "description": "Quality Checker for Lint Report Package\n===============================\nThis module serves as the public API for the lint report package.\nIt imports all plugins, drives tool execution and parsing, and merges results into the RefactorGuard audit.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "merge_into_refactor_guard",
+        "description": "Enrich *audit_path* with quality data produced by every plugin.\nParameters:\n----------\naudit_path: str\nPath to the RefactorGuard audit JSON file.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "merge_reports",
+        "description": "Return merged dict where *b* overrides *a* on duplicate keys.\nParameters:\n----------\nfile_a: str\nPath to the first JSON file.\nfile_b: str\nPath to the second JSON file.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/lint_report_pkg/helpers.py": {
+    "module_doc": {
+      "description": "Helpers for Lint Report Package\n===============================\nThis module provides utility functions shared by the quality-checker core and plugins.\nIt includes functions for running commands, printing safely, and reading report files.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "safe_print",
+        "description": "Print `msg` even on exotic console encodings (swallows UnicodeEncodeError).",
+        "args": "msg (str): The message to print.",
+        "returns": null
+      },
+      {
+        "name": "run_cmd",
+        "description": "Run *cmd*, write **combined stdout + stderr** to *output_file* (UTF-8),\nand return the subprocess' exit-code.",
+        "args": "cmd (Sequence[str]): The command to run.\noutput_file (Union[str, os.PathLike]): The file to write the output to.",
+        "returns": "int: The exit code of the command."
+      },
+      {
+        "name": "read_report",
+        "description": "Return the textual contents of *path* (empty string if the file is missing),\ndecoding as UTF-8 and falling back to “replace” for any bad bytes.",
+        "args": "path (Path): The path to the report file.",
+        "returns": "str: The contents of the report file."
+      }
+    ]
+  },
+  "scripts/refactor/lint_report_pkg/quality_registry.py": {
+    "module_doc": {
+      "description": "Quality Registry for Lint Report Package\n===============================\nThis module provides functionality to register and run quality plugins.\nIt includes decorators for registering plugins and a method to invoke all registered plugins.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "register",
+        "description": "Decorator to register a quality plug-in.",
+        "args": "func (Plugin): The plugin function to register.",
+        "returns": "Plugin: The registered plugin function."
+      },
+      {
+        "name": "run_all",
+        "description": "Invoke every registered plug-in in order.",
+        "args": "quality (Dict[str, Dict[str, Any]]): The quality data to pass to plugins.\nreport_paths (Dict[str, Path]): The paths to the reports.",
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/lint_report_pkg/plugins/__init__.py": {
+    "module_doc": {
+      "description": "Auto-discover all ToolPlugin subclasses so the orchestrator can `import PLUGINS`.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/refactor/lint_report_pkg/plugins/flake8.py": {
+    "module_doc": {
+      "description": "Flake8 Plugin for Lint Report Package\n===============================\nThis module provides a plugin for the Flake8 linter, implementing the ToolPlugin interface.\nIt includes functionality to run Flake8 on code and parse its output for linting issues.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "Flake8Plugin",
+        "description": "Plugin for the Flake8 linter.\nAttributes:\nname (str): The name of the plugin.\ndefault_report (Path): The default report file path.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "run",
+        "description": "Run Flake8 on the scripts directory.",
+        "args": null,
+        "returns": "int: The exit code from the Flake8 command."
+      },
+      {
+        "name": "parse",
+        "description": "Parse the output report from Flake8 and update the destination dictionary.",
+        "args": "dst (Dict[str, Dict[str, Any]]): Destination dictionary to update with linting issues.",
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/lint_report_pkg/plugins/coverage_plugin.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "CoveragePlugin",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "run",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "parse",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/lint_report_pkg/plugins/mypy.py": {
+    "module_doc": {
+      "description": "Mypy Plugin for Lint Report Package\n===============================\nThis module provides a plugin for the MyPy type checker, implementing the ToolPlugin interface.\nIt includes functionality to run MyPy on code and parse its output for type checking errors.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "MypyPlugin",
+        "description": "Plugin for the MyPy type checker.\nAttributes:\nname (str): The name of the plugin.\ndefault_report (Path): The default report file path.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "run",
+        "description": "Run MyPy in strict mode on the scripts directory.",
+        "args": null,
+        "returns": "int: The exit code from the MyPy command."
+      },
+      {
+        "name": "parse",
+        "description": "Parse the output report from MyPy and update the destination dictionary.",
+        "args": "dst (Dict[str, Dict[str, Any]]): Destination dictionary to update with type checking errors.",
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/lint_report_pkg/plugins/black.py": {
+    "module_doc": {
+      "description": "Black Plugin for Lint Report Package\n===============================\nThis module provides a plugin for the Black code formatter, implementing the ToolPlugin interface.\nIt includes functionality to run Black on code and parse its output for formatting issues.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "BlackPlugin",
+        "description": "Plugin for the Black code formatter.\nAttributes:\nname (str): The name of the plugin.\ndefault_report (Path): The default report file path.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "run",
+        "description": "Run Black in check mode on the scripts directory.",
+        "args": null,
+        "returns": "int: The exit code from the Black command."
+      },
+      {
+        "name": "parse",
+        "description": "Parse the output report from Black and update the destination dictionary.",
+        "args": "dst (Dict[str, Dict[str, Any]]): Destination dictionary to update with formatting needs.",
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/lint_report_pkg/plugins/pydocstyle.py": {
+    "module_doc": {
+      "description": "Pydocstyle Plugin for Lint Report Package\n===============================\nThis module provides a plugin for the pydocstyle tool, implementing the ToolPlugin interface.\nIt includes functionality to run pydocstyle on code and parse its output for docstring issues.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "PydocstylePlugin",
+        "description": "Plugin for the pydocstyle tool.\nAttributes:\nname (str): The name of the plugin.\ndefault_report (Path): The default report file path.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "run",
+        "description": "Execute the pydocstyle tool on the scripts directory.",
+        "args": null,
+        "returns": "int: The exit code from the pydocstyle command."
+      },
+      {
+        "name": "parse",
+        "description": "Parse pydocstyle output and inject docstring issues grouped by symbol with full detail.",
+        "args": "dst (Dict[str, Dict[str, Any]]): Destination dictionary to update with docstring issues.",
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/complexity/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/refactor/complexity/complexity_summary.py": {
+    "module_doc": {
+      "description": "complexity_summary.py\nThis module provides functionality for analyzing code complexity from a JSON audit file.\nIt reads the audit data, checks for complexity thresholds, and prints a summary report\nindicating any methods that exceed the specified complexity limits.\nDependencies:\n- json\n- sys\n- os",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "analyze_complexity",
+        "description": "Analyzes code complexity from a JSON audit file and prints a summary.\nParameters:\nfile_path (str): Path to the audit JSON file. Defaults to \"refactor_audit.json\".\nmax_complexity (int): Maximum allowed complexity before issuing warnings. Defaults to 10.\nExits the process with an error message if the file is missing, empty, or contains invalid JSON.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "run_analysis",
+        "description": "Analyzes method complexity across files and prints a summary report.",
+        "args": "data (Dict[str, Any]): Mapping of file names to complexity information.\nmax_complexity (Union[int, float]): Threshold for complexity warnings.\nuse_emoji (bool, optional): If True, prints summary with emojis; otherwise, uses plain text.\nPrints:\nA summary of methods and files analyzed, and lists methods exceeding the complexity threshold.\nExits the process with an error code if warnings are found and use_emoji is False.",
+        "returns": null
+      }
+    ]
+  },
+  "scripts/refactor/complexity/complexity_analyzer.py": {
+    "module_doc": {
+      "description": "complexity_analyzer.py\nThis module provides utilities for analyzing the cyclomatic complexity of Python functions, methods, and modules using the AST (Abstract Syntax Tree).\nCore features include:\n- Computing cyclomatic complexity for each function and method in a Python file, including support for nested classes.\n- Summing per-function complexities to produce a module-level complexity score.\n- Supporting Python 3.10+ match/case syntax in complexity calculations.\n- Providing a ComplexityVisitor class for AST traversal and complexity computation.\n- Handling syntax and I/O errors gracefully with warnings.\n- Deprecated alias for backward compatibility.\nIntended for use in code quality analysis, refactoring tools, and CI pipelines to help maintain manageable code complexity.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "ComplexityVisitor",
+        "description": "Visits each top-level function or method definition and computes\nits cyclomatic complexity based on decision point nodes.\nNested functions are entirely skipped; nested classes are recursed into.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the ComplexityVisitor with an empty dictionary for function scores\nand sets the current class name to an empty string.",
+        "args": null,
+        "returns": "None"
+      },
+      {
+        "name": "visit_ClassDef",
+        "description": "Visits a class definition node and computes the complexity of its methods.",
+        "args": "node (ast.ClassDef): The class definition node to visit.",
+        "returns": "None"
+      },
+      {
+        "name": "visit_FunctionDef",
+        "description": "Visits a function definition node and calculates its complexity.",
+        "args": "node (ast.FunctionDef): The function definition node to visit.",
+        "returns": "None"
+      },
+      {
+        "name": "visit_AsyncFunctionDef",
+        "description": "Visits an asynchronous function definition node and calculates its complexity.",
+        "args": "node (ast.AsyncFunctionDef): The asynchronous function definition node to visit.",
+        "returns": "None"
+      },
+      {
+        "name": "_compute_and_record",
+        "description": "Calculate complexity for a function/method node and record it.",
+        "args": "node (ast.AST): The function or method node to analyze.",
+        "returns": "None"
+      },
+      {
+        "name": "count_nodes",
+        "description": "Recursively counts the number of decision nodes in the given AST node.",
+        "args": "n (ast.AST): The AST node to count decision nodes in.",
+        "returns": "int: The number of decision nodes in the given AST node."
+      },
+      {
+        "name": "get_scores",
+        "description": "Return the computed complexity scores.",
+        "args": null,
+        "returns": "Dict[str, int]: A dictionary mapping function/method names to their complexity scores."
+      },
+      {
+        "name": "calculate_function_complexity_map",
+        "description": "Parses the given Python file and returns a mapping from function/method\nfull names to their cyclomatic complexity scores.",
+        "args": "file_path (str): Path to the Python source file.",
+        "returns": "Dict[str, int]: A mapping of function/method names to their complexity scores.\nOn parse errors, prints a warning and returns an empty dict."
+      },
+      {
+        "name": "calculate_module_complexity",
+        "description": "Sum all function/method complexities in the module and add 1 overhead.",
+        "args": "module_path (str): Path to the Python module.",
+        "returns": "int: The total complexity score for the module, or -1 on error."
+      },
+      {
+        "name": "calculate_cyclomatic_complexity_for_module",
+        "description": "Deprecated alias for calculate_module_complexity.\nIssues a DeprecationWarning and delegates to calculate_module_complexity.",
+        "args": "module_path (str): Path to the Python module.",
+        "returns": "int: The total complexity score for the module, or -1 on error."
+      }
+    ]
+  },
+  "scripts/core/core.py": {
+    "module_doc": {
+      "description": "This module provides core functionality for the Zephyrus Logger application.\nIt includes the ZephyrusLoggerCore class, which manages logging, summarization,\nand search capabilities for categorized entries stored in JSON and Markdown files.\nThe module handles the initialization of the environment, batch summarization using AI,\nand maintains tracking of summaries. It also offers search functionality across both\nsummaries and raw logs, integrating with organization-specific modules for configuration,\nfile management, and AI summarization.\nKey functionalities:\n- Initialization of logging and summarization environments.\n- Batch processing of logs for summarization.\n- Search capabilities for retrieving categorized entries.\n- Integration with configuration and file management utilities.\nDependencies:\n- pathlib\n- datetime\n- logging\n- re\n- scripts.ai.ai_summarizer\n- scripts.config.config_loader\n- scripts.utils.file_utils\n- scripts.core.summary_tracker\n- scripts.core.log_manager\n- scripts.paths.ZephyrusPaths",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "ZephyrusLoggerCore",
+        "description": "Manages logging, summarization, and search for categorized entries using JSON and Markdown files.\nInitializes the environment, handles batch summarization with AI, maintains summary tracking,\nand provides search functionality across summaries and raw logs.\nIntegrates with organization-specific modules for configuration, file management,\nand AI summarization.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the ZephyrusLoggerCore instance by loading configuration, setting up paths,\nenvironment, AI summarizer, summary tracker, and log manager. Validates or rebuilds the\nsummary tracker as needed, and configures batch size and logging behavior based on the\ncurrent configuration.",
+        "args": "script_dir (str or Path): The directory containing the script, used to resolve paths.",
+        "returns": null
+      },
+      {
+        "name": "_safe_read_json",
+        "description": "Safely reads a JSON file and returns its contents as a dictionary.",
+        "args": "filepath (Path): The path to the JSON file to be read.",
+        "returns": "Dict[str, Any]: The contents of the JSON file. Returns an empty dictionary if an error occurs during reading."
+      },
+      {
+        "name": "_initialize_environment",
+        "description": "Ensures the environment is initialized by creating base directories, log files, and other necessary files.\nThis method is called during the constructor of the `ZephyrusCore` class. It ensures that the following files/directories exist:\n- The log directory (`self.paths.log_dir`)\n- The export directory (`self.paths.export_dir`)\n- The JSON log file (`self.paths.json_log_file`)\n- The plain text log file (`self.paths.txt_log_file`)\n- The correction summaries file (`self.paths.correction_summaries_file`)\n- The configuration file (`self.paths.config_file`)\nIf any of these files/directories do not exist, they are created. If the JSON log file or correction summaries file exist but are empty, they are initialized to an empty JSON object.\nIf the configuration file does not exist, a minimal configuration is recreated with a batch size of 5.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_get_summary_for_batch",
+        "description": "Gets a summary for a batch of log entries.",
+        "args": "batch_entries (List[Dict[str, Any]]): A list of log entries to summarize.\nsubcategory (str): The subcategory of the log entries.",
+        "returns": "str: The summary of the batch of entries, or None if summarization failed."
+      },
+      {
+        "name": "log_to_json",
+        "description": "Logs an entry to the JSON log file and updates the summary tracker.",
+        "args": "timestamp (str): The timestamp of the log entry.\ndate_str (str): The date string of the log entry.\nmain_category (str): The main category of the log entry.\nsubcategory (str): The subcategory of the log entry.\nentry (str): The log entry to be logged.",
+        "returns": "bool: True if the entry was logged successfully, False otherwise."
+      },
+      {
+        "name": "generate_global_summary",
+        "description": "Generates a global summary for the given main category and subcategory.",
+        "args": "main_category (str): The main category of the log entries.\nsubcategory (str): The subcategory of the log entries.",
+        "returns": "bool: True if the global summary was generated successfully, False otherwise."
+      },
+      {
+        "name": "generate_summary",
+        "description": "Generates a summary for the given date, main category, and subcategory.",
+        "args": "date_str (str): The date of the log entries.\nmain_category (str): The main category of the log entries.\nsubcategory (str): The subcategory of the log entries.",
+        "returns": "bool: True if the summary was generated successfully, False otherwise."
+      },
+      {
+        "name": "log_to_markdown",
+        "description": "Logs an entry to a Markdown file, organizing by date and subcategory.",
+        "args": "date_str (str): The date string for the log entry.\nmain_category (str): The main category of the log entry.\nsubcategory (str): The subcategory of the log entry.\nentry (str): The content of the log entry to be written.",
+        "returns": "bool: True if the entry was logged successfully, False otherwise.\nThis method creates or updates a Markdown file for the given main category, adding\nthe entry under the appropriate date header. If the file or date header does not exist,\nthey are created. An error is logged and False is returned if an exception occurs."
+      },
+      {
+        "name": "force_summary_all",
+        "description": "Forces summarization for all log entries across all dates, main categories, and subcategories.\nIterates until no more unsummarized batches are available.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "save_entry",
+        "description": "Wrapper for log_to_json to support the GUI controller interface.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "search_summaries",
+        "description": "Searches through all summaries (across all dates, main categories, and subcategories)\nand returns the top-k most relevant results based on the query.",
+        "args": "query (str): The search query.\ntop_k (int, optional): The number of results to return. Defaults to 5.",
+        "returns": "List[Dict[str, Any]]: A list of dictionaries containing the search results."
+      },
+      {
+        "name": "search_raw_logs",
+        "description": "Searches through the raw logs using the specified query and returns the top-k most relevant results.",
+        "args": "query (str): The search query.\ntop_k (int, optional): The number of top results to return. Defaults to 5.",
+        "returns": "List[Dict[str, Any]]: A list of dictionaries containing the search results."
+      },
+      {
+        "name": "log_new_entry",
+        "description": "Logs a new entry, saving it to both the JSON log and the Markdown file.",
+        "args": "main_category (str): The main category of the log entry.\nsubcategory (str): The subcategory of the log entry.\nentry (str): The content of the log entry.",
+        "returns": "bool: Whether the log entry was saved successfully."
+      }
+    ]
+  },
+  "scripts/core/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/core/summary_tracker.py": {
+    "module_doc": {
+      "description": "summary_tracker.py\nThis module provides the SummaryTracker class for managing and tracking summaries of logs.\nIt includes functionality for loading tracker data, initializing indexers, and maintaining\nthe state of summaries. This module is essential for the Zephyrus Logger application to\nmanage summaries effectively.\nDependencies:\n- json\n- logging\n- pathlib\n- collections (defaultdict)\n- scripts.indexers.summary_indexer\n- scripts.indexers.raw_log_indexer\n- scripts.utils.file_utils\n- scripts.paths.ZephyrusPaths",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "SummaryTracker",
+        "description": "SummaryTracker manages the loading, initialization, and tracking of summary data for logs.\nAttributes:\npaths (ZephyrusPaths): The paths configuration for the summary tracker.\ntracker_path (Path): The path to the summary tracker file.\ntracker (Dict[str, Dict[str, Any]]): The loaded tracker data.\nsummary_indexer (Optional[SummaryIndexer]): The indexer for summaries.\nraw_indexer (Optional[RawLogIndexer]): The indexer for raw logs.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the SummaryTracker with the given paths.",
+        "args": "paths (ZephyrusPaths): The paths configuration for the summary tracker.",
+        "returns": null
+      },
+      {
+        "name": "_safe_load_tracker",
+        "description": "Safely loads the tracker data from the tracker file.",
+        "args": null,
+        "returns": "Dict[str, Dict[str, Any]]: The loaded tracker data, or an empty dictionary if loading fails."
+      },
+      {
+        "name": "_safe_init_summary_indexer",
+        "description": "Safely initializes the SummaryIndexer.",
+        "args": null,
+        "returns": "Optional[SummaryIndexer]: The initialized SummaryIndexer, or None if initialization fails."
+      },
+      {
+        "name": "_safe_init_raw_indexer",
+        "description": "Safely initializes the RawLogIndexer.",
+        "args": null,
+        "returns": "Optional[RawLogIndexer]: The initialized RawLogIndexer, or None if initialization fails."
+      },
+      {
+        "name": "get_summarized_count",
+        "description": "Retrieves the summarized count for the given main category and subcategory.",
+        "args": "main_category (str): The main category.\nsubcategory (str): The subcategory.",
+        "returns": "int: The summarized count."
+      },
+      {
+        "name": "update",
+        "description": "Updates the tracker with the given summarized and new entries counts.",
+        "args": "main_category (str): The main category.\nsubcategory (str): The subcategory.\nsummarized (int, optional): The summarized count. Defaults to 0.\nnew_entries (int, optional): The new entries count. Defaults to 0.",
+        "returns": null
+      },
+      {
+        "name": "_save",
+        "description": "Saves the tracker data to the tracker file.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "rebuild",
+        "description": "Rebuilds the tracker by clearing the current data and re-counting the logged and summarized entries.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "validate",
+        "description": "Validates the tracker by comparing the summarized counts with the actual counts in the correction summaries.",
+        "args": "verbose (bool, optional): If True, logs every subcategory status. Otherwise, only logs mismatches. Defaults to False.",
+        "returns": "bool: True if the tracker is valid (no mismatches), False otherwise."
+      },
+      {
+        "name": "get_coverage_data",
+        "description": "Returns a structured list of coverage data for all tracked (main, sub) categories.\nEach entry includes:\n- main_category\n- subcategory\n- logged_total\n- estimated_summarized_entries\n- coverage_percent (0–100)",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/core/log_manager.py": {
+    "module_doc": {
+      "description": "log_manager.py\nThis module provides the LogManager class for managing log entries and correction summaries.\nIt includes functionality for reading and writing log data in both JSON and plain text formats,\nas well as handling timestamps and content keys for structured logging. The LogManager is essential\nfor the Zephyrus Logger application to maintain a reliable logging system.\nDependencies:\n- pathlib\n- datetime\n- logging\n- scripts.utils.file_utils",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "LogManager",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes a LogManager instance.",
+        "args": "json_log_file (Path): Path to the JSON file that stores log entries.\ntxt_log_file (Path): Path to the text file that stores log entries in plain text.\ncorrection_summaries_file (Path): Path to the JSON file that stores correction summaries.\ntimestamp_format (str): Timestamp format for log entries.\ncontent_key (str): Key used to store the content of a log entry in the JSON file.\ntimestamp_key (str): Key used to store the timestamp of a log entry in the JSON file.",
+        "returns": null
+      },
+      {
+        "name": "_safe_read_or_create_json",
+        "description": "Safely reads a JSON file or creates it if it doesn't exist.\nIf the file doesn't exist, it will create an empty JSON object.",
+        "args": "filepath (Path): Path to the JSON file.",
+        "returns": "dict: The parsed JSON data or an empty dictionary if the file couldn't be loaded."
+      },
+      {
+        "name": "read_logs",
+        "description": "Reads the JSON log file and returns its contents. If the file doesn't exist, it will create an empty JSON object.",
+        "args": null,
+        "returns": "dict: The parsed JSON data or an empty dictionary if the file couldn't be loaded."
+      },
+      {
+        "name": "update_logs",
+        "description": "Updates the JSON log file with the provided update function.\nThe update function will be provided with the current JSON data as a dictionary.\nThe function should modify the dictionary in-place as needed.",
+        "args": "update_func (Callable[[dict], None]): The function to call to update the JSON data.",
+        "returns": null
+      },
+      {
+        "name": "append_entry",
+        "description": "Appends a new log entry to the JSON log file.",
+        "args": "date_str (str): The date of the log entry in the format specified by `timestamp_format`.\nmain_category (str): The main category of the log entry.\nsubcategory (str): The subcategory of the log entry.\nentry (str): The content of the log entry.",
+        "returns": null
+      },
+      {
+        "name": "updater",
+        "description": "Updates the JSON data to append a new log entry.",
+        "args": "data (dict): The current JSON data.",
+        "returns": null
+      },
+      {
+        "name": "get_unsummarized_batch",
+        "description": "Retrieves a batch of unsummarized log entries for the given main category and subcategory.",
+        "args": "main_category (str): The main category of the log entries.\nsubcategory (str): The subcategory of the log entries.\nsummarized_total (int): The total number of log entries that have already been summarized.\nbatch_size (int): The number of unsummarized log entries to retrieve in the batch.",
+        "returns": "list: A list of log entries, each represented as a dictionary with 'timestamp' and 'content' keys."
+      },
+      {
+        "name": "update_correction_summaries",
+        "description": "Updates the correction summaries JSON file with new data.",
+        "args": "main_category (str): The main category of the log entries.\nsubcategory (str): The subcategory of the log entries.\nnew_data (dict): The new data to append to the correction summaries.\nThe dictionary should contain the following keys:\n- \"batch\": The batch label.\n- \"original_summary\": The original summary.\n- \"corrected_summary\": The corrected summary.\n- \"correction_timestamp\": The timestamp of the correction.\n- \"start\": The start timestamp of the batch.\n- \"end\": The end timestamp of the batch.",
+        "returns": null
+      }
+    ]
+  },
+  "scripts/gui/style_manager.py": {
+    "module_doc": {
+      "description": "style_manager.py\nThis module defines the StyleManager class for managing application-wide styles for tkinter and ttk.\nCore features include:\n- Managing application-wide styles for tkinter and ttk.\n- Defining default colors and fonts.\n- Configuring ttk styles.\n- Updating specific styles with new options.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "StyleManager",
+        "description": "Manages application-wide styles for tkinter and ttk.\nThis class can be extended to handle dynamic theme changes.\nAttributes:\nroot (Tk): The root Tkinter window.\nstyle (ttk.Style): The ttk style manager instance.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the StyleManager with the specified root window.",
+        "args": "root (Tk): The root Tkinter window.",
+        "returns": null
+      },
+      {
+        "name": "initialize_styles",
+        "description": "Defines default colors and fonts and configures ttk styles.",
+        "args": null,
+        "returns": "None"
+      },
+      {
+        "name": "update_style",
+        "description": "Update a specific style with new options.",
+        "args": "style_name (str): The name of the style to update (e.g., 'TButton').\noptions (Dict[str, Any]): A dictionary of style options (e.g., {'background': 'red'}).",
+        "returns": "None"
+      }
+    ]
+  },
+  "scripts/gui/gui_controller.py": {
+    "module_doc": {
+      "description": "gui_controller.py\nThis module provides the GUIController class for managing the interaction between the GUI\nand the logging core of the Zephyrus Logger application. It handles the initialization of\nthe logger core and facilitates logging entries through the GUI.\nDependencies:\n- os\n- logging\n- scripts.core.core.ZephyrusLoggerCore",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "GUIController",
+        "description": "GUIController manages the interaction between the GUI and the logging core.\nAttributes:\ncore (ZephyrusLoggerCore): The instance of the ZephyrusLoggerCore used for logging.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the GUIController with the given logger core or initializes a new one.",
+        "args": "logger_core (Optional[ZephyrusLoggerCore]): The logger core instance. If None, a new instance will be created.\nscript_dir (Optional[str]): The directory of the script. Defaults to the current working directory.",
+        "returns": null
+      },
+      {
+        "name": "log_entry",
+        "description": "Logs an entry with the specified main category, subcategory, and text.",
+        "args": "main (str): The main category of the log entry.\nsub (str): The subcategory of the log entry.\ntext (str): The text content of the log entry.",
+        "returns": "Any: The result of the logging operation."
+      },
+      {
+        "name": "force_summarize_all",
+        "description": "Forces the summarization of all logs.",
+        "args": null,
+        "returns": "Any: The result of the summarization operation."
+      },
+      {
+        "name": "search_summaries",
+        "description": "Searches for summaries matching the given query.",
+        "args": "query (str): The search query.",
+        "returns": "Any: The result of the search operation."
+      },
+      {
+        "name": "search_raw_logs",
+        "description": "Searches for raw logs matching the given query.",
+        "args": "query (str): The search query.",
+        "returns": "Any: The result of the search operation."
+      },
+      {
+        "name": "rebuild_tracker",
+        "description": "Rebuilds the summary tracker and returns True if successful, False otherwise.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "get_tracker_status",
+        "description": "Returns a user-friendly status string of the summary tracker.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "get_coverage_data",
+        "description": "Retrieves coverage data from the tracker for the UI heatmap.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "get_logs",
+        "description": "Retrieves the contents of the plain text log file as a string.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/gui/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/gui/app.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "ZephyrusLoggerApp",
+        "description": "Core Application Class that initializes the main window,\nsets up the style manager, creates the main notebook, and\nintegrates the concrete tabs.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_create_status_bar",
+        "description": "Creates a basic status bar at the bottom of the main window.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "run",
+        "description": "Starts the main event loop.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/gui/gui_logging.py": {
+    "module_doc": {
+      "description": "gui_logging.py\nThis module provides a logging handler that appends log messages to a Tkinter Text widget.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "GUILogHandler",
+        "description": "A logging handler that appends log messages to a Tkinter Text widget.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": ":param text_widget: The Text widget where log messages should be appended.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "emit",
+        "description": "Emits a log message to the associated Text widget.\n:param record: logging.LogRecord",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "append_message",
+        "description": "Appends a log message to the associated Text widget.\nThis method is designed to be called from the main thread,\nand will block until the message is appended.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/gui/gui_helpers.py": {
+    "module_doc": {
+      "description": "gui_helpers.py\nThis module provides utility functions for building and customizing the\nZephyrus Logger application's graphical user interface (GUI).\nCore features include:\n- Validating user input for logging and searching.\n- Creating and customizing Tkinter widgets (e.g. scrolled text, buttons).\n- Displaying alerts and messages using Tkinter's messagebox module.\n- Utility functions for reading and writing JSON files.\nIntended to provide a set of reusable functions for the GUI components of\nthe Zephyrus Logger application.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "validate_log_input",
+        "description": "Returns False if the input is empty, None, or just whitespace.\nLogs a warning if invalid.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "get_current_date",
+        "description": "Returns the current date as a string in 'YYYY-MM-DD' format.\n:return: Current date as a string.\n:rtype: str",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "get_current_timestamp",
+        "description": "Returns the current date and time as a formatted string (YYYY-MM-DD HH:MM:SS).",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "clear_text_input",
+        "description": "Clears all text from the given Tkinter text entry widget.",
+        "args": "entry_widget: The Tkinter text widget to be cleared.",
+        "returns": null
+      },
+      {
+        "name": "update_status_label",
+        "description": "Update the text and foreground color of a Tkinter label widget.",
+        "args": "label (tk.Label): The label widget to update.\nmessage (str): The text to display on the label.\ncolor (str, optional): The text color. Defaults to \"blue\".",
+        "returns": null
+      },
+      {
+        "name": "get_selected_option",
+        "description": "Returns the currently selected option from a Tkinter menu variable, or a default value if none is selected.",
+        "args": "menu_var: A Tkinter variable associated with a menu widget.\ndefault (str, optional): The value to return if no option is selected. Defaults to \"General\".",
+        "returns": "str: The selected option or the default value."
+      },
+      {
+        "name": "append_log_entry",
+        "description": "Appends a log entry with a timestamp and content to the specified log file, organizing entries by date, category, and subcategory.",
+        "args": "log_file (str): Path to the JSON log file.\ndate (str): Date key for the log entry (YYYY-MM-DD).\ncategory (str): Category under which to store the entry.\nsubcategory (str): Subcategory under the category.\nentry_text (str): The content of the log entry.",
+        "returns": null
+      },
+      {
+        "name": "get_category_options",
+        "description": "Retrieves a list of category names from a JSON file at the given path.",
+        "args": "categories_json_path (str): Path to the JSON file containing categories.",
+        "returns": "list: List of category names, or an empty list if reading fails."
+      },
+      {
+        "name": "create_status_label",
+        "description": "Create and pack a status label widget in the given root window.",
+        "args": "root: The parent Tkinter widget.\nstatus_var: A Tkinter StringVar to display as the label's text.",
+        "returns": "The created Label widget."
+      },
+      {
+        "name": "create_log_frame",
+        "description": "Creates and returns a disabled scrolled text widget within a frame for logging purposes in a Tkinter GUI.",
+        "args": "root: The parent Tkinter widget.",
+        "returns": "tuple: (log_text, log_frame) where log_text is the ScrolledText widget and log_frame is the containing Frame."
+      },
+      {
+        "name": "log_message",
+        "description": "Appends a timestamped message to the provided Tkinter text widget for logging purposes.",
+        "args": "log_text_widget (tkinter.Text): The text widget where the log message will be displayed.\nmessage (str): The message to log.",
+        "returns": null
+      },
+      {
+        "name": "create_dropdown_menu",
+        "description": "Creates a labeled dropdown menu (OptionMenu) in the given Tkinter frame.",
+        "args": "frame: The parent Tkinter frame to place the dropdown menu in.\nlabel_text: The text to display as the label next to the dropdown.\nvariable: A Tkinter variable to store the selected option.\noptions: A list of options to display in the dropdown menu.",
+        "returns": "The created Tkinter OptionMenu widget."
+      },
+      {
+        "name": "create_button",
+        "description": "Creates and returns a Tkinter Button widget with customizable text, command, size, and colors.",
+        "args": "frame: The parent widget where the button will be placed.\ntext (str): The label displayed on the button.\ncommand (callable): The function to be called when the button is clicked.\nwidth (int, optional): The width of the button. Defaults to 15.\nheight (int, optional): The height of the button. Defaults to 2.\nbg (str, optional): The background color of the button. Defaults to \"#4CAF50\".\nfg (str, optional): The text color of the button. Defaults to \"white\".",
+        "returns": "tk.Button: The configured Button widget."
+      },
+      {
+        "name": "show_messagebox",
+        "description": "Displays a message box with the specified icon, title, and message using tkinter.",
+        "args": "icon (str): Type of message box to display ('info', 'warning', or 'error').\ntitle (str): The title of the message box window.\nmessage (str): The message to display in the message box.",
+        "returns": null
+      },
+      {
+        "name": "create_text_entry",
+        "description": "Creates a text entry widget for user input.",
+        "args": "root (tk.Tk or tk.Frame): The parent widget.\nheight (int): Number of lines tall.\nwidth (int): Number of characters wide.",
+        "returns": "tk.Text: A configured Text widget."
+      },
+      {
+        "name": "format_summary_results",
+        "description": "Formats a list of result items into a readable summary string.\nEach result can be a dict with 'score' and 'text' keys, a tuple/list with score and text,\nor any other type, which will be converted to string with a default score of 0.0.\nHandles exceptions gracefully and includes error information in the output.",
+        "args": "results (list): List of result items to format.",
+        "returns": "str: Formatted summary string with scores and texts."
+      },
+      {
+        "name": "format_raw_results",
+        "description": "Formats a list of raw result items into a readable string.\nEach result is processed based on its type (dict, list/tuple, or other),\nand formatted with a '[RAW LOG MATCH]' prefix. Handles exceptions by\nincluding error details in the output.",
+        "args": "results (list): List of raw result items to format.",
+        "returns": "str: Formatted string representation of all results."
+      },
+      {
+        "name": "display_message",
+        "description": "Displays an informational message box.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "display_error",
+        "description": "Displays an error message box.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "format_coverage_data",
+        "description": "Formats the structured coverage data into a readable string grouped by main category.",
+        "args": "data (list[dict]): List of coverage data entries.",
+        "returns": "str: A nicely formatted string for displaying coverage stats."
+      }
+    ]
+  },
+  "scripts/gui/gui.py": {
+    "module_doc": {
+      "description": "gui.py\nThis module provides the ZephyrusLoggerGUI class, which implements a graphical user interface\nfor the Zephyrus Ideas Logger application using the tkinter library. It manages the GUI components,\nuser interactions, and integrates logging functionality.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "ZephyrusLoggerGUI",
+        "description": "A class to represent the Zephyrus Ideas Logger GUI.\nThis class initializes the GUI components and handles user interactions.\nAttributes:\ncontroller (GUIController): The controller for managing the application's logic.\nlogger (logging.Logger): Logger for tracking GUI events and actions.\nconfig (dict): Configuration settings loaded from the config file.\ncategory_structure (dict): Structure of categories for the GUI.\nroot (tk.Tk): The main window of the GUI application.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initialize the ZephyrusLoggerGUI.",
+        "args": "controller (GUIController): The controller for managing the application's logic.",
+        "returns": null
+      },
+      {
+        "name": "_setup_gui_logging",
+        "description": "Set up the logging for the GUI.\nThis method configures the logging handler to display logs in the GUI.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_build_widgets",
+        "description": "Build the GUI widgets and layout.\nThis method creates and arranges the GUI components, such as frames and buttons.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_update_coverage_display",
+        "description": "Update the coverage display.\nThis method retrieves the coverage data from the controller and updates the coverage display.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_populate_category_dropdown",
+        "description": "Populate the category dropdown menu.\nThis method retrieves the categories from the controller and populates the dropdown menu.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_update_main_category",
+        "description": "Update the main category.\nThis method updates the main category and subcategory dropdown menus.",
+        "args": "new_main (str): The new main category.",
+        "returns": null
+      },
+      {
+        "name": "_log_entry",
+        "description": "Log a new entry.\nThis method logs a new entry based on the user's input.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_manual_summarize",
+        "description": "Manually summarize the logs.\nThis method generates a summary of the logs based on the user's input.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_search_summary",
+        "description": "Search for summaries.\nThis method searches for summaries based on the user's input.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_search_raw",
+        "description": "Search for raw logs.\nThis method searches for raw logs based on the user's input.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_rebuild_tracker",
+        "description": "Rebuild the tracker.\nThis method rebuilds the tracker based on the user's input.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_show_coverage",
+        "description": "Show the coverage.\nThis method displays the coverage data.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "run",
+        "description": "Run the GUI application.\nThis method starts the GUI event loop.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/gui/widget_factory.py": {
+    "module_doc": {
+      "description": "widget_factory.py\nThis module defines the WidgetFactory class for creating common widgets with standardized styling.\nCore features include:\n- Creating styled buttons, labels, entries, frames, and notebooks for Tkinter applications.\n- Providing a consistent look and feel across the application.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "WidgetFactory",
+        "description": "Factory for creating common widgets with standardized styling.\nThis class provides static methods to create buttons, labels, entries, frames, and notebooks with consistent styles.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "create_button",
+        "description": "Create and return a styled ttk Button.",
+        "args": "parent (tk.Widget): The parent widget.\ntext (str): The text to display on the button.\ncommand (callable): The function to call when the button is clicked.\nstyle (str): The style to apply to the button. Defaults to 'TButton'.\n**options: Additional options to configure the button.",
+        "returns": "ttk.Button: The created button widget."
+      },
+      {
+        "name": "create_label",
+        "description": "Create and return a styled ttk Label.",
+        "args": "parent (tk.Widget): The parent widget.\ntext (str): The text to display on the label.\nstyle (str): The style to apply to the label. Defaults to 'TLabel'.\n**options: Additional options to configure the label.",
+        "returns": "ttk.Label: The created label widget."
+      },
+      {
+        "name": "create_entry",
+        "description": "Create and return a ttk Entry widget.",
+        "args": "parent (tk.Widget): The parent widget.\ntextvariable (Any): The variable to associate with the entry. Defaults to None.\n**options: Additional options to configure the entry.",
+        "returns": "ttk.Entry: The created entry widget."
+      },
+      {
+        "name": "create_frame",
+        "description": "Create and return a ttk Frame widget.",
+        "args": "parent (tk.Widget): The parent widget.\nstyle (str): The style to apply to the frame. Defaults to 'TFrame'.\n**options: Additional options to configure the frame.",
+        "returns": "ttk.Frame: The created frame widget."
+      },
+      {
+        "name": "create_notebook",
+        "description": "Create and return a ttk Notebook widget.",
+        "args": "parent (tk.Widget): The parent widget.\n**options: Additional options to configure the notebook.",
+        "returns": "ttk.Notebook: The created notebook widget."
+      }
+    ]
+  },
+  "scripts/gui/tabs/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/gui/tabs/main_tab.py": {
+    "module_doc": {
+      "description": "main_tab.py\nThis module defines the MainTab class, which is the primary tab for logging functionality in the application.\nCore features include:\n- Organizing child panels for logging, coverage, entry, and actions.\n- Refreshing child panels when the tab becomes active.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "MainTab",
+        "description": "MainTab is the primary tab for logging functionality.\nIt organizes child panels: LogPanel, CoveragePanel, EntryPanel, and ActionPanel.\nAttributes:\nlog_panel (LogPanel): The panel for displaying logs.\ncoverage_panel (CoveragePanel): The panel for displaying coverage information.\nentry_panel (EntryPanel): The panel for entering new log entries.\naction_panel (ActionPanel): The panel for action buttons.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "setup_tab",
+        "description": "Create a container frame to hold the child panels and pack them into the tab.",
+        "args": null,
+        "returns": "None"
+      },
+      {
+        "name": "on_show",
+        "description": "Called when the MainTab becomes active. This refreshes all child panels.",
+        "args": null,
+        "returns": "None"
+      }
+    ]
+  },
+  "scripts/gui/panels/action_panel.py": {
+    "module_doc": {
+      "description": "action_panel.py\nThis module defines the ActionPanel class, which hosts buttons for actions such as summarizing or rebuilding.\nCore features include:\n- Creating buttons for summarizing and rebuilding functionality.\n- Integrating with the application controller to trigger actions.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "ActionPanel",
+        "description": "ActionPanel hosts buttons for actions such as summarizing or rebuilding.\nAttributes:\nframe (Optional[ttk.Frame]): The frame containing the action buttons.\nsummarize_button (Optional[ttk.Button]): The button for summarizing logs.\nrebuild_button (Optional[ttk.Button]): The button for rebuilding the tracker.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the ActionPanel with the specified parent and controller.",
+        "args": "parent (tk.Widget): The parent widget for this panel.\ncontroller (Optional[object]): The controller for handling actions. Defaults to None.",
+        "returns": null
+      },
+      {
+        "name": "initialize_ui",
+        "description": "Creates and packs the action buttons into the panel.",
+        "args": null,
+        "returns": "None"
+      },
+      {
+        "name": "on_summarize",
+        "description": "Trigger the controller's summarize function if available.",
+        "args": null,
+        "returns": "None"
+      },
+      {
+        "name": "on_rebuild",
+        "description": "Trigger the controller's rebuild_tracker function if available.",
+        "args": null,
+        "returns": "None"
+      },
+      {
+        "name": "refresh",
+        "description": "Action panel may not need refreshing, but this hook is here if needed.",
+        "args": null,
+        "returns": "None"
+      }
+    ]
+  },
+  "scripts/gui/panels/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/gui/panels/log_panel.py": {
+    "module_doc": {
+      "description": "log_panel.py\nThis module defines the LogPanel class, which manages the display area for logs.\nCore features include:\n- Displaying log entries in a scrollable text area.\n- Integrating with the application controller to fetch log data.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "LogPanel",
+        "description": "LogPanel manages the display area for logs.\nAttributes:\nframe (ttk.LabelFrame): The frame containing the log display.\nlog_display (scrolledtext.ScrolledText): The text area for displaying log entries.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the LogPanel with the specified parent and controller.",
+        "args": "parent (tk.Widget): The parent widget for this panel.\ncontroller (Optional[object]): The controller for handling log data. Defaults to None.",
+        "returns": null
+      },
+      {
+        "name": "initialize_ui",
+        "description": "Creates and packs the user interface components for the log panel.",
+        "args": null,
+        "returns": "None"
+      },
+      {
+        "name": "refresh",
+        "description": "Refreshes the log display area by fetching logs from the controller.",
+        "args": null,
+        "returns": "None"
+      }
+    ]
+  },
+  "scripts/gui/panels/entry_panel.py": {
+    "module_doc": {
+      "description": "entry_panel.py\nThis module defines the EntryPanel class, which provides the interface for creating new log entries.\nCore features include:\n- Allowing users to enter and submit new log entries.\n- Integrating with the application controller to handle log submission.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "EntryPanel",
+        "description": "EntryPanel provides the interface for creating new log entries.\nAttributes:\nframe (Optional[ttk.LabelFrame]): The frame containing the entry interface.\nentry_text (Optional[tk.Text]): The text widget for entering log content.\nsubmit_button (Optional[ttk.Button]): The button for submitting the log entry.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the EntryPanel with the specified parent and controller.",
+        "args": "parent (tk.Widget): The parent widget for this panel.\ncontroller (Optional[object]): The controller for handling log submissions. Defaults to None.",
+        "returns": null
+      },
+      {
+        "name": "initialize_ui",
+        "description": "Creates and packs the user interface components for the entry panel.",
+        "args": null,
+        "returns": "None"
+      },
+      {
+        "name": "on_submit",
+        "description": "Handles the submission of a new log entry.\nRetrieves text from the text widget and submits it to the controller if available.",
+        "args": null,
+        "returns": "None"
+      },
+      {
+        "name": "refresh",
+        "description": "Clears the text area when refreshing, if needed.",
+        "args": null,
+        "returns": "None"
+      }
+    ]
+  },
+  "scripts/gui/panels/coverage_panel.py": {
+    "module_doc": {
+      "description": "coverage_panel.py\nThis module defines the CoveragePanel class, which displays coverage metrics in a tree view.\nCore features include:\n- Displaying coverage metrics for various categories.\n- Integrating with the application controller to fetch coverage data.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "CoveragePanel",
+        "description": "CoveragePanel displays coverage metrics in a tree view.\nAttributes:\nframe (Optional[ttk.LabelFrame]): The frame containing the coverage metrics.\ntree (Optional[ttk.Treeview]): The tree view for displaying coverage data.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the CoveragePanel with the specified parent and controller.",
+        "args": "parent (tk.Widget): The parent widget for this panel.\ncontroller (Optional[object]): The controller for handling coverage data. Defaults to None.",
+        "returns": null
+      },
+      {
+        "name": "initialize_ui",
+        "description": "Creates and packs the user interface components for the coverage panel.",
+        "args": null,
+        "returns": "None"
+      },
+      {
+        "name": "refresh",
+        "description": "Refreshes the coverage data displayed in the tree view.",
+        "args": null,
+        "returns": "None"
+      }
+    ]
+  },
+  "scripts/gui/base/base_tab.py": {
+    "module_doc": {
+      "description": "base_tab.py\nThis module defines the BaseTab class, which provides a common structure for major tabs in the application.\nCore features include:\n- Providing a base class for tabs with consistent styling.\n- Allowing subclasses to implement specific tab components and behavior.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "BaseTab",
+        "description": "BaseTab provides a common structure for major tabs in the application.\nInherits from ttk.Frame for consistent styling.\nAttributes:\ncontroller (Optional[object]): The controller for handling tab actions.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the BaseTab with the specified parent and controller.",
+        "args": "parent (tk.Widget): The parent widget for this tab.\ncontroller (Optional[object]): The controller for handling tab actions. Defaults to None.",
+        "returns": null
+      },
+      {
+        "name": "setup_tab",
+        "description": "Set up the tab contents.\nOverride this method in subclasses to build tab-specific components.",
+        "args": null,
+        "returns": "None"
+      },
+      {
+        "name": "on_show",
+        "description": "Called when the tab becomes active.\nOverride to update or refresh content when the tab is shown.",
+        "args": null,
+        "returns": "None"
+      }
+    ]
+  },
+  "scripts/gui/base/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/gui/base/base_panel.py": {
+    "module_doc": {
+      "description": "base_panel.py\nThis module defines the BasePanel class, which provides common functionality for all UI panels.\nCore features include:\n- Providing a base class for panels with consistent styling.\n- Allowing subclasses to implement specific UI components and refresh logic.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "BasePanel",
+        "description": "BasePanel provides common functionality for all UI panels.\nInherits from ttk.Frame to leverage consistent styling.\nAttributes:\ncontroller (Optional[object]): The controller for handling panel actions.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initializes the BasePanel with the specified parent and controller.",
+        "args": "parent (tk.Widget): The parent widget for this panel.\ncontroller (Optional[object]): The controller for handling panel actions. Defaults to None.",
+        "returns": null
+      },
+      {
+        "name": "initialize_ui",
+        "description": "Set up UI components for the panel.\nOverride this method in subclasses to build specific panel content.",
+        "args": null,
+        "returns": "None"
+      },
+      {
+        "name": "refresh",
+        "description": "Refresh the panel content.\nOverride this method in subclasses if needed.",
+        "args": null,
+        "returns": "None"
+      }
+    ]
+  },
+  "scripts/ai/ai_summarizer.py": {
+    "module_doc": {
+      "description": "This module provides the AISummarizer class for generating summaries of text entries\nusing a configurable large language model (LLM).\nIt supports both single-entry and bulk summarization, with the ability to use\nsubcategory-specific prompts loaded from configuration. If the primary summarization\nmethod fails, the module falls back to the Ollama chat API to attempt summarization.\nLogging is integrated throughout for monitoring and debugging,\nand configuration is loaded at initialization for flexible model and prompt management.\nTypical use cases include automated summarization of logs, notes, or other textual data\nin workflows requiring concise, context-aware summaries.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "AISummarizer",
+        "description": "AISummarizer provides methods to generate summaries for single or multiple text entries\nusing a configurable LLM model and subcategory-specific prompts. It supports fallback\nto the Ollama chat API if primary summarization fails and loads configuration settings\nat initialization.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__init__",
+        "description": "Initialize AISummarizer by loading configuration, setting the LLM model,\nand preparing prompts by subcategory.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "_fallback_summary",
+        "description": "Attempt to generate a summary using the Ollama chat API as a fallback when\nprimary summarization fails.",
+        "args": "full_prompt (str): The prompt to send to the chat model.",
+        "returns": "str: The generated summary or an error message."
+      },
+      {
+        "name": "summarize_entry",
+        "description": "Generate a summary for a single text entry using the configured LLM model\nand an optional subcategory-specific prompt.",
+        "args": "entry_text (str): The text to summarize.\nsubcategory (Optional[str], optional): The subcategory to use for the prompt.",
+        "returns": "str: The generated summary or a fallback message if summarization fails."
+      },
+      {
+        "name": "summarize_entries_bulk",
+        "description": "Generate a summary for a list of text entries using the configured LLM model\nand subcategory-specific prompts.",
+        "args": "entries (List[str]): The list of text entries to summarize.\nsubcategory (Optional[str], optional): The subcategory to use for the prompt.",
+        "returns": "str: The generated summary or a fallback message if summarization fails."
+      }
+    ]
+  },
+  "scripts/ai/module_docstring_summarizer.py": {
+    "module_doc": {
+      "description": "This module provides functionality to summarize the purpose of Python modules based on their function-level docstrings.\nIt includes functions to summarize module docstrings and process reports containing module information.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "summarize_module",
+        "description": "Summarize a module's purpose based on its function-level docstrings.",
+        "args": "file_path (str): The path of the module file.\ndoc_entries (list): A list of function docstring entries.\nsummarizer (AISummarizer): The summarizer object used for generating summaries.\nconfig (ConfigManager): Configuration object containing relevant settings.",
+        "returns": "str: The summarized purpose of the module."
+      },
+      {
+        "name": "main",
+        "description": "Main function to load a report and summarize the docstrings for each module.",
+        "args": "input_path (str): The path to the input JSON report file.",
+        "returns": null
+      }
+    ]
+  },
+  "scripts/ai/llm_router.py": {
+    "module_doc": {
+      "description": "This module provides functionality to retrieve prompt templates and apply personas to prompts for an AI assistant.\nIt includes functions to get prompt templates based on subcategories and modify prompts according to specified personas.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "get_prompt_template",
+        "description": "Retrieve a prompt string for a given subcategory from the configuration.\nFalls back to the default if not found.",
+        "args": "subcategory (str): The subcategory for which to retrieve the prompt.\nconfig: Optional configuration object.",
+        "returns": "str: The prompt string for the specified subcategory."
+      },
+      {
+        "name": "apply_persona",
+        "description": "Optionally tweak the prompt based on the specified persona.",
+        "args": "prompt (str): The original prompt string.\npersona (str): The persona to apply to the prompt.",
+        "returns": "str: The modified prompt string with persona adjustments."
+      }
+    ]
+  },
+  "scripts/ai/llm_refactor_advisor.py": {
+    "module_doc": {
+      "description": "This module provides functionality to load audit reports and build refactor prompts for an AI assistant.\nIt includes functions to load JSON audit data, extract top offenders based on various metrics, and generate prompts for AI assistance.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "load_audit",
+        "description": "Load a JSON audit report from the specified file path.",
+        "args": "path (str): The path to the JSON audit file.",
+        "returns": "dict: The loaded audit data."
+      },
+      {
+        "name": "extract_top_offenders",
+        "description": "Extract the top offenders from the report data based on various metrics.",
+        "args": "report_data (dict): The report data containing file information.\ntop_n (int): The number of top offenders to return.",
+        "returns": "list: A sorted list of top offenders with their metrics."
+      },
+      {
+        "name": "build_refactor_prompt",
+        "description": "Build a refactor prompt for the AI assistant based on identified offenders.",
+        "args": "offenders (list): A list of top offenders with their metrics.\nconfig: Configuration object containing persona information.\nsubcategory (str): The subcategory for the prompt.",
+        "returns": "str: The constructed prompt for the AI assistant."
+      }
+    ]
+  },
+  "scripts/ai/chat_refactor.py": {
+    "module_doc": {
+      "description": "This module provides functionality to load reports and build contextual prompts for an AI assistant.\nIt includes functions to load JSON reports and generate prompts based on the report data and user queries.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "load_report",
+        "description": "Load a JSON report from the specified file path.",
+        "args": "path (str): The path to the JSON report file.",
+        "returns": "dict: The loaded report data."
+      },
+      {
+        "name": "build_contextual_prompt",
+        "description": "Build a contextual prompt for the AI assistant based on the developer's query and report data.",
+        "args": "query (str): The developer's question.\nreport_data (dict): The report data containing file information.\nconfig: Configuration object containing persona information.",
+        "returns": "str: The constructed prompt for the AI assistant."
+      }
+    ]
+  },
+  "scripts/ai/__init__.py": {
+    "module_doc": {
+      "description": "The `ai` module provides AI-powered summarization utilities for text entries using large language models (LLMs).\nCore features include:\n- Generating concise summaries for individual or multiple text entries.\n- Supporting subcategory-specific prompts for context-aware summarization.\n- Configurable model selection and prompt templates, loaded at initialization.\n- Fallback to the Ollama chat API for summarization if the primary LLM fails.\n- Designed for seamless integration into workflows requiring automated, high-quality text summarization.\nThis module enables flexible and robust summarization capabilities for downstream applications such as log analysis, reporting, and intelligent querying.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/config/logging_setup.py": {
+    "module_doc": {
+      "description": "logging_setup.py\nThis module provides centralized logging configuration for the application.\nCore features include:\n- Defining a `setup_logging` function to initialize the root logger with a specified log level.\n- Clearing existing handlers and adding a console handler with a standardized log message format.\n- Automatically configuring logging upon import for convenience and consistency across the application.\nIntended for use as the standard logging setup to ensure uniform log formatting and log level management.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "setup_logging",
+        "description": "Sets up application-wide logging configuration.\nInitializes the root logger with the specified log level, clears existing handlers,\nand adds a console handler with a standard log message format.",
+        "args": "log_level (str): Logging level as a string (e.g., \"INFO\", \"DEBUG\"). Defaults to \"INFO\".",
+        "returns": null
+      }
+    ]
+  },
+  "scripts/config/constants.py": {
+    "module_doc": {
+      "description": "constants.py\nThis module defines global constants used throughout the Zephyrus Logger application.\nCore features include:\n- Timestamp and date formatting strings for consistent time representation.\n- Standardized JSON keys for batch processing, summaries, and content tracking.\n- Keys for summary tracking and logging statistics.\n- Default configuration values for batch size, autosave interval, and log level.\n- Default file suffixes and extensions for summary and markdown files.\n- Centralized UI default settings, such as theme.\nIntended to provide a single source of truth for application-wide constants, improving maintainability and consistency.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/config/__init__.py": {
+    "module_doc": {
+      "description": "The `config` module centralizes application configuration management and logging setup.\nCore features include:\n- Loading, validating, and caching application settings from JSON configuration files.\n- Providing a Pydantic-based configuration model for type-safe access to settings.\n- Managing environment-specific and test-mode configurations.\n- Utilities for safe file reading and error handling during configuration loading.\n- Centralized logging setup for consistent application-wide logging behavior.\nThis module ensures robust, maintainable, and flexible configuration and logging for the entire application.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/config/config_loader.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "setup_logging",
+        "description": "Configure centralized logging.\nThis function sets up the logging level, format, and handlers for the application.",
+        "args": null,
+        "returns": "None\nRaises:\nNone"
+      },
+      {
+        "name": "load_config",
+        "description": "Safely load the configuration file from the specified path.\nIf the config file does not exist or has errors, return an empty dictionary.",
+        "args": "config_path (Optional[Path]): The path to the config file. If None, defaults to CONFIG_FILE_PATH.",
+        "returns": "Dict[str, Any]: The loaded configuration dictionary, or an empty dictionary if loading fails.\nRaises:\nFileNotFoundError: If the configuration file cannot be found.\nJSONDecodeError: If the configuration file contains invalid JSON."
+      },
+      {
+        "name": "get_config_value",
+        "description": "Retrieve a configuration value by its key from the provided config dictionary.\nIf the key is not found in the config, a warning is logged and the default value is returned.",
+        "args": "config (Dict[str, Any]): The configuration dictionary.\nkey (str): The key of the value to retrieve.\ndefault (Any): The default value to return if the key is not found.",
+        "returns": "Any: The retrieved configuration value or the default value.\nRaises:\nKeyError: If the key is not found and no default is provided."
+      },
+      {
+        "name": "get_absolute_path",
+        "description": "Build an absolute path from a project-root-relative path.",
+        "args": "relative_path (str): The relative path to convert.",
+        "returns": "Path: The absolute path derived from the project root.\nRaises:\nValueError: If the relative path is invalid."
+      },
+      {
+        "name": "is_test_mode",
+        "description": "Check if 'test_mode' is enabled in the configuration.",
+        "args": "config (Optional[Dict[str, Any]]): The configuration dictionary. If None, defaults to loading the config.",
+        "returns": "bool: True if 'test_mode' is enabled, False otherwise.\nRaises:\nRuntimeError: If the configuration cannot be loaded."
+      },
+      {
+        "name": "get_effective_config",
+        "description": "Load the configuration from the specified path and override paths with test-safe ones if 'test_mode' is enabled.\nThis function first attempts to load the configuration from the given path. If 'test_mode' is active, it modifies certain paths in the configuration to point to test-safe equivalents, ensuring that tests do not interfere with production data.",
+        "args": "config_path (Optional[Path]): The path to the config file. If None, defaults to CONFIG_FILE_PATH.",
+        "returns": "Dict[str, Any]: The effective configuration dictionary, with test-safe paths if applicable.\nRaises:\nFileNotFoundError: If the configuration file cannot be found.\nJSONDecodeError: If the configuration file contains invalid JSON."
+      }
+    ]
+  },
+  "scripts/config/config_manager.py": {
+    "module_doc": {
+      "description": "config_manager.py\nThis module provides centralized management of application configuration using a Pydantic-based model.\nCore features include:\n- Defining a comprehensive AppConfig model for all configurable application parameters.\n- Loading, validating, and caching configuration from a JSON file.\n- Utility methods for retrieving configuration values, resetting the config cache, and validating critical config paths.\n- Integration with safe file reading utilities for resilience against missing or malformed config files.\nIntended for use throughout the application to ensure consistent, validated configuration management.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "AppConfig",
+        "description": "Configuration model for application settings.\nDefines all configurable parameters for the application, including UI,\nlogging, LLM and embedding model settings, file paths, test mode,\nand plugin management. Ignores any extra fields not explicitly defined.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "Config",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "ConfigManager",
+        "description": "Manages application configuration loading, caching, and validation.\nProvides methods to load configuration from a JSON file using the AppConfig model,\nretrieve configuration values, reset the cached config, and validate critical config paths.\nHandles missing or invalid config files by returning default settings and logs relevant events.",
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "_default_config",
+        "description": "Return a fresh copy of the pre-instantiated default config.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "load_config",
+        "description": "Loads the application configuration from a JSON file, with optional cache refresh.\nIf the config file is missing or invalid, returns a default AppConfig instance.\nCaches the loaded config and reloads if the file changes or force_reload is True.\nLogs relevant events and raises on validation errors.",
+        "args": "config_path (str): Path to the configuration JSON file.\nforce_reload (bool): If True, forces reloading the config from disk.",
+        "returns": "AppConfig: The loaded or default application configuration."
+      },
+      {
+        "name": "get_value",
+        "description": "Retrieve a configuration value by key from the loaded AppConfig.",
+        "args": "key (str): The configuration attribute to retrieve.\ndefault (Any, optional): Value to return if the key is not found. Defaults to None.\nforce_reload (bool, optional): If True, reloads the config from disk. Defaults to False.",
+        "returns": "Any: The value of the requested configuration key, or the default if not found."
+      },
+      {
+        "name": "reset",
+        "description": "Reset the cached configuration and timestamp.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "validate_config_paths",
+        "description": "Validate that critical config paths have existing parent directories.\nLogs a warning for each missing directory. Returns True if all required directories exist, otherwise False.",
+        "args": null,
+        "returns": "bool: True if all critical directories exist, False otherwise."
+      }
+    ]
+  },
+  "scripts/ci_analyzer/visuals.py": {
+    "module_doc": {
+      "description": "This module provides functionality to render visual representations of risk and scores for code quality analysis.\nIt includes functions to generate risk emojis and bar representations based on severity scores.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "risk_emoji",
+        "description": "Return an emoji representing the risk level based on the severity score.",
+        "args": "score (float): The severity score to evaluate.",
+        "returns": "str: An emoji indicating the risk level (green, yellow, or red)."
+      },
+      {
+        "name": "render_bar",
+        "description": "Render a horizontal bar representation of the score.",
+        "args": "score (float): The score to represent as a bar.\nwidth (int): The total width of the bar (default is 20).",
+        "returns": "str: A string representing the filled and unfilled sections of the bar."
+      }
+    ]
+  },
+  "scripts/ci_analyzer/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "scripts/ci_analyzer/severity_audit.py": {
+    "module_doc": {
+      "description": "This module provides functionality to generate a CI code quality audit report.\nIt includes functions to format priority levels and generate summary header blocks based on severity metrics.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "format_priority",
+        "description": "Format the priority level based on the severity score.",
+        "args": "score (float): The severity score to evaluate.",
+        "returns": "str: A string representing the priority level (High, Medium, Low)."
+      },
+      {
+        "name": "generate_header_block",
+        "description": "Generate a header block for the CI code quality audit report.",
+        "args": "severity_df: DataFrame containing severity information for files.\nreport_data: Dictionary containing report data for each file.",
+        "returns": "str: A Markdown formatted string representing the header block."
+      },
+      {
+        "name": "generate_severity_table",
+        "description": "Generate a severity table for the CI code quality audit report.",
+        "args": "severity_df: DataFrame containing severity information for files.",
+        "returns": "str: A Markdown formatted string representing the severity table."
+      },
+      {
+        "name": "main",
+        "description": "Generate a CI code quality audit report.\nThis function parses command line arguments, loads report data, computes severity metrics,\nand generates a Markdown report.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "scripts/ci_analyzer/metrics_summary.py": {
+    "module_doc": {
+      "description": "This module provides functionality to generate summary metrics from code quality reports.\nIt includes functions to analyze report data and summarize key metrics related to methods, tests, complexity, docstrings, and linter issues.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "generate_metrics_summary",
+        "description": "Generate a summary of metrics from the provided report data.",
+        "args": "report_data (dict): Dictionary containing report data for each file.",
+        "returns": "str: A Markdown formatted string summarizing the metrics."
+      }
+    ]
+  },
+  "scripts/ci_analyzer/severity_index.py": {
+    "module_doc": {
+      "description": "This module provides functionality to compute severity scores for code quality analysis.\nIt includes functions to compute individual severity scores for files and to create a severity index DataFrame from report data.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "compute_severity",
+        "description": "Compute the severity score for a given file based on its coverage and linting data.",
+        "args": "file_path (str): The path of the file being analyzed.\ncontent (dict): The report data for the file, including coverage and linting information.",
+        "returns": "dict: A dictionary containing the severity metrics for the file."
+      },
+      {
+        "name": "compute_severity_index",
+        "description": "Compute a severity index for all files in the report data.",
+        "args": "report_data (dict): Dictionary containing report data for each file.",
+        "returns": "pd.DataFrame: A DataFrame sorted by severity score."
+      }
+    ]
+  },
+  "scripts/ci_analyzer/drilldown.py": {
+    "module_doc": {
+      "description": "This module provides functionality to generate detailed Markdown reports for top offenders in code quality analysis.\nIt includes functions to create drilldowns that summarize linting errors, complexity, coverage, and function descriptions for the top offenders.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "generate_top_offender_drilldowns",
+        "description": "Generate a Markdown section with drilldowns for the top N offenders.",
+        "args": "severity_df: DataFrame containing severity information for files.\nreport_data (dict): Dictionary containing report data for each file.\ntop_n (int): Number of top offenders to include in the report.",
+        "returns": "str: Markdown formatted string with detailed analysis of top offenders."
+      }
+    ]
+  },
+  "tests/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/conftest.py": {
+    "module_doc": {
+      "description": "conftest.py\nThis module contains configuration and fixtures for pytest testing.\nIt imports and makes available all fixtures from separate modules to keep\nthe testing infrastructure organized and maintainable.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/unit/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/unit/indexers/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/unit/utils/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/unit/kg/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/unit/refactor/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/unit/core/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/unit/gui/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/unit/ai/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/unit/config/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/unit/ci_analyzer/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/smoke/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/integration/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/mocks/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/mock_data/__init__.py": {
+    "module_doc": {
+      "description": null,
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/fixtures/core_fixtures.py": {
+    "module_doc": {
+      "description": "Core Application Fixtures\nThis module provides fixtures for testing core application components like\nthe logger core, summary tracker, and indexers.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "DummyEmbeddingModel",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "logger_core",
+        "description": "Creates a logger core for testing.",
+        "args": "temp_dir (Path): The temporary directory for the logger core.",
+        "returns": "Any: The logger core."
+      },
+      {
+        "name": "clean_summary_tracker",
+        "description": "Cleans the summary tracker for testing.",
+        "args": "logger_core (Any): The logger core to clean.",
+        "returns": null
+      },
+      {
+        "name": "reset_config_manager",
+        "description": "Resets the configuration manager for testing.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "stub_indexers",
+        "description": "Stubs indexers for testing.",
+        "args": "monkeypatch (Any): The monkeypatch object to use for patching.\nmock_raw_log_file (Any): The mocked raw log file.\nmock_correction_summaries_file (Any): The mocked correction summaries file.\ntemp_dir (Path): The temporary directory for the indexers.",
+        "returns": null
+      },
+      {
+        "name": "encode",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "mock_init_summary",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "mock_init_raw",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "tests/fixtures/temp_dir_fixtures.py": {
+    "module_doc": {
+      "description": "Temporary Directory and Configuration Management Fixtures\nThis module provides fixtures for creating temporary directories and\nmanaging configuration during testing.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "temp_dir",
+        "description": "Creates a temporary directory for testing.",
+        "args": "tmp_path (Path): The temporary path to create the directory.",
+        "returns": "Path: The path to the created temporary directory."
+      },
+      {
+        "name": "temp_script_dir",
+        "description": "Creates a temporary script directory for testing.",
+        "args": "temp_dir (Path): The temporary directory for the script.",
+        "returns": "str: The path to the created temporary script directory."
+      },
+      {
+        "name": "temp_config_file",
+        "description": "Creates a temporary config file for testing.",
+        "args": "temp_dir (Path): The temporary directory for the config file.",
+        "returns": "Path: The path to the created temporary config file."
+      },
+      {
+        "name": "patch_config_and_paths",
+        "description": "Patches the configuration and paths for testing.",
+        "args": "monkeypatch (Any): The monkeypatch object to use for patching.\ntemp_dir (Path): The temporary directory for the configuration.",
+        "returns": null
+      },
+      {
+        "name": "build_test_config",
+        "description": "Builds a test configuration.",
+        "args": "temp_dir (Path): The temporary directory for the configuration.",
+        "returns": "dict: The test configuration."
+      },
+      {
+        "name": "safe_path",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "tests/fixtures/ai_mock_fixtures.py": {
+    "module_doc": {
+      "description": "AI and External Service Mocking Fixtures\nThis module provides fixtures for mocking AI components and external services\nused in the application during testing.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [
+      {
+        "name": "FailingSummarizer",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "mock_ollama",
+        "description": "Mocks the ollama library functions for testing.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "mock_sentence_transformer",
+        "description": "Provide a fully-mocked SentenceTransformer for *all* tests:\n• Registers a fake ``sentence_transformers`` package in ``sys.modules``\n• Exposes the same mock on ``scripts.indexers.base_indexer`` so that\nhelpers can patch it with ``patch(\"scripts.indexers.base_indexer.SentenceTransformer\")``.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "patch_aisummarizer",
+        "description": "Patches the AI summarizer for testing.",
+        "args": "monkeypatch (Any): The monkeypatch object to use for patching.",
+        "returns": null
+      },
+      {
+        "name": "mock_failed_summarizer",
+        "description": "Mocks a failed summarizer.",
+        "args": null,
+        "returns": "Any: The mocked failed summarizer."
+      },
+      {
+        "name": "summarize_entries_bulk",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "tests/fixtures/tkinter_fixtures.py": {
+    "module_doc": {
+      "description": "Tkinter Environment Management Fixtures\nThis module provides fixtures for managing Tkinter in headless environments\nand patching Tkinter components during testing.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "_force_headless_tk",
+        "description": "Ensure Tk works in headless CI.\n• If $DISPLAY exists → no-op.\n• If not, try xvfb :0; if that fails, monkey-patch tk.Tk with MagicMock.\nReturns True if *real* GUI is available, False if mocked.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "tk_safe",
+        "description": "Yields (root, gui_ok):\nroot   -> a Tk() instance (real or mocked)\ngui_ok -> bool flag (True if real GUI)",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "flush_tk_events",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "patch_blocking_dialogs",
+        "description": null,
+        "args": null,
+        "returns": null
+      }
+    ]
+  },
+  "tests/fixtures/__init__.py": {
+    "module_doc": {
+      "description": "Package initialization file for fixtures.\nMakes the fixtures importable when importing from tests.fixtures.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": []
+  },
+  "tests/fixtures/safety_fixtures.py": {
+    "module_doc": {
+      "description": "Test Safety and Integrity Safeguards\nThis module provides fixtures for ensuring test integrity, preventing writes\nto production paths, and maintaining the safety of the test environment.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "watch_conftest_integrity",
+        "description": "Watches the integrity of the conftest.py file.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "prevent_production_path_writes",
+        "description": "Prevents writes to production paths.",
+        "args": "monkeypatch (Any): The monkeypatch object to use for patching.",
+        "returns": null
+      },
+      {
+        "name": "guarded_open",
+        "description": null,
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "assert_all_output_in_temp",
+        "description": "Asserts all output is in the temporary directory.",
+        "args": "tmp_path_factory (Any): The temporary path factory.",
+        "returns": null
+      }
+    ]
+  },
+  "tests/fixtures/encoding_fixtures.py": {
+    "module_doc": {
+      "description": "UTF-8 and Locale Management Fixtures\nThis module provides fixtures for ensuring consistent UTF-8 encoding and\nlocale handling during testing, especially in subprocesses.",
+      "args": null,
+      "returns": null
+    },
+    "classes": [],
+    "functions": [
+      {
+        "name": "_utf8_subprocess_env",
+        "description": "Context-manager that injects UTF-8 friendly env-vars before a subprocess\nstarts and rolls them back afterwards.",
+        "args": null,
+        "returns": null
+      },
+      {
+        "name": "force_utf8_subprocesses",
+        "description": "Session-scoped, autouse – runs once before ANY test executes.\n* sets environment so that every child-process sees UTF-8 encodings\n* patches ``locale.getpreferredencoding`` so libraries that rely on it\n(e.g. `subprocess._readerthread` inside pytest's capture layer) won't\nfall back to CP1252 on Windows.",
+        "args": null,
+        "returns": null
+      }
+    ]
+  }
+}

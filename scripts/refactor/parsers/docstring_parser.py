@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-docstring_parser.py
+Docstring Parser
+===============================
+This module scans a Python project directory for missing or partial docstrings.
 
-Scan a Python project directory for missing or partial docstrings.
-Outputs structured JSON and markdown-style reports with description, args, and return sections.
+It outputs structured JSON and markdown-style reports with description, args, and return sections.
 """
 
 import ast
@@ -17,7 +18,7 @@ script_path = Path(__file__).resolve()
 project_root = script_path.parents[3]  # should point to your repo root
 sys.path.insert(0, str(project_root))
 
-from scripts.refactor.enrich_refactor_pkg.path_utils import norm
+from scripts.refactor.lint_report_pkg.path_utils import norm
 
 DEFAULT_EXCLUDES = {".venv", "venv", "__pycache__", ".git", "build", "dist"}
 
@@ -94,8 +95,13 @@ class DocstringAnalyzer:
         if tree is None:
             return {}
 
+        docstring = None
+        if isinstance(tree, ast.Module) and tree.body:
+            first_node = tree.body[0]
+            if isinstance(first_node, (ast.Expr,)) and isinstance(first_node.value, ast.Str):
+                docstring = first_node.value.s
         result = {
-            "module_doc": split_docstring_sections(ast.get_docstring(tree)),
+            "module_doc": split_docstring_sections(docstring),
             "classes": [],
             "functions": [],
         }
@@ -103,20 +109,24 @@ class DocstringAnalyzer:
         def visit_node(node):
             if isinstance(node, ast.ClassDef):
                 doc = split_docstring_sections(ast.get_docstring(node))
-                result["classes"].append({
-                    "name": node.name,
-                    "description": doc["description"],
-                    "args": doc["args"],
-                    "returns": doc["returns"],
-                })
+                result["classes"].append(
+                    {
+                        "name": node.name,
+                        "description": doc["description"],
+                        "args": doc["args"],
+                        "returns": doc["returns"],
+                    }
+                )
             elif isinstance(node, ast.FunctionDef):
                 doc = split_docstring_sections(ast.get_docstring(node))
-                result["functions"].append({
-                    "name": node.name,
-                    "description": doc["description"],
-                    "args": doc["args"],
-                    "returns": doc["returns"],
-                })
+                result["functions"].append(
+                    {
+                        "name": node.name,
+                        "description": doc["description"],
+                        "args": doc["args"],
+                        "returns": doc["returns"],
+                    }
+                )
             for child in ast.iter_child_nodes(node):
                 visit_node(child)
 

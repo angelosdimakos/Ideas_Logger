@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+
+# Virtual environments
+.venv/
+env/
+
+# Git
+.git/
+.gitignore
+
+# Editors
+.vscode/
+.idea/
+
+# Tests and coverage
+htmlcov/
+.coverage
+.pytest_cache/
+*.log
+
+# Misc
+*.mp4
+*.png
+*.zip
+*.tar.gz
+*.pth
+*.bak

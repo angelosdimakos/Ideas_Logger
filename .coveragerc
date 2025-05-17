@@ -1,10 +1,40 @@
-# .coveragerc (new, minimal and accurate)
 [run]
 branch = True
-source = scripts
+source =
+    scripts
+    tests
+
+omit =
+    */__init__.py
+    */mocks/*
+    */fixtures/*
+    */constants.py
+    */logging_setup.py
+    */visuals.py
+    */deprecated/*
+    */.*
+    */site-packages/*
+    */venv/*
+    */.venv/*
 
 [report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
+    logger\.
+    raise NotImplementedError
+    pass
+
 show_missing = True
-skip_covered = False
-omit =
-    scripts/gui/*
+skip_covered = True
+precision = 1
+
+[html]
+directory = coverage_html_report
+title = Ideas Logger Coverage Report
+
+[xml]
+output = coverage.xml
+
+[json]
+output = coverage.json

@@ -9,3 +9,9 @@ exclude = '''
   | dist
 )/
 '''
+
+[tool.mutmut]
+paths_to_mutate = "scripts/ai/"
+exclude_paths = "scripts/tests/,*/__init__.py"
+use_coverage = true
+runner = "pytest"

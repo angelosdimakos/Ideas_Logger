@@ -6,7 +6,7 @@ pytestmark = [pytest.mark.unit]
 
 
 @pytest.fixture
-def test_config(tmp_path, monkeypatch):
+def test_paths_config(tmp_path, monkeypatch):
     """
     Unit tests for verifying ZephyrusPaths path resolution in test mode.
 
@@ -32,7 +32,7 @@ def test_config(tmp_path, monkeypatch):
     return config
 
 
-def test_paths_in_test_mode(test_config, tmp_path):
+def test_paths_in_test_mode(test_paths_config, tmp_path):
     """
     Unit tests for ZephyrusPaths path resolution in test mode.
 

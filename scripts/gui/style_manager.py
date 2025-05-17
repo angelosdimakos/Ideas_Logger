@@ -9,7 +9,7 @@ Core features include:
 - Configuring ttk styles.
 - Updating specific styles with new options.
 """
-
+import tkinter as Tk
 from tkinter import ttk
 from typing import Dict, Any
 
@@ -25,7 +25,7 @@ class StyleManager:
         style (ttk.Style): The ttk style manager instance.
     """
 
-    def __init__(self, root: ttk.Tk) -> None:
+    def __init__(self, root: Tk.Tk) -> None:
         """
         Initializes the StyleManager with the specified root window.
 
@@ -33,7 +33,7 @@ class StyleManager:
             root (Tk): The root Tkinter window.
         """
         self.root = root
-        self.style = ttk.Style(root)
+        self.style = ttk.Style()  # patched: do not pass root for compatibility
         self.initialize_styles()
 
     def initialize_styles(self) -> None:
