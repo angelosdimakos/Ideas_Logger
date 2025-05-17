@@ -105,4 +105,29 @@ git add -A
 git commit -m "$Message"
 git push
 
+Write-Host "Compressing latest reports..."
+
+$latestStrictness = Join-Path $latestDir "final_strictness_report.json"
+$latestMerged     = Join-Path $latestDir "merged_report.json"
+
+$compressedStrictness = Join-Path $artifactsDir "final_strictness_report.comp.json"
+$compressedMerged     = Join-Path $artifactsDir "merged_report.comp.json"
+
+if (Test-Path $latestStrictness) {
+    Write-Host "Compressing strictness report..."
+    python scripts/refactor/compressor/strictness_report_squeezer.py compress `
+           $latestStrictness `
+           $compressedStrictness
+}
+
+if (Test-Path $latestMerged) {
+    Write-Host "Compressing merged report..."
+    python scripts/refactor/compressor/merged_report_squeezer.py compress `
+           $latestMerged `
+           $compressedMerged
+}
+
+Write-Host "Compression completed. Compressed reports saved to root artifacts directory."
+
+
 Write-Host "Done."

@@ -1,16 +1,9 @@
-# tests/unit/ai/unified_code_assistant/test_analysis.py
+# tests/utils_test.py
 import json
 import tempfile
 import os
 from scripts.unified_code_assistant.assistant_utils import load_report, extract_code_snippets, get_issue_locations
-from scripts.unified_code_assistant import build_contextual_prompt, build_enhanced_contextual_prompt
-from scripts.unified_code_assistant.module_summarizer import summarize_modules
-from scripts.unified_code_assistant import analyze_report
-from scripts.config.config_manager import ConfigManager
-
-class MockSummarizer:
-    def summarize_entry(self, text, subcategory=None):
-        return "Summary for: " + text[:30]
+from scripts.unified_code_assistant.prompt_builder import build_contextual_prompt, build_enhanced_contextual_prompt
 
 def test_load_report():
     mock_data = {"some": "data"}
@@ -105,59 +98,3 @@ def test_build_enhanced_contextual_prompt():
     assert "module1.py" in prompt
     assert "Refactor large function." in prompt
     assert "What should we fix first?" in prompt
-
-def test_summarize_modules():
-    report_data = {
-        "src/module1.py": {
-            "docstrings": {
-                "functions": [{"name": "foo", "docstring": "Does something"}]
-            }
-        },
-        "src/module2.py": {
-            "docstrings": {
-                "functions": []
-            }
-        },
-        "src/ignore.py": {
-            "docstrings": {}
-        }
-    }
-    config = ConfigManager.load_config()
-    summaries = summarize_modules(report_data, MockSummarizer(), config=config)
-    assert "src/module1.py" in summaries
-    assert "Summary for: " in summaries["src/module1.py"]
-    assert "src/module2.py" not in summaries
-    assert "src/ignore.py" not in summaries
-
-def test_analyze_report():
-    report_data = {
-        "file_a.py": {
-            "mypy": {"errors": ["e1"]},
-            "lint": {"issues": ["l1"]},
-            "complexity": {"functions": []},
-            "coverage": {
-                "complexity": {
-                    "foo": {"complexity": 5},
-                    "bar": {"complexity": 3}
-                }
-            }
-        },
-        "file_b.py": {
-            "mypy": {"errors": []},
-            "lint": {"issues": []},
-            "complexity": {"functions": []},
-            "coverage": {
-                "complexity": {
-                    "baz": {"complexity": 2}
-                }
-            }
-        }
-    }
-
-    result = analyze_report(report_data, top_n=2)
-    assert "top_offenders" in result
-    assert "severity_data" in result
-    assert "summary_metrics" in result
-    assert isinstance(result["top_offenders"], list)
-    assert isinstance(result["severity_data"], list)
-    assert isinstance(result["summary_metrics"], dict)

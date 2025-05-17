@@ -1,9 +1,20 @@
 # tests/unit/ai/unified_code_assistant/test_assistant_cli.py
 import tempfile
 import json
-from scripts.unified_code_assistant import main
+from scripts.unified_code_assistant.assistant_cli import main
 import sys
 from unittest import mock
+import pytest
+from types import SimpleNamespace
+
+@pytest.fixture(autouse=True)
+def patch_mock_config(monkeypatch):
+    mock_config = SimpleNamespace(
+        persona="test",
+        prompts_by_subcategory={"_default": "Summarize the function briefly."}
+    )
+    monkeypatch.setattr("scripts.config.config_manager.ConfigManager.load_config", lambda: mock_config)
+
 
 
 def make_temp_report(data):
