@@ -16,6 +16,19 @@ def suggest_new_modules(
     subcategory: str = "Architecture Planning",
     path_filter: str | None = None,
 ) -> tuple[str, str]:
+    """
+    Generates new module or package suggestions and corresponding Python prototype code based on an architecture report.
+    
+    Reads a JSON report of existing modules and their documented functions, optionally filtered by path substring. Summarizes current functionality, prompts an AI summarizer to propose complementary modules/packages with technical justifications, and then generates Python code stubs for the suggested modules following strict naming conventions.
+    
+    Args:
+        artifact_path: Path to the JSON architecture report.
+        subcategory: Optional subcategory for prompt context (default: "Architecture Planning").
+        path_filter: Optional substring to filter modules by file path.
+    
+    Returns:
+        A tuple containing the textual module/package suggestions and the generated Python prototype code stubs.
+    """
     with open(artifact_path, "r", encoding="utf-8") as f:
         report = json.load(f)
 
@@ -89,7 +102,16 @@ Module Suggestions:
 
 def generate_test_stubs(prototype_code: str, config: ConfigManager) -> str:
     """
-    Generate pytest test stubs for given module prototypes.
+    Generates pytest unit test stubs for the provided module prototype code.
+    
+    The generated test stubs follow naming conventions, include multiple test functions per original function or method, use pytest fixtures where appropriate, and are formatted with filename annotations for easy export.
+    
+    Args:
+        prototype_code: The Python prototype code for which to generate test stubs.
+        config: Configuration manager containing persona and summarizer settings.
+    
+    Returns:
+        A string containing the generated pytest test stubs in Markdown code blocks.
     """
     summarizer = AISummarizer()
     prompt = f"""
@@ -114,7 +136,15 @@ Module Prototypes:
 
 
 def extract_filenames_from_code(code: str) -> list[str]:
-    """Extract filenames from code blocks based on filename comments."""
+    """
+    Extracts Python filenames from code blocks by searching for '# Filename: <filename.py>' comments.
+    
+    Args:
+        code: A string containing code blocks with embedded filename comments.
+    
+    Returns:
+        A list of extracted Python filenames found in the code.
+    """
     return [match.group(1).strip() for match in re.finditer(r"# Filename:\s*([^\n]+\.py)", code)]
 
 
@@ -125,7 +155,9 @@ def export_prototypes_to_files(
     is_test: bool = False,
 ):
     """
-    Export code or test stubs to filesystem based on '# Filename' comments.
+    Writes generated prototype or test code blocks to files based on embedded filename comments.
+    
+    Extracts Python code blocks from the input string, determines target filenames from `# Filename:` comments, and writes each code block to the specified output directory. For test files, ensures filenames are prefixed with `test_` and prepends necessary imports. Skips code blocks without filename annotations and prints status messages for each file created.
     """
     output_dir_path = Path(output_dir)
     output_dir_path.mkdir(parents=True, exist_ok=True)
@@ -173,7 +205,18 @@ def export_prototypes_to_files(
 
 
 def validate_test_coverage(module_dir: str, test_dir: str) -> list[str]:
-    """Verify that all public functions and methods have corresponding pytest tests."""
+    """
+    Checks that all public functions and methods in a module directory have corresponding pytest test functions.
+    
+    Parses Python source files to identify public functions and methods, scans test files for matching test functions, reports missing coverage, and returns a list of uncovered items.
+    
+    Args:
+        module_dir: Path to the directory containing module source files.
+        test_dir: Path to the directory containing pytest test files.
+    
+    Returns:
+        A list of public function and method names (with module and class context) that lack corresponding tests.
+    """
     module_functions: dict[str, bool] = {}
 
     # Traverse module files and collect public functions and methods

@@ -20,14 +20,15 @@
       @abc.abstractmethod
       def transform(self, config: Dict[str, Any]) -> Dict[str, Any]:
           """
-          Apply a transformation to the configuration before it is used throughout the application.
-
-          This method should modify the configuration as needed and return the transformed configuration.
-
+          Transforms the configuration dictionary before it is used by the application.
+          
+          Subclasses should override this method to implement specific transformation logic, such as validation, normalization, or conversion.
+          
           Args:
-              config (Dict[str, Any]): The configuration as a dictionary.
+              config: The configuration data as a dictionary.
+          
           Returns:
-              Dict[str, Any]: The transformed configuration as a dictionary.
+              The transformed configuration dictionary.
           """
 
   class ConfigValidator(AbstractTransformer):

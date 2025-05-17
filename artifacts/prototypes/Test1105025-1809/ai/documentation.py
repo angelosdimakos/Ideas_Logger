@@ -21,15 +21,23 @@ class Documenter:
                 A dictionary mapping the code elements (module names or tuples of class/function names) to their respective documents.
     """
     def __init__(self, modules: List[str], functions: List[str], classes: List[str]):
+        """
+        Initializes the Documenter with lists of modules, functions, and classes to document.
+        
+        Args:
+            modules: List of module names to be documented.
+            functions: List of function or method names to be documented.
+            classes: List of class names to be documented.
+        """
         self.modules = modules
         self.functions = functions
         self.classes = classes
 
     def generate_documentation(self) -> Dict[Union[str, tuple], str]:
         """
-        Generates comprehensive documentation for the specified modules, functions, and classes.
-
+        Generates documentation for the specified modules, functions, and classes.
+        
         Returns:
-            A dictionary mapping the code elements (module names or tuples of class/function names) to their respective documents.
+            A dictionary mapping each code element (module name as a string or a tuple for class/function names) to its generated documentation string.
         """
         pass

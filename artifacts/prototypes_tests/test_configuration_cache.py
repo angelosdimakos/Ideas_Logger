@@ -7,7 +7,7 @@ import pytest
   @pytest.fixture(name="config_source")
   def config_source_fixture():
       """
-      A fixture for creating a mock config source.
+      Pytest fixture that provides a mocked asynchronous configuration source.
       """
       return AsyncMock()
 
@@ -27,7 +27,9 @@ import pytest
 
   def test_configcache_reuses_stored_item_on_subsequent_calls(config_source):
       """
-      Tests that the ConfigCache reuses a stored item on subsequent calls to load_item with the same cache key.
+      Verifies that ConfigCache returns the cached item on repeated calls with the same key.
+      
+      Ensures that after the first retrieval, subsequent calls to load_item with the same cache key return the stored item instead of invoking the underlying config source again.
       """
       cache = ConfigCache(config_source)
       cache_key = "test_cache_key"

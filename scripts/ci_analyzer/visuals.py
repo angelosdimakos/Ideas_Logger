@@ -7,13 +7,9 @@ It includes functions to generate risk emojis and bar representations based on s
 
 def risk_emoji(score: float) -> str:
     """
-    Return an emoji representing the risk level based on the severity score.
-
-    Args:
-        score (float): The severity score to evaluate.
-
-    Returns:
-        str: An emoji indicating the risk level (green, yellow, or red).
+    Returns an emoji indicating risk level based on the given severity score.
+    
+    A green emoji ("🟢") represents low risk for scores 90 and above, yellow ("🟡") indicates moderate risk for scores between 70 and 89, and red ("🔴") signifies high risk for scores below 70.
     """
     if score >= 90:
         return "🟢"  # Green emoji for low risk
@@ -25,14 +21,16 @@ def risk_emoji(score: float) -> str:
 
 def render_bar(score: float, width: int = 20) -> str:
     """
-    Render a horizontal bar representation of the score.
-
+    Generates a horizontal bar visualizing the score as filled and unfilled segments.
+    
+    The bar's length is determined by the width parameter, with the number of filled segments proportional to the score out of 100.
+    
     Args:
-        score (float): The score to represent as a bar.
-        width (int): The total width of the bar (default is 20).
-
+        score: The value to visualize, where 100 fills the bar completely.
+        width: Total number of segments in the bar (default is 20).
+    
     Returns:
-        str: A string representing the filled and unfilled sections of the bar.
+        A string composed of filled ("▓") and unfilled ("░") segments representing the score.
     """
     filled = int((score / 100.0) * width)  # Calculate how many sections of the bar should be filled
     return "▓" * filled + "░" * (

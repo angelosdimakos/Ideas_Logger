@@ -31,8 +31,9 @@ class AISummarizer:
 
     def __init__(self) -> None:
         """
-        Initialize AISummarizer by loading configuration, setting the LLM model,
-        and preparing prompts by subcategory.
+        Initializes the AISummarizer with configuration settings, model selection, and prompts.
+        
+        Loads configuration data, sets the LLM model (defaulting to 'mistral' if unspecified), and prepares subcategory-specific prompts for summarization.
         """
         config: Dict[str, Any] = load_config()  # Load configuration settings from external source
         self.model: str = get_config_value(
@@ -45,14 +46,13 @@ class AISummarizer:
 
     def _fallback_summary(self, full_prompt: str) -> str:
         """
-        Attempt to generate a summary using the Ollama chat API as a fallback when
-        primary summarization fails.
-
+        Generates a summary using the Ollama chat API as a fallback if primary summarization fails.
+        
         Args:
-            full_prompt (str): The prompt to send to the chat model.
-
+            full_prompt: The prompt to send to the chat model.
+        
         Returns:
-            str: The generated summary or an error message.
+            The generated summary, or an error message if the fallback fails.
         """
         logger.info("[AI] Attempting fallback approach (chat)")
         try:
@@ -69,15 +69,14 @@ class AISummarizer:
 
     def summarize_entry(self, entry_text: str, subcategory: Optional[str] = None) -> str:
         """
-        Generate a summary for a single text entry using the configured LLM model
-        and an optional subcategory-specific prompt.
-
+        Generates a summary for a single text entry using the configured LLM model and an optional subcategory-specific prompt.
+        
         Args:
-            entry_text (str): The text to summarize.
-            subcategory (Optional[str], optional): The subcategory to use for the prompt.
-
+            entry_text: The text to be summarized.
+            subcategory: An optional subcategory to select a specialized prompt.
+        
         Returns:
-            str: The generated summary or a fallback message if summarization fails.
+            The generated summary, or a fallback message if summarization fails.
         """
         prompt: str = self.prompts_by_subcategory.get(
             subcategory, self.prompts_by_subcategory.get("_default", "Summarize this:")
@@ -101,15 +100,16 @@ class AISummarizer:
 
     def summarize_entries_bulk(self, entries: List[str], subcategory: Optional[str] = None) -> str:
         """
-        Generate a summary for a list of text entries using the configured LLM model
-        and subcategory-specific prompts.
-
+        Generates a summary for a list of text entries using the configured LLM model and prompts.
+        
+        If a subcategory is provided, a corresponding prompt is used; otherwise, a default prompt is applied. Returns a fallback message if summarization fails or if the input list is empty.
+        
         Args:
-            entries (List[str]): The list of text entries to summarize.
-            subcategory (Optional[str], optional): The subcategory to use for the prompt.
-
+            entries: List of text entries to summarize.
+            subcategory: Optional subcategory to select a specific prompt.
+        
         Returns:
-            str: The generated summary or a fallback message if summarization fails.
+            The generated summary as a string, or a fallback message if summarization fails.
         """
         if not entries:
             logger.warning("[EmptyInput] summarize_entries_bulk received empty list")

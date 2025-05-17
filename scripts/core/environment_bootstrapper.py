@@ -30,28 +30,27 @@ class EnvironmentBootstrapper:
 
     def __init__(self, paths: ZephyrusPaths, default_batch_size: int = 5) -> None:
         """
-        Initialize the EnvironmentBootstrapper.
-
-        Parameters:
-            paths (ZephyrusPaths): The paths object containing locations for
-                                    logs, exports, and configuration.
-            default_batch_size (int): The default batch size for processing
-                                       entries. Defaults to 5.
+        Initializes the EnvironmentBootstrapper with paths and an optional default batch size.
+        
+        Args:
+            paths: Contains directory and file locations for logs, exports, and configuration.
+            default_batch_size: Batch size to use if the configuration file is missing. Defaults to 5.
         """
         self.paths = paths  # Store the paths for later use
         self.default_batch_size = default_batch_size  # Set default batch size
 
     def bootstrap(self) -> None:
         """
-        Bootstrap the environment by creating necessary directories and
-        initializing required files.
+        Prepares the application environment by ensuring required directories and files exist.
+        
+        Calls internal methods to create necessary directories and initialize essential files for the Zephyrus Logger application, guaranteeing all resources are ready before startup.
         """
         self._make_directories()  # Create necessary directories
         self._initialize_files()  # Initialize required files
 
     def _make_directories(self) -> None:
         """
-        Create necessary directories for logs and exports.
+        Creates required directories for logs, exports, and configuration files if they do not exist.
         """
         self.paths.log_dir.mkdir(parents=True, exist_ok=True)  # Create log directory
         self.paths.export_dir.mkdir(parents=True, exist_ok=True)  # Create export directory
@@ -59,8 +58,9 @@ class EnvironmentBootstrapper:
 
     def _initialize_files(self) -> None:
         """
-        Initialize log and configuration files. Creates empty files if they
-        do not exist and sets up default values where necessary.
+        Initializes required log and configuration files for the Zephyrus Logger environment.
+        
+        Creates empty or default-initialized files if they do not exist, including JSON and text log files, correction summaries, and the configuration file. If the correction summaries file exists but is empty, it is reinitialized as an empty JSON file. The configuration file is recreated with a default batch size if missing.
         """
         if not self.paths.json_log_file.exists():  # Check if log file exists
             logger.info("Creating empty log file: %s", self.paths.json_log_file)

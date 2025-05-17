@@ -7,15 +7,9 @@ It includes functions to create drilldowns that summarize linting errors, comple
 
 def generate_top_offender_drilldowns(severity_df, report_data: dict, top_n: int = 3) -> str:
     """
-    Generate a Markdown section with drilldowns for the top N offenders.
-
-    Args:
-        severity_df: DataFrame containing severity information for files.
-        report_data (dict): Dictionary containing report data for each file.
-        top_n (int): Number of top offenders to include in the report.
-
-    Returns:
-        str: Markdown formatted string with detailed analysis of top offenders.
+    Generates a Markdown report with expandable drilldowns for the top N files with the highest severity scores.
+    
+    For each top offender file, includes sections detailing MyPy errors, Pydocstyle issues, functions with high complexity or low coverage, and function docstrings with argument and return documentation. Returns a single Markdown-formatted string summarizing these analyses.
     """
     md = "\n## 🔎 Top Offenders: Detailed Analysis\n"
     top_files = severity_df.head(top_n)["File"].tolist()  # Get top N files based on severity

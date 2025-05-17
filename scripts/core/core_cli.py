@@ -15,12 +15,12 @@ core = ZephyrusLoggerCore(".")
 @app.command()
 def log(main: str, sub: str, entry: str) -> None:
     """
-    Log a new entry to JSON and Markdown.
-
-    Parameters:
-        main (str): The main category for the log entry.
-        sub (str): The subcategory for the log entry.
-        entry (str): The content of the log entry.
+    Saves a new log entry under the specified main and subcategory.
+    
+    Args:
+        main: Main category for the log entry.
+        sub: Subcategory for the log entry.
+        entry: Content of the log entry.
     """
     if core.save_entry(main, sub, entry):
         typer.echo("✅ Entry saved successfully.")
@@ -31,11 +31,13 @@ def log(main: str, sub: str, entry: str) -> None:
 @app.command()
 def summarize(main: str, sub: str) -> None:
     """
-    Force summarization of a category/subcategory.
-
-    Parameters:
-        main (str): The main category for the summary.
-        sub (str): The subcategory for the summary.
+    Generates a summary for the specified main category and subcategory.
+    
+    Args:
+        main: The main category to summarize.
+        sub: The subcategory to summarize.
+    
+    Prints a confirmation message if the summary is generated, or a warning if there are insufficient entries or the summarization fails.
     """
     if core.generate_global_summary(main, sub):
         typer.echo("🧠 Summary generated.")
@@ -46,12 +48,12 @@ def summarize(main: str, sub: str) -> None:
 @app.command()
 def search(query: str, top_k: int = 5, kind: str = "summary") -> None:
     """
-    Search summaries or raw logs.
-
-    Parameters:
-        query (str): The search query.
-        top_k (int): The number of top results to return.
-        kind (str): The type of search ('summary' or 'raw').
+    Searches summaries or raw logs and displays the top matching results.
+    
+    Args:
+        query: The search query string.
+        top_k: Maximum number of results to display. Defaults to 5.
+        kind: Specifies whether to search 'summary' or 'raw' logs. Defaults to 'summary'.
     """
     results = (
         core.search_summaries(query, top_k)

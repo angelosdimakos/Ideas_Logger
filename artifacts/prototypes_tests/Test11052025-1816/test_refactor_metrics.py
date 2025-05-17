@@ -1,4 +1,3 @@
-
 import refactor_docs
 from unittest.mock import Mock
 
@@ -11,7 +10,9 @@ def test_analyze_docstrings():
     # Replace this placeholder with a more specific test for the structure and contents of the suggested improvements.
 
 def test_analyze_docstrings_empty_module():
-    """Test analyze_docstrings function with an empty module."""
+    """
+    Tests that analyze_docstrings returns no suggestions when given an empty module.
+    """
     mock_module = Mock()
     mock_module.__dict__.clear()  # Clear all attributes
     suggestions = refactor_docs.analyze_docstrings(str(mock_module.__file__))

@@ -19,16 +19,18 @@
       @abc.abstractmethod
       async def load_item(self, cache_key):
           """
-          Load an item from the cache by its unique key.
-
-          This method should return the cached object if it exists or load it from the appropriate source and cache it.
-
+          Asynchronously loads and returns an item identified by a unique cache key.
+          
+          If the item is not present in the cache, it is loaded from the source and cached. Raises a KeyError if the item cannot be found or loaded.
+          
           Args:
-              cache_key (str): The unique identifier for the item to be loaded.
+              cache_key: The unique identifier for the item.
+          
           Returns:
-              Any: The loaded item.
+              The loaded item.
+          
           Raises:
-              KeyError: If the item is not found in the cache or cannot be loaded from the source.
+              KeyError: If the item cannot be found or loaded.
           """
 
   class ConfigCache(AbstractCache):
@@ -38,10 +40,10 @@
 
       def __init__(self, config_source):
           """
-          Initialize the cache with a specified config source.
-
+          Initializes the configuration cache with the given configuration source.
+          
           Args:
-              config_source (ConfigLoader): An instance of the ConfigLoader class responsible for loading the configuration.
+              config_source: The source responsible for loading configuration objects.
           """
 
   # Suggested Integrations: load_config, get_effective_config, reset

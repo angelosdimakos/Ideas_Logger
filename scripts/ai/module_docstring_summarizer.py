@@ -17,16 +17,16 @@ def summarize_module(
     file_path: str, doc_entries: list, summarizer: AISummarizer, config: ConfigManager
 ) -> str:
     """
-    Summarize the module's docstrings using the provided summarizer.
-
+    Generates a concise summary of a module's functions based on their docstrings.
+    
+    If no docstring entries are provided, returns "No docstrings found." Otherwise, formats each entry, applies a prompt template and persona, and uses the provided AI summarizer to produce a module-level summary.
+    
     Args:
-        file_path (str): The path to the module file.
-        doc_entries (list): List of docstring entries to summarize.
-        summarizer (AISummarizer): The summarizer instance to use.
-        config (ConfigManager): The configuration manager instance.
-
+        file_path: Path to the module file.
+        doc_entries: List of function or class docstring entries to summarize.
+    
     Returns:
-        str: The summary of the module's docstrings.
+        A string containing the summarized description of the module's functionality.
     """
     if not doc_entries:
         return "No docstrings found."  # Early exit if no docstrings are provided
@@ -51,12 +51,9 @@ def summarize_module(
 
 def run(input_path: str, output_path: str | None = None, path_filter: str | None = None) -> None:
     """
-    Run the summarization process on the specified input file.
-
-    Args:
-        input_path (str): The path to the input JSON report file.
-        output_path (str | None): Optional path to save the output summary.
-        path_filter (str | None): Optional filter for file paths to include in the summary.
+    Processes a JSON audit report to generate and output module docstring summaries.
+    
+    Reads a JSON report file containing module docstrings, optionally filters modules by file path, summarizes each module's functions using an AI summarizer, and outputs the results either to a Markdown file or to standard output.
     """
     config = ConfigManager.load_config()  # Load configuration settings
     summarizer = AISummarizer()  # Initialize the summarizer

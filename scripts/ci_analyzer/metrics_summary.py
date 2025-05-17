@@ -7,13 +7,15 @@ It includes functions to analyze report data and summarize key metrics related t
 
 def generate_metrics_summary(report_data: dict) -> str:
     """
-    Generate a summary of metrics from the provided report data.
-
+    Generates a Markdown summary of key code quality metrics from report data.
+    
+    Aggregates counts of total methods audited, methods missing tests, high-complexity methods (complexity ≥ 10), methods missing docstrings, and linter issues from the provided report data for multiple files.
+    
     Args:
-        report_data (dict): Dictionary containing report data for each file.
-
+        report_data: Dictionary containing code quality report data for each file.
+    
     Returns:
-        str: A Markdown formatted string summarizing the metrics.
+        A Markdown-formatted string summarizing the aggregated metrics.
     """
     total_methods = 0
     missing_tests = 0

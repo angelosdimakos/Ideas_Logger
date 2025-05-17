@@ -16,7 +16,16 @@ def compute_executive_summary(
     strictness_data: Dict[str, Any]
 ) -> Dict[str, Any]:
     """
-    Produce high-level summary metrics for the dashboard's Executive Summary.
+    Computes high-level summary metrics for the dashboard's Executive Summary.
+    
+    Aggregates unique test count, average strictness and severity, number of production files, overall coverage percentage, and percentage of missing documentation from the provided data.
+    
+    Args:
+        merged_data: Data containing documentation and code structure information.
+        strictness_data: Data containing coverage, strictness, and severity metrics.
+    
+    Returns:
+        A dictionary with total unique tests, average strictness, average severity, production file count, overall coverage percentage, and missing documentation percentage.
     """
     unique_tests = set()
     strictness_vals, severity_vals, coverage_vals = [], [], []
@@ -68,7 +77,14 @@ def get_low_coverage_modules(
     top_n: int = 5
 ) -> List[Tuple[str, float]]:
     """
-    Returns a list of (module, coverage) sorted ascending by coverage.
+    Identifies modules with the lowest coverage based on strictness data.
+    
+    Args:
+        strictness_data: Dictionary containing module coverage information.
+        top_n: Number of modules with the lowest coverage to return.
+    
+    Returns:
+        A list of tuples, each containing a module name and its coverage value, sorted in ascending order by coverage.
     """
     pairs: List[Tuple[str, float]] = []
     raw_modules = strictness_data.get("modules", strictness_data)
@@ -85,7 +101,14 @@ def coverage_by_module(
     top_n: int = 10
 ) -> List[Tuple[str, float]]:
     """
-    Compute LOC-weighted coverage for each module and return top_n lowest.
+    Calculates LOC-weighted coverage percentages for each module and returns the modules with the lowest coverage.
+    
+    Args:
+        merged_data: Dictionary containing module data with coverage and complexity information.
+        top_n: Number of modules with the lowest coverage to return.
+    
+    Returns:
+        A list of tuples containing the module name and its coverage percentage, sorted in ascending order by coverage.
     """
     covs: Dict[str, float] = {}
     for path, rep in merged_data.items():
@@ -105,7 +128,9 @@ def compute_severity(
     content: Dict[str, Any]
 ) -> Dict[str, Any]:
     """
-    Compute severity metrics for a file based on linting, complexity, and coverage.
+    Calculates severity metrics for a file by combining linting errors, code complexity, and coverage.
+    
+    The severity score is computed as a weighted sum of mypy errors, pydocstyle lint issues, average code complexity, and coverage deficit. Returns a dictionary with file name, path, error counts, average complexity, average coverage percentage, and severity score.
     """
     linting = content.get("linting", {}).get("quality", {})
     mypy_errors = linting.get("mypy", {}).get("errors", [])
@@ -143,7 +168,16 @@ def compute_severity_df(
     compute_severity_fn
 ) -> pd.DataFrame:
     """
-    Build a DataFrame of severity metrics for all files.
+    Builds a pandas DataFrame containing severity metrics for each file.
+    
+    Applies the provided severity computation function to every file in the merged data, sorts the resulting DataFrame by severity score in descending order, and resets the index.
+    
+    Args:
+        merged_data: Dictionary mapping file paths to their associated data.
+        compute_severity_fn: Function that computes severity metrics for a given file.
+    
+    Returns:
+        A pandas DataFrame with severity metrics for all files, sorted by severity score.
     """
     rows: List[Dict[str, Any]] = []
     for fp, content in merged_data.items():
@@ -154,9 +188,9 @@ def compute_severity_df(
 
 def build_prod_to_tests_df(strictness_data: Dict[str, Any]) -> pd.DataFrame:
     """
-    Build DataFrame showing production module coverage and associated unique tests.
-    This version correctly calculates average strictness and severity over unique tests,
-    and avoids double counting of tests that appear multiple times per module.
+    Builds a DataFrame mapping production modules to their unique covering tests and related metrics.
+    
+    For each production module, deduplicates tests by name (keeping the highest severity per test), then computes the test count, average strictness, average severity, and a comma-separated list of unique test names. Returns a DataFrame sorted by test count in descending order.
     """
     rows: List[Dict[str, Any]] = []
 
@@ -196,8 +230,9 @@ def build_prod_to_tests_df(strictness_data: Dict[str, Any]) -> pd.DataFrame:
 
 def severity_distribution(strictness_data: Dict[str, Any]) -> Dict[str, int]:
     """
-    Bucketize tests by severity: Low (<=0.3), Medium (<=0.7), High (>0.7).
-    Deduplicates globally by test_name, keeping only the highest severity observed.
+    Buckets unique tests into Low, Medium, and High severity categories based on their highest observed severity.
+    
+    Deduplicates tests globally by test name, assigning each to a severity bucket: Low (≤0.3), Medium (≤0.7), or High (>0.7). Returns a dictionary with the count of tests in each bucket.
     """
     buckets = {"Low": 0, "Medium": 0, "High": 0}
     severity_thresholds = {"Low": 0.3, "Medium": 0.7}

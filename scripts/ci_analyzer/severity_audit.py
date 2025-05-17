@@ -17,13 +17,9 @@ from scripts.ci_analyzer.visuals import risk_emoji, render_bar
 
 def format_priority(score: float) -> str:
     """
-    Format the priority level based on the severity score.
-
-    Args:
-        score (float): The severity score to evaluate.
-
-    Returns:
-        str: A string representing the priority level (High, Medium, Low).
+    Returns a priority label with emoji based on the given severity score.
+    
+    A score above 30 is labeled as "🔥 High", above 15 as "⚠️ Medium", and 15 or below as "✅ Low".
     """
     if score > 30:  # High priority for scores above 30
         return "🔥 High"
@@ -35,14 +31,9 @@ def format_priority(score: float) -> str:
 
 def generate_header_block(severity_df, report_data: Dict[str, Dict]) -> str:
     """
-    Generate a header block for the CI code quality audit report.
-
-    Args:
-        severity_df: DataFrame containing severity information for files.
-        report_data: Dictionary containing report data for each file.
-
-    Returns:
-        str: A Markdown formatted string representing the header block.
+    Generates a Markdown header block summarizing key metrics from the CI code quality audit.
+    
+    Calculates totals and percentages for files analyzed, files with issues, top risk file, methods audited, missing tests, missing docstrings, and linter issues. Returns a formatted Markdown string with visual indicators for documentation, testing, and linting coverage.
     """
     total_files = len(report_data)  # Total number of files in the report
     files_with_issues = (
@@ -109,13 +100,9 @@ def generate_header_block(severity_df, report_data: Dict[str, Dict]) -> str:
 
 def generate_severity_table(severity_df) -> str:
     """
-    Generate a severity table for the CI code quality audit report.
-
-    Args:
-        severity_df: DataFrame containing severity information for files.
-
-    Returns:
-        str: A Markdown formatted string representing the severity table.
+    Generates a Markdown table ranking the top 10 files by severity for the CI audit report.
+    
+    If no data is available, returns a placeholder row with default values. The table includes file name, Mypy errors, lint issues, average complexity (with risk emoji), average coverage (with bar and emoji), severity score, and priority level.
     """
     table = "\n## 🧨 Severity Rankings (Top 10)\n\n"
     table += "| File | 🔣 Mypy | 🧼 Lint | 📉 Cx | 📊 Cov | 📈 Score | 🎯 Priority |\n"
@@ -140,10 +127,9 @@ def generate_severity_table(severity_df) -> str:
 
 def main() -> None:
     """
-    Generate a CI code quality audit report.
-
-    This function parses command line arguments, loads report data, computes severity metrics,
-    and generates a Markdown report.
+    Generates a CI code quality audit report in Markdown format.
+    
+    Parses command-line arguments to specify input and output paths, loads audit data, computes severity metrics, and assembles a comprehensive Markdown report summarizing code quality findings.
     """
     parser = argparse.ArgumentParser(description="Generate a CI code quality audit report")
     parser.add_argument("--audit", required=True, help="Path to merged_report.json")

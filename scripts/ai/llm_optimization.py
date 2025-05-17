@@ -43,6 +43,11 @@ __all__ = [
 # ---------------------------------------------------------------------------
 
 def _mean(values: List[float]) -> float:
+    """
+    Calculates the mean of a list of floats.
+    
+    Returns 0.0 if the input list is empty.
+    """
     return float(np.mean(values)) if values else 0.0
 
 
@@ -51,14 +56,15 @@ from typing import List, Dict
 
 def _categorise_issues(offenders: List[Dict]) -> str:
     """
-    Return a three-line summary that counts how many files trigger each
-    broad issue category.
-
-    Categories
-    ----------
-    • type errors   (Mypy Errors > 5)
-    • high complexity (Avg Complexity > 7)
-    • low coverage  (Avg Coverage % < 60)
+    Returns a summary of how many files exceed thresholds for type errors, complexity, and coverage.
+    
+    Counts the number of files in each of the following categories:
+    - Type errors: more than 5 Mypy errors
+    - High complexity: average complexity greater than 7
+    - Low coverage: average coverage below 60%
+    
+    Returns:
+        A three-line string reporting the file counts for each category.
     """
     counts = {
         "type errors": sum(o.get("Mypy Errors", 0) > 5 for o in offenders),
@@ -74,7 +80,11 @@ def _categorise_issues(offenders: List[Dict]) -> str:
 # ---------------------------------------------------------------------------
 
 def summarize_file_data_for_llm(file_data: dict, file_path: str) -> dict[str, Any]:
-    """Create the *exact* summary dict expected by legacy callers/tests."""
+    """
+    Produces a summary dictionary of code quality metrics for a file, matching legacy output keys.
+    
+    Extracts average complexity and coverage, counts MyPy errors and missing function docstrings, and identifies top issues. Returns a dictionary with file name, full path, rounded complexity and coverage, MyPy error count, docstring completeness ratio, and a list of up to three key issues.
+    """
 
     coverage_info: dict = file_data.get("coverage", {}).get("complexity", {})
     lint_info: dict = file_data.get("linting", {}).get("quality", {})
@@ -104,6 +114,18 @@ def summarize_file_data_for_llm(file_data: dict, file_path: str) -> dict[str, An
 
 
 def extract_top_issues(file_data: dict, max_issues: int = 3) -> List[str]:
+    """
+    Extracts up to a specified number of top issues from file quality data.
+    
+    Identifies and returns descriptions of the most significant issues in the file, prioritizing the first MyPy error, the first function with high complexity (>10), and the first function with low coverage (<50%).
+    
+    Args:
+        file_data: Nested dictionary containing code quality metrics for a file.
+        max_issues: Maximum number of issues to extract.
+    
+    Returns:
+        A list of issue description strings, up to the specified limit.
+    """
     issues: List[str] = []
 
     mypy_errors = file_data.get("linting", {}).get("quality", {}).get("mypy", {}).get("errors", [])
@@ -135,7 +157,18 @@ def build_refactor_prompt(
         verbose: bool = False,
         limit: int = 30,
 ) -> str:
-    """Return an LLM prompt focused on refactoring advice for up to *limit* files."""
+    """
+        Constructs an LLM prompt requesting strategic refactoring suggestions for a set of offender files.
+        
+        Args:
+            offenders: A list of tuples containing file metrics and issues.
+            config: Configuration object providing prompt templates and persona.
+            verbose: If True, includes detailed offender information in the prompt.
+            limit: Maximum number of offender files to include.
+        
+        Returns:
+            A formatted prompt string guiding the LLM to suggest refactoring strategies based on summarized code quality issues.
+        """
 
     offenders = offenders[:limit]
     template = apply_persona(
@@ -158,7 +191,11 @@ def build_strategic_recommendations_prompt(
         *,
         limit: int = 30,
 ) -> str:
-    """Return a high‑level, strategy‑oriented prompt covering the *limit* worst files."""
+    """
+        Builds a strategy-oriented prompt for an LLM, summarizing the most severe code quality issues across the worst offender files.
+        
+        Analyzes severity data to highlight patterns such as high complexity, low coverage, and type errors, and identifies modules with multiple problematic files. Includes key metrics, issue distributions, and details of the top five most severe files. The resulting prompt instructs the LLM to generate specific, actionable recommendations tailored to the actual issues and files identified in the codebase.
+        """
 
     top_offenders = severity_data[:limit]
     issue_summary = _categorise_issues(top_offenders)
@@ -263,7 +300,11 @@ def build_strategic_recommendations_prompt(
 # ---------------------------------------------------------------------------
 
 def compute_severity(file_path: str, content: Dict[str, Any]) -> Dict[str, Any]:
-    """Compute a weighted severity score for one module."""
+    """
+    Calculates a weighted severity score and summary metrics for a single module.
+    
+    The severity score combines counts of MyPy errors, pydocstyle lint issues, average function complexity, and lack of test coverage using fixed weights. Returns a dictionary with the file name, full path, error and issue counts, average complexity, average coverage percentage, and the computed severity score.
+    """
 
     coverage = content.get("coverage", {}).get("complexity", {})
     linting = content.get("linting", {}).get("quality", {})
@@ -301,13 +342,26 @@ def compute_severity(file_path: str, content: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _summarise_offenders(offenders: List[Tuple[str, float, list, int, float, float]]) -> str:
-    """Aggregate offender list into a human‑readable summary block."""
+    """
+    Aggregates a list of offender files into a summary highlighting key issue categories.
+    
+    Summarizes the number and examples of files with high complexity (complexity >8), low coverage (coverage <50%), and many type errors (more than 5 errors), listing up to five file names per category.
+    """
 
     high_cx = [os.path.basename(fp) for fp, _, _, _, cx, _ in offenders if cx > 8]
     low_cov = [os.path.basename(fp) for fp, _, _, _, _, cov in offenders if cov < 50]
     many_err = [os.path.basename(fp) for fp, _, errs, _, _, _ in offenders if len(errs) > 5]
 
     def _fmt(lst: List[str]) -> str:
+        """
+        Formats a list of strings as a comma-separated summary, truncating with ellipsis if more than five items.
+        
+        Args:
+            lst: List of strings to format.
+        
+        Returns:
+            A string containing up to the first five items, separated by commas, with '...' appended if the list is longer.
+        """
         return f"{', '.join(lst[:5])}{'...' if len(lst) > 5 else ''}"
 
     return (
@@ -319,6 +373,18 @@ def _summarise_offenders(offenders: List[Tuple[str, float, list, int, float, flo
 
 
 def _format_offender_block(offenders: List[Tuple[str, float, list, int, float, float]], verbose: bool) -> str:
+    """
+    Formats offender file details into a string block for inclusion in LLM prompts.
+    
+    If verbose is True, returns a detailed multi-line summary for each offender file, including severity score, error counts, complexity, coverage, and sample errors. Otherwise, returns a concise list with file name, score, and error counts.
+    
+    Args:
+        offenders: List of tuples containing file path, severity score, MyPy errors, lint issue count, average complexity, and coverage percentage.
+        verbose: If True, produces detailed output; otherwise, produces a concise summary.
+    
+    Returns:
+        A formatted string representing the offender files for prompt inclusion.
+    """
     if verbose:
         return "\n\n".join(
             (

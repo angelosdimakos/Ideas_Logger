@@ -27,25 +27,18 @@ class MarkdownLogger:
 
     def __init__(self, export_dir: Path) -> None:
         """
-        Initialize the MarkdownLogger.
-
-        Parameters:
-            export_dir (Path): The directory where Markdown files will be saved.
+        Initializes a MarkdownLogger to write entries to Markdown files in the specified directory.
+        
+        Args:
+            export_dir: Path to the directory where Markdown files will be stored.
         """
         self.export_dir = export_dir
 
     def log(self, date_str: str, main_category: str, subcategory: str, entry: str) -> bool:
         """
-        Log an entry to a Markdown file.
-
-        Parameters:
-            date_str (str): The date string to be used as a header.
-            main_category (str): The main category for the log entry.
-            subcategory (str): The subcategory for the log entry.
-            entry (str): The content of the log entry.
-
-        Returns:
-            bool: True if logging was successful, False otherwise.
+        Appends a log entry under a date header in a Markdown file for the specified main category.
+        
+        If the file exists, inserts the entry under the given date header or creates a new date section if needed. If the file does not exist, creates it with appropriate headers and the entry. Returns True on success, or False if an error occurs.
         """
         try:
             md_filename = sanitize_filename(main_category) + ".md"
