@@ -39,12 +39,11 @@ It integrates:
 
 ```mermaid
 graph TD
-A[User Input / Logs] --> B[LLM Summarization Pipeline]
-B --> C[FAISS Semantic Indexing]
-C --> D[Search & Retrieval Engine]
-D --> E[Prototype & Test Stub Generator]
-E --> F[CI Analyzer]
-F --> G[Refactor Guard & Metrics]
+A[User Input / Logs] -->|Summarization| B[LLM Pipeline]
+B --> C["Semantic Indexing (FAISS)"]
+C --> D[Search & Retrieval]
+D --> E[Prototype + Test Stub Generation]
+E --> F[CI Analyzer / Refactor Guard]
 ```
 
 ### 🔬 Test & CI Workflow
