@@ -2,7 +2,7 @@ name: Run Tests & CI Audit with Documentation
 
 on:
   push:
-    branches: [main, master, "features/**""feature/**", "fix/**", "dev/**"]
+    branches: [main, master, "features/**","feature/**", "fix/**", "dev/**"]
   pull_request:
     branches: [main, master,"features/**"]
 
