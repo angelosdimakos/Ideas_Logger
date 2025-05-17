@@ -10,6 +10,21 @@ Each file includes:
 - Optional: MyPy errors (--verbose)
 """
 
+from __future__ import annotations
+
+import sys
+import argparse
+import io
+import json
+import os
+from pathlib import Path
+from typing import Any, Dict
+
+# ─── make "scripts." imports work when executed as a script ────────────────
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(_PROJECT_ROOT))
+
+
 import argparse
 import json
 from pathlib import Path
