@@ -40,7 +40,7 @@ It integrates:
 ```mermaid
 graph TD
 A[User Input / Logs] -->|Summarization| B[LLM Pipeline]
-B --> C[Semantic Indexing (FAISS)]
+B --> C["Semantic Indexing (FAISS)"]
 C --> D[Search & Retrieval]
 D --> E[Prototype + Test Stub Generation]
 E --> F[CI Analyzer / Refactor Guard]
