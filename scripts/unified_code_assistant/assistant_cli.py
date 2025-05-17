@@ -11,8 +11,6 @@ from scripts.ai.llm_refactor_advisor import build_refactor_prompt
 import sys
 import io
 
-# Ensure correct emoji output on Windows
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 def chat_mode(
     report_path: str,
@@ -156,4 +154,7 @@ def main() -> None:
             print(output)
 
 if __name__ == "__main__":
+    import sys, io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    import sys
     sys.exit(main())
