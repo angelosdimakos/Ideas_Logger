@@ -10,14 +10,9 @@ import pandas as pd
 
 def compute_severity(file_path: str, content: dict) -> dict:
     """
-    Compute the severity score for a given file based on its coverage and linting data.
-
-    Args:
-        file_path (str): The path of the file being analyzed.
-        content (dict): The report data for the file, including coverage and linting information.
-
-    Returns:
-        dict: A dictionary containing the severity metrics for the file.
+    Calculates a severity score for a file using its coverage and linting report data.
+    
+    The severity score is a weighted sum of MyPy errors, Pydocstyle lint issues, average function complexity, and coverage deficit. Returns a dictionary summarizing these metrics and the computed severity score.
     """
     coverage_data = content.get("coverage", {}).get(
         "complexity", {}
@@ -61,13 +56,15 @@ def compute_severity(file_path: str, content: dict) -> dict:
 
 def compute_severity_index(report_data: dict) -> pd.DataFrame:
     """
-    Compute a severity index for all files in the report data.
-
+    Aggregates severity scores for multiple files into a sorted DataFrame.
+    
+    Processes report data for each file, computes severity metrics, and returns a DataFrame sorted by severity score in descending order. If no data is provided, returns an empty DataFrame with predefined columns.
+    
     Args:
-        report_data (dict): Dictionary containing report data for each file.
-
+        report_data: Mapping of file paths to their coverage and linting report data.
+    
     Returns:
-        pd.DataFrame: A DataFrame sorted by severity score.
+        A pandas DataFrame containing severity metrics for each file, sorted by severity score.
     """
     rows = [compute_severity(fp, content) for fp, content in report_data.items()]
 
