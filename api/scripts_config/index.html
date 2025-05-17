@@ -1,0 +1,908 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the Ideas Logger project">
+      
+      
+        <meta name="author" content="Angelos Dimakos">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Docstring Report for scripts/config/ - Ideas Logger</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#docstring-report-for-scriptsconfig" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Ideas Logger" class="md-header__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ideas Logger
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Docstring Report for scripts/config/
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Documentation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../coverage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Test Coverage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quality/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Quality
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Ideas Logger" class="md-nav__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ideas Logger
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Coverage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code Quality
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsconfig__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.config.__init__
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsconfigconfig_loader" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.config.config_loader
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.config.config_loader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup_logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      setup_logging
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_config_value" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_config_value
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_absolute_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_absolute_path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is_test_mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      is_test_mode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_effective_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_effective_config
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsconfigconfig_manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.config.config_manager
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.config.config_manager">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#appconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      AppConfig
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config" class="md-nav__link">
+    <span class="md-ellipsis">
+      Config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configmanager" class="md-nav__link">
+    <span class="md-ellipsis">
+      ConfigManager
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_default_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      _default_config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_config_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_value" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_value
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reset" class="md-nav__link">
+    <span class="md-ellipsis">
+      reset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate_config_paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate_config_paths
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsconfigconstants" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.config.constants
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsconfiglogging_setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.config.logging_setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.config.logging_setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup_logging_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      setup_logging
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="docstring-report-for-scriptsconfig">Docstring Report for <code>scripts/config/</code><a class="headerlink" href="#docstring-report-for-scriptsconfig" title="Permanent link">&para;</a></h1>
+<h2 id="scriptsconfig__init__"><code>scripts.config.__init__</code><a class="headerlink" href="#scriptsconfig__init__" title="Permanent link">&para;</a></h2>
+<p>The <code>config</code> module centralizes application configuration management and logging setup.
+Core features include:
+- Loading, validating, and caching application settings from JSON configuration files.
+- Providing a Pydantic-based configuration model for type-safe access to settings.
+- Managing environment-specific and test-mode configurations.
+- Utilities for safe file reading and error handling during configuration loading.
+- Centralized logging setup for consistent application-wide logging behavior.
+This module ensures robust, maintainable, and flexible configuration and logging for the entire application.</p>
+<h2 id="scriptsconfigconfig_loader"><code>scripts.config.config_loader</code><a class="headerlink" href="#scriptsconfigconfig_loader" title="Permanent link">&para;</a></h2>
+<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
+<h4 id="setup_logging">setup_logging<a class="headerlink" href="#setup_logging" title="Permanent link">&para;</a></h4>
+<p>Configures centralized logging for the application.
+Sets the logging level to INFO, applies a standard log message format, and directs output to the console.</p>
+<h4 id="load_config">load_config<a class="headerlink" href="#load_config" title="Permanent link">&para;</a></h4>
+<p>Loads a JSON configuration file from the specified path, returning its contents as a dictionary.
+If the file does not exist, cannot be read, or contains invalid JSON, returns an empty dictionary. Adjusts the logger level to DEBUG if "test_mode" is enabled in the configuration; otherwise, sets it to INFO.</p>
+<p><strong>Arguments:</strong>
+config_path: Path to the configuration file. Defaults to CONFIG_FILE_PATH.</p>
+<p><strong>Returns:</strong>
+A dictionary containing the configuration, or an empty dictionary if loading fails.</p>
+<h4 id="get_config_value">get_config_value<a class="headerlink" href="#get_config_value" title="Permanent link">&para;</a></h4>
+<p>Retrieves a value from the configuration dictionary by key, returning a default if missing.
+Logs a warning if the key is not present in the configuration.</p>
+<h4 id="get_absolute_path">get_absolute_path<a class="headerlink" href="#get_absolute_path" title="Permanent link">&para;</a></h4>
+<p>Resolves an absolute path by joining the project base directory with a relative path.</p>
+<p><strong>Arguments:</strong>
+relative_path: The path relative to the project root.</p>
+<p><strong>Returns:</strong>
+The absolute Path object corresponding to the given relative path.
+Raises:
+TypeError, ValueError, or OSError if the path cannot be constructed.</p>
+<h4 id="is_test_mode">is_test_mode<a class="headerlink" href="#is_test_mode" title="Permanent link">&para;</a></h4>
+<p>Determines whether test mode is enabled in the configuration.
+If no configuration is provided, loads the default configuration.</p>
+<p><strong>Returns:</strong>
+True if "test_mode" is set to True in the configuration; otherwise, False.</p>
+<h4 id="get_effective_config">get_effective_config<a class="headerlink" href="#get_effective_config" title="Permanent link">&para;</a></h4>
+<p>Loads the configuration and overrides paths with test-safe equivalents if test mode is enabled.
+If 'test_mode' is set in the configuration, certain directory and file paths are replaced with test-specific values to prevent interference with production data.</p>
+<p><strong>Arguments:</strong>
+config_path: Path to the configuration file. Defaults to CONFIG_FILE_PATH.</p>
+<p><strong>Returns:</strong>
+The effective configuration dictionary, with test-safe paths if test mode is active.</p>
+<h2 id="scriptsconfigconfig_manager"><code>scripts.config.config_manager</code><a class="headerlink" href="#scriptsconfigconfig_manager" title="Permanent link">&para;</a></h2>
+<p>config_manager.py
+This module provides centralized management of application configuration using a Pydantic-based model.
+Core features include:
+- Defining a comprehensive AppConfig model for all configurable application parameters.
+- Loading, validating, and caching configuration from a JSON file.
+- Utility methods for retrieving configuration values, resetting the config cache, and validating critical config paths.
+- Integration with safe file reading utilities for resilience against missing or malformed config files.
+Intended for use throughout the application to ensure consistent, validated configuration management.</p>
+<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
+<h4 id="appconfig">AppConfig<a class="headerlink" href="#appconfig" title="Permanent link">&para;</a></h4>
+<p>Configuration model for application settings.
+Defines all configurable parameters for the application, including UI,
+logging, LLM and embedding model settings, file paths, test mode,
+and plugin management. Ignores any extra fields not explicitly defined.</p>
+<h4 id="config">Config<a class="headerlink" href="#config" title="Permanent link">&para;</a></h4>
+<h4 id="configmanager">ConfigManager<a class="headerlink" href="#configmanager" title="Permanent link">&para;</a></h4>
+<p>Manages application configuration loading, caching, and validation.
+Provides methods to load configuration from a JSON file using the AppConfig model,
+retrieve configuration values, reset the cached config, and validate critical config paths.
+Handles missing or invalid config files by returning default settings and logs relevant events.</p>
+<h3 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
+<h4 id="_default_config">_default_config<a class="headerlink" href="#_default_config" title="Permanent link">&para;</a></h4>
+<p>Return a fresh copy of the pre-instantiated default config.</p>
+<h4 id="load_config_1">load_config<a class="headerlink" href="#load_config_1" title="Permanent link">&para;</a></h4>
+<p>Loads the application configuration from a JSON file, with optional cache refresh.
+If the config file is missing or invalid, returns a default AppConfig instance.
+Caches the loaded config and reloads if the file changes or force_reload is True.
+Logs relevant events and raises on validation errors.</p>
+<p><strong>Arguments:</strong>
+config_path (str): Path to the configuration JSON file.
+force_reload (bool): If True, forces reloading the config from disk.</p>
+<p><strong>Returns:</strong>
+AppConfig: The loaded or default application configuration.</p>
+<h4 id="get_value">get_value<a class="headerlink" href="#get_value" title="Permanent link">&para;</a></h4>
+<p>Retrieve a configuration value by key from the loaded AppConfig.</p>
+<p><strong>Arguments:</strong>
+key (str): The configuration attribute to retrieve.
+default (Any, optional): Value to return if the key is not found. Defaults to None.
+force_reload (bool, optional): If True, reloads the config from disk. Defaults to False.</p>
+<p><strong>Returns:</strong>
+Any: The value of the requested configuration key, or the default if not found.</p>
+<h4 id="reset">reset<a class="headerlink" href="#reset" title="Permanent link">&para;</a></h4>
+<p>Reset the cached configuration and timestamp.</p>
+<h4 id="validate_config_paths">validate_config_paths<a class="headerlink" href="#validate_config_paths" title="Permanent link">&para;</a></h4>
+<p>Validate that critical config paths have existing parent directories.
+Logs a warning for each missing directory. Returns True if all required directories exist, otherwise False.</p>
+<p><strong>Returns:</strong>
+bool: True if all critical directories exist, False otherwise.</p>
+<h2 id="scriptsconfigconstants"><code>scripts.config.constants</code><a class="headerlink" href="#scriptsconfigconstants" title="Permanent link">&para;</a></h2>
+<p>constants.py
+This module defines global constants used throughout the Zephyrus Logger application.
+Core features include:
+- Timestamp and date formatting strings for consistent time representation.
+- Standardized JSON keys for batch processing, summaries, and content tracking.
+- Keys for summary tracking and logging statistics.
+- Default configuration values for batch size, autosave interval, and log level.
+- Default file suffixes and extensions for summary and markdown files.
+- Centralized UI default settings, such as theme.
+Intended to provide a single source of truth for application-wide constants, improving maintainability and consistency.</p>
+<h2 id="scriptsconfiglogging_setup"><code>scripts.config.logging_setup</code><a class="headerlink" href="#scriptsconfiglogging_setup" title="Permanent link">&para;</a></h2>
+<p>logging_setup.py
+This module provides centralized logging configuration for the application.
+Core features include:
+- Defining a <code>setup_logging</code> function to initialize the root logger with a specified log level.
+- Clearing existing handlers and adding a console handler with a standardized log message format.
+- Automatically configuring logging upon import for convenience and consistency across the application.
+Intended for use as the standard logging setup to ensure uniform log formatting and log level management.</p>
+<h3 id="functions_2">Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
+<h4 id="setup_logging_1">setup_logging<a class="headerlink" href="#setup_logging_1" title="Permanent link">&para;</a></h4>
+<p>Configures the root logger with a specified log level and standardized console output.
+Initializes application-wide logging by setting the root logger's level, clearing any existing handlers, and adding a console handler with a consistent log message format. If an invalid log level is provided, defaults to INFO.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

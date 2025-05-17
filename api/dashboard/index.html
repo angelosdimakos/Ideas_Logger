@@ -1,0 +1,971 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the Ideas Logger project">
+      
+      
+        <meta name="author" content="Angelos Dimakos">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Docstring Report for dashboard/ - Ideas Logger</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#docstring-report-for-dashboard" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Ideas Logger" class="md-header__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ideas Logger
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Docstring Report for dashboard/
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Documentation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../coverage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Test Coverage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quality/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Quality
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Ideas Logger" class="md-nav__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ideas Logger
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Coverage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code Quality
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dashboard__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      dashboard.__init__
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dashboardai_integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      dashboard.ai_integration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="dashboard.ai_integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aiintegration" class="md-nav__link">
+    <span class="md-ellipsis">
+      AIIntegration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_audit_summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      generate_audit_summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_refactor_advice" class="md-nav__link">
+    <span class="md-ellipsis">
+      generate_refactor_advice
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_strategic_recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      generate_strategic_recommendations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat_general" class="md-nav__link">
+    <span class="md-ellipsis">
+      chat_general
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat_code" class="md-nav__link">
+    <span class="md-ellipsis">
+      chat_code
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat_doc" class="md-nav__link">
+    <span class="md-ellipsis">
+      chat_doc
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dashboardapp" class="md-nav__link">
+    <span class="md-ellipsis">
+      dashboard.app
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="dashboard.app">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init_artifacts_dir" class="md-nav__link">
+    <span class="md-ellipsis">
+      init_artifacts_dir
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dashboarddata_loader" class="md-nav__link">
+    <span class="md-ellipsis">
+      dashboard.data_loader
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="dashboard.data_loader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#is_excluded" class="md-nav__link">
+    <span class="md-ellipsis">
+      is_excluded
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_artifact" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_artifact
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#weighted_coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      weighted_coverage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dashboardmetrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      dashboard.metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="dashboard.metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compute_executive_summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      compute_executive_summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_low_coverage_modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_low_coverage_modules
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coverage_by_module" class="md-nav__link">
+    <span class="md-ellipsis">
+      coverage_by_module
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compute_severity" class="md-nav__link">
+    <span class="md-ellipsis">
+      compute_severity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compute_severity_df" class="md-nav__link">
+    <span class="md-ellipsis">
+      compute_severity_df
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build_prod_to_tests_df" class="md-nav__link">
+    <span class="md-ellipsis">
+      build_prod_to_tests_df
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#severity_distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      severity_distribution
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="docstring-report-for-dashboard">Docstring Report for <code>dashboard/</code><a class="headerlink" href="#docstring-report-for-dashboard" title="Permanent link">&para;</a></h1>
+<h2 id="dashboard__init__"><code>dashboard.__init__</code><a class="headerlink" href="#dashboard__init__" title="Permanent link">&para;</a></h2>
+<h2 id="dashboardai_integration"><code>dashboard.ai_integration</code><a class="headerlink" href="#dashboardai_integration" title="Permanent link">&para;</a></h2>
+<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
+<h4 id="aiintegration">AIIntegration<a class="headerlink" href="#aiintegration" title="Permanent link">&para;</a></h4>
+<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
+<h4 id="init"><strong>init</strong><a class="headerlink" href="#init" title="Permanent link">&para;</a></h4>
+<p>Initializes the AIIntegration instance with configuration and summarizer components.</p>
+<h4 id="generate_audit_summary">generate_audit_summary<a class="headerlink" href="#generate_audit_summary" title="Permanent link">&para;</a></h4>
+<p>Generates an AI-driven audit summary based on provided metrics context.
+Combines a persona-enriched audit summary prompt with the given metrics context and returns a summarized audit report as a string.</p>
+<h4 id="generate_refactor_advice">generate_refactor_advice<a class="headerlink" href="#generate_refactor_advice" title="Permanent link">&para;</a></h4>
+<p>Generates AI-driven refactoring advice based on analysis of merged code data.
+Analyzes the provided merged data to identify the top offenders for refactoring, constructs a contextual prompt, and returns a summary suggestion along with the list of top offenders.</p>
+<p><strong>Arguments:</strong>
+merged_data: Aggregated code analysis data to be evaluated.
+limit: The maximum number of top offenders to consider.</p>
+<p><strong>Returns:</strong>
+A tuple containing the AI-generated refactor suggestion and the list of top offenders.</p>
+<h4 id="generate_strategic_recommendations">generate_strategic_recommendations<a class="headerlink" href="#generate_strategic_recommendations" title="Permanent link">&para;</a></h4>
+<p>Generates strategic recommendations based on merged code analysis data.
+Writes the merged data to a temporary JSON file and invokes a CLI assistant in strategic mode with the specified limit and persona. Returns the output generated by the CLI assistant.</p>
+<p><strong>Arguments:</strong>
+merged_data: The combined code analysis data to be evaluated.
+limit: The maximum number of recommendations to generate.</p>
+<p><strong>Returns:</strong>
+The output string containing strategic recommendations.</p>
+<h4 id="chat_general">chat_general<a class="headerlink" href="#chat_general" title="Permanent link">&para;</a></h4>
+<p>Generates an AI-driven summary response to a user query based on analyzed code report data.</p>
+<p><strong>Arguments:</strong>
+user_query: The user's question or prompt for the AI.
+merged_data: Aggregated code analysis data to inform the response.</p>
+<p><strong>Returns:</strong>
+A summary string providing advice or insights relevant to the user query and code analysis context.</p>
+<h4 id="chat_code">chat_code<a class="headerlink" href="#chat_code" title="Permanent link">&para;</a></h4>
+<p>Generates an AI-driven code analysis summary for a specific file based on user input.
+Builds a detailed context using the file's complexity and linting information, issue locations, placeholder module summaries, and AI-generated refactor recommendations. Incorporates the user's query and persona to produce a comprehensive code analysis summary for the file.</p>
+<p><strong>Arguments:</strong>
+file_path: Path to the file being analyzed.
+complexity_info: Complexity metrics or data for the file.
+lint_info: Linting quality information for the file.
+user_query: User's question or prompt related to the file.</p>
+<p><strong>Returns:</strong>
+A summarized AI-generated analysis of the file in response to the user query.</p>
+<h4 id="chat_doc">chat_doc<a class="headerlink" href="#chat_doc" title="Permanent link">&para;</a></h4>
+<p>Generates a summary of a module's documentation using the provided functions list.</p>
+<p><strong>Arguments:</strong>
+module_path: Path to the module to be summarized.
+funcs: List of functions within the module to include in the summary.</p>
+<p><strong>Returns:</strong>
+A summary string describing the module and its functions.</p>
+<h2 id="dashboardapp"><code>dashboard.app</code><a class="headerlink" href="#dashboardapp" title="Permanent link">&para;</a></h2>
+<h3 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
+<h4 id="init_artifacts_dir">init_artifacts_dir<a class="headerlink" href="#init_artifacts_dir" title="Permanent link">&para;</a></h4>
+<p>Returns the directory to use for artifacts, preferring the given default if it exists.
+If the specified default directory does not exist, returns the current directory instead.</p>
+<p><strong>Arguments:</strong>
+default_dir: The preferred directory for artifacts.</p>
+<p><strong>Returns:</strong>
+The path to the artifacts directory.</p>
+<h2 id="dashboarddata_loader"><code>dashboard.data_loader</code><a class="headerlink" href="#dashboarddata_loader" title="Permanent link">&para;</a></h2>
+<h3 id="functions_2">Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
+<h4 id="is_excluded">is_excluded<a class="headerlink" href="#is_excluded" title="Permanent link">&para;</a></h4>
+<p>Determines whether a file path should be excluded based on predefined patterns.</p>
+<p><strong>Returns:</strong>
+True if the path matches any exclusion pattern or is an '<strong>init</strong>.py' file; otherwise, False.</p>
+<h4 id="load_artifact">load_artifact<a class="headerlink" href="#load_artifact" title="Permanent link">&para;</a></h4>
+<p>Loads a JSON artifact from the specified path, supporting compressed and specialized formats.
+Attempts to load a coverage-related JSON artifact from the given path, handling <code>.comp.json.gz</code>, <code>.comp.json</code>, and plain <code>.json</code> variants. Applies specialized decompression for known report formats and filters out top-level keys matching exclusion criteria.</p>
+<p><strong>Arguments:</strong>
+path: The base file path (without extension) of the artifact to load.</p>
+<p><strong>Returns:</strong>
+A dictionary containing the processed and filtered artifact data, or an empty dictionary if no valid file is found.</p>
+<h4 id="weighted_coverage">weighted_coverage<a class="headerlink" href="#weighted_coverage" title="Permanent link">&para;</a></h4>
+<p>Calculates the lines-of-code weighted average coverage from function coverage data.</p>
+<p><strong>Arguments:</strong>
+func_dict: A dictionary where each value is a mapping containing "lines" (number of lines) and "coverage" (coverage ratio) for a function.</p>
+<p><strong>Returns:</strong>
+The weighted average coverage ratio, or 0.0 if the total line count is zero.</p>
+<h2 id="dashboardmetrics"><code>dashboard.metrics</code><a class="headerlink" href="#dashboardmetrics" title="Permanent link">&para;</a></h2>
+<p>Module: scripts/dashboard/metrics.py
+Extracts all data-transformation and metrics logic from the Streamlit app.</p>
+<h3 id="functions_3">Functions<a class="headerlink" href="#functions_3" title="Permanent link">&para;</a></h3>
+<h4 id="compute_executive_summary">compute_executive_summary<a class="headerlink" href="#compute_executive_summary" title="Permanent link">&para;</a></h4>
+<p>Generates high-level summary metrics for the dashboard's Executive Summary.
+Aggregates unique test counts, average strictness and severity scores, number of production files, overall coverage percentage, and percentage of missing documentation from the provided data sources.</p>
+<p><strong>Arguments:</strong>
+merged_data: Dictionary containing merged module data, including docstring information.
+strictness_data: Dictionary containing strictness and coverage metrics for modules.</p>
+<p><strong>Returns:</strong>
+A dictionary with total unique tests, average strictness, average severity, production file count, overall coverage percentage, and percentage of missing documentation.</p>
+<h4 id="get_low_coverage_modules">get_low_coverage_modules<a class="headerlink" href="#get_low_coverage_modules" title="Permanent link">&para;</a></h4>
+<p>Returns the modules with the lowest coverage percentages.
+Iterates over modules in the strictness data, excluding filtered files, and collects their coverage values. Returns a list of (module name, coverage) tuples for the modules with the lowest coverage, sorted in ascending order.</p>
+<p><strong>Arguments:</strong>
+strictness_data: Dictionary containing module coverage information.
+top_n: Number of modules to return.</p>
+<p><strong>Returns:</strong>
+A list of tuples, each containing a module name and its coverage percentage.</p>
+<h4 id="coverage_by_module">coverage_by_module<a class="headerlink" href="#coverage_by_module" title="Permanent link">&para;</a></h4>
+<p>Calculates line-of-code weighted coverage for each module and returns the modules with the lowest coverage.</p>
+<p><strong>Arguments:</strong>
+merged_data: Dictionary containing module data, including coverage and complexity information.
+top_n: Number of modules with the lowest coverage to return.</p>
+<p><strong>Returns:</strong>
+A list of tuples containing the module name and its coverage percentage, sorted in ascending order by coverage.</p>
+<h4 id="compute_severity">compute_severity<a class="headerlink" href="#compute_severity" title="Permanent link">&para;</a></h4>
+<p>Calculates a severity score for a file based on linting errors, code complexity, and coverage.
+The severity score combines the number of mypy errors, pydocstyle lint issues, average function complexity, and coverage ratio using weighted factors. Returns a dictionary summarizing the file's name, path, error counts, average complexity, average coverage percentage, and computed severity score.</p>
+<h4 id="compute_severity_df">compute_severity_df<a class="headerlink" href="#compute_severity_df" title="Permanent link">&para;</a></h4>
+<p>Builds a DataFrame summarizing severity metrics for all files.
+Applies the provided severity computation function to each file in the merged data and constructs a DataFrame from the results, sorted by severity score in descending order with the index reset.</p>
+<p><strong>Arguments:</strong>
+merged_data: A dictionary mapping file paths to their associated data.
+compute_severity_fn: A function that computes severity metrics for a given file.</p>
+<p><strong>Returns:</strong>
+A pandas DataFrame containing severity metrics for each file, sorted by severity score descending.</p>
+<h4 id="build_prod_to_tests_df">build_prod_to_tests_df<a class="headerlink" href="#build_prod_to_tests_df" title="Permanent link">&para;</a></h4>
+<p>Creates a DataFrame mapping each production module to its unique covering tests and related metrics.
+Deduplicates tests by name within each module, retaining the highest severity and corresponding strictness for each test. Calculates the average strictness and severity across unique tests per module, and lists the names of all covering tests. The resulting DataFrame includes the production module name, test count, average strictness, average severity, and a comma-separated list of test names, sorted by test count in descending order.</p>
+<h4 id="severity_distribution">severity_distribution<a class="headerlink" href="#severity_distribution" title="Permanent link">&para;</a></h4>
+<p>Categorizes tests into Low, Medium, and High severity buckets based on their highest observed severity.
+Deduplicates tests globally by test name, retaining only the highest severity for each test, and returns a count of tests in each severity category.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

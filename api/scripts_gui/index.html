@@ -1,0 +1,1664 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the Ideas Logger project">
+      
+      
+        <meta name="author" content="Angelos Dimakos">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Docstring Report for scripts/gui/ - Ideas Logger</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#docstring-report-for-scriptsgui" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Ideas Logger" class="md-header__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ideas Logger
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Docstring Report for scripts/gui/
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Documentation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../coverage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Test Coverage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quality/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Quality
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Ideas Logger" class="md-nav__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ideas Logger
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Coverage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code Quality
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsgui__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.gui.__init__
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsguigui" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.gui.gui
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.gui.gui">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#zephyrusloggergui" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZephyrusLoggerGUI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_setup_gui_logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      _setup_gui_logging
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_build_widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      _build_widgets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_update_coverage_display" class="md-nav__link">
+    <span class="md-ellipsis">
+      _update_coverage_display
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_populate_category_dropdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      _populate_category_dropdown
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_update_main_category" class="md-nav__link">
+    <span class="md-ellipsis">
+      _update_main_category
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_log_entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      _log_entry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_manual_summarize" class="md-nav__link">
+    <span class="md-ellipsis">
+      _manual_summarize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_search_summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      _search_summary
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_search_raw" class="md-nav__link">
+    <span class="md-ellipsis">
+      _search_raw
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_rebuild_tracker" class="md-nav__link">
+    <span class="md-ellipsis">
+      _rebuild_tracker
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_show_coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      _show_coverage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run" class="md-nav__link">
+    <span class="md-ellipsis">
+      run
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsguigui_controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.gui.gui_controller
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.gui.gui_controller">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#guicontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      GUIController
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log_entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      log_entry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#force_summarize_all" class="md-nav__link">
+    <span class="md-ellipsis">
+      force_summarize_all
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search_summaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      search_summaries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search_raw_logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      search_raw_logs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rebuild_tracker" class="md-nav__link">
+    <span class="md-ellipsis">
+      rebuild_tracker
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_tracker_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_tracker_status
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_coverage_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_coverage_data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_logs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsguigui_helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.gui.gui_helpers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.gui.gui_helpers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validate_log_input" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate_log_input
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_current_date" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_current_date
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_current_timestamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_current_timestamp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear_text_input" class="md-nav__link">
+    <span class="md-ellipsis">
+      clear_text_input
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update_status_label" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_status_label
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_selected_option" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_selected_option
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#append_log_entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      append_log_entry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_category_options" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_category_options
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create_status_label" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_status_label
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create_log_frame" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_log_frame
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      log_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create_dropdown_menu" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_dropdown_menu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create_button" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_button
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_messagebox" class="md-nav__link">
+    <span class="md-ellipsis">
+      show_messagebox
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create_text_entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_text_entry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#format_summary_results" class="md-nav__link">
+    <span class="md-ellipsis">
+      format_summary_results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#format_raw_results" class="md-nav__link">
+    <span class="md-ellipsis">
+      format_raw_results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#display_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      display_message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#display_error" class="md-nav__link">
+    <span class="md-ellipsis">
+      display_error
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#format_coverage_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      format_coverage_data
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsguigui_logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.gui.gui_logging
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.gui.gui_logging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#guiloghandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      GUILogHandler
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emit" class="md-nav__link">
+    <span class="md-ellipsis">
+      emit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#append_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      append_message
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsguistyle_manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.gui.style_manager
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.gui.style_manager">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stylemanager" class="md-nav__link">
+    <span class="md-ellipsis">
+      StyleManager
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initialize_styles" class="md-nav__link">
+    <span class="md-ellipsis">
+      initialize_styles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update_style" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_style
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsguiwidget_factory" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.gui.widget_factory
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.gui.widget_factory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#widgetfactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      WidgetFactory
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_button_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_button
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create_label" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_label
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create_entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_entry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create_frame" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_frame
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create_notebook" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_notebook
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="docstring-report-for-scriptsgui">Docstring Report for <code>scripts/gui/</code><a class="headerlink" href="#docstring-report-for-scriptsgui" title="Permanent link">&para;</a></h1>
+<h2 id="scriptsgui__init__"><code>scripts.gui.__init__</code><a class="headerlink" href="#scriptsgui__init__" title="Permanent link">&para;</a></h2>
+<h2 id="scriptsguigui"><code>scripts.gui.gui</code><a class="headerlink" href="#scriptsguigui" title="Permanent link">&para;</a></h2>
+<p>gui.py
+This module provides the ZephyrusLoggerGUI class, which implements a graphical user interface
+for the Zephyrus Ideas Logger application using the tkinter library. It manages the GUI components,
+user interactions, and integrates logging functionality.</p>
+<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
+<h4 id="zephyrusloggergui">ZephyrusLoggerGUI<a class="headerlink" href="#zephyrusloggergui" title="Permanent link">&para;</a></h4>
+<p>A class to represent the Zephyrus Ideas Logger GUI.
+This class initializes the GUI components and handles user interactions.
+Attributes:
+controller (GUIController): The controller for managing the application's logic.
+logger (logging.Logger): Logger for tracking GUI events and actions.
+config (dict): Configuration settings loaded from the config file.
+category_structure (dict): Structure of categories for the GUI.
+root (tk.Tk): The main window of the GUI application.</p>
+<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
+<h4 id="init"><strong>init</strong><a class="headerlink" href="#init" title="Permanent link">&para;</a></h4>
+<p>Initialize the ZephyrusLoggerGUI.</p>
+<p><strong>Arguments:</strong>
+controller (GUIController): The controller for managing the application's logic.</p>
+<h4 id="_setup_gui_logging">_setup_gui_logging<a class="headerlink" href="#_setup_gui_logging" title="Permanent link">&para;</a></h4>
+<p>Set up the logging for the GUI.
+This method configures the logging handler to display logs in the GUI.</p>
+<h4 id="_build_widgets">_build_widgets<a class="headerlink" href="#_build_widgets" title="Permanent link">&para;</a></h4>
+<p>Build the GUI widgets and layout.
+This method creates and arranges the GUI components, such as frames and buttons.</p>
+<h4 id="_update_coverage_display">_update_coverage_display<a class="headerlink" href="#_update_coverage_display" title="Permanent link">&para;</a></h4>
+<p>Update the coverage display.
+This method retrieves the coverage data from the controller and updates the coverage display.</p>
+<h4 id="_populate_category_dropdown">_populate_category_dropdown<a class="headerlink" href="#_populate_category_dropdown" title="Permanent link">&para;</a></h4>
+<p>Populate the category dropdown menu.
+This method retrieves the categories from the controller and populates the dropdown menu.</p>
+<h4 id="_update_main_category">_update_main_category<a class="headerlink" href="#_update_main_category" title="Permanent link">&para;</a></h4>
+<p>Update the main category.
+This method updates the main category and subcategory dropdown menus.</p>
+<p><strong>Arguments:</strong>
+new_main (str): The new main category.</p>
+<h4 id="_log_entry">_log_entry<a class="headerlink" href="#_log_entry" title="Permanent link">&para;</a></h4>
+<p>Log a new entry.
+This method logs a new entry based on the user's input.</p>
+<h4 id="_manual_summarize">_manual_summarize<a class="headerlink" href="#_manual_summarize" title="Permanent link">&para;</a></h4>
+<p>Manually summarize the logs.
+This method generates a summary of the logs based on the user's input.</p>
+<h4 id="_search_summary">_search_summary<a class="headerlink" href="#_search_summary" title="Permanent link">&para;</a></h4>
+<p>Search for summaries.
+This method searches for summaries based on the user's input.</p>
+<h4 id="_search_raw">_search_raw<a class="headerlink" href="#_search_raw" title="Permanent link">&para;</a></h4>
+<p>Search for raw logs.
+This method searches for raw logs based on the user's input.</p>
+<h4 id="_rebuild_tracker">_rebuild_tracker<a class="headerlink" href="#_rebuild_tracker" title="Permanent link">&para;</a></h4>
+<p>Rebuild the tracker.
+This method rebuilds the tracker based on the user's input.</p>
+<h4 id="_show_coverage">_show_coverage<a class="headerlink" href="#_show_coverage" title="Permanent link">&para;</a></h4>
+<p>Show the coverage.
+This method displays the coverage data.</p>
+<h4 id="run">run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h4>
+<p>Run the GUI application.
+This method starts the GUI event loop.</p>
+<h2 id="scriptsguigui_controller"><code>scripts.gui.gui_controller</code><a class="headerlink" href="#scriptsguigui_controller" title="Permanent link">&para;</a></h2>
+<p>gui_controller.py
+This module provides the GUIController class for managing the interaction between the GUI
+and the logging core of the Zephyrus Logger application. It handles the initialization of
+the logger core and facilitates logging entries through the GUI.
+Dependencies:
+- os
+- logging
+- scripts.core.core.ZephyrusLoggerCore</p>
+<h3 id="classes_1">Classes<a class="headerlink" href="#classes_1" title="Permanent link">&para;</a></h3>
+<h4 id="guicontroller">GUIController<a class="headerlink" href="#guicontroller" title="Permanent link">&para;</a></h4>
+<p>GUIController manages the interaction between the GUI and the logging core.
+Attributes:
+core (ZephyrusLoggerCore): The instance of the ZephyrusLoggerCore used for logging.</p>
+<h3 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
+<h4 id="init_1"><strong>init</strong><a class="headerlink" href="#init_1" title="Permanent link">&para;</a></h4>
+<p>Initializes the GUIController with the given logger core or initializes a new one.</p>
+<p><strong>Arguments:</strong>
+logger_core (Optional[ZephyrusLoggerCore]): The logger core instance. If None, a new instance will be created.
+script_dir (Optional[str]): The directory of the script. Defaults to the current working directory.</p>
+<h4 id="log_entry">log_entry<a class="headerlink" href="#log_entry" title="Permanent link">&para;</a></h4>
+<p>Logs an entry with the specified main category, subcategory, and text.</p>
+<p><strong>Arguments:</strong>
+main (str): The main category of the log entry.
+sub (str): The subcategory of the log entry.
+text (str): The text content of the log entry.</p>
+<p><strong>Returns:</strong>
+Any: The result of the logging operation.</p>
+<h4 id="force_summarize_all">force_summarize_all<a class="headerlink" href="#force_summarize_all" title="Permanent link">&para;</a></h4>
+<p>Forces the summarization of all logs.</p>
+<p><strong>Returns:</strong>
+Any: The result of the summarization operation.</p>
+<h4 id="search_summaries">search_summaries<a class="headerlink" href="#search_summaries" title="Permanent link">&para;</a></h4>
+<p>Searches for summaries matching the given query.</p>
+<p><strong>Arguments:</strong>
+query (str): The search query.</p>
+<p><strong>Returns:</strong>
+Any: The result of the search operation.</p>
+<h4 id="search_raw_logs">search_raw_logs<a class="headerlink" href="#search_raw_logs" title="Permanent link">&para;</a></h4>
+<p>Searches for raw logs matching the given query.</p>
+<p><strong>Arguments:</strong>
+query (str): The search query.</p>
+<p><strong>Returns:</strong>
+Any: The result of the search operation.</p>
+<h4 id="rebuild_tracker">rebuild_tracker<a class="headerlink" href="#rebuild_tracker" title="Permanent link">&para;</a></h4>
+<p>Rebuilds the summary tracker and returns True if successful, False otherwise.</p>
+<h4 id="get_tracker_status">get_tracker_status<a class="headerlink" href="#get_tracker_status" title="Permanent link">&para;</a></h4>
+<p>Returns a user-friendly status string of the summary tracker.</p>
+<h4 id="get_coverage_data">get_coverage_data<a class="headerlink" href="#get_coverage_data" title="Permanent link">&para;</a></h4>
+<p>Retrieves coverage data from the tracker for the UI heatmap.</p>
+<h4 id="get_logs">get_logs<a class="headerlink" href="#get_logs" title="Permanent link">&para;</a></h4>
+<p>Retrieves the contents of the plain text log file as a string.</p>
+<h2 id="scriptsguigui_helpers"><code>scripts.gui.gui_helpers</code><a class="headerlink" href="#scriptsguigui_helpers" title="Permanent link">&para;</a></h2>
+<p>gui_helpers.py
+This module provides utility functions for building and customizing the
+Zephyrus Logger application's graphical user interface (GUI).
+Core features include:
+- Validating user input for logging and searching.
+- Creating and customizing Tkinter widgets (e.g. scrolled text, buttons).
+- Displaying alerts and messages using Tkinter's messagebox module.
+- Utility functions for reading and writing JSON files.
+Intended to provide a set of reusable functions for the GUI components of
+the Zephyrus Logger application.</p>
+<h3 id="functions_2">Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
+<h4 id="validate_log_input">validate_log_input<a class="headerlink" href="#validate_log_input" title="Permanent link">&para;</a></h4>
+<p>Returns False if the input is empty, None, or just whitespace.
+Logs a warning if invalid.</p>
+<h4 id="get_current_date">get_current_date<a class="headerlink" href="#get_current_date" title="Permanent link">&para;</a></h4>
+<p>Returns the current date as a string in 'YYYY-MM-DD' format.
+:return: Current date as a string.
+:rtype: str</p>
+<h4 id="get_current_timestamp">get_current_timestamp<a class="headerlink" href="#get_current_timestamp" title="Permanent link">&para;</a></h4>
+<p>Returns the current date and time as a formatted string (YYYY-MM-DD HH:MM:SS).</p>
+<h4 id="clear_text_input">clear_text_input<a class="headerlink" href="#clear_text_input" title="Permanent link">&para;</a></h4>
+<p>Clears all text from the given Tkinter text entry widget.</p>
+<p><strong>Arguments:</strong>
+entry_widget: The Tkinter text widget to be cleared.</p>
+<h4 id="update_status_label">update_status_label<a class="headerlink" href="#update_status_label" title="Permanent link">&para;</a></h4>
+<p>Update the text and foreground color of a Tkinter label widget.</p>
+<p><strong>Arguments:</strong>
+label (tk.Label): The label widget to update.
+message (str): The text to display on the label.
+color (str, optional): The text color. Defaults to "blue".</p>
+<h4 id="get_selected_option">get_selected_option<a class="headerlink" href="#get_selected_option" title="Permanent link">&para;</a></h4>
+<p>Returns the currently selected option from a Tkinter menu variable, or a default value if none is selected.</p>
+<p><strong>Arguments:</strong>
+menu_var: A Tkinter variable associated with a menu widget.
+default (str, optional): The value to return if no option is selected. Defaults to "General".</p>
+<p><strong>Returns:</strong>
+str: The selected option or the default value.</p>
+<h4 id="append_log_entry">append_log_entry<a class="headerlink" href="#append_log_entry" title="Permanent link">&para;</a></h4>
+<p>Appends a log entry with a timestamp and content to the specified log file, organizing entries by date, category, and subcategory.</p>
+<p><strong>Arguments:</strong>
+log_file (str): Path to the JSON log file.
+date (str): Date key for the log entry (YYYY-MM-DD).
+category (str): Category under which to store the entry.
+subcategory (str): Subcategory under the category.
+entry_text (str): The content of the log entry.</p>
+<h4 id="get_category_options">get_category_options<a class="headerlink" href="#get_category_options" title="Permanent link">&para;</a></h4>
+<p>Retrieves a list of category names from a JSON file at the given path.</p>
+<p><strong>Arguments:</strong>
+categories_json_path (str): Path to the JSON file containing categories.</p>
+<p><strong>Returns:</strong>
+list: List of category names, or an empty list if reading fails.</p>
+<h4 id="create_status_label">create_status_label<a class="headerlink" href="#create_status_label" title="Permanent link">&para;</a></h4>
+<p>Create and pack a status label widget in the given root window.</p>
+<p><strong>Arguments:</strong>
+root: The parent Tkinter widget.
+status_var: A Tkinter StringVar to display as the label's text.</p>
+<p><strong>Returns:</strong>
+The created Label widget.</p>
+<h4 id="create_log_frame">create_log_frame<a class="headerlink" href="#create_log_frame" title="Permanent link">&para;</a></h4>
+<p>Creates and returns a disabled scrolled text widget within a frame for logging purposes in a Tkinter GUI.</p>
+<p><strong>Arguments:</strong>
+root: The parent Tkinter widget.</p>
+<p><strong>Returns:</strong>
+tuple: (log_text, log_frame) where log_text is the ScrolledText widget and log_frame is the containing Frame.</p>
+<h4 id="log_message">log_message<a class="headerlink" href="#log_message" title="Permanent link">&para;</a></h4>
+<p>Appends a timestamped message to the provided Tkinter text widget for logging purposes.</p>
+<p><strong>Arguments:</strong>
+log_text_widget (tkinter.Text): The text widget where the log message will be displayed.
+message (str): The message to log.</p>
+<h4 id="create_dropdown_menu">create_dropdown_menu<a class="headerlink" href="#create_dropdown_menu" title="Permanent link">&para;</a></h4>
+<p>Creates a labeled dropdown menu (OptionMenu) in the given Tkinter frame.</p>
+<p><strong>Arguments:</strong>
+frame: The parent Tkinter frame to place the dropdown menu in.
+label_text: The text to display as the label next to the dropdown.
+variable: A Tkinter variable to store the selected option.
+options: A list of options to display in the dropdown menu.</p>
+<p><strong>Returns:</strong>
+The created Tkinter OptionMenu widget.</p>
+<h4 id="create_button">create_button<a class="headerlink" href="#create_button" title="Permanent link">&para;</a></h4>
+<p>Creates and returns a Tkinter Button widget with customizable text, command, size, and colors.</p>
+<p><strong>Arguments:</strong>
+frame: The parent widget where the button will be placed.
+text (str): The label displayed on the button.
+command (callable): The function to be called when the button is clicked.
+width (int, optional): The width of the button. Defaults to 15.
+height (int, optional): The height of the button. Defaults to 2.
+bg (str, optional): The background color of the button. Defaults to "#4CAF50".
+fg (str, optional): The text color of the button. Defaults to "white".</p>
+<p><strong>Returns:</strong>
+tk.Button: The configured Button widget.</p>
+<h4 id="show_messagebox">show_messagebox<a class="headerlink" href="#show_messagebox" title="Permanent link">&para;</a></h4>
+<p>Displays a message box with the specified icon, title, and message using tkinter.</p>
+<p><strong>Arguments:</strong>
+icon (str): Type of message box to display ('info', 'warning', or 'error').
+title (str): The title of the message box window.
+message (str): The message to display in the message box.</p>
+<h4 id="create_text_entry">create_text_entry<a class="headerlink" href="#create_text_entry" title="Permanent link">&para;</a></h4>
+<p>Creates a text entry widget for user input.</p>
+<p><strong>Arguments:</strong>
+root (tk.Tk or tk.Frame): The parent widget.
+height (int): Number of lines tall.
+width (int): Number of characters wide.</p>
+<p><strong>Returns:</strong>
+tk.Text: A configured Text widget.</p>
+<h4 id="format_summary_results">format_summary_results<a class="headerlink" href="#format_summary_results" title="Permanent link">&para;</a></h4>
+<p>Formats a list of result items into a readable summary string.
+Each result can be a dict with 'score' and 'text' keys, a tuple/list with score and text,
+or any other type, which will be converted to string with a default score of 0.0.
+Handles exceptions gracefully and includes error information in the output.</p>
+<p><strong>Arguments:</strong>
+results (list): List of result items to format.</p>
+<p><strong>Returns:</strong>
+str: Formatted summary string with scores and texts.</p>
+<h4 id="format_raw_results">format_raw_results<a class="headerlink" href="#format_raw_results" title="Permanent link">&para;</a></h4>
+<p>Formats a list of raw result items into a readable string.
+Each result is processed based on its type (dict, list/tuple, or other),
+and formatted with a '[RAW LOG MATCH]' prefix. Handles exceptions by
+including error details in the output.</p>
+<p><strong>Arguments:</strong>
+results (list): List of raw result items to format.</p>
+<p><strong>Returns:</strong>
+str: Formatted string representation of all results.</p>
+<h4 id="display_message">display_message<a class="headerlink" href="#display_message" title="Permanent link">&para;</a></h4>
+<p>Displays an informational message box.</p>
+<h4 id="display_error">display_error<a class="headerlink" href="#display_error" title="Permanent link">&para;</a></h4>
+<p>Displays an error message box.</p>
+<h4 id="format_coverage_data">format_coverage_data<a class="headerlink" href="#format_coverage_data" title="Permanent link">&para;</a></h4>
+<p>Formats the structured coverage data into a readable string grouped by main category.</p>
+<p><strong>Arguments:</strong>
+data (list[dict]): List of coverage data entries.</p>
+<p><strong>Returns:</strong>
+str: A nicely formatted string for displaying coverage stats.</p>
+<h2 id="scriptsguigui_logging"><code>scripts.gui.gui_logging</code><a class="headerlink" href="#scriptsguigui_logging" title="Permanent link">&para;</a></h2>
+<p>gui_logging.py
+This module provides a logging handler that appends log messages to a Tkinter Text widget.</p>
+<h3 id="classes_2">Classes<a class="headerlink" href="#classes_2" title="Permanent link">&para;</a></h3>
+<h4 id="guiloghandler">GUILogHandler<a class="headerlink" href="#guiloghandler" title="Permanent link">&para;</a></h4>
+<p>A logging handler that appends log messages to a Tkinter Text widget.</p>
+<h3 id="functions_3">Functions<a class="headerlink" href="#functions_3" title="Permanent link">&para;</a></h3>
+<h4 id="init_2"><strong>init</strong><a class="headerlink" href="#init_2" title="Permanent link">&para;</a></h4>
+<p>:param text_widget: The Text widget where log messages should be appended.</p>
+<h4 id="emit">emit<a class="headerlink" href="#emit" title="Permanent link">&para;</a></h4>
+<p>Emits a log message to the associated Text widget.
+:param record: logging.LogRecord</p>
+<h4 id="append_message">append_message<a class="headerlink" href="#append_message" title="Permanent link">&para;</a></h4>
+<p>Appends a log message to the associated Text widget.
+This method is designed to be called from the main thread,
+and will block until the message is appended.</p>
+<h2 id="scriptsguistyle_manager"><code>scripts.gui.style_manager</code><a class="headerlink" href="#scriptsguistyle_manager" title="Permanent link">&para;</a></h2>
+<p>style_manager.py
+This module defines the StyleManager class for managing application-wide styles for tkinter and ttk.
+Core features include:
+- Managing application-wide styles for tkinter and ttk.
+- Defining default colors and fonts.
+- Configuring ttk styles.
+- Updating specific styles with new options.</p>
+<h3 id="classes_3">Classes<a class="headerlink" href="#classes_3" title="Permanent link">&para;</a></h3>
+<h4 id="stylemanager">StyleManager<a class="headerlink" href="#stylemanager" title="Permanent link">&para;</a></h4>
+<p>Manages application-wide styles for tkinter and ttk.
+This class can be extended to handle dynamic theme changes.
+Attributes:
+root (Tk): The root Tkinter window.
+style (ttk.Style): The ttk style manager instance.</p>
+<h3 id="functions_4">Functions<a class="headerlink" href="#functions_4" title="Permanent link">&para;</a></h3>
+<h4 id="init_3"><strong>init</strong><a class="headerlink" href="#init_3" title="Permanent link">&para;</a></h4>
+<p>Initializes the StyleManager with the specified root window.</p>
+<p><strong>Arguments:</strong>
+root (Tk): The root Tkinter window.</p>
+<h4 id="initialize_styles">initialize_styles<a class="headerlink" href="#initialize_styles" title="Permanent link">&para;</a></h4>
+<p>Defines default colors and fonts and configures ttk styles.</p>
+<p><strong>Returns:</strong>
+None</p>
+<h4 id="update_style">update_style<a class="headerlink" href="#update_style" title="Permanent link">&para;</a></h4>
+<p>Update a specific style with new options.</p>
+<p><strong>Arguments:</strong>
+style_name (str): The name of the style to update (e.g., 'TButton').
+options (Dict[str, Any]): A dictionary of style options (e.g., {'background': 'red'}).</p>
+<p><strong>Returns:</strong>
+None</p>
+<h2 id="scriptsguiwidget_factory"><code>scripts.gui.widget_factory</code><a class="headerlink" href="#scriptsguiwidget_factory" title="Permanent link">&para;</a></h2>
+<p>widget_factory.py
+This module defines the WidgetFactory class for creating common widgets with standardized styling.
+Core features include:
+- Creating styled buttons, labels, entries, frames, and notebooks for Tkinter applications.
+- Providing a consistent look and feel across the application.</p>
+<h3 id="classes_4">Classes<a class="headerlink" href="#classes_4" title="Permanent link">&para;</a></h3>
+<h4 id="widgetfactory">WidgetFactory<a class="headerlink" href="#widgetfactory" title="Permanent link">&para;</a></h4>
+<p>Factory for creating common widgets with standardized styling.
+This class provides static methods to create buttons, labels, entries, frames, and notebooks with consistent styles.</p>
+<h3 id="functions_5">Functions<a class="headerlink" href="#functions_5" title="Permanent link">&para;</a></h3>
+<h4 id="create_button_1">create_button<a class="headerlink" href="#create_button_1" title="Permanent link">&para;</a></h4>
+<p>Create and return a styled ttk Button.</p>
+<p><strong>Arguments:</strong>
+parent (tk.Widget): The parent widget.
+text (str): The text to display on the button.
+command (callable): The function to call when the button is clicked.
+style (str): The style to apply to the button. Defaults to 'TButton'.
+**options: Additional options to configure the button.</p>
+<p><strong>Returns:</strong>
+ttk.Button: The created button widget.</p>
+<h4 id="create_label">create_label<a class="headerlink" href="#create_label" title="Permanent link">&para;</a></h4>
+<p>Create and return a styled ttk Label.</p>
+<p><strong>Arguments:</strong>
+parent (tk.Widget): The parent widget.
+text (str): The text to display on the label.
+style (str): The style to apply to the label. Defaults to 'TLabel'.
+**options: Additional options to configure the label.</p>
+<p><strong>Returns:</strong>
+ttk.Label: The created label widget.</p>
+<h4 id="create_entry">create_entry<a class="headerlink" href="#create_entry" title="Permanent link">&para;</a></h4>
+<p>Create and return a ttk Entry widget.</p>
+<p><strong>Arguments:</strong>
+parent (tk.Widget): The parent widget.
+textvariable (Any): The variable to associate with the entry. Defaults to None.
+**options: Additional options to configure the entry.</p>
+<p><strong>Returns:</strong>
+ttk.Entry: The created entry widget.</p>
+<h4 id="create_frame">create_frame<a class="headerlink" href="#create_frame" title="Permanent link">&para;</a></h4>
+<p>Create and return a ttk Frame widget.</p>
+<p><strong>Arguments:</strong>
+parent (tk.Widget): The parent widget.
+style (str): The style to apply to the frame. Defaults to 'TFrame'.
+**options: Additional options to configure the frame.</p>
+<p><strong>Returns:</strong>
+ttk.Frame: The created frame widget.</p>
+<h4 id="create_notebook">create_notebook<a class="headerlink" href="#create_notebook" title="Permanent link">&para;</a></h4>
+<p>Create and return a ttk Notebook widget.</p>
+<p><strong>Arguments:</strong>
+parent (tk.Widget): The parent widget.
+**options: Additional options to configure the notebook.</p>
+<p><strong>Returns:</strong>
+ttk.Notebook: The created notebook widget.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

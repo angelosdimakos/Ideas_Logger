@@ -1,0 +1,724 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the Ideas Logger project">
+      
+      
+        <meta name="author" content="Angelos Dimakos">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Docstring Report for scripts/kg/modules/ - Ideas Logger</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#docstring-report-for-scriptskgmodules" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Ideas Logger" class="md-header__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ideas Logger
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Docstring Report for scripts/kg/modules/
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Documentation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../coverage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Test Coverage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quality/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Quality
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Ideas Logger" class="md-nav__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ideas Logger
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Coverage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code Quality
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scriptskgmodules__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.kg.modules.__init__
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptskgmodulesanalysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.kg.modules.analysis
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="docstring-report-for-scriptskgmodules">Docstring Report for <code>scripts/kg/modules/</code><a class="headerlink" href="#docstring-report-for-scriptskgmodules" title="Permanent link">&para;</a></h1>
+<h2 id="scriptskgmodules__init__"><code>scripts.kg.modules.__init__</code><a class="headerlink" href="#scriptskgmodules__init__" title="Permanent link">&para;</a></h2>
+<h2 id="scriptskgmodulesanalysis"><code>scripts.kg.modules.analysis</code><a class="headerlink" href="#scriptskgmodulesanalysis" title="Permanent link">&para;</a></h2>
+<h1 id="complexity-analysis-for-knowledge-graphs">Complexity Analysis for Knowledge Graphs<a class="headerlink" href="#complexity-analysis-for-knowledge-graphs" title="Permanent link">&para;</a></h1>
+<p>This module provides tools for analyzing the complexity of knowledge graphs.
+It includes metrics for density, degree, busyness, and overall complexity scores.</p>
+<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
+<h4 id="complexityanalyzer">ComplexityAnalyzer<a class="headerlink" href="#complexityanalyzer" title="Permanent link">&para;</a></h4>
+<p>Analyzes graph complexity using various metrics.
+Attributes:
+None
+Methods:
+analyze_density: Analyzes the density and complexity of a given graph.</p>
+<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
+<h4 id="analyze_density">analyze_density<a class="headerlink" href="#analyze_density" title="Permanent link">&para;</a></h4>
+<p>Analyze the density and complexity of a given graph.</p>
+<p><strong>Arguments:</strong>
+graph (nx.Graph): The graph to analyze.
+name (str): An optional name for the graph.</p>
+<p><strong>Returns:</strong>
+Dict[str, Any]: A dictionary containing various metrics of the graph's complexity.
+Raises:
+None</p>
+<h2 id="scriptskgmodulesdata_extractors"><code>scripts.kg.modules.data_extractors</code><a class="headerlink" href="#scriptskgmodulesdata_extractors" title="Permanent link">&para;</a></h2>
+<p>Data extractors for analyzing Python docstrings and extracting relationships.</p>
+<h3 id="classes_1">Classes<a class="headerlink" href="#classes_1" title="Permanent link">&para;</a></h3>
+<h4 id="datarelationextractor">DataRelationExtractor<a class="headerlink" href="#datarelationextractor" title="Permanent link">&para;</a></h4>
+<p>Extracts data relations from module docstrings.</p>
+<h4 id="functionextractor">FunctionExtractor<a class="headerlink" href="#functionextractor" title="Permanent link">&para;</a></h4>
+<p>Extracts function parameters and return values from docstrings.</p>
+<h3 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
+<h4 id="extract_data_relations">extract_data_relations<a class="headerlink" href="#extract_data_relations" title="Permanent link">&para;</a></h4>
+<p>Extract data relations from module docstrings using pattern matching.</p>
+<p><strong>Arguments:</strong>
+graph: The directed graph to which data relations will be added.
+module_node: The module node identifier.
+description: The module description from which to extract relations.</p>
+<h4 id="_add_data_node">_add_data_node<a class="headerlink" href="#_add_data_node" title="Permanent link">&para;</a></h4>
+<p>Add a data node and its relation to the graph.</p>
+<p><strong>Arguments:</strong>
+graph: The directed graph to which the node will be added.
+module_node: The module node identifier.
+data_node: The data node identifier.
+relation: The type of relation to the data node.
+confidence: The confidence level of the relation.</p>
+<h4 id="extract_parameters_and_returns">extract_parameters_and_returns<a class="headerlink" href="#extract_parameters_and_returns" title="Permanent link">&para;</a></h4>
+<p>Extract parameters and return values from a function entry.</p>
+<p><strong>Arguments:</strong>
+fn_entry: A dictionary containing function metadata.</p>
+<p><strong>Returns:</strong>
+A tuple containing lists of parameters and return values.</p>
+<h2 id="scriptskgmodulesgraph_builder"><code>scripts.kg.modules.graph_builder</code><a class="headerlink" href="#scriptskgmodulesgraph_builder" title="Permanent link">&para;</a></h2>
+<p>Knowledge graph construction and management tools.</p>
+<h3 id="classes_2">Classes<a class="headerlink" href="#classes_2" title="Permanent link">&para;</a></h3>
+<h4 id="knowledgegraphbuilder">KnowledgeGraphBuilder<a class="headerlink" href="#knowledgegraphbuilder" title="Permanent link">&para;</a></h4>
+<p>Builds knowledge graphs from docmap data.</p>
+<h4 id="codebaseanalyzer">CodebaseAnalyzer<a class="headerlink" href="#codebaseanalyzer" title="Permanent link">&para;</a></h4>
+<p>Main class for analyzing and visualizing codebase knowledge graphs.</p>
+<h3 id="functions_2">Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
+<h4 id="init"><strong>init</strong><a class="headerlink" href="#init" title="Permanent link">&para;</a></h4>
+<p>Initialize with normalized docmap data.</p>
+<p><strong>Arguments:</strong>
+docmap: A dictionary mapping module paths to their data attributes.</p>
+<h4 id="build_knowledge_graph">build_knowledge_graph<a class="headerlink" href="#build_knowledge_graph" title="Permanent link">&para;</a></h4>
+<p>Constructs a knowledge graph from the docmap data, optionally filtering by prefix.</p>
+<p><strong>Arguments:</strong>
+focus_prefix: Optional prefix to filter modules.</p>
+<p><strong>Returns:</strong>
+A directed graph representing the relationships between modules and their data.</p>
+<h4 id="_build_graph">_build_graph<a class="headerlink" href="#_build_graph" title="Permanent link">&para;</a></h4>
+<p>Build the knowledge graph from the filtered docmap.</p>
+<p><strong>Arguments:</strong>
+docmap: A filtered dictionary mapping module paths to their data attributes.</p>
+<p><strong>Returns:</strong>
+A directed graph representing the relationships.</p>
+<h4 id="init_1"><strong>init</strong><a class="headerlink" href="#init_1" title="Permanent link">&para;</a></h4>
+<p>Initialize the analyzer with JSON data.</p>
+<p><strong>Arguments:</strong>
+json_path: Path to the docstring summary JSON file
+focus_prefix: Prefix to filter modules</p>
+<h4 id="analyze">analyze<a class="headerlink" href="#analyze" title="Permanent link">&para;</a></h4>
+<p>Analyze the codebase and build knowledge graph.</p>
+<p><strong>Returns:</strong>
+Tuple containing the graph and complexity report</p>
+<h4 id="visualize">visualize<a class="headerlink" href="#visualize" title="Permanent link">&para;</a></h4>
+<p>Visualize the knowledge graph with complexity indicators.</p>
+<p><strong>Arguments:</strong>
+graph: The knowledge graph
+density_report: Complexity metrics report</p>
+<h4 id="export_graph">export_graph<a class="headerlink" href="#export_graph" title="Permanent link">&para;</a></h4>
+<p>Export the graph to a file.</p>
+<p><strong>Arguments:</strong>
+graph: The knowledge graph
+format_type: Export format ('graphml' or 'gexf')</p>
+<p><strong>Returns:</strong>
+Filename of the exported graph</p>
+<h2 id="scriptskgmodulesutils"><code>scripts.kg.modules.utils</code><a class="headerlink" href="#scriptskgmodulesutils" title="Permanent link">&para;</a></h2>
+<p>Utility functions for the codebase analysis and graph generation.</p>
+<h3 id="classes_3">Classes<a class="headerlink" href="#classes_3" title="Permanent link">&para;</a></h3>
+<h4 id="docmapnormalizer">DocMapNormalizer<a class="headerlink" href="#docmapnormalizer" title="Permanent link">&para;</a></h4>
+<p>Handles normalization of module path keys in docmap dictionaries.</p>
+<h3 id="functions_3">Functions<a class="headerlink" href="#functions_3" title="Permanent link">&para;</a></h3>
+<h4 id="load_json_file">load_json_file<a class="headerlink" href="#load_json_file" title="Permanent link">&para;</a></h4>
+<p>Load and parse a JSON file.</p>
+<p><strong>Arguments:</strong>
+file_path: Path to the JSON file.</p>
+<p><strong>Returns:</strong>
+The parsed JSON content or empty dict on error.</p>
+<h4 id="safe_get">safe_get<a class="headerlink" href="#safe_get" title="Permanent link">&para;</a></h4>
+<p>Safely get a value from a dictionary.</p>
+<p><strong>Arguments:</strong>
+data: Dictionary to get value from.
+key: Key to lookup.
+default: Default value if key not found.</p>
+<p><strong>Returns:</strong>
+The value from the dictionary or default.</p>
+<h4 id="normalize_keys">normalize_keys<a class="headerlink" href="#normalize_keys" title="Permanent link">&para;</a></h4>
+<p>Normalize all keys to use forward slashes for consistency.</p>
+<p><strong>Arguments:</strong>
+docmap: A dictionary mapping module paths to their respective data.</p>
+<p><strong>Returns:</strong>
+A new dictionary with normalized keys.</p>
+<h2 id="scriptskgmodulesvisualization"><code>scripts.kg.modules.visualization</code><a class="headerlink" href="#scriptskgmodulesvisualization" title="Permanent link">&para;</a></h2>
+<p>Visualization tools for knowledge graphs.</p>
+<h3 id="classes_4">Classes<a class="headerlink" href="#classes_4" title="Permanent link">&para;</a></h3>
+<h4 id="graphvisualizer">GraphVisualizer<a class="headerlink" href="#graphvisualizer" title="Permanent link">&para;</a></h4>
+<p>Handles visualization of knowledge graphs with complexity information.</p>
+<h3 id="functions_4">Functions<a class="headerlink" href="#functions_4" title="Permanent link">&para;</a></h3>
+<h4 id="init_2"><strong>init</strong><a class="headerlink" href="#init_2" title="Permanent link">&para;</a></h4>
+<p>Initialize the visualizer.</p>
+<h4 id="visualize_graph">visualize_graph<a class="headerlink" href="#visualize_graph" title="Permanent link">&para;</a></h4>
+<p>Visualize the graph with complexity scores.</p>
+<p><strong>Arguments:</strong>
+graph: The graph to visualize.
+complexity_scores: A dictionary of complexity scores for nodes.
+title: The title of the visualization.</p>
+<h4 id="_position_nodes_in_layers">_position_nodes_in_layers<a class="headerlink" href="#_position_nodes_in_layers" title="Permanent link">&para;</a></h4>
+<p>Position nodes in horizontal layers by type.</p>
+<p><strong>Arguments:</strong>
+layers: Dictionary of node types and their nodes.</p>
+<p><strong>Returns:</strong>
+Dictionary of node positions.</p>
+<h4 id="_handle_remaining_nodes">_handle_remaining_nodes<a class="headerlink" href="#_handle_remaining_nodes" title="Permanent link">&para;</a></h4>
+<p>Add positions for any nodes that weren't positioned in the initial layout.
+This modifies the pos dictionary in-place.</p>
+<p><strong>Arguments:</strong>
+pos: Dictionary of node positions to update.</p>
+<h4 id="_draw_module_rectangles">_draw_module_rectangles<a class="headerlink" href="#_draw_module_rectangles" title="Permanent link">&para;</a></h4>
+<p>Draw colored rectangles around modules based on complexity.</p>
+<p><strong>Arguments:</strong>
+ax: Matplotlib axes to draw on.
+modules: Dictionary of module nodes.
+pos: Dictionary of node positions.
+complexity_scores: Dictionary of complexity scores.</p>
+<h4 id="_get_node_colors">_get_node_colors<a class="headerlink" href="#_get_node_colors" title="Permanent link">&para;</a></h4>
+<p>Get node colors based on node type and module complexity.</p>
+<p><strong>Arguments:</strong>
+graph: The knowledge graph.
+complexity_scores: Dictionary of complexity scores.</p>
+<p><strong>Returns:</strong>
+List of colors for each node.</p>
+<h4 id="_get_complexity_color">_get_complexity_color<a class="headerlink" href="#_get_complexity_color" title="Permanent link">&para;</a></h4>
+<p>Get the color representation based on the complexity score.</p>
+<p><strong>Arguments:</strong>
+score: The complexity score.</p>
+<p><strong>Returns:</strong>
+The color corresponding to the complexity score.</p>
+<h4 id="_shorten_label">_shorten_label<a class="headerlink" href="#_shorten_label" title="Permanent link">&para;</a></h4>
+<p>Shorten a label for display purposes.</p>
+<p><strong>Arguments:</strong>
+name: The label to shorten.</p>
+<p><strong>Returns:</strong>
+The shortened label.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

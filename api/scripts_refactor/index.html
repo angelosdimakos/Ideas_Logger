@@ -1,0 +1,1496 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the Ideas Logger project">
+      
+      
+        <meta name="author" content="Angelos Dimakos">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Docstring Report for scripts/refactor/ - Ideas Logger</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#docstring-report-for-scriptsrefactor" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Ideas Logger" class="md-header__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ideas Logger
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Docstring Report for scripts/refactor/
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Documentation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../coverage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Test Coverage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quality/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Quality
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Ideas Logger" class="md-nav__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ideas Logger
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Coverage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code Quality
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsrefactor__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.refactor.__init__
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsrefactorast_extractor" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.refactor.ast_extractor
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.refactor.ast_extractor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classmethodinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ClassMethodInfo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classmethodextractor" class="md-nav__link">
+    <span class="md-ellipsis">
+      ClassMethodExtractor
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add_method" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_method
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repr" class="md-nav__link">
+    <span class="md-ellipsis">
+      repr
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract_class_methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      extract_class_methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#init_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visit_classdef" class="md-nav__link">
+    <span class="md-ellipsis">
+      visit_ClassDef
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generic_visit" class="md-nav__link">
+    <span class="md-ellipsis">
+      generic_visit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compare_class_methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      compare_class_methods
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsrefactormerge_audit_reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.refactor.merge_audit_reports
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.refactor.merge_audit_reports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#normalize_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      normalize_path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_and_normalize" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_and_normalize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      merge_reports
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main" class="md-nav__link">
+    <span class="md-ellipsis">
+      main
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsrefactormethod_line_ranges" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.refactor.method_line_ranges
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.refactor.method_line_ranges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methodrangevisitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      MethodRangeVisitor
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visit_classdef_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      visit_ClassDef
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visit_functiondef" class="md-nav__link">
+    <span class="md-ellipsis">
+      visit_FunctionDef
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visit_asyncfunctiondef" class="md-nav__link">
+    <span class="md-ellipsis">
+      visit_AsyncFunctionDef
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_record_range" class="md-nav__link">
+    <span class="md-ellipsis">
+      _record_range
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract_method_line_ranges" class="md-nav__link">
+    <span class="md-ellipsis">
+      extract_method_line_ranges
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsrefactorrefactor_guard" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.refactor.refactor_guard
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.refactor.refactor_guard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analysiserror" class="md-nav__link">
+    <span class="md-ellipsis">
+      AnalysisError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refactorguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      RefactorGuard
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attach_coverage_hits" class="md-nav__link">
+    <span class="md-ellipsis">
+      attach_coverage_hits
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analyze_tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      analyze_tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analyze_module" class="md-nav__link">
+    <span class="md-ellipsis">
+      analyze_module
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_simple_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      _simple_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analyze_directory_recursive" class="md-nav__link">
+    <span class="md-ellipsis">
+      analyze_directory_recursive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#print_human_readable" class="md-nav__link">
+    <span class="md-ellipsis">
+      print_human_readable
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsrefactorrefactor_guard_cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.refactor.refactor_guard_cli
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.refactor.refactor_guard_cli">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functions_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_ensure_utf8_stdout" class="md-nav__link">
+    <span class="md-ellipsis">
+      _ensure_utf8_stdout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_parse_args" class="md-nav__link">
+    <span class="md-ellipsis">
+      _parse_args
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_merge_coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      _merge_coverage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handle_full_scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      handle_full_scan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handle_single_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      handle_single_file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      main
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsrefactorstrictness_analyzer" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.refactor.strictness_analyzer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.refactor.strictness_analyzer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#complexitymetrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      ComplexityMetrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fileaudit" class="md-nav__link">
+    <span class="md-ellipsis">
+      FileAudit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auditreport" class="md-nav__link">
+    <span class="md-ellipsis">
+      AuditReport
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strictnessentry" class="md-nav__link">
+    <span class="md-ellipsis">
+      StrictnessEntry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strictnessreport" class="md-nav__link">
+    <span class="md-ellipsis">
+      StrictnessReport
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methodoutput" class="md-nav__link">
+    <span class="md-ellipsis">
+      MethodOutput
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testoutput" class="md-nav__link">
+    <span class="md-ellipsis">
+      TestOutput
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#moduleoutput" class="md-nav__link">
+    <span class="md-ellipsis">
+      ModuleOutput
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finalreport" class="md-nav__link">
+    <span class="md-ellipsis">
+      FinalReport
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#weighted_coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      weighted_coverage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_test_severity" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_test_severity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_audit_report" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_audit_report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_test_report" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_test_report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_module_report" class="md-nav__link">
+    <span class="md-ellipsis">
+      generate_module_report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fuzzy_match" class="md-nav__link">
+    <span class="md-ellipsis">
+      fuzzy_match
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate_report_schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate_report_schema
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#should_assign_test_to_module" class="md-nav__link">
+    <span class="md-ellipsis">
+      should_assign_test_to_module
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      main
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="docstring-report-for-scriptsrefactor">Docstring Report for <code>scripts/refactor/</code><a class="headerlink" href="#docstring-report-for-scriptsrefactor" title="Permanent link">&para;</a></h1>
+<h2 id="scriptsrefactor__init__"><code>scripts.refactor.__init__</code><a class="headerlink" href="#scriptsrefactor__init__" title="Permanent link">&para;</a></h2>
+<p>The <code>refactor</code> module provides tools for analyzing, comparing, and validating Python code refactoring.
+Core functionality includes:
+- Comparing original and refactored Python modules or directories to detect changes in class and method definitions.
+- Analyzing cyclomatic complexity of functions and methods to ensure maintainability.
+- Identifying missing or insufficient test coverage for public methods.
+- Integrating with code coverage data to enrich analysis results.
+- Supporting configuration for complexity thresholds and file/directory ignore patterns.
+This module is intended to help developers and teams maintain code quality and test coverage during refactoring processes.</p>
+<h2 id="scriptsrefactorast_extractor"><code>scripts.refactor.ast_extractor</code><a class="headerlink" href="#scriptsrefactorast_extractor" title="Permanent link">&para;</a></h2>
+<p>ast_extractor.py
+This module provides utilities for analyzing Python source files using the AST (Abstract Syntax Tree) to extract class and method information.
+Core features include:
+- Extracting all classes and their methods from a Python file, including method start and end line numbers.
+- Supporting nested class and method extraction.
+- Comparing two sets of class methods to identify missing or newly added methods after refactoring.
+- Providing a ClassMethodInfo class to encapsulate class and method metadata for further analysis.
+Intended for use in code analysis, refactoring tools, and automated quality checks.</p>
+<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
+<h4 id="classmethodinfo">ClassMethodInfo<a class="headerlink" href="#classmethodinfo" title="Permanent link">&para;</a></h4>
+<p>Holds information about methods in a single class.
+Attributes:
+class_name (str): Name of the class.
+methods (Dict[str, Tuple[int, int]]): Mapping from method name to a tuple of (start_lineno, end_lineno).</p>
+<h4 id="classmethodextractor">ClassMethodExtractor<a class="headerlink" href="#classmethodextractor" title="Permanent link">&para;</a></h4>
+<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
+<h4 id="init"><strong>init</strong><a class="headerlink" href="#init" title="Permanent link">&para;</a></h4>
+<p>Initializes ClassMethodInfo with the class name and an empty methods dictionary.</p>
+<p><strong>Arguments:</strong>
+class_name (str): The name of the class.</p>
+<h4 id="add_method">add_method<a class="headerlink" href="#add_method" title="Permanent link">&para;</a></h4>
+<p>Record a method with its start and end line numbers.</p>
+<p><strong>Arguments:</strong>
+name (str): The name of the method.
+linenos (Tuple[int, int]): A tuple containing the start and end line numbers of the method.</p>
+<h4 id="repr"><strong>repr</strong><a class="headerlink" href="#repr" title="Permanent link">&para;</a></h4>
+<p>Returns a string representation of the ClassMethodInfo instance.</p>
+<p><strong>Returns:</strong>
+str: A string representation of the class and its methods.</p>
+<h4 id="extract_class_methods">extract_class_methods<a class="headerlink" href="#extract_class_methods" title="Permanent link">&para;</a></h4>
+<p>Extracts all classes and their methods from a Python file, including method start and end line numbers.</p>
+<p><strong>Arguments:</strong>
+file_path (str): Path to the Python source file.</p>
+<p><strong>Returns:</strong>
+List[ClassMethodInfo]: A list of ClassMethodInfo instances containing class and method data.</p>
+<h4 id="init_1"><strong>init</strong><a class="headerlink" href="#init_1" title="Permanent link">&para;</a></h4>
+<h4 id="visit_classdef">visit_ClassDef<a class="headerlink" href="#visit_classdef" title="Permanent link">&para;</a></h4>
+<h4 id="generic_visit">generic_visit<a class="headerlink" href="#generic_visit" title="Permanent link">&para;</a></h4>
+<p>Visit all child nodes, to catch nested class definitions.</p>
+<h4 id="compare_class_methods">compare_class_methods<a class="headerlink" href="#compare_class_methods" title="Permanent link">&para;</a></h4>
+<p>Compare two ClassMethodInfo objects and return which methods are missing in the refactored version and which are newly added.</p>
+<p><strong>Arguments:</strong>
+original (ClassMethodInfo): The original class method info.
+refactored (ClassMethodInfo): The refactored class method info.</p>
+<p><strong>Returns:</strong>
+Dict[str, List[str]]: A dictionary with keys 'missing' and 'added', each mapping to a sorted list of method names.</p>
+<h2 id="scriptsrefactormerge_audit_reports"><code>scripts.refactor.merge_audit_reports</code><a class="headerlink" href="#scriptsrefactormerge_audit_reports" title="Permanent link">&para;</a></h2>
+<p>merge_audit_reports.py – bespoke normalizer
+Merges docstring, coverage/complexity, and linting JSON reports into a unified output.
+Uses <strong>custom normalization logic per input source</strong> to ensure accurate matching.
+Author: Your Name
+Version: 1.0</p>
+<h3 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
+<h4 id="normalize_path">normalize_path<a class="headerlink" href="#normalize_path" title="Permanent link">&para;</a></h4>
+<p>Normalize any report path by stripping everything up to and including the project 'scripts' directory
+and converting to a forward‑slash relative path.</p>
+<p><strong>Arguments:</strong>
+path (str): The original file path.</p>
+<p><strong>Returns:</strong>
+str: The normalized relative path.</p>
+<h4 id="load_and_normalize">load_and_normalize<a class="headerlink" href="#load_and_normalize" title="Permanent link">&para;</a></h4>
+<p>Load JSON and normalize its keys using a common path normalizer.</p>
+<p><strong>Arguments:</strong>
+path (Path): The path to the JSON file.</p>
+<p><strong>Returns:</strong>
+Dict[str, Any]: A dictionary with normalized keys and their corresponding values.</p>
+<h4 id="merge_reports">merge_reports<a class="headerlink" href="#merge_reports" title="Permanent link">&para;</a></h4>
+<p>Merge docstring, coverage, and linting reports into a single JSON output.</p>
+<p><strong>Arguments:</strong>
+doc_path (Path): Path to the docstring JSON file.
+cov_path (Path): Path to the coverage JSON file.
+lint_path (Path): Path to the linting JSON file.
+output_path (Path): Path where the merged output will be saved.</p>
+<h4 id="main">main<a class="headerlink" href="#main" title="Permanent link">&para;</a></h4>
+<p>Main entry point for the script.</p>
+<h2 id="scriptsrefactormethod_line_ranges"><code>scripts.refactor.method_line_ranges</code><a class="headerlink" href="#scriptsrefactormethod_line_ranges" title="Permanent link">&para;</a></h2>
+<p>method_line_ranges.py
+This module provides utilities for extracting the start and end line numbers of all functions and methods in a Python source file using the AST (Abstract Syntax Tree).
+Core features include:
+- The MethodRangeVisitor class, which traverses the AST to collect line ranges for top-level functions, class methods, and methods in nested classes.
+- The extract_method_line_ranges function, which parses a Python file and returns a dictionary mapping each function or method (as "function" or "Class.method") to its (start_lineno, end_lineno) tuple.
+- Handles both synchronous and asynchronous functions, and supports Python versions with or without the end_lineno attribute.
+- Designed for use in code analysis, refactoring tools, and coverage mapping.
+Intended to facilitate precise mapping of code structure for downstream analysis and tooling.</p>
+<h3 id="classes_1">Classes<a class="headerlink" href="#classes_1" title="Permanent link">&para;</a></h3>
+<h4 id="methodrangevisitor">MethodRangeVisitor<a class="headerlink" href="#methodrangevisitor" title="Permanent link">&para;</a></h4>
+<p>Collects start and end line numbers for each function or async method,
+keyed by 'ClassName.method' for methods or just 'function' for top-level functions.
+Nested classes are also visited.
+Attributes:
+ranges (Dict[str, Tuple[int, int]]): A dictionary mapping functions or methods to their line ranges.
+current_class (Optional[str]): The name of the current class being visited.</p>
+<h3 id="functions_2">Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
+<h4 id="init_2"><strong>init</strong><a class="headerlink" href="#init_2" title="Permanent link">&para;</a></h4>
+<p>Initializes the MethodRangeVisitor with an empty dictionary for ranges
+and a placeholder for the current class name.</p>
+<h4 id="visit_classdef_1">visit_ClassDef<a class="headerlink" href="#visit_classdef_1" title="Permanent link">&para;</a></h4>
+<p>Visits a class definition node and collects line ranges for its methods.</p>
+<p><strong>Arguments:</strong>
+node (ast.ClassDef): The class definition node to visit.</p>
+<h4 id="visit_functiondef">visit_FunctionDef<a class="headerlink" href="#visit_functiondef" title="Permanent link">&para;</a></h4>
+<p>Visits a function definition node and records its line range.</p>
+<p><strong>Arguments:</strong>
+node (ast.FunctionDef): The function definition node to visit.</p>
+<h4 id="visit_asyncfunctiondef">visit_AsyncFunctionDef<a class="headerlink" href="#visit_asyncfunctiondef" title="Permanent link">&para;</a></h4>
+<p>Visits an asynchronous function definition node and records its line range.</p>
+<p><strong>Arguments:</strong>
+node (ast.AsyncFunctionDef): The asynchronous function definition node to visit.</p>
+<h4 id="_record_range">_record_range<a class="headerlink" href="#_record_range" title="Permanent link">&para;</a></h4>
+<p>Records the line range for a function or asynchronous function node.</p>
+<p><strong>Arguments:</strong>
+node (Union[ast.FunctionDef, ast.AsyncFunctionDef]): The function or asynchronous function node to record.</p>
+<h4 id="extract_method_line_ranges">extract_method_line_ranges<a class="headerlink" href="#extract_method_line_ranges" title="Permanent link">&para;</a></h4>
+<p>Parses a Python file and returns a dict mapping each function or method
+to its (start_lineno, end_lineno).</p>
+<p><strong>Arguments:</strong>
+file_path (str): Path to the Python source file.</p>
+<p><strong>Returns:</strong>
+Dict[str, Tuple[int, int]]: A dict mapping functions or methods to their line ranges.
+Raises:
+FileNotFoundError: If the file cannot be found.
+IOError: If the file cannot be read.
+SyntaxError: If the file cannot be parsed.</p>
+<h2 id="scriptsrefactorrefactor_guard"><code>scripts.refactor.refactor_guard</code><a class="headerlink" href="#scriptsrefactorrefactor_guard" title="Permanent link">&para;</a></h2>
+<p>RefactorGuard: analyse refactors and (optionally) enrich the results with line‑coverage
+information coming from a <code>.coverage</code> SQLite DB or a JSON export produced by Coverage.py.
+Adds support for both <code>.coverage</code> and <code>coverage.json</code> formats. Automatically switches
+parsers based on the extension.</p>
+<h3 id="classes_2">Classes<a class="headerlink" href="#classes_2" title="Permanent link">&para;</a></h3>
+<h4 id="analysiserror">AnalysisError<a class="headerlink" href="#analysiserror" title="Permanent link">&para;</a></h4>
+<p>Raised when an error occurs during analysis.</p>
+<h4 id="refactorguard">RefactorGuard<a class="headerlink" href="#refactorguard" title="Permanent link">&para;</a></h4>
+<p>Analyse / validate Python refactors.</p>
+<h3 id="functions_3">Functions<a class="headerlink" href="#functions_3" title="Permanent link">&para;</a></h3>
+<h4 id="init_3"><strong>init</strong><a class="headerlink" href="#init_3" title="Permanent link">&para;</a></h4>
+<h4 id="attach_coverage_hits">attach_coverage_hits<a class="headerlink" href="#attach_coverage_hits" title="Permanent link">&para;</a></h4>
+<h4 id="analyze_tests">analyze_tests<a class="headerlink" href="#analyze_tests" title="Permanent link">&para;</a></h4>
+<h4 id="analyze_module">analyze_module<a class="headerlink" href="#analyze_module" title="Permanent link">&para;</a></h4>
+<h4 id="_simple_name">_simple_name<a class="headerlink" href="#_simple_name" title="Permanent link">&para;</a></h4>
+<h4 id="analyze_directory_recursive">analyze_directory_recursive<a class="headerlink" href="#analyze_directory_recursive" title="Permanent link">&para;</a></h4>
+<h4 id="print_human_readable">print_human_readable<a class="headerlink" href="#print_human_readable" title="Permanent link">&para;</a></h4>
+<p>Print a human-readable summary of the analysis results.</p>
+<h2 id="scriptsrefactorrefactor_guard_cli"><code>scripts.refactor.refactor_guard_cli</code><a class="headerlink" href="#scriptsrefactorrefactor_guard_cli" title="Permanent link">&para;</a></h2>
+<h3 id="functions_4">Functions<a class="headerlink" href="#functions_4" title="Permanent link">&para;</a></h3>
+<h4 id="_ensure_utf8_stdout">_ensure_utf8_stdout<a class="headerlink" href="#_ensure_utf8_stdout" title="Permanent link">&para;</a></h4>
+<h4 id="_parse_args">_parse_args<a class="headerlink" href="#_parse_args" title="Permanent link">&para;</a></h4>
+<h4 id="_merge_coverage">_merge_coverage<a class="headerlink" href="#_merge_coverage" title="Permanent link">&para;</a></h4>
+<h4 id="handle_full_scan">handle_full_scan<a class="headerlink" href="#handle_full_scan" title="Permanent link">&para;</a></h4>
+<h4 id="handle_single_file">handle_single_file<a class="headerlink" href="#handle_single_file" title="Permanent link">&para;</a></h4>
+<h4 id="main_1">main<a class="headerlink" href="#main_1" title="Permanent link">&para;</a></h4>
+<h2 id="scriptsrefactorstrictness_analyzer"><code>scripts.refactor.strictness_analyzer</code><a class="headerlink" href="#scriptsrefactorstrictness_analyzer" title="Permanent link">&para;</a></h2>
+<p>Test Coverage Mapper (Strictness Report Version)
+Author: Angelos Dimakos
+Version: 3.2.0
+Loads precomputed strictness analysis and merges it with audit coverage data
+into a module-centric report with consistent schema handling.
+Usage:
+python test_coverage_mapper.py --test-report test_report.json --audit refactor_audit.json --output final_report.json</p>
+<h3 id="classes_3">Classes<a class="headerlink" href="#classes_3" title="Permanent link">&para;</a></h3>
+<h4 id="complexitymetrics">ComplexityMetrics<a class="headerlink" href="#complexitymetrics" title="Permanent link">&para;</a></h4>
+<p>Model for storing code complexity and test coverage metrics for a single method.</p>
+<h4 id="fileaudit">FileAudit<a class="headerlink" href="#fileaudit" title="Permanent link">&para;</a></h4>
+<p>Model for storing audit data for a specific file.</p>
+<h4 id="auditreport">AuditReport<a class="headerlink" href="#auditreport" title="Permanent link">&para;</a></h4>
+<p>Top-level model for the audit report.</p>
+<h4 id="strictnessentry">StrictnessEntry<a class="headerlink" href="#strictnessentry" title="Permanent link">&para;</a></h4>
+<p>Model for storing test strictness evaluation data.</p>
+<h4 id="strictnessreport">StrictnessReport<a class="headerlink" href="#strictnessreport" title="Permanent link">&para;</a></h4>
+<p>Top-level model for the strictness report.</p>
+<h4 id="methodoutput">MethodOutput<a class="headerlink" href="#methodoutput" title="Permanent link">&para;</a></h4>
+<p>Standardized output model for method data in the final report.</p>
+<h4 id="testoutput">TestOutput<a class="headerlink" href="#testoutput" title="Permanent link">&para;</a></h4>
+<p>Standardized output model for test data in the final report.</p>
+<h4 id="moduleoutput">ModuleOutput<a class="headerlink" href="#moduleoutput" title="Permanent link">&para;</a></h4>
+<p>Standardized output model for module data in the final report.</p>
+<h4 id="finalreport">FinalReport<a class="headerlink" href="#finalreport" title="Permanent link">&para;</a></h4>
+<p>Top-level model for the final merged report.</p>
+<h3 id="functions_5">Functions<a class="headerlink" href="#functions_5" title="Permanent link">&para;</a></h3>
+<h4 id="weighted_coverage">weighted_coverage<a class="headerlink" href="#weighted_coverage" title="Permanent link">&para;</a></h4>
+<p>Return overall coverage weighted by each function's lines-of-code.</p>
+<p><strong>Arguments:</strong>
+func_dict: Dictionary of function names to ComplexityMetrics</p>
+<p><strong>Returns:</strong>
+float: Weighted coverage value between 0.0 and 1.0</p>
+<h4 id="get_test_severity">get_test_severity<a class="headerlink" href="#get_test_severity" title="Permanent link">&para;</a></h4>
+<p>Compute severity with implicit weighting from coverage.</p>
+<p><strong>Arguments:</strong>
+test_entry: StrictnessEntry object with test data.
+coverage: Optional coverage value (0.0 to 1.0). If None, no weighting applied.
+alpha: Weighting factor for severity vs. coverage.
+Higher alpha means severity dominates.</p>
+<p><strong>Returns:</strong>
+float: Adjusted severity score.</p>
+<h4 id="load_audit_report">load_audit_report<a class="headerlink" href="#load_audit_report" title="Permanent link">&para;</a></h4>
+<p>Load the audit report JSON into the Pydantic model.</p>
+<p><strong>Arguments:</strong>
+audit_path: Path to the audit report JSON file</p>
+<p><strong>Returns:</strong>
+AuditReport: Pydantic model with audit data
+Raises:
+SystemExit: If file not found or invalid JSON</p>
+<h4 id="load_test_report">load_test_report<a class="headerlink" href="#load_test_report" title="Permanent link">&para;</a></h4>
+<p>Load the precomputed strictness analysis JSON.</p>
+<p><strong>Arguments:</strong>
+test_report_path: Path to the test strictness report JSON file</p>
+<p><strong>Returns:</strong>
+List[StrictnessEntry]: List of test strictness entries
+Raises:
+SystemExit: If file not found or invalid JSON</p>
+<h4 id="generate_module_report">generate_module_report<a class="headerlink" href="#generate_module_report" title="Permanent link">&para;</a></h4>
+<h4 id="fuzzy_match">fuzzy_match<a class="headerlink" href="#fuzzy_match" title="Permanent link">&para;</a></h4>
+<p>Fuzzy matching with partial ratio preference for looser matching.</p>
+<h4 id="validate_report_schema">validate_report_schema<a class="headerlink" href="#validate_report_schema" title="Permanent link">&para;</a></h4>
+<h4 id="should_assign_test_to_module">should_assign_test_to_module<a class="headerlink" href="#should_assign_test_to_module" title="Permanent link">&para;</a></h4>
+<p>Decide if a test should be assigned to a production module using strict matching.
+Prioritizes conventions and imports. Fuzzy matching is a last resort with a high bar.</p>
+<h4 id="main_2">main<a class="headerlink" href="#main_2" title="Permanent link">&para;</a></h4>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

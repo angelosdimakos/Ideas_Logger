@@ -1,0 +1,922 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the Ideas Logger project">
+      
+      
+        <meta name="author" content="Angelos Dimakos">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Docstring Report for scripts/core/ - Ideas Logger</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#docstring-report-for-scriptscore" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Ideas Logger" class="md-header__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ideas Logger
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Docstring Report for scripts/core/
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Documentation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../coverage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Test Coverage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quality/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Quality
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Ideas Logger" class="md-nav__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ideas Logger
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Coverage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code Quality
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scriptscore__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.core.__init__
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptscorecore" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.core.core
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="docstring-report-for-scriptscore">Docstring Report for <code>scripts/core/</code><a class="headerlink" href="#docstring-report-for-scriptscore" title="Permanent link">&para;</a></h1>
+<h2 id="scriptscore__init__"><code>scripts.core.__init__</code><a class="headerlink" href="#scriptscore__init__" title="Permanent link">&para;</a></h2>
+<h2 id="scriptscorecore"><code>scripts.core.core</code><a class="headerlink" href="#scriptscorecore" title="Permanent link">&para;</a></h2>
+<h1 id="core-module-for-zephyrus-logger">Core module for Zephyrus Logger<a class="headerlink" href="#core-module-for-zephyrus-logger" title="Permanent link">&para;</a></h1>
+<p>This refactored <strong>core.py</strong> wires together the new, slimmer helper
+modules we just introduced (<code>EnvironmentBootstrapper</code>, <code>LogManager</code>,
+<code>MarkdownLogger</code>, <code>SummaryTracker</code>, <code>SummaryEngine</code>). It restores the
+public surface that the unit &amp; integration tests expect while keeping
+the implementation focused and declarative.
+Key public methods / attributes re-exposed</p>
+<hr />
+<ul>
+<li><strong>save_entry</strong>          – add a new idea to JSON + Markdown &amp; update tracker</li>
+<li><strong>log_new_entry</strong>       – alias of <em>save_entry</em> (used by integration tests)</li>
+<li><strong>generate_global_summary</strong> – force batch summarisation via <code>SummaryEngine</code></li>
+<li><strong>generate_summary</strong>    – backward-compat shim (date arg ignored)</li>
+<li><strong>search_summaries</strong> / <strong>search_raw_logs</strong> – thin wrappers around the FAISS
+indexers (gracefully degrade to empty list when indices are disabled in
+tests)</li>
+<li><strong>BATCH_SIZE</strong>          – pulled from config with sane default so tests can
+use it directly.
+Everything else (bootstrap, validation, etc.) stays untouched aside from
+swapping our bespoke <code>_initialize_environment</code> with the clearer
+<code>EnvironmentBootstrapper</code>.</li>
+</ul>
+<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
+<h4 id="zephyrusloggercore">ZephyrusLoggerCore<a class="headerlink" href="#zephyrusloggercore" title="Permanent link">&para;</a></h4>
+<p>High-level façade that ties together logging, summarizing, and search functionalities.
+This class serves as the main interface for managing logs, generating summaries,
+and searching through entries within the Zephyrus Logger application. It initializes
+various components necessary for logging and summarization, ensuring the environment
+is properly set up.
+Attributes:
+TIMESTAMP_FORMAT (str): Format for timestamps in logs.
+DATE_FORMAT (str): Format for dates in logs.
+BATCH_KEY (str): Key for batch processing.
+ORIGINAL_SUMMARY_KEY (str): Key for original summaries.
+CORRECTED_SUMMARY_KEY (str): Key for corrected summaries.
+CORRECTION_TIMESTAMP_KEY (str): Key for correction timestamps.
+CONTENT_KEY (str): Key for content in logs.
+TIMESTAMP_KEY (str): Key for timestamps in logs.
+BATCH_SIZE (int): Number of entries to process in a batch.
+ai_summarizer (AISummarizer): Instance of the AI summarizer.
+log_manager (LogManager): Instance of the log manager.
+md_logger (MarkdownLogger): Instance of the markdown logger.
+summary_tracker (SummaryTracker): Instance of the summary tracker.
+summary_engine (SummaryEngine): Instance of the summary engine.</p>
+<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
+<h4 id="init"><strong>init</strong><a class="headerlink" href="#init" title="Permanent link">&para;</a></h4>
+<p>Initializes ZephyrusLoggerCore with configuration, environment setup, and core components.
+Loads configuration, resolves file system paths, ensures required directories and files exist, and instantiates collaborators for logging, summarization, and summary tracking. Validates the summary tracker on startup, rebuilding it if necessary or configured to do so.</p>
+<p><strong>Arguments:</strong>
+script_dir: Path to the script directory used for resolving application paths.
+Raises:
+RuntimeError: If the summary tracker fails validation after a rebuild.</p>
+<h4 id="save_entry">save_entry<a class="headerlink" href="#save_entry" title="Permanent link">&para;</a></h4>
+<p>Saves a new log entry to both the JSON log and Markdown export.
+Adds the entry under the specified main category and subcategory, updates the summary tracker, and returns whether the Markdown export succeeded.</p>
+<p><strong>Arguments:</strong>
+main_category: The primary category for the log entry.
+subcategory: The subcategory for the log entry.
+entry: The content of the log entry.</p>
+<p><strong>Returns:</strong>
+True if the entry was successfully exported to Markdown; False otherwise.</p>
+<h4 id="generate_global_summary">generate_global_summary<a class="headerlink" href="#generate_global_summary" title="Permanent link">&para;</a></h4>
+<p>Generates a batch summary for the specified main category and subcategory.</p>
+<p><strong>Arguments:</strong>
+main_category: The primary category to summarize.
+subcategory: The subcategory within the main category.</p>
+<p><strong>Returns:</strong>
+True if the batch summarization succeeds; otherwise, False.</p>
+<h4 id="generate_summary">generate_summary<a class="headerlink" href="#generate_summary" title="Permanent link">&para;</a></h4>
+<p>Generates a summary for the specified main category and subcategory.
+This method ignores the date argument and delegates to generate_global_summary for backward compatibility.</p>
+<p><strong>Arguments:</strong>
+_date_str: Ignored legacy date argument.
+main_category: The main category to summarize.
+subcategory: The subcategory to summarize.</p>
+<p><strong>Returns:</strong>
+True if the summary generation succeeds, False otherwise.</p>
+<h4 id="_safe_search">_safe_search<a class="headerlink" href="#_safe_search" title="Permanent link">&para;</a></h4>
+<p>Safely performs a search on a specified FAISS indexer attribute of the summary tracker.
+If the indexer or its search method is unavailable, or if an exception occurs during search, returns an empty list.</p>
+<p><strong>Arguments:</strong>
+indexer_attr: Name of the summary tracker attribute representing the FAISS indexer.
+query: The search query string.
+top_k: Maximum number of results to return.</p>
+<p><strong>Returns:</strong>
+A list of search results, or an empty list if the search fails.</p>
+<h4 id="search_summaries">search_summaries<a class="headerlink" href="#search_summaries" title="Permanent link">&para;</a></h4>
+<p>Searches summary entries for the most relevant matches to a query using vector similarity.</p>
+<p><strong>Arguments:</strong>
+query: The search query string.
+top_k: Maximum number of results to return.</p>
+<p><strong>Returns:</strong>
+A list of the top-k most relevant summary search results, or an empty list if search fails.</p>
+<h4 id="search_raw_logs">search_raw_logs<a class="headerlink" href="#search_raw_logs" title="Permanent link">&para;</a></h4>
+<p>Searches raw log entries for the most relevant matches to a query using vector similarity.</p>
+<p><strong>Arguments:</strong>
+query: The search query string.
+top_k: Maximum number of results to return.</p>
+<p><strong>Returns:</strong>
+A list of the top-k most relevant raw log entries matching the query.</p>
+<h4 id="_safe_read_json">_safe_read_json<a class="headerlink" href="#_safe_read_json" title="Permanent link">&para;</a></h4>
+<p>Safely reads a JSON file and returns its contents as a dictionary.
+If the file cannot be read or parsed, returns an empty dictionary instead of raising an exception.</p>
+<h2 id="scriptscorecore_cli"><code>scripts.core.core_cli</code><a class="headerlink" href="#scriptscorecore_cli" title="Permanent link">&para;</a></h2>
+<h1 id="command-line-interface-for-zephyrus-logger">Command Line Interface for Zephyrus Logger<a class="headerlink" href="#command-line-interface-for-zephyrus-logger" title="Permanent link">&para;</a></h1>
+<p>This module provides a command-line interface for the Zephyrus Logger application,
+allowing users to log entries, summarize categories, and search through logs.</p>
+<h3 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
+<h4 id="log">log<a class="headerlink" href="#log" title="Permanent link">&para;</a></h4>
+<p>Logs a new entry under the specified main and subcategory.</p>
+<p><strong>Arguments:</strong>
+main: Main category for the log entry.
+sub: Subcategory for the log entry.
+entry: Content of the log entry.
+The entry is saved in both JSON and Markdown formats.</p>
+<h4 id="summarize">summarize<a class="headerlink" href="#summarize" title="Permanent link">&para;</a></h4>
+<p>Generates a summary for the specified main category and subcategory.</p>
+<p><strong>Arguments:</strong>
+main: The main category to summarize.
+sub: The subcategory to summarize.
+Prints a confirmation message if the summary is generated, or a warning if there are insufficient entries or the operation fails.</p>
+<h4 id="search">search<a class="headerlink" href="#search" title="Permanent link">&para;</a></h4>
+<p>Searches summaries or raw logs and displays the top results.</p>
+<p><strong>Arguments:</strong>
+query: The search query string.
+top_k: Maximum number of results to display.
+kind: Specifies whether to search 'summary' or 'raw' logs. Defaults to 'summary'.</p>
+<h2 id="scriptscoreenvironment_bootstrapper"><code>scripts.core.environment_bootstrapper</code><a class="headerlink" href="#scriptscoreenvironment_bootstrapper" title="Permanent link">&para;</a></h2>
+<h1 id="environment-bootstrapper-module">Environment Bootstrapper Module<a class="headerlink" href="#environment-bootstrapper-module" title="Permanent link">&para;</a></h1>
+<p>This module provides the EnvironmentBootstrapper class, which is responsible
+for setting up the necessary directories and files for the Zephyrus Logger
+application. It ensures that all required resources are in place before
+the application starts.</p>
+<h3 id="classes_1">Classes<a class="headerlink" href="#classes_1" title="Permanent link">&para;</a></h3>
+<h4 id="environmentbootstrapper">EnvironmentBootstrapper<a class="headerlink" href="#environmentbootstrapper" title="Permanent link">&para;</a></h4>
+<p>A class to bootstrap the environment for the Zephyrus Logger application.
+This class handles the creation of necessary directories and files,
+ensuring that the application has all required resources available.
+Attributes:
+paths (ZephyrusPaths): An instance containing paths for logs, exports,
+and configuration files.
+default_batch_size (int): The default batch size to use if the
+configuration file is missing.</p>
+<h3 id="functions_2">Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
+<h4 id="init_1"><strong>init</strong><a class="headerlink" href="#init_1" title="Permanent link">&para;</a></h4>
+<p>Initializes the EnvironmentBootstrapper with paths and a default batch size.</p>
+<p><strong>Arguments:</strong>
+paths: Contains locations for logs, exports, and configuration files.
+default_batch_size: Default batch size used if the configuration file is missing.</p>
+<h4 id="bootstrap">bootstrap<a class="headerlink" href="#bootstrap" title="Permanent link">&para;</a></h4>
+<p>Prepares the application environment by ensuring required directories and files exist.
+Calls internal methods to create necessary directories and initialize essential files for the Zephyrus Logger application, guaranteeing all resources are ready before startup.</p>
+<h4 id="_make_directories">_make_directories<a class="headerlink" href="#_make_directories" title="Permanent link">&para;</a></h4>
+<p>Creates required directories for logs, exports, and configuration files if they do not exist.</p>
+<h4 id="_initialize_files">_initialize_files<a class="headerlink" href="#_initialize_files" title="Permanent link">&para;</a></h4>
+<p>Initializes required log and configuration files for the Zephyrus Logger environment.
+Creates empty or default-initialized files if they do not exist, including the JSON log, text log, correction summaries, and configuration files. If the correction summaries file exists but is empty, it is reinitialized as an empty JSON file. The configuration file is recreated with a default batch size if missing.</p>
+<h2 id="scriptscorelog_manager"><code>scripts.core.log_manager</code><a class="headerlink" href="#scriptscorelog_manager" title="Permanent link">&para;</a></h2>
+<p>log_manager.py
+This module provides the LogManager class for managing log entries and correction summaries.
+It includes functionality for reading and writing log data in both JSON and plain text formats,
+as well as handling timestamps and content keys for structured logging. The LogManager is essential
+for the Zephyrus Logger application to maintain a reliable logging system.
+Dependencies:
+- pathlib
+- datetime
+- logging
+- scripts.utils.file_utils</p>
+<h3 id="classes_2">Classes<a class="headerlink" href="#classes_2" title="Permanent link">&para;</a></h3>
+<h4 id="logmanager">LogManager<a class="headerlink" href="#logmanager" title="Permanent link">&para;</a></h4>
+<h3 id="functions_3">Functions<a class="headerlink" href="#functions_3" title="Permanent link">&para;</a></h3>
+<h4 id="init_2"><strong>init</strong><a class="headerlink" href="#init_2" title="Permanent link">&para;</a></h4>
+<p>Initializes a LogManager instance.</p>
+<p><strong>Arguments:</strong>
+json_log_file (Path): Path to the JSON file that stores log entries.
+txt_log_file (Path): Path to the text file that stores log entries in plain text.
+correction_summaries_file (Path): Path to the JSON file that stores correction summaries.
+timestamp_format (str): Timestamp format for log entries.
+content_key (str): Key used to store the content of a log entry in the JSON file.
+timestamp_key (str): Key used to store the timestamp of a log entry in the JSON file.</p>
+<h4 id="_safe_read_or_create_json">_safe_read_or_create_json<a class="headerlink" href="#_safe_read_or_create_json" title="Permanent link">&para;</a></h4>
+<p>Safely reads a JSON file or creates it if it doesn't exist.
+If the file doesn't exist, it will create an empty JSON object.</p>
+<p><strong>Arguments:</strong>
+filepath (Path): Path to the JSON file.</p>
+<p><strong>Returns:</strong>
+dict: The parsed JSON data or an empty dictionary if the file couldn't be loaded.</p>
+<h4 id="read_logs">read_logs<a class="headerlink" href="#read_logs" title="Permanent link">&para;</a></h4>
+<p>Reads the JSON log file and returns its contents. If the file doesn't exist, it will create an empty JSON object.</p>
+<p><strong>Returns:</strong>
+dict: The parsed JSON data or an empty dictionary if the file couldn't be loaded.</p>
+<h4 id="update_logs">update_logs<a class="headerlink" href="#update_logs" title="Permanent link">&para;</a></h4>
+<p>Updates the JSON log file with the provided update function.
+The update function will be provided with the current JSON data as a dictionary.
+The function should modify the dictionary in-place as needed.</p>
+<p><strong>Arguments:</strong>
+update_func (Callable[[dict], None]): The function to call to update the JSON data.</p>
+<h4 id="append_entry">append_entry<a class="headerlink" href="#append_entry" title="Permanent link">&para;</a></h4>
+<p>Appends a new log entry to the JSON log file.</p>
+<p><strong>Arguments:</strong>
+date_str (str): The date of the log entry in the format specified by <code>timestamp_format</code>.
+main_category (str): The main category of the log entry.
+subcategory (str): The subcategory of the log entry.
+entry (str): The content of the log entry.</p>
+<h4 id="updater">updater<a class="headerlink" href="#updater" title="Permanent link">&para;</a></h4>
+<p>Updates the JSON data to append a new log entry.</p>
+<p><strong>Arguments:</strong>
+data (dict): The current JSON data.</p>
+<h4 id="get_unsummarized_batch">get_unsummarized_batch<a class="headerlink" href="#get_unsummarized_batch" title="Permanent link">&para;</a></h4>
+<p>Retrieves a batch of unsummarized log entries for the given main category and subcategory.</p>
+<p><strong>Arguments:</strong>
+main_category (str): The main category of the log entries.
+subcategory (str): The subcategory of the log entries.
+summarized_total (int): The total number of log entries that have already been summarized.
+batch_size (int): The number of unsummarized log entries to retrieve in the batch.</p>
+<p><strong>Returns:</strong>
+list: A list of log entries, each represented as a dictionary with 'timestamp' and 'content' keys.</p>
+<h4 id="update_correction_summaries">update_correction_summaries<a class="headerlink" href="#update_correction_summaries" title="Permanent link">&para;</a></h4>
+<p>Updates the correction summaries JSON file with new data.</p>
+<p><strong>Arguments:</strong>
+main_category (str): The main category of the log entries.
+subcategory (str): The subcategory of the log entries.
+new_data (dict): The new data to append to the correction summaries.
+The dictionary should contain the following keys:
+- "batch": The batch label.
+- "original_summary": The original summary.
+- "corrected_summary": The corrected summary.
+- "correction_timestamp": The timestamp of the correction.
+- "start": The start timestamp of the batch.
+- "end": The end timestamp of the batch.</p>
+<h2 id="scriptscoremarkdown_logger"><code>scripts.core.markdown_logger</code><a class="headerlink" href="#scriptscoremarkdown_logger" title="Permanent link">&para;</a></h2>
+<h1 id="markdown-logger-module">Markdown Logger Module<a class="headerlink" href="#markdown-logger-module" title="Permanent link">&para;</a></h1>
+<p>This module provides the MarkdownLogger class, which is responsible
+for logging entries to Markdown files. It handles the creation and
+updating of Markdown files in the specified export directory.</p>
+<h3 id="classes_3">Classes<a class="headerlink" href="#classes_3" title="Permanent link">&para;</a></h3>
+<h4 id="markdownlogger">MarkdownLogger<a class="headerlink" href="#markdownlogger" title="Permanent link">&para;</a></h4>
+<p>A class to log entries to Markdown files.
+This class manages the logging of entries into Markdown format,
+creating new files or updating existing ones as necessary.
+Attributes:
+export_dir (Path): The directory where Markdown files will be saved.</p>
+<h3 id="functions_4">Functions<a class="headerlink" href="#functions_4" title="Permanent link">&para;</a></h3>
+<h4 id="init_3"><strong>init</strong><a class="headerlink" href="#init_3" title="Permanent link">&para;</a></h4>
+<p>Initializes a MarkdownLogger to write entries to Markdown files in the specified directory.</p>
+<p><strong>Arguments:</strong>
+export_dir: Directory where Markdown files will be stored.</p>
+<h4 id="log_1">log<a class="headerlink" href="#log_1" title="Permanent link">&para;</a></h4>
+<p>Logs an entry under a specific date and category in a Markdown file.
+Creates or updates a Markdown file named after the main category, adding the entry under the specified date header and subcategory. Returns True if the operation succeeds, or False if an error occurs.</p>
+<h2 id="scriptscoresummary_engine"><code>scripts.core.summary_engine</code><a class="headerlink" href="#scriptscoresummary_engine" title="Permanent link">&para;</a></h2>
+<h1 id="summary-engine-module">Summary Engine Module<a class="headerlink" href="#summary-engine-module" title="Permanent link">&para;</a></h1>
+<p>This module provides the SummaryEngine class, which is responsible
+for generating summaries from log entries using AI summarization.
+It integrates with the log manager and summary tracker to manage
+the summarization process.</p>
+<h3 id="classes_4">Classes<a class="headerlink" href="#classes_4" title="Permanent link">&para;</a></h3>
+<h4 id="summaryengine">SummaryEngine<a class="headerlink" href="#summaryengine" title="Permanent link">&para;</a></h4>
+<p>A class to manage the summarization of log entries.
+This class utilizes an AI summarizer to generate summaries from
+batches of log entries, coordinating with the log manager and
+summary tracker.
+Attributes:
+summarizer (AISummarizer): The AI summarizer instance.
+log_manager (LogManager): The log manager instance.
+tracker (SummaryTracker): The summary tracker instance.
+timestamp_format (str): The format for timestamps.
+content_key (str): The key for content in log entries.
+timestamp_key (str): The key for timestamps in log entries.
+batch_size (int): The number of entries to process in a batch.</p>
+<h3 id="functions_5">Functions<a class="headerlink" href="#functions_5" title="Permanent link">&para;</a></h3>
+<h4 id="init_4"><strong>init</strong><a class="headerlink" href="#init_4" title="Permanent link">&para;</a></h4>
+<p>Initialize the SummaryEngine.
+Parameters:
+summarizer (AISummarizer): The AI summarizer instance.
+log_manager (LogManager): The log manager instance.
+summary_tracker (SummaryTracker): The summary tracker instance.
+timestamp_format (str): The format for timestamps.
+content_key (str): The key for content in log entries.
+timestamp_key (str): The key for timestamps in log entries.
+batch_size (int): The number of entries to process in a batch.</p>
+<h4 id="_get_summary">_get_summary<a class="headerlink" href="#_get_summary" title="Permanent link">&para;</a></h4>
+<p>Generate a summary from a batch of log entries.
+Parameters:
+batch_entries (List[Dict[str, Any]]): The batch of log entries.
+subcategory (str): The subcategory for the summary.</p>
+<p><strong>Returns:</strong>
+Optional[str]: The generated summary, or None if summarization fails.</p>
+<h4 id="summarize_1">summarize<a class="headerlink" href="#summarize_1" title="Permanent link">&para;</a></h4>
+<p>Summarize log entries for a given main category and subcategory.
+Parameters:
+main_category (str): The main category for the summary.
+subcategory (str): The subcategory for the summary.</p>
+<p><strong>Returns:</strong>
+bool: True if summarization is successful, False otherwise.</p>
+<h2 id="scriptscoresummary_tracker"><code>scripts.core.summary_tracker</code><a class="headerlink" href="#scriptscoresummary_tracker" title="Permanent link">&para;</a></h2>
+<p>summary_tracker.py
+This module provides the SummaryTracker class for managing and tracking summaries of logs.
+It includes functionality for loading tracker data, initializing indexers, and maintaining
+the state of summaries. This module is essential for the Zephyrus Logger application to
+manage summaries effectively.
+Dependencies:
+- json
+- logging
+- pathlib
+- collections (defaultdict)
+- scripts.indexers.summary_indexer
+- scripts.indexers.raw_log_indexer
+- scripts.utils.file_utils
+- scripts.paths.ZephyrusPaths</p>
+<h3 id="classes_5">Classes<a class="headerlink" href="#classes_5" title="Permanent link">&para;</a></h3>
+<h4 id="summarytracker">SummaryTracker<a class="headerlink" href="#summarytracker" title="Permanent link">&para;</a></h4>
+<p>SummaryTracker manages the loading, initialization, and tracking of summary data for logs.
+Attributes:
+paths (ZephyrusPaths): The paths configuration for the summary tracker.
+tracker_path (Path): The path to the summary tracker file.
+tracker (Dict[str, Dict[str, Any]]): The loaded tracker data.
+summary_indexer (Optional[SummaryIndexer]): The indexer for summaries.
+raw_indexer (Optional[RawLogIndexer]): The indexer for raw logs.</p>
+<h3 id="functions_6">Functions<a class="headerlink" href="#functions_6" title="Permanent link">&para;</a></h3>
+<h4 id="init_5"><strong>init</strong><a class="headerlink" href="#init_5" title="Permanent link">&para;</a></h4>
+<p>Initializes the SummaryTracker with the given paths.</p>
+<p><strong>Arguments:</strong>
+paths (ZephyrusPaths): The paths configuration for the summary tracker.</p>
+<h4 id="_safe_load_tracker">_safe_load_tracker<a class="headerlink" href="#_safe_load_tracker" title="Permanent link">&para;</a></h4>
+<p>Safely loads the tracker data from the tracker file.</p>
+<p><strong>Returns:</strong>
+Dict[str, Dict[str, Any]]: The loaded tracker data, or an empty dictionary if loading fails.</p>
+<h4 id="_safe_init_summary_indexer">_safe_init_summary_indexer<a class="headerlink" href="#_safe_init_summary_indexer" title="Permanent link">&para;</a></h4>
+<p>Safely initializes the SummaryIndexer.</p>
+<p><strong>Returns:</strong>
+Optional[SummaryIndexer]: The initialized SummaryIndexer, or None if initialization fails.</p>
+<h4 id="_safe_init_raw_indexer">_safe_init_raw_indexer<a class="headerlink" href="#_safe_init_raw_indexer" title="Permanent link">&para;</a></h4>
+<p>Safely initializes the RawLogIndexer.</p>
+<p><strong>Returns:</strong>
+Optional[RawLogIndexer]: The initialized RawLogIndexer, or None if initialization fails.</p>
+<h4 id="get_summarized_count">get_summarized_count<a class="headerlink" href="#get_summarized_count" title="Permanent link">&para;</a></h4>
+<p>Retrieves the summarized count for the given main category and subcategory.</p>
+<p><strong>Arguments:</strong>
+main_category (str): The main category.
+subcategory (str): The subcategory.</p>
+<p><strong>Returns:</strong>
+int: The summarized count.</p>
+<h4 id="update">update<a class="headerlink" href="#update" title="Permanent link">&para;</a></h4>
+<p>Updates the tracker with the given summarized and new entries counts.</p>
+<p><strong>Arguments:</strong>
+main_category (str): The main category.
+subcategory (str): The subcategory.
+summarized (int, optional): The summarized count. Defaults to 0.
+new_entries (int, optional): The new entries count. Defaults to 0.</p>
+<h4 id="_save">_save<a class="headerlink" href="#_save" title="Permanent link">&para;</a></h4>
+<p>Saves the tracker data to the tracker file.</p>
+<h4 id="rebuild">rebuild<a class="headerlink" href="#rebuild" title="Permanent link">&para;</a></h4>
+<p>Rebuilds the tracker by clearing the current data and re-counting the logged and summarized entries.</p>
+<h4 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h4>
+<p>Validates the tracker by comparing the summarized counts with the actual counts in the correction summaries.</p>
+<p><strong>Arguments:</strong>
+verbose (bool, optional): If True, logs every subcategory status. Otherwise, only logs mismatches. Defaults to False.</p>
+<p><strong>Returns:</strong>
+bool: True if the tracker is valid (no mismatches), False otherwise.</p>
+<h4 id="get_coverage_data">get_coverage_data<a class="headerlink" href="#get_coverage_data" title="Permanent link">&para;</a></h4>
+<p>Returns a structured list of coverage data for all tracked (main, sub) categories.
+Each entry includes:
+- main_category
+- subcategory
+- logged_total
+- estimated_summarized_entries
+- coverage_percent (0–100)</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

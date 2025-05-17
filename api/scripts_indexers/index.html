@@ -1,0 +1,1095 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the Ideas Logger project">
+      
+      
+        <meta name="author" content="Angelos Dimakos">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Docstring Report for scripts/indexers/ - Ideas Logger</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#docstring-report-for-scriptsindexers" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Ideas Logger" class="md-header__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ideas Logger
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Docstring Report for scripts/indexers/
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Documentation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../coverage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Test Coverage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quality/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code Quality
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Ideas Logger" class="md-nav__button md-logo" aria-label="Ideas Logger" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ideas Logger
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/angelosdimakos/Ideas_Logger" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    angelosdimakos/Ideas_Logger
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Coverage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code Quality
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsindexers__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.indexers.__init__
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsindexersbase_indexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.indexers.base_indexer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.indexers.base_indexer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#baseindexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      BaseIndexer
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_load_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      _load_model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_index" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_index
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search" class="md-nav__link">
+    <span class="md-ellipsis">
+      search
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build_index" class="md-nav__link">
+    <span class="md-ellipsis">
+      build_index
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save_index" class="md-nav__link">
+    <span class="md-ellipsis">
+      save_index
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsindexersraw_log_indexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.indexers.raw_log_indexer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.indexers.raw_log_indexer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rawlogindexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      RawLogIndexer
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_entries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_process_categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      _process_categories
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_process_subcategories" class="md-nav__link">
+    <span class="md-ellipsis">
+      _process_subcategories
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_process_entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      _process_entries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build_index_from_logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      build_index_from_logs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rebuild" class="md-nav__link">
+    <span class="md-ellipsis">
+      rebuild
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scriptsindexerssummary_indexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts.indexers.summary_indexer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scripts.indexers.summary_indexer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summaryindexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      SummaryIndexer
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#init_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_entries_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_entries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_process_categories_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      _process_categories
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_process_subcategories_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      _process_subcategories
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_process_batches" class="md-nav__link">
+    <span class="md-ellipsis">
+      _process_batches
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_index_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_index
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save_index_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      save_index
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rebuild_index" class="md-nav__link">
+    <span class="md-ellipsis">
+      rebuild_index
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build_index_from_logs_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      build_index_from_logs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rebuild_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      rebuild
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="docstring-report-for-scriptsindexers">Docstring Report for <code>scripts/indexers/</code><a class="headerlink" href="#docstring-report-for-scriptsindexers" title="Permanent link">&para;</a></h1>
+<h2 id="scriptsindexers__init__"><code>scripts.indexers.__init__</code><a class="headerlink" href="#scriptsindexers__init__" title="Permanent link">&para;</a></h2>
+<p>The <code>indexers</code> module provides classes and utilities for building, managing, and searching vector indexes over log and summary data.
+Core features include:
+- Construction of FAISS indexes for both raw log entries and summarized corrections.
+- Support for semantic search using SentenceTransformer embeddings.
+- Management of index and metadata persistence for efficient retrieval.
+- Utilities for rebuilding, updating, and searching indexes across different data granularities.
+This module enables fast and flexible semantic search over structured and unstructured idea logs, supporting downstream applications such as idea retrieval, analytics, and intelligent querying.</p>
+<h2 id="scriptsindexersbase_indexer"><code>scripts.indexers.base_indexer</code><a class="headerlink" href="#scriptsindexersbase_indexer" title="Permanent link">&para;</a></h2>
+<p>base_indexer.py
+This module defines the BaseIndexer class, which provides core functionality for building, saving, loading, and searching FAISS vector indexes over log and summary data.
+Core features include:
+- Initializing index and metadata paths based on project configuration and index type (summary or raw).
+- Building a FAISS index from text data using SentenceTransformer embeddings.
+- Saving and loading both the FAISS index and associated metadata.
+- Performing semantic search over indexed data, returning the most relevant results with similarity scores.
+- Supporting flexible configuration and robust error handling for index operations.
+Intended for use as a base class for specialized indexers in the Zephyrus project, enabling fast and flexible semantic search over structured logs and summaries.</p>
+<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
+<h4 id="baseindexer">BaseIndexer<a class="headerlink" href="#baseindexer" title="Permanent link">&para;</a></h4>
+<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
+<h4 id="init"><strong>init</strong><a class="headerlink" href="#init" title="Permanent link">&para;</a></h4>
+<p>Initializes the BaseIndexer object.
+Sets the paths to the summaries file, FAISS index file, and metadata file based on the
+provided <code>index_name</code> and the <code>ZephyrusPaths</code> object.  If <code>index_name</code> is "summary",
+the paths are set to the correction summaries file, FAISS index file, and metadata file.
+If <code>index_name</code> is "raw", the paths are set to the JSON log file, raw log index file,
+and raw log metadata file.  In all other cases, a ValueError is raised.
+Also, loads the SentenceTransformer model specified by the "embedding_model"
+configuration key, or defaults to "all-MiniLM-L6-v2" if the key is missing.</p>
+<p><strong>Arguments:</strong>
+paths (ZephyrusPaths): The paths configuration for the indexer.
+index_name (str): The name of the index to create, either "summary" or "raw".
+Raises:
+ValueError: If <code>index_name</code> is not "summary" or "raw".</p>
+<h4 id="_load_model">_load_model<a class="headerlink" href="#_load_model" title="Permanent link">&para;</a></h4>
+<h4 id="load_index">load_index<a class="headerlink" href="#load_index" title="Permanent link">&para;</a></h4>
+<p>Loads the FAISS index and associated metadata from their respective files.
+This method reads the index from the file specified by <code>self.index_path</code> and loads
+the metadata from the file specified by <code>self.metadata_path</code>. If either file does not
+exist, a FileNotFoundError is raised.
+Raises:
+FileNotFoundError: If the index file or metadata file is not found.</p>
+<h4 id="search">search<a class="headerlink" href="#search" title="Permanent link">&para;</a></h4>
+<p>Searches the FAISS index for the given query and returns the top-k most relevant results.</p>
+<p><strong>Arguments:</strong>
+query (str): The search query.
+top_k (int, optional): The number of top results to return. Defaults to 5.</p>
+<p><strong>Returns:</strong>
+List[Dict[str, Any]]: A list of dictionaries containing the search results. Each dictionary includes the
+following keys:
+- "date"
+- "main_category"
+- "subcategory"
+- "timestamp"
+- "similarity" (the similarity score, computed as 1.0 / (1.0 + distance))</p>
+<h4 id="build_index">build_index<a class="headerlink" href="#build_index" title="Permanent link">&para;</a></h4>
+<p>Builds a FAISS index from provided texts and metadata.</p>
+<p><strong>Arguments:</strong>
+texts (List[str]): A list of texts to encode and index.
+meta (List[Dict[str, Any]]): Metadata per text entry.
+fail_on_empty (bool): Raise ValueError if input is empty (useful for tests).</p>
+<p><strong>Returns:</strong>
+bool: True if successful, False otherwise.</p>
+<h4 id="save_index">save_index<a class="headerlink" href="#save_index" title="Permanent link">&para;</a></h4>
+<p>Saves the FAISS index to a file, and the associated metadata.
+This method must be called after <code>build_index</code> or <code>load_index</code> has been called.</p>
+<h2 id="scriptsindexersraw_log_indexer"><code>scripts.indexers.raw_log_indexer</code><a class="headerlink" href="#scriptsindexersraw_log_indexer" title="Permanent link">&para;</a></h2>
+<p>This module defines the RawLogIndexer class for building and managing a FAISS vector index
+over raw log entries from zephyrus_log.json.
+Core features:
+- Loading and parsing raw log entries by date, main category, and subcategory.
+- Extracting entry content and metadata for semantic indexing.
+- Building, saving, loading, and rebuilding a FAISS index for full-text vector search.
+- Robust error handling and logging for file I/O and data processing.
+- Designed for use in the Zephyrus project to enable fast, flexible semantic search.</p>
+<h3 id="classes_1">Classes<a class="headerlink" href="#classes_1" title="Permanent link">&para;</a></h3>
+<h4 id="rawlogindexer">RawLogIndexer<a class="headerlink" href="#rawlogindexer" title="Permanent link">&para;</a></h4>
+<p>Builds a FAISS index from raw entries in zephyrus_log.json.
+Used for full-text vector search across all logged ideas (not just summaries).
+Attributes:
+log_path (str): The path to the JSON log file.</p>
+<h3 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
+<h4 id="init_1"><strong>init</strong><a class="headerlink" href="#init_1" title="Permanent link">&para;</a></h4>
+<p>Initializes the RawLogIndexer with the specified paths and optionally loads the index.</p>
+<p><strong>Arguments:</strong>
+paths (ZephyrusPaths): The paths configuration for the indexer.
+autoload (bool): Whether to automatically load the index on initialization.
+Defaults to True.
+Raises:
+FileNotFoundError: If the index files are not found during autoload.</p>
+<h4 id="load_entries">load_entries<a class="headerlink" href="#load_entries" title="Permanent link">&para;</a></h4>
+<p>Loads raw entries from the zephyrus_log.json file.</p>
+<p><strong>Returns:</strong>
+Tuple[List[str], List[Dict[str, Any]]]: A tuple containing a list of entry contents
+and a list of metadata dictionaries.
+Raises:
+FileNotFoundError: If the log file does not exist.
+json.JSONDecodeError: If the JSON file is malformed.</p>
+<h4 id="_process_categories">_process_categories<a class="headerlink" href="#_process_categories" title="Permanent link">&para;</a></h4>
+<p>Processes categories for a given date, updating the texts and metadata.</p>
+<p><strong>Arguments:</strong>
+date (str): The date of the entries being processed.
+categories (Dict[str, Any]): A dictionary of main categories.
+texts (List[str]): The list to append entry contents to.
+meta (List[Dict[str, Any]]): The list to append entry metadata to.</p>
+<p><strong>Returns:</strong>
+Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists.</p>
+<h4 id="_process_subcategories">_process_subcategories<a class="headerlink" href="#_process_subcategories" title="Permanent link">&para;</a></h4>
+<p>Processes subcategories within a main category for a given date.</p>
+<p><strong>Arguments:</strong>
+date (str): The date of the entries being processed.
+main_cat (str): The main category of the entries.
+subcats (Dict[str, Any]): A dictionary of subcategories.
+texts (List[str]): The list to append entry contents to.
+meta (List[Dict[str, Any]]): The list to append entry metadata to.</p>
+<p><strong>Returns:</strong>
+Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists.</p>
+<h4 id="_process_entries">_process_entries<a class="headerlink" href="#_process_entries" title="Permanent link">&para;</a></h4>
+<p>Processes a list of entries for a given date, main category, and subcategory.</p>
+<p><strong>Arguments:</strong>
+date (str): The date of the entries being processed.
+main_cat (str): The main category of the entries.
+subcat (str): The subcategory of the entries.
+entries (List[Any]): A list of entries to process.
+texts (List[str]): The list to append entry contents to.
+meta (List[Dict[str, Any]]): The list to append entry metadata to.</p>
+<p><strong>Returns:</strong>
+Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists.</p>
+<h4 id="build_index_from_logs">build_index_from_logs<a class="headerlink" href="#build_index_from_logs" title="Permanent link">&para;</a></h4>
+<p>Loads entries from file and rebuilds FAISS index.</p>
+<p><strong>Returns:</strong>
+bool: Whether the index was successfully rebuilt.
+Raises:
+Exception: If an error occurs while building the index.</p>
+<h4 id="rebuild">rebuild<a class="headerlink" href="#rebuild" title="Permanent link">&para;</a></h4>
+<p>Rebuilds the raw log index from scratch.
+This method loads entries from the log file, rebuilds the FAISS index, and saves the new index.
+Raises:
+Exception: If an error occurs while rebuilding the index.</p>
+<h2 id="scriptsindexerssummary_indexer"><code>scripts.indexers.summary_indexer</code><a class="headerlink" href="#scriptsindexerssummary_indexer" title="Permanent link">&para;</a></h2>
+<p>summary_indexer.py
+This module defines the SummaryIndexer class for building and managing a FAISS vector index over summarized entries from correction_summaries.json.
+Core features include:
+- Loading and parsing summarized entries organized by date, main category, and subcategory.
+- Extracting summary texts and associated metadata for semantic indexing.
+- Building, saving, loading, and rebuilding a FAISS index for semantic search across all summarized corrections.
+- Robust error handling and logging for file I/O and data processing.
+- Designed for use in the Zephyrus project to enable fast, flexible semantic search over all summarized log data.</p>
+<h3 id="classes_2">Classes<a class="headerlink" href="#classes_2" title="Permanent link">&para;</a></h3>
+<h4 id="summaryindexer">SummaryIndexer<a class="headerlink" href="#summaryindexer" title="Permanent link">&para;</a></h4>
+<p>Builds a FAISS index from summarized entries in correction_summaries.json.
+Core features include loading and parsing summarized entries, extracting summary texts,
+and managing the FAISS index for semantic search.</p>
+<h3 id="functions_2">Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
+<h4 id="init_2"><strong>init</strong><a class="headerlink" href="#init_2" title="Permanent link">&para;</a></h4>
+<p>Initializes a SummaryIndexer object.</p>
+<p><strong>Arguments:</strong>
+paths (ZephyrusPaths): An instance containing the necessary file paths.
+autoload (bool, optional): Flag indicating whether to load the index automatically. Defaults to True.</p>
+<h4 id="load_entries_1">load_entries<a class="headerlink" href="#load_entries_1" title="Permanent link">&para;</a></h4>
+<p>Loads summarized entries from the correction_summaries.json file.</p>
+<p><strong>Returns:</strong>
+Tuple[List[str], List[Dict[str, Any]]]: Summarized entry texts and metadata.</p>
+<h4 id="_process_categories_1">_process_categories<a class="headerlink" href="#_process_categories_1" title="Permanent link">&para;</a></h4>
+<h4 id="_process_subcategories_1">_process_subcategories<a class="headerlink" href="#_process_subcategories_1" title="Permanent link">&para;</a></h4>
+<h4 id="_process_batches">_process_batches<a class="headerlink" href="#_process_batches" title="Permanent link">&para;</a></h4>
+<h4 id="load_index_1">load_index<a class="headerlink" href="#load_index_1" title="Permanent link">&para;</a></h4>
+<p>Load the FAISS index and associated metadata from their respective files.
+Raises:
+FileNotFoundError: If the index file or metadata file is not found.</p>
+<h4 id="save_index_1">save_index<a class="headerlink" href="#save_index_1" title="Permanent link">&para;</a></h4>
+<p>Save the FAISS index and associated metadata to their respective files.
+This method delegates to the BaseIndexer implementation.</p>
+<h4 id="rebuild_index">rebuild_index<a class="headerlink" href="#rebuild_index" title="Permanent link">&para;</a></h4>
+<p>Rebuild the FAISS index from the summarized entries.
+This method invokes building index from logs and saving it.</p>
+<h4 id="build_index_from_logs_1">build_index_from_logs<a class="headerlink" href="#build_index_from_logs_1" title="Permanent link">&para;</a></h4>
+<p>Loads entries from file and rebuilds FAISS index.</p>
+<p><strong>Returns:</strong>
+bool: Whether the index was successfully rebuilt.</p>
+<h4 id="rebuild_1">rebuild<a class="headerlink" href="#rebuild_1" title="Permanent link">&para;</a></h4>
+<p>Rebuild the summary index from scratch.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>
