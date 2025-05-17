@@ -25,7 +25,7 @@ class StyleManager:
         style (ttk.Style): The ttk style manager instance.
     """
 
-    def __init__(self, root: Tk.Tk) -> None:
+    def __init__(self, root: ttk.Tk) -> None:
         """
         Initializes the StyleManager with the specified root window.
 

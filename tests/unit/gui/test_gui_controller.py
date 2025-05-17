@@ -40,3 +40,46 @@ def test_search_raw_logs_delegation(dummy_core):
     result = controller.search_raw_logs("query")
     dummy_core.search_raw_logs.assert_called_once_with("query")
     assert result == "Raw Log Results!"
+
+def test_rebuild_tracker_validates_true(dummy_core):
+    dummy_core.summary_tracker.validate.return_value = True
+    controller = GUIController(logger_core=dummy_core)
+    result = controller.rebuild_tracker()
+    dummy_core.summary_tracker.rebuild.assert_called_once()
+    dummy_core.summary_tracker.validate.assert_called_once()
+    assert result is True
+
+
+def test_get_tracker_status_valid(dummy_core):
+    dummy_core.summary_tracker.validate.return_value = True
+    controller = GUIController(logger_core=dummy_core)
+    status = controller.get_tracker_status()
+    assert status == "✅ Valid"
+
+
+def test_get_tracker_status_invalid(dummy_core):
+    dummy_core.summary_tracker.validate.return_value = False
+    controller = GUIController(logger_core=dummy_core)
+    status = controller.get_tracker_status()
+    assert status == "❌ Invalid"
+
+
+def test_get_coverage_data(dummy_core):
+    dummy_core.summary_tracker.get_coverage_data.return_value = {"coverage": "data"}
+    controller = GUIController(logger_core=dummy_core)
+    result = controller.get_coverage_data()
+    dummy_core.summary_tracker.get_coverage_data.assert_called_once()
+    assert result == {"coverage": "data"}
+
+
+def test_get_logs_reads_file(tmp_path, dummy_core):
+    # Setup a dummy log file
+    dummy_log_file = tmp_path / "dummy_log.txt"
+    dummy_log_file.write_text("Log content here")
+
+    dummy_core.paths.txt_log_file = str(dummy_log_file)
+    controller = GUIController(logger_core=dummy_core)
+
+    log_data = controller.get_logs()
+    assert log_data == "Log content here"
+
