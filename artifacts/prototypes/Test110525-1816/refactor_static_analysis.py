@@ -9,12 +9,13 @@ import bandit
 from typing import Dict[str, Any]
 
 def check_security(project_path: str) -> Dict[str, Any]:
-    """Perform a security analysis on the given project.
-
+    """
+    Performs a static security analysis on the specified project directory.
+    
     Args:
-        project_path (str): The path to the root directory of the project.
-
+        project_path: Path to the root directory of the project to analyze.
+    
     Returns:
-        Dict[str, Any]: A dictionary containing the results of the security analysis.
+        A dictionary containing the results of the security analysis.
     """
     bandit_results = bandit.test(project_path)

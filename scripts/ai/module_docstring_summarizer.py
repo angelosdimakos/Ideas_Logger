@@ -17,16 +17,16 @@ def summarize_module(
     file_path: str, doc_entries: list, summarizer: AISummarizer, config: ConfigManager
 ) -> str:
     """
-    Summarize the module's docstrings using the provided summarizer.
-
+    Generates a concise summary of a Python module's functionality based on its docstrings.
+    
+    Formats the provided docstring entries into a structured prompt, applies persona adjustments, and uses the given AI summarizer to produce a human-readable summary. Returns a fixed message if no docstrings are available.
+    
     Args:
-        file_path (str): The path to the module file.
-        doc_entries (list): List of docstring entries to summarize.
-        summarizer (AISummarizer): The summarizer instance to use.
-        config (ConfigManager): The configuration manager instance.
-
+        file_path: Path to the module file.
+        doc_entries: List of docstring entries, each representing a function or class.
+    
     Returns:
-        str: The summary of the module's docstrings.
+        A summary string describing the module's functionality, or a message if no docstrings are found.
     """
     if not doc_entries:
         return "No docstrings found."  # Early exit if no docstrings are provided
@@ -51,12 +51,9 @@ def summarize_module(
 
 def run(input_path: str, output_path: str | None = None, path_filter: str | None = None) -> None:
     """
-    Run the summarization process on the specified input file.
-
-    Args:
-        input_path (str): The path to the input JSON report file.
-        output_path (str | None): Optional path to save the output summary.
-        path_filter (str | None): Optional filter for file paths to include in the summary.
+    Executes the module docstring summarization workflow for a given JSON audit report.
+    
+    Processes each file in the report, optionally filtering by file path substring, and generates a summary of its documented functions using an AI summarizer. Outputs the results either to a Markdown file or to standard output.
     """
     config = ConfigManager.load_config()  # Load configuration settings
     summarizer = AISummarizer()  # Initialize the summarizer
