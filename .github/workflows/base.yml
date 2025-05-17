@@ -1,4 +1,4 @@
-name: Run Tests & CI Audit (Dockerized)
+name: Run Tests & CI Audit with Documentation
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main, master]
 
 permissions:
-  contents: read
+  contents: write
   actions: read
   checks: write
   pull-requests: write
@@ -47,8 +47,6 @@ jobs:
       - name: "🛠 Install Runtime Dependency: rapidfuzz"
         run: |
           python -m pip install --no-cache-dir rapidfuzz
-      
-      
 
       - name: ✅ Run Tests
         run: |
@@ -122,7 +120,6 @@ jobs:
         run: |
           python -m pip install --no-cache-dir rapidfuzz
 
-
       - name: 📥 Download Refactor Audit Artifact
         uses: actions/download-artifact@v4
         with:
@@ -157,10 +154,6 @@ jobs:
         with:
           name: test-report
           path: ./artifacts/test_report.json
-
-
-
-
 
   report:
     needs: [lint, test, docstring]
@@ -213,3 +206,55 @@ jobs:
         with:
           path: artifacts/ci_severity_report.md
 
+  documentation:
+    needs: [report]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: ${{ success() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }}
+    container:
+      image: ghcr.io/angelosdimakos/ideas_logger:latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 📥 Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: 📦 Install MkDocs Dependencies
+        run: |
+          pip install --no-cache-dir mkdocs-material mkdocstrings mkdocstrings-python
+
+      - name: 🔍 Generate API Documentation
+        run: |
+          echo "🔎 Running Docstring Parser with MkDocs output..."
+          python scripts/refactor/parsers/docstring_parser.py --mkdocs --json
+
+      - name: 📊 Generate Coverage Page
+        run: |
+          echo "📊 Generating coverage documentation..."
+          mkdir -p docs
+          python scripts/ci_analyzer/generate_coverage_docs.py \
+            --coverage artifacts/coverage-reports/coverage.json \
+            --output docs/coverage
+
+      - name: 📈 Generate Quality Page
+        run: |
+          echo "📈 Generating code quality documentation..."
+          mkdir -p docs
+          python scripts/ci_analyzer/generate_quality_docs.py \
+            --report artifacts/combined-report/merged_report.json \
+            --output docs/quality
+
+      - name: 🏗️ Build Documentation
+        run: |
+          echo "🏗️ Building MkDocs site..."
+          mkdocs build
+
+      - name: 🚀 Deploy Documentation
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site

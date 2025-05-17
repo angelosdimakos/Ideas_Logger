@@ -17,3 +17,6 @@ typer
 flake8-json
 mutmut
 rapidfuzz
+mkdocs-material
+mkdocstrings
+mkdocstrings-python
