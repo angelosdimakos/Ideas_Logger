@@ -65,95 +65,102 @@ def split_docstring_sections(docstring: Optional[str]) -> Dict[str, Optional[str
 
 class DocstringAnalyzer:
     def __init__(self, exclude_dirs: List[str]) -> None:
-        """
-        Initialize the DocstringAnalyzer with directories to exclude.
-
-        Args:
-            exclude_dirs (List[str]): A list of directories to exclude from analysis.
-        """
         self.exclude_dirs = set(exclude_dirs)
 
     def should_exclude(self, path: Path) -> bool:
-        """
-        Determine if a given path should be excluded from analysis.
-
-        Args:
-            path (Path): The path to check.
-
-        Returns:
-            bool: True if the path should be excluded, False otherwise.
-        """
         parts = set(path.parts)
         return bool(parts & self.exclude_dirs)
 
+    def _format_args(self, args_node: ast.arguments) -> List[str]:
+        def arg_str(arg):
+            arg_type = ast.unparse(arg.annotation) if arg.annotation else "Any"
+            return f"{arg.arg}: {arg_type}"
+
+        args = [arg_str(a) for a in args_node.posonlyargs]
+        args += [arg_str(a) for a in args_node.args]
+        if args_node.vararg:
+            args.append(f"*{args_node.vararg.arg}")
+        args += [arg_str(a) for a in args_node.kwonlyargs]
+        if args_node.kwarg:
+            args.append(f"**{args_node.kwarg.arg}")
+        return args
+
+    def _get_return_type(self, func_node: ast.FunctionDef) -> str:
+        if func_node.returns:
+            try:
+                return ast.unparse(func_node.returns)
+            except Exception:
+                return "Any"
+        return "Any"
+
+    def _process_function(self, node: ast.FunctionDef) -> Dict[str, Any]:
+        doc = split_docstring_sections(ast.get_docstring(node))
+        return {
+            "name": node.name,
+            "description": doc["description"],
+            "args": self._format_args(node.args),
+            "returns": self._get_return_type(node),
+        }
+
+    def _process_class(self, node: ast.ClassDef) -> Dict[str, Any]:
+        doc = split_docstring_sections(ast.get_docstring(node))
+        init_args = []
+        for item in node.body:
+            if isinstance(item, ast.FunctionDef) and item.name == "__init__":
+                init_args = self._format_args(item.args)
+                break
+        return {
+            "name": node.name,
+            "description": doc["description"],
+            "args": init_args or None,
+            "returns": "None",  # Class constructors implicitly return None
+        }
+
     def extract_docstrings(self, file_path: Path) -> Dict[str, Any]:
         """
-        Extract docstrings from a Python file, recursively.
+        Extract docstrings, args, and return types from a Python file using AST.
 
-        Args:
-            file_path (Path): The path to the Python file to analyze.
-
-        Returns:
-            Dict[str, Any]: A dictionary containing docstring information.
+        Always returns a consistent structure even on parse failure.
         """
-        try:
-            source = file_path.read_text(encoding="utf-8")
-            tree = ast.parse(source)
-        except (SyntaxError, UnicodeDecodeError):
-            return {}
-
-        if tree is None:
-            return {}
-
-        docstring = None
-        if isinstance(tree, ast.Module) and tree.body:
-            first_node = tree.body[0]
-            if isinstance(first_node, (ast.Expr,)) and isinstance(first_node.value, ast.Str):
-                docstring = first_node.value.s
         result = {
-            "module_doc": split_docstring_sections(docstring),
+            "module_doc": {"description": None, "args": None, "returns": None},
             "classes": [],
             "functions": [],
         }
 
-        def visit_node(node):
-            if isinstance(node, ast.ClassDef):
-                doc = split_docstring_sections(ast.get_docstring(node))
-                result["classes"].append(
-                    {
-                        "name": node.name,
-                        "description": doc["description"],
-                        "args": doc["args"],
-                        "returns": doc["returns"],
-                    }
-                )
-            elif isinstance(node, ast.FunctionDef):
-                doc = split_docstring_sections(ast.get_docstring(node))
-                result["functions"].append(
-                    {
-                        "name": node.name,
-                        "description": doc["description"],
-                        "args": doc["args"],
-                        "returns": doc["returns"],
-                    }
-                )
-            for child in ast.iter_child_nodes(node):
-                visit_node(child)
+        try:
+            source = file_path.read_text(encoding="utf-8")
+            tree = ast.parse(source)
+        except (SyntaxError, UnicodeDecodeError) as e:
+            print(f"⚠️ Skipping file due to parse error: {file_path} — {e}")
+            return result  # Return default structure instead of {}
 
-        visit_node(tree)
+        if tree is None:
+            print(f"⚠️ No AST tree found for file: {file_path}")
+            return result
+
+        # Module-level docstring
+        docstring = None
+        if isinstance(tree, ast.Module) and tree.body:
+            first_node = tree.body[0]
+            if isinstance(first_node, ast.Expr) and isinstance(first_node.value, ast.Str):
+                docstring = first_node.value.s
+
+        result["module_doc"] = split_docstring_sections(docstring)
+
+        # Visit each node recursively
+        def visit(node):
+            if isinstance(node, ast.ClassDef):
+                result["classes"].append(self._process_class(node))
+            elif isinstance(node, ast.FunctionDef):
+                result["functions"].append(self._process_function(node))
+            for child in ast.iter_child_nodes(node):
+                visit(child)
+
+        visit(tree)
         return result
 
     def analyze_directory(self, root: Path) -> Dict[str, Dict[str, Any]]:
-        """
-        Analyze all Python files in the given directory and its subdirectories.
-
-        Args:
-            root (Path): The path to the directory to analyze.
-
-        Returns:
-            Dict[str, Dict[str, Any]]: A dictionary with normalized file paths as keys and
-            dictionaries with docstring information as values.
-        """
         results = {}
         for file in root.rglob("*.py"):
             if self.should_exclude(file) or file.name.startswith("test_"):
