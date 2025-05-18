@@ -1,13 +1,24 @@
-# Docstring Report for `scripts/kg/`
+# `scripts/kg`
 
 
 ## `scripts\kg\__init__`
 
+**🧠 Docstring Summary**
+
+| Section | Content |
+|---------|---------|
+| Description | *No module description available.* |
+| Args | — |
+| Returns | — |
+
 
 ## `scripts\kg\generate_codebase_kg`
 
+**🧠 Docstring Summary**
 
-generate_codebase_kg.py
+| Section | Content |
+|---------|---------|
+| Description | generate_codebase_kg.py
 Builds Knowledge Graphs for a Python codebase using docstring summaries.
 Analyzes module complexity (density, degree, busyness).
 Colors graphs based on complexity.
@@ -16,12 +27,11 @@ Usage:
 - Build Parent Graph (subpackages)
 - Build Child Graphs (per subpackage)
 - Analyze complexity
-- Visualize with color-coding
+- Visualize with color-coding |
+| Args | — |
+| Returns | — |
 
-
-### Functions
-
-#### main
-
+### 🛠️ Functions
+#### `main`
 Main entry point for the script.
 Parses command-line arguments and initializes the CodebaseAnalyzer.

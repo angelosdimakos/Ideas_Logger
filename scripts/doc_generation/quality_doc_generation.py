@@ -14,68 +14,27 @@ from __future__ import annotations
 
 import sys
 import argparse
-import io
 import json
-import os
 from pathlib import Path
-from typing import Any, Dict
+from collections import defaultdict
 
 # ─── make "scripts." imports work when executed as a script ────────────────
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(_PROJECT_ROOT))
 
-
-import argparse
-import json
-from pathlib import Path
-from collections import defaultdict
-from typing import Dict, Any
+# Import rendering functions
+from scripts.doc_generation.doc_renderers import render_folder_report, render_quality_index
 
 
-def render_folder_report(folder: str, section: dict, verbose: bool = False) -> str:
-    """Renders the markdown content for a single folder."""
-    md = [f"# Code Quality Report for `{folder}/`\n"]
+def generate_split_reports(report_data: dict, output_dir: Path, verbose: bool = False):
+    """
+    Generate split code quality documentation files.
 
-    totals = section["totals"]
-    total_issues = sum(totals.values())
-    md.append(f"**Folder Totals:** {total_issues} issues "
-              f"(Critical: {totals['critical']}, High: {totals['high']}, "
-              f"Medium: {totals['medium']}, Low: {totals['low']})\n")
-
-    # Docstring Table
-    if section["docs"]:
-        md += [
-            "## 📄 Missing Documentation",
-            "| File | Module Doc | Missing Classes | Missing Functions |",
-            "| ---- | -----------| ----------------| ------------------ |"
-        ]
-        for doc in section["docs"]:
-            md.append(f"| {doc['file']} | {doc['module']} | {doc['classes']} | {doc['functions']} |")
-        md.append("")
-
-    # Linting Table
-    if section["lint"]:
-        md += [
-            "## 🧹 Linting Issues",
-            "| File | Critical | High | Medium | Low | Total |",
-            "| ---- | -------- | ---- | ------ | --- | ----- |"
-        ]
-        for item in section["lint"]:
-            i = item["issues"]
-            md.append(f"| {item['file']} | {i['critical']} | {i['high']} | "
-                      f"{i['medium']} | {i['low']} | {item['total']} |")
-        md.append("")
-
-    # MyPy Dump
-    if verbose and section["mypy"]:
-        md.append("## 📋 MyPy Errors")
-        for path, errors in section["mypy"].items():
-            md.append(f"#### {path}\n```\n" + "\n".join(errors) + "\n```")
-
-    return "\n".join(md)
-
-
-def generate_split_reports(report_data: Dict[str, Dict[str, Any]], output_dir: Path, verbose: bool = False):
+    Args:
+        report_data: The parsed quality report JSON data
+        output_dir: Directory where markdown files will be written
+        verbose: Whether to include detailed MyPy error blocks
+    """
     grouped = defaultdict(lambda: {
         "docs": [],
         "lint": [],
@@ -136,16 +95,17 @@ def generate_split_reports(report_data: Dict[str, Dict[str, Any]], output_dir: P
 
     # Generate markdown files
     output_dir.mkdir(parents=True, exist_ok=True)
-    index_lines = ["# Code Quality Report Index\n"]
+    folders = []
 
     for folder in sorted(grouped):
         safe_name = folder.replace("/", "_")
         output_file = output_dir / f"{safe_name}.md"
         content = render_folder_report(folder, grouped[folder], verbose=verbose)
         output_file.write_text(content, encoding="utf-8")
-        index_lines.append(f"- [{folder}/](./{safe_name}.md)")
+        folders.append(folder)
 
     # Write index file
+    index_lines = render_quality_index(folders)
     index_path = output_dir / "index.md"
     index_path.write_text("\n".join(index_lines), encoding="utf-8")
     print(f"✅ Split reports written to: {output_dir}/")

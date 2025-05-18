@@ -210,7 +210,7 @@ jobs:
     needs: [report]
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    if: ${{ success() }}
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
     container:
       image: ghcr.io/angelosdimakos/ideas_logger:latest
     steps:
@@ -229,8 +229,11 @@ jobs:
 
       - name: 🔍 Generate API Documentation
         run: |
-          echo "🔎 Running Docstring Parser with MkDocs output..."
-          python scripts/refactor/parsers/docstring_parser.py --mkdocs --json
+          echo "🔎 Running unified docstring doc generator..."
+          python scripts/doc_generation/docstring_doc_generation.py \
+            --docstrings artifacts/docstring-summary/docstring_summary.json \
+            --output docs/api
+      
 
       - name: 📊 Generate Coverage Page
         run: |

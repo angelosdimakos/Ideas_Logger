@@ -1,25 +1,36 @@
-# Docstring Report for `scripts/refactor/compressor/`
+# `scripts/refactor/compressor`
 
 
 ## `scripts\refactor\compressor\__init__`
 
+**🧠 Docstring Summary**
+
+| Section | Content |
+|---------|---------|
+| Description | *No module description available.* |
+| Args | — |
+| Returns | — |
+
 
 ## `scripts\refactor\compressor\merged_report_squeezer`
 
+**🧠 Docstring Summary**
 
-### Functions
+| Section | Content |
+|---------|---------|
+| Description | *No module description available.* |
+| Args | — |
+| Returns | — |
 
-#### _get_or_add
-
+### 🛠️ Functions
+#### `_get_or_add`
 Return ID for *triple*; create a new one if unseen.
 
-#### _calc_percent
-
+#### `_calc_percent`
 Return overall file-coverage percentage if the *complexity* section
 provides enough data, otherwise None.
 
-#### compress_obj
-
+#### `compress_obj`
 Return a *compact* structure with docstrings hoisted into a lookup table.
 Parameters
 ----------
@@ -29,37 +40,47 @@ retain_keys
 If True, keep verbose dict keys inside each docstring record instead of
 positional arrays.  (Adds ~2 kB gzipped – handy for debugging.)
 
-#### decompress_obj
-
+#### `decompress_obj`
 Rebuild the full merged_report structure from the compact *blob*.
 
-#### _expand
+#### `_expand`
+*No description available.*
 
-#### _load_json
+#### `_load_json`
+*No description available.*
 
-#### _dump_json
+#### `_dump_json`
+*No description available.*
 
-#### _cli
+#### `_cli`
+*No description available.*
+
 
 ## `scripts\refactor\compressor\strictness_report_squeezer`
 
+**🧠 Docstring Summary**
 
-### Functions
+| Section | Content |
+|---------|---------|
+| Description | *No module description available.* |
+| Args | — |
+| Returns | — |
 
-#### compress_obj
-
+### 🛠️ Functions
+#### `compress_obj`
 Compress a strictness report into a minimal 'modules' mapping.
 
-#### decompress_obj
-
+#### `decompress_obj`
 Rebuild the full strictness report structure from the compact blob.
 
-#### semantic_equal
-
+#### `semantic_equal`
 Compare two reports semantically, allowing for rounding discrepancies.
 
-#### _load_json
+#### `_load_json`
+*No description available.*
 
-#### _dump_json
+#### `_dump_json`
+*No description available.*
 
-#### _cli
+#### `_cli`
+*No description available.*

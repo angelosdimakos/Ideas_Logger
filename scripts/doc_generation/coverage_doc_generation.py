@@ -11,54 +11,26 @@ from __future__ import annotations
 
 import sys
 import argparse
-import io
 import json
-import os
 from pathlib import Path
-from typing import Any, Dict
+from collections import defaultdict
 
 # ─── make "scripts." imports work when executed as a script ────────────────
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(_PROJECT_ROOT))
 
-
-import argparse
-import json
-from pathlib import Path
-from collections import defaultdict
-from typing import Dict, Any
+# Import rendering functions
+from scripts.doc_generation.doc_renderers import render_folder_coverage, render_coverage_index
 
 
-def render_folder_coverage(folder: str, entries: list) -> str:
-    """Renders the markdown content for a single folder's coverage."""
-    md = [f"# Test Coverage Report for `{folder}/`\n"]
+def generate_split_coverage_docs(coverage_data: dict, output_dir: Path):
+    """
+    Generate split coverage documentation files.
 
-    total_lines = sum(e[1]['summary'].get('num_statements', 0) for e in entries)
-    covered_lines = sum(e[1]['summary'].get('covered_lines', 0) for e in entries)
-    pct = (covered_lines / total_lines * 100) if total_lines > 0 else 0
-
-    md.append(f"**Folder Coverage:** {pct:.2f}% ({covered_lines} of {total_lines} lines covered)\n")
-
-    md += [
-        "## 📄 File Coverage",
-        "| File | Line Coverage | Branch Coverage |",
-        "| ---- | ------------- | ---------------- |"
-    ]
-
-    for file_path, file_data in sorted(entries):
-        summary = file_data.get("summary", {})
-        line_cov = f"{summary.get('percent_covered', 0):.2f}%"
-        if summary.get("num_branches", 0) > 0:
-            branch_cov = f"{summary.get('percent_covered_branches', 0):.2f}%"
-        else:
-            branch_cov = "N/A"
-
-        md.append(f"| {Path(file_path).name} | {line_cov} | {branch_cov} |")
-
-    return "\n".join(md)
-
-
-def generate_split_coverage_docs(coverage_data: Dict[str, Any], output_dir: Path):
+    Args:
+        coverage_data: The parsed coverage JSON data
+        output_dir: Directory where markdown files will be written
+    """
     grouped = defaultdict(list)
     IGNORED_PREFIXES = ("tests", "artifacts")
 
@@ -71,32 +43,19 @@ def generate_split_coverage_docs(coverage_data: Dict[str, Any], output_dir: Path
         grouped[folder].append((file_path, file_data))
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    totals = coverage_data.get("totals", {})
-    pct = f"{totals.get('percent_covered', 0):.2f}%"
-    covered_lines = totals.get("covered_lines", 0)
-    total_lines = totals.get("num_statements", 0)
-    branches = totals.get("covered_branches", 0)
-    total_branches = totals.get("num_branches", 0)
 
-    index_lines = ["# Test Coverage Report Index\n", "## Summary\n"]
-    index_lines += [
-        "| Metric | Coverage |",
-        "|--------|----------|",
-        f"| Overall Coverage | {pct} |",
-        f"| Lines Covered | {covered_lines} of {total_lines} |"
-    ]
-    if total_branches > 0:
-        index_lines.append(f"| Branches Covered | {branches} of {total_branches} |")
-    index_lines.append("")
-
+    # Generate individual folder files
+    folders = []
     for folder in sorted(grouped):
         safe_name = folder.replace("/", "_")
         output_file = output_dir / f"{safe_name}.md"
         content = render_folder_coverage(folder, grouped[folder])
         output_file.write_text(content, encoding="utf-8")
-        index_lines.append(f"- [{folder}/](./{safe_name}.md)")
+        folders.append(folder)
 
     # Write index file
+    totals = coverage_data.get("totals", {})
+    index_lines = render_coverage_index(folders, totals)
     index_path = output_dir / "index.md"
     index_path.write_text("\n".join(index_lines), encoding="utf-8")
 

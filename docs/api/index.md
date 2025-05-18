@@ -1,15 +1,13 @@
-# API Documentation
-
-This documentation is automatically generated from docstrings.
+# Docstring Report Index
 
 - [./](..md)
 - [dashboard/](dashboard.md)
 - [scripts/](scripts.md)
 - [scripts/ai/](scripts_ai.md)
-- [scripts/ci_analyzer/](scripts_ci_analyzer.md)
+- [scripts/ci/analyzer/](scripts_ci_analyzer.md)
 - [scripts/config/](scripts_config.md)
 - [scripts/core/](scripts_core.md)
-- [scripts/doc_generation/](scripts_doc_generation.md)
+- [scripts/doc/generation/](scripts_doc_generation.md)
 - [scripts/gui/](scripts_gui.md)
 - [scripts/gui/base/](scripts_gui_base.md)
 - [scripts/gui/panels/](scripts_gui_panels.md)
@@ -20,8 +18,8 @@ This documentation is automatically generated from docstrings.
 - [scripts/refactor/](scripts_refactor.md)
 - [scripts/refactor/complexity/](scripts_refactor_complexity.md)
 - [scripts/refactor/compressor/](scripts_refactor_compressor.md)
-- [scripts/refactor/lint_report_pkg/](scripts_refactor_lint_report_pkg.md)
-- [scripts/refactor/lint_report_pkg/plugins/](scripts_refactor_lint_report_pkg_plugins.md)
+- [scripts/refactor/lint/report/pkg/](scripts_refactor_lint_report_pkg.md)
+- [scripts/refactor/lint/report/pkg/plugins/](scripts_refactor_lint_report_pkg_plugins.md)
 - [scripts/refactor/parsers/](scripts_refactor_parsers.md)
-- [scripts/unified_code_assistant/](scripts_unified_code_assistant.md)
+- [scripts/unified/code/assistant/](scripts_unified_code_assistant.md)
 - [scripts/utils/](scripts_utils.md)
