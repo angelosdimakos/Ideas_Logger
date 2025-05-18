@@ -71,21 +71,52 @@ class DocstringAnalyzer:
         parts = set(path.parts)
         return bool(parts & self.exclude_dirs)
 
+    def _format_args(self, args_node: ast.arguments) -> List[str]:
+        def arg_str(arg):
+            arg_type = ast.unparse(arg.annotation) if arg.annotation else "Any"
+            return f"{arg.arg}: {arg_type}"
+
+        args = [arg_str(a) for a in args_node.posonlyargs]
+        args += [arg_str(a) for a in args_node.args]
+        if args_node.vararg:
+            args.append(f"*{args_node.vararg.arg}")
+        args += [arg_str(a) for a in args_node.kwonlyargs]
+        if args_node.kwarg:
+            args.append(f"**{args_node.kwarg.arg}")
+        return args
+
+    def _get_return_type(self, func_node: ast.FunctionDef) -> str:
+        if func_node.returns:
+            try:
+                return ast.unparse(func_node.returns)
+            except Exception:
+                return "Any"
+        return "Any"
+
+    def _process_function(self, node: ast.FunctionDef) -> Dict[str, Any]:
+        doc = split_docstring_sections(ast.get_docstring(node))
+        return {
+            "name": node.name,
+            "description": doc["description"],
+            "args": self._format_args(node.args),
+            "returns": self._get_return_type(node),
+        }
+
+    def _process_class(self, node: ast.ClassDef) -> Dict[str, Any]:
+        doc = split_docstring_sections(ast.get_docstring(node))
+        init_args = []
+        for item in node.body:
+            if isinstance(item, ast.FunctionDef) and item.name == "__init__":
+                init_args = self._format_args(item.args)
+                break
+        return {
+            "name": node.name,
+            "description": doc["description"],
+            "args": init_args or None,
+            "returns": "None",  # Class constructors implicitly return None
+        }
+
     def extract_docstrings(self, file_path: Path) -> Dict[str, Any]:
-        def format_args(args_node: ast.arguments) -> List[str]:
-            def arg_str(arg):
-                arg_type = ast.unparse(arg.annotation) if arg.annotation else "Any"
-                return f"{arg.arg}: {arg_type}"
-
-            args = [arg_str(a) for a in args_node.posonlyargs]
-            args += [arg_str(a) for a in args_node.args]
-            if args_node.vararg:
-                args.append(f"*{args_node.vararg.arg}")
-            args += [arg_str(a) for a in args_node.kwonlyargs]
-            if args_node.kwarg:
-                args.append(f"**{args_node.kwarg.arg}")
-            return args
-
         try:
             source = file_path.read_text(encoding="utf-8")
             tree = ast.parse(source)
@@ -95,7 +126,7 @@ class DocstringAnalyzer:
         if tree is None:
             return {}
 
-        # Handle top-level module docstring
+        # Module-level docstring
         docstring = None
         if isinstance(tree, ast.Module) and tree.body:
             first_node = tree.body[0]
@@ -108,36 +139,16 @@ class DocstringAnalyzer:
             "functions": [],
         }
 
-        def visit_node(node):
+        # Visit each node recursively
+        def visit(node):
             if isinstance(node, ast.ClassDef):
-                doc = split_docstring_sections(ast.get_docstring(node))
-                init_args = []
-                for item in node.body:
-                    if isinstance(item, ast.FunctionDef) and item.name == "__init__":
-                        init_args = format_args(item.args)
-                        break
-
-                result["classes"].append({
-                    "name": node.name,
-                    "description": doc["description"],
-                    "args": init_args or None,
-                    "returns": doc["returns"],
-                })
-
+                result["classes"].append(self._process_class(node))
             elif isinstance(node, ast.FunctionDef):
-                doc = split_docstring_sections(ast.get_docstring(node))
-                parsed_args = format_args(node.args)
-                result["functions"].append({
-                    "name": node.name,
-                    "description": doc["description"],
-                    "args": parsed_args,
-                    "returns": doc["returns"],
-                })
-
+                result["functions"].append(self._process_function(node))
             for child in ast.iter_child_nodes(node):
-                visit_node(child)
+                visit(child)
 
-        visit_node(tree)
+        visit(tree)
         return result
 
     def analyze_directory(self, root: Path) -> Dict[str, Dict[str, Any]]:
