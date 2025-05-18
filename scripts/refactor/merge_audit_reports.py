@@ -12,7 +12,7 @@ Version: 1.0
 import json
 import argparse
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Set
 
 
 def normalize_path(path: str) -> str:
@@ -54,7 +54,17 @@ def load_and_normalize(path: Path) -> Dict[str, Any]:
     return {normalize_path(k): v for k, v in raw.items()}
 
 
-def merge_reports(doc_path: Path, cov_path: Path, lint_path: Path, output_path: Path) -> None:
+# In merge_audit_reports.py:
+def merge_reports(
+    doc_path: Path,
+    cov_path: Path,
+    lint_path: Path,
+    output_path: Path,
+    changed_files: Set[str] = None,
+    task_results: Dict[str, Any] = None,
+    verbose: bool = False,
+    return_data: bool = False
+) -> Dict[str, Any] | None:
     """
     Merge docstring, coverage, and linting reports into a single JSON output.
 
@@ -63,23 +73,52 @@ def merge_reports(doc_path: Path, cov_path: Path, lint_path: Path, output_path: 
         cov_path (Path): Path to the coverage JSON file.
         lint_path (Path): Path to the linting JSON file.
         output_path (Path): Path where the merged output will be saved.
+        changed_files (Set[str], optional): If provided, only include files in this set.
+        task_results (Dict[str, Any], optional): CI task routing results. Filters what data to merge.
+        verbose (bool): If True, prints summary output.
+        return_data (bool): If True, returns the merged dictionary instead of writing to file.
+
+    Returns:
+        Optional[Dict[str, Any]]: Merged report, if return_data is True.
     """
     doc_data = load_and_normalize(doc_path)
     cov_data = load_and_normalize(cov_path)
     lint_data = load_and_normalize(lint_path)
 
     all_keys = set(doc_data) | set(cov_data) | set(lint_data)
-    merged: Dict[str, Any] = {}
 
-    for key in sorted(all_keys):
-        merged[key] = {
-            "docstrings": doc_data.get(key, {}),
-            "coverage": cov_data.get(key, {}),
-            "linting": lint_data.get(key, {}),
+    if changed_files:
+        all_keys = {
+            k for k in all_keys if any(changed_file in k or k in changed_file for changed_file in changed_files)
         }
 
+    include_doc = not task_results or "docstring" in task_results
+    include_cov = not task_results or "test" in task_results
+    include_lint = not task_results or "lint" in task_results
+
+    merged: Dict[str, Any] = {}
+    for key in sorted(all_keys):
+        entry = {}
+        if include_doc and key in doc_data:
+            entry["docstrings"] = doc_data[key]
+        if include_cov and key in cov_data:
+            coverage_entry = cov_data[key]
+            entry["coverage"] = coverage_entry
+            if "complexity_score" in coverage_entry:
+                entry["complexity_score"] = coverage_entry["complexity_score"]
+        if include_lint and key in lint_data:
+            entry["linting"] = lint_data[key]
+
+        if entry:
+            merged[key] = entry
+
     output_path.write_text(json.dumps(merged, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"✅ Final merged report written to {output_path}")
+    if verbose:
+        print(f"✅ Merged report written with {len(merged)} files to {output_path}")
+
+    if return_data:
+        return merged
+
 
 
 def main() -> None:

@@ -118,10 +118,20 @@ class TestMergeAuditReports:
         lint_norm = {normalize_path(k): v for k, v in lint.items()}
 
         for fp, bundle in merged.items():
-            assert bundle.keys() == {"docstrings", "coverage", "linting"}
-            assert bundle["docstrings"] == doc_norm.get(fp, {})
-            assert bundle["coverage"] == cov_norm.get(fp, {})
-            assert bundle["linting"] == lint_norm.get(fp, {})
+            if fp in doc_norm:
+                assert bundle.get("docstrings", {}) == doc_norm[fp]
+            else:
+                assert "docstrings" not in bundle
+
+            if fp in cov_norm:
+                assert bundle.get("coverage", {}) == cov_norm[fp]
+            else:
+                assert "coverage" not in bundle
+
+            if fp in lint_norm:
+                assert bundle.get("linting", {}) == lint_norm[fp]
+            else:
+                assert "linting" not in bundle
 
     # -------- guard against mutating inputs -----------------------------------
     def test_inputs_not_mutated(self):
