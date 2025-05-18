@@ -117,14 +117,27 @@ class DocstringAnalyzer:
         }
 
     def extract_docstrings(self, file_path: Path) -> Dict[str, Any]:
+        """
+        Extract docstrings, args, and return types from a Python file using AST.
+
+        Always returns a consistent structure even on parse failure.
+        """
+        result = {
+            "module_doc": {"description": None, "args": None, "returns": None},
+            "classes": [],
+            "functions": [],
+        }
+
         try:
             source = file_path.read_text(encoding="utf-8")
             tree = ast.parse(source)
-        except (SyntaxError, UnicodeDecodeError):
-            return {}
+        except (SyntaxError, UnicodeDecodeError) as e:
+            print(f"⚠️ Skipping file due to parse error: {file_path} — {e}")
+            return result  # Return default structure instead of {}
 
         if tree is None:
-            return {}
+            print(f"⚠️ No AST tree found for file: {file_path}")
+            return result
 
         # Module-level docstring
         docstring = None
@@ -133,11 +146,7 @@ class DocstringAnalyzer:
             if isinstance(first_node, ast.Expr) and isinstance(first_node.value, ast.Str):
                 docstring = first_node.value.s
 
-        result = {
-            "module_doc": split_docstring_sections(docstring),
-            "classes": [],
-            "functions": [],
-        }
+        result["module_doc"] = split_docstring_sections(docstring)
 
         # Visit each node recursively
         def visit(node):

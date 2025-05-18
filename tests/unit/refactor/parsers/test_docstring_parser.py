@@ -23,6 +23,11 @@ from scripts.refactor.parsers.docstring_parser import split_docstring_sections, 
 MODULE_PATH = "scripts.refactor.parsers.docstring_parser"
 dp = pytest.importorskip(MODULE_PATH, reason="target package must be importable")
 
+
+# Add wrapper for dedented source writing
+def write_dedent(path: Path, code: str):
+    path.write_text(dedent(code), encoding="utf-8")
+
 def test_split_docstring_sections_all_parts() -> None:
     """Test the split_docstring_sections function with a complete docstring."""
     docstring = """
@@ -194,12 +199,27 @@ def test_extract_docstrings_nested_and_missing(tmp_path: Path) -> None:
     )
 
     res = dp.DocstringAnalyzer([]).extract_docstrings(src)
+
+    # Module doc
     assert res["module_doc"]["description"] == "Top docs."
+
+    # Class names
     class_names = {c["name"] for c in res["classes"]}
     assert {"Outer", "Inner"} <= class_names
-    # function with no docstring should still exist but have description None
+
+    # Function with no docstring
     fn_no_doc = next(f for f in res["functions"] if f["name"] == "no_doc")
     assert fn_no_doc["description"] is None
+    assert fn_no_doc["args"] == ["self: Any"] or fn_no_doc["args"] == []  # AST will still yield args
+    assert fn_no_doc["returns"] == "Any" or fn_no_doc["returns"] is None
+
+    # Nested method check
+    inner_method = next((f for f in res["functions"] if f["name"] == "inner_method"), None)
+    assert inner_method is not None
+    assert inner_method["description"] == "Method docs."
+    assert "self: Any" in inner_method["args"]
+    assert inner_method["returns"] == "Any"
+
 
 
 # --------------------------------------------------------------------------------------
@@ -264,3 +284,38 @@ def test_cli_check_missing_docstrings_exits_with_code(monkeypatch, tmp_path: Pat
     with pytest.raises(SystemExit) as exc:
         dp.DocstringAuditCLI().run()
     assert exc.value.code == 1
+
+def test_extract_docstrings_ast_args_and_return(tmp_path: Path) -> None:
+    write_dedent(tmp_path / "typed_func.py", '''
+    def add(x: int, y: int) -> int:
+        """Adds two numbers."""
+        return x + y
+    ''')
+    result = dp.DocstringAnalyzer([]).extract_docstrings(tmp_path / "typed_func.py")
+    fn = result["functions"][0]
+    assert fn["name"] == "add"
+    assert "x: int" in fn["args"]
+    assert "y: int" in fn["args"]
+    assert fn["returns"] == "int"
+
+def test_extract_docstrings_class_init_args(tmp_path: Path) -> None:
+    write_dedent(tmp_path / "greeter.py", '''
+    class Greeter:
+        def __init__(self, name: str, loud: bool = False) -> None:
+            """Initialize with name and loud flag."""
+            self.name = name
+    ''')
+    result = dp.DocstringAnalyzer([]).extract_docstrings(tmp_path / "greeter.py")
+    cls = next(c for c in result["classes"] if c["name"] == "Greeter")
+    assert "name: str" in cls["args"]
+    assert "loud: bool" in cls["args"]
+    assert cls["returns"] == "None"
+
+def test_extract_docstrings_untyped_args(tmp_path: Path) -> None:
+    write_dedent(tmp_path / "untyped.py", '''
+    def foo(x, y): return x + y
+    ''')
+    result = dp.DocstringAnalyzer([]).extract_docstrings(tmp_path / "untyped.py")
+    args = result["functions"][0]["args"]
+    assert args == ["x: Any", "y: Any"]
+
