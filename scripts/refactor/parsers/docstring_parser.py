@@ -5,14 +5,18 @@ Docstring Parser
 This module scans a Python project directory for missing or partial docstrings.
 
 It outputs structured JSON and markdown-style reports with description, args, and return sections.
+Also supports generating MkDocs-compatible markdown files.
 """
 
 import ast
 import argparse
 import json
+import os
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 import sys
+from collections import defaultdict
+
 
 script_path = Path(__file__).resolve()
 project_root = script_path.parents[3]  # should point to your repo root
@@ -85,6 +89,12 @@ class DocstringAnalyzer:
     def extract_docstrings(self, file_path: Path) -> Dict[str, Any]:
         """
         Extract docstrings from a Python file, recursively.
+
+        Args:
+            file_path (Path): The path to the Python file to analyze.
+
+        Returns:
+            Dict[str, Any]: A dictionary containing docstring information.
         """
         try:
             source = file_path.read_text(encoding="utf-8")
@@ -157,6 +167,9 @@ class DocstringAnalyzer:
         return results
 
 
+
+
+
 class DocstringAuditCLI:
     def __init__(self) -> None:
         """
@@ -203,6 +216,8 @@ class DocstringAuditCLI:
 
         if self.args.markdown:
             print("🔧 Markdown output not yet implemented for structured fields.")
+
+
 
         if self.args.check:
             has_missing = any(
