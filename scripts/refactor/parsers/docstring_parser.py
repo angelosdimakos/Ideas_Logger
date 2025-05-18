@@ -65,37 +65,27 @@ def split_docstring_sections(docstring: Optional[str]) -> Dict[str, Optional[str
 
 class DocstringAnalyzer:
     def __init__(self, exclude_dirs: List[str]) -> None:
-        """
-        Initialize the DocstringAnalyzer with directories to exclude.
-
-        Args:
-            exclude_dirs (List[str]): A list of directories to exclude from analysis.
-        """
         self.exclude_dirs = set(exclude_dirs)
 
     def should_exclude(self, path: Path) -> bool:
-        """
-        Determine if a given path should be excluded from analysis.
-
-        Args:
-            path (Path): The path to check.
-
-        Returns:
-            bool: True if the path should be excluded, False otherwise.
-        """
         parts = set(path.parts)
         return bool(parts & self.exclude_dirs)
 
     def extract_docstrings(self, file_path: Path) -> Dict[str, Any]:
-        """
-        Extract docstrings from a Python file, recursively.
+        def format_args(args_node: ast.arguments) -> List[str]:
+            def arg_str(arg):
+                arg_type = ast.unparse(arg.annotation) if arg.annotation else "Any"
+                return f"{arg.arg}: {arg_type}"
 
-        Args:
-            file_path (Path): The path to the Python file to analyze.
+            args = [arg_str(a) for a in args_node.posonlyargs]
+            args += [arg_str(a) for a in args_node.args]
+            if args_node.vararg:
+                args.append(f"*{args_node.vararg.arg}")
+            args += [arg_str(a) for a in args_node.kwonlyargs]
+            if args_node.kwarg:
+                args.append(f"**{args_node.kwarg.arg}")
+            return args
 
-        Returns:
-            Dict[str, Any]: A dictionary containing docstring information.
-        """
         try:
             source = file_path.read_text(encoding="utf-8")
             tree = ast.parse(source)
@@ -105,11 +95,13 @@ class DocstringAnalyzer:
         if tree is None:
             return {}
 
+        # Handle top-level module docstring
         docstring = None
         if isinstance(tree, ast.Module) and tree.body:
             first_node = tree.body[0]
-            if isinstance(first_node, (ast.Expr,)) and isinstance(first_node.value, ast.Str):
+            if isinstance(first_node, ast.Expr) and isinstance(first_node.value, ast.Str):
                 docstring = first_node.value.s
+
         result = {
             "module_doc": split_docstring_sections(docstring),
             "classes": [],
@@ -119,24 +111,29 @@ class DocstringAnalyzer:
         def visit_node(node):
             if isinstance(node, ast.ClassDef):
                 doc = split_docstring_sections(ast.get_docstring(node))
-                result["classes"].append(
-                    {
-                        "name": node.name,
-                        "description": doc["description"],
-                        "args": doc["args"],
-                        "returns": doc["returns"],
-                    }
-                )
+                init_args = []
+                for item in node.body:
+                    if isinstance(item, ast.FunctionDef) and item.name == "__init__":
+                        init_args = format_args(item.args)
+                        break
+
+                result["classes"].append({
+                    "name": node.name,
+                    "description": doc["description"],
+                    "args": init_args or None,
+                    "returns": doc["returns"],
+                })
+
             elif isinstance(node, ast.FunctionDef):
                 doc = split_docstring_sections(ast.get_docstring(node))
-                result["functions"].append(
-                    {
-                        "name": node.name,
-                        "description": doc["description"],
-                        "args": doc["args"],
-                        "returns": doc["returns"],
-                    }
-                )
+                parsed_args = format_args(node.args)
+                result["functions"].append({
+                    "name": node.name,
+                    "description": doc["description"],
+                    "args": parsed_args,
+                    "returns": doc["returns"],
+                })
+
             for child in ast.iter_child_nodes(node):
                 visit_node(child)
 
@@ -144,16 +141,6 @@ class DocstringAnalyzer:
         return result
 
     def analyze_directory(self, root: Path) -> Dict[str, Dict[str, Any]]:
-        """
-        Analyze all Python files in the given directory and its subdirectories.
-
-        Args:
-            root (Path): The path to the directory to analyze.
-
-        Returns:
-            Dict[str, Dict[str, Any]]: A dictionary with normalized file paths as keys and
-            dictionaries with docstring information as values.
-        """
         results = {}
         for file in root.rglob("*.py"):
             if self.should_exclude(file) or file.name.startswith("test_"):
