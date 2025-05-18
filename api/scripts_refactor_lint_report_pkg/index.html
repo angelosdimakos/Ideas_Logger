@@ -893,15 +893,21 @@
 <h4 id="register"><code>register</code><a class="headerlink" href="#register" title="Permanent link">&para;</a></h4>
 <p>Decorator used by each plugin module to register it in the plugin registry.
 <strong>Parameters:</strong>
-name (str): The name to register the plugin under.
+['name: str']
 <strong>Returns:</strong>
-Callable[[Type], Type]: A decorator that registers the class in the plugin registry.</p>
+Callable[[Type], Type]</p>
 <h4 id="_inner"><code>_inner</code><a class="headerlink" href="#_inner" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['cls: Type']
+<strong>Returns:</strong>
+Type</p>
 <h4 id="_discover_plugins"><code>_discover_plugins</code><a class="headerlink" href="#_discover_plugins" title="Permanent link">&para;</a></h4>
 <p>Discovers and imports all plugin modules in the 'plugins' directory.
 This function automatically imports all Python files in the 'plugins' directory,
-excluding those that start with an underscore.</p>
+excluding those that start with an underscore.
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsrefactorlint_report_pkgcore"><code>scripts.refactor.lint_report_pkg.core</code><a class="headerlink" href="#scriptsrefactorlint_report_pkgcore" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -949,18 +955,38 @@ All subclasses must define:
 - name: str (unique plugin name)
 - default_report: Path (where output is written)
 - run(): run the tool
-- parse(dst): enrich the lint result dictionary</p>
+- parse(dst): enrich the lint result dictionary
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="name"><code>name</code><a class="headerlink" href="#name" title="Permanent link">&para;</a></h4>
-<p>Unique plugin identifier (e.g., 'flake8').</p>
+<p>Unique plugin identifier (e.g., 'flake8').
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+str</p>
 <h4 id="default_report"><code>default_report</code><a class="headerlink" href="#default_report" title="Permanent link">&para;</a></h4>
-<p>Path where the tool writes its report (txt/json/xml).</p>
+<p>Path where the tool writes its report (txt/json/xml).
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+Path</p>
 <h4 id="run"><code>run</code><a class="headerlink" href="#run" title="Permanent link">&para;</a></h4>
-<p>Execute the tool, writing to <code>default_report</code>; return exit code.</p>
+<p>Execute the tool, writing to <code>default_report</code>; return exit code.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+int</p>
 <h4 id="parse"><code>parse</code><a class="headerlink" href="#parse" title="Permanent link">&para;</a></h4>
-<p>Read <code>default_report</code> and update <code>dst</code> with findings.</p>
+<p>Read <code>default_report</code> and update <code>dst</code> with findings.
+<strong>Parameters:</strong>
+['self: Any', 'dst: Dict[str, Dict[str, Any]]']
+<strong>Returns:</strong>
+None</p>
 <h4 id="all_plugins"><code>all_plugins</code><a class="headerlink" href="#all_plugins" title="Permanent link">&para;</a></h4>
-<p>Return all ToolPlugin instances registered by plugin modules.</p>
+<p>Return all ToolPlugin instances registered by plugin modules.
+<strong>Returns:</strong>
+List[ToolPlugin]</p>
 <h2 id="scriptsrefactorlint_report_pkghelpers"><code>scripts.refactor.lint_report_pkg.helpers</code><a class="headerlink" href="#scriptsrefactorlint_report_pkghelpers" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1001,22 +1027,23 @@ All subclasses must define:
 <h4 id="safe_print"><code>safe_print</code><a class="headerlink" href="#safe_print" title="Permanent link">&para;</a></h4>
 <p>Print <code>msg</code> even on exotic console encodings (swallows UnicodeEncodeError).
 <strong>Parameters:</strong>
-msg (str): The message to print.</p>
+['msg: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="run_cmd"><code>run_cmd</code><a class="headerlink" href="#run_cmd" title="Permanent link">&para;</a></h4>
 <p>Run <em>cmd</em>, write <strong>combined stdout + stderr</strong> to <em>output_file</em> (UTF-8),
 and return the subprocess' exit-code.
 <strong>Parameters:</strong>
-cmd (Sequence[str]): The command to run.
-output_file (Union[str, os.PathLike]): The file to write the output to.
+['cmd: Sequence[str]', 'output_file: Union[str, os.PathLike]']
 <strong>Returns:</strong>
-int: The exit code of the command.</p>
+int</p>
 <h4 id="read_report"><code>read_report</code><a class="headerlink" href="#read_report" title="Permanent link">&para;</a></h4>
 <p>Return the textual contents of <em>path</em> (empty string if the file is missing),
 decoding as UTF-8 and falling back to “replace” for any bad bytes.
 <strong>Parameters:</strong>
-path (Path): The path to the report file.
+['path: Path']
 <strong>Returns:</strong>
-str: The contents of the report file.</p>
+str</p>
 <h2 id="scriptsrefactorlint_report_pkglint_report_cli"><code>scripts.refactor.lint_report_pkg.lint_report_cli</code><a class="headerlink" href="#scriptsrefactorlint_report_pkglint_report_cli" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1083,7 +1110,11 @@ str: The contents of the report file.</p>
 Parameters:</p>
 <hr />
 <p>audit_path: str
-Path to the RefactorGuard audit JSON file.</p>
+Path to the RefactorGuard audit JSON file.
+<strong>Parameters:</strong>
+['audit_path: str']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsrefactorlint_report_pkgpath_utils"><code>scripts.refactor.lint_report_pkg.path_utils</code><a class="headerlink" href="#scriptsrefactorlint_report_pkgpath_utils" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1126,9 +1157,9 @@ Path to the RefactorGuard audit JSON file.</p>
 If the file lives outside the repo, fall back to “last-two components”
 to avoid collisions yet stay platform-agnostic.
 <strong>Parameters:</strong>
-p (str | os.PathLike): The path to normalize.
+['p: str | os.PathLike']
 <strong>Returns:</strong>
-str: The normalized repository-relative path.</p>
+str</p>
 <h2 id="scriptsrefactorlint_report_pkgquality_checker"><code>scripts.refactor.lint_report_pkg.quality_checker</code><a class="headerlink" href="#scriptsrefactorlint_report_pkgquality_checker" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1171,7 +1202,11 @@ str: The normalized repository-relative path.</p>
 Parameters</p>
 <hr />
 <p>audit_path : str
-Path to the RefactorGuard audit JSON file.</p>
+Path to the RefactorGuard audit JSON file.
+<strong>Parameters:</strong>
+['audit_path: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="merge_reports"><code>merge_reports</code><a class="headerlink" href="#merge_reports" title="Permanent link">&para;</a></h4>
 <p>Return merged dict where <em>b</em> overrides <em>a</em> on duplicate keys.
 Parameters</p>
@@ -1179,7 +1214,11 @@ Parameters</p>
 <p>file_a : str
 Path to the first JSON file.
 file_b : str
-Path to the second JSON file.</p>
+Path to the second JSON file.
+<strong>Parameters:</strong>
+['file_a: str', 'file_b: str']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h2 id="scriptsrefactorlint_report_pkgquality_registry"><code>scripts.refactor.lint_report_pkg.quality_registry</code><a class="headerlink" href="#scriptsrefactorlint_report_pkgquality_registry" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1220,14 +1259,15 @@ Path to the second JSON file.</p>
 <h4 id="register_1"><code>register</code><a class="headerlink" href="#register_1" title="Permanent link">&para;</a></h4>
 <p>Decorator to register a quality plug-in.
 <strong>Parameters:</strong>
-func (Plugin): The plugin function to register.
+['func: Plugin']
 <strong>Returns:</strong>
-Plugin: The registered plugin function.</p>
+Plugin</p>
 <h4 id="run_all"><code>run_all</code><a class="headerlink" href="#run_all" title="Permanent link">&para;</a></h4>
 <p>Invoke every registered plug-in in order.
 <strong>Parameters:</strong>
-quality (Dict[str, Dict[str, Any]]): The quality data to pass to plugins.
-report_paths (Dict[str, Path]): The paths to the reports.</p>
+['quality: Dict[str, Dict[str, Any]]', 'report_paths: Dict[str, Path]']
+<strong>Returns:</strong>
+None</p>
 
 
 

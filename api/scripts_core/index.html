@@ -1324,66 +1324,65 @@ ai_summarizer (AISummarizer): Instance of the AI summarizer.
 log_manager (LogManager): Instance of the log manager.
 md_logger (MarkdownLogger): Instance of the markdown logger.
 summary_tracker (SummaryTracker): Instance of the summary tracker.
-summary_engine (SummaryEngine): Instance of the summary engine.</p>
+summary_engine (SummaryEngine): Instance of the summary engine.
+<strong>Parameters:</strong>
+['self: Any', 'script_dir: Union[str, Path]']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="__init__"><code>__init__</code><a class="headerlink" href="#__init__" title="Permanent link">&para;</a></h4>
 <p>Initializes ZephyrusLoggerCore with configuration, environment setup, and core components.
 Loads configuration, resolves file system paths, ensures required directories and files exist, and instantiates collaborators for logging, summarization, and summary tracking. Validates the summary tracker on startup, rebuilding it if necessary or configured to do so.
 <strong>Parameters:</strong>
-script_dir: Path to the script directory used for resolving application paths.
-Raises:
-RuntimeError: If the summary tracker fails validation after a rebuild.</p>
+['self: Any', 'script_dir: Union[str, Path]']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="save_entry"><code>save_entry</code><a class="headerlink" href="#save_entry" title="Permanent link">&para;</a></h4>
 <p>Saves a new log entry to both the JSON log and Markdown export.
 Adds the entry under the specified main category and subcategory, updates the summary tracker, and returns whether the Markdown export succeeded.
 <strong>Parameters:</strong>
-main_category: The primary category for the log entry.
-subcategory: The subcategory for the log entry.
-entry: The content of the log entry.
+['self: Any', 'main_category: str', 'subcategory: str', 'entry: str']
 <strong>Returns:</strong>
-True if the entry was successfully exported to Markdown; False otherwise.</p>
+bool</p>
 <h4 id="generate_global_summary"><code>generate_global_summary</code><a class="headerlink" href="#generate_global_summary" title="Permanent link">&para;</a></h4>
 <p>Generates a batch summary for the specified main category and subcategory.
 <strong>Parameters:</strong>
-main_category: The primary category to summarize.
-subcategory: The subcategory within the main category.
+['self: Any', 'main_category: str', 'subcategory: str']
 <strong>Returns:</strong>
-True if the batch summarization succeeds; otherwise, False.</p>
+bool</p>
 <h4 id="generate_summary"><code>generate_summary</code><a class="headerlink" href="#generate_summary" title="Permanent link">&para;</a></h4>
 <p>Generates a summary for the specified main category and subcategory.
 This method ignores the date argument and delegates to generate_global_summary for backward compatibility.
 <strong>Parameters:</strong>
-_date_str: Ignored legacy date argument.
-main_category: The main category to summarize.
-subcategory: The subcategory to summarize.
+['self: Any', '_date_str: str', 'main_category: str', 'subcategory: str']
 <strong>Returns:</strong>
-True if the summary generation succeeds, False otherwise.</p>
+bool</p>
 <h4 id="_safe_search"><code>_safe_search</code><a class="headerlink" href="#_safe_search" title="Permanent link">&para;</a></h4>
 <p>Safely performs a search on a specified FAISS indexer attribute of the summary tracker.
 If the indexer or its search method is unavailable, or if an exception occurs during search, returns an empty list.
 <strong>Parameters:</strong>
-indexer_attr: Name of the summary tracker attribute representing the FAISS indexer.
-query: The search query string.
-top_k: Maximum number of results to return.
+['self: Any', 'indexer_attr: str', 'query: str', 'top_k: int']
 <strong>Returns:</strong>
-A list of search results, or an empty list if the search fails.</p>
+List[Any]</p>
 <h4 id="search_summaries"><code>search_summaries</code><a class="headerlink" href="#search_summaries" title="Permanent link">&para;</a></h4>
 <p>Searches summary entries for the most relevant matches to a query using vector similarity.
 <strong>Parameters:</strong>
-query: The search query string.
-top_k: Maximum number of results to return.
+['self: Any', 'query: str', 'top_k: int']
 <strong>Returns:</strong>
-A list of the top-k most relevant summary search results, or an empty list if search fails.</p>
+List[Any]</p>
 <h4 id="search_raw_logs"><code>search_raw_logs</code><a class="headerlink" href="#search_raw_logs" title="Permanent link">&para;</a></h4>
 <p>Searches raw log entries for the most relevant matches to a query using vector similarity.
 <strong>Parameters:</strong>
-query: The search query string.
-top_k: Maximum number of results to return.
+['self: Any', 'query: str', 'top_k: int']
 <strong>Returns:</strong>
-A list of the top-k most relevant raw log entries matching the query.</p>
+List[Any]</p>
 <h4 id="_safe_read_json"><code>_safe_read_json</code><a class="headerlink" href="#_safe_read_json" title="Permanent link">&para;</a></h4>
 <p>Safely reads a JSON file and returns its contents as a dictionary.
-If the file cannot be read or parsed, returns an empty dictionary instead of raising an exception.</p>
+If the file cannot be read or parsed, returns an empty dictionary instead of raising an exception.
+<strong>Parameters:</strong>
+['filepath: Path']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h2 id="scriptscorecore_cli"><code>scripts.core.core_cli</code><a class="headerlink" href="#scriptscorecore_cli" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1424,22 +1423,21 @@ If the file cannot be read or parsed, returns an empty dictionary instead of rai
 <h4 id="log"><code>log</code><a class="headerlink" href="#log" title="Permanent link">&para;</a></h4>
 <p>Logs a new entry under the specified main and subcategory.
 <strong>Parameters:</strong>
-main: Main category for the log entry.
-sub: Subcategory for the log entry.
-entry: Content of the log entry.
-The entry is saved in both JSON and Markdown formats.</p>
+['main: str', 'sub: str', 'entry: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="summarize"><code>summarize</code><a class="headerlink" href="#summarize" title="Permanent link">&para;</a></h4>
 <p>Generates a summary for the specified main category and subcategory.
 <strong>Parameters:</strong>
-main: The main category to summarize.
-sub: The subcategory to summarize.
-Prints a confirmation message if the summary is generated, or a warning if there are insufficient entries or the operation fails.</p>
+['main: str', 'sub: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="search"><code>search</code><a class="headerlink" href="#search" title="Permanent link">&para;</a></h4>
 <p>Searches summaries or raw logs and displays the top results.
 <strong>Parameters:</strong>
-query: The search query string.
-top_k: Maximum number of results to display.
-kind: Specifies whether to search 'summary' or 'raw' logs. Defaults to 'summary'.</p>
+['query: str', 'top_k: int', 'kind: str']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptscoreenvironment_bootstrapper"><code>scripts.core.environment_bootstrapper</code><a class="headerlink" href="#scriptscoreenvironment_bootstrapper" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1493,21 +1491,38 @@ Attributes:
 paths (ZephyrusPaths): An instance containing paths for logs, exports,
 and configuration files.
 default_batch_size (int): The default batch size to use if the
-configuration file is missing.</p>
+configuration file is missing.
+<strong>Parameters:</strong>
+['self: Any', 'paths: ZephyrusPaths', 'default_batch_size: int']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_2">🛠️ Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
 <h4 id="__init___1"><code>__init__</code><a class="headerlink" href="#__init___1" title="Permanent link">&para;</a></h4>
 <p>Initializes the EnvironmentBootstrapper with paths and a default batch size.
 <strong>Parameters:</strong>
-paths: Contains locations for logs, exports, and configuration files.
-default_batch_size: Default batch size used if the configuration file is missing.</p>
+['self: Any', 'paths: ZephyrusPaths', 'default_batch_size: int']
+<strong>Returns:</strong>
+None</p>
 <h4 id="bootstrap"><code>bootstrap</code><a class="headerlink" href="#bootstrap" title="Permanent link">&para;</a></h4>
 <p>Prepares the application environment by ensuring required directories and files exist.
-Calls internal methods to create necessary directories and initialize essential files for the Zephyrus Logger application, guaranteeing all resources are ready before startup.</p>
+Calls internal methods to create necessary directories and initialize essential files for the Zephyrus Logger application, guaranteeing all resources are ready before startup.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_make_directories"><code>_make_directories</code><a class="headerlink" href="#_make_directories" title="Permanent link">&para;</a></h4>
-<p>Creates required directories for logs, exports, and configuration files if they do not exist.</p>
+<p>Creates required directories for logs, exports, and configuration files if they do not exist.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_initialize_files"><code>_initialize_files</code><a class="headerlink" href="#_initialize_files" title="Permanent link">&para;</a></h4>
 <p>Initializes required log and configuration files for the Zephyrus Logger environment.
-Creates empty or default-initialized files if they do not exist, including the JSON log, text log, correction summaries, and configuration files. If the correction summaries file exists but is empty, it is reinitialized as an empty JSON file. The configuration file is recreated with a default batch size if missing.</p>
+Creates empty or default-initialized files if they do not exist, including the JSON log, text log, correction summaries, and configuration files. If the correction summaries file exists but is empty, it is reinitialized as an empty JSON file. The configuration file is recreated with a default batch size if missing.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptscorelog_manager"><code>scripts.core.log_manager</code><a class="headerlink" href="#scriptscorelog_manager" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1570,67 +1585,63 @@ Creates empty or default-initialized files if they do not exist, including the J
 </table>
 <h3 id="classes_2">📦 Classes<a class="headerlink" href="#classes_2" title="Permanent link">&para;</a></h3>
 <h4 id="logmanager"><code>LogManager</code><a class="headerlink" href="#logmanager" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any', 'json_log_file: Path', 'txt_log_file: Path', 'correction_summaries_file: Path', 'timestamp_format: str', 'content_key: str', 'timestamp_key: str']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_3">🛠️ Functions<a class="headerlink" href="#functions_3" title="Permanent link">&para;</a></h3>
 <h4 id="__init___2"><code>__init__</code><a class="headerlink" href="#__init___2" title="Permanent link">&para;</a></h4>
 <p>Initializes a LogManager instance.
 <strong>Parameters:</strong>
-json_log_file (Path): Path to the JSON file that stores log entries.
-txt_log_file (Path): Path to the text file that stores log entries in plain text.
-correction_summaries_file (Path): Path to the JSON file that stores correction summaries.
-timestamp_format (str): Timestamp format for log entries.
-content_key (str): Key used to store the content of a log entry in the JSON file.
-timestamp_key (str): Key used to store the timestamp of a log entry in the JSON file.</p>
+['self: Any', 'json_log_file: Path', 'txt_log_file: Path', 'correction_summaries_file: Path', 'timestamp_format: str', 'content_key: str', 'timestamp_key: str']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="_safe_read_or_create_json"><code>_safe_read_or_create_json</code><a class="headerlink" href="#_safe_read_or_create_json" title="Permanent link">&para;</a></h4>
 <p>Safely reads a JSON file or creates it if it doesn't exist.
 If the file doesn't exist, it will create an empty JSON object.
 <strong>Parameters:</strong>
-filepath (Path): Path to the JSON file.
+['self: Any', 'filepath: Path']
 <strong>Returns:</strong>
-dict: The parsed JSON data or an empty dictionary if the file couldn't be loaded.</p>
+dict</p>
 <h4 id="read_logs"><code>read_logs</code><a class="headerlink" href="#read_logs" title="Permanent link">&para;</a></h4>
 <p>Reads the JSON log file and returns its contents. If the file doesn't exist, it will create an empty JSON object.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-dict: The parsed JSON data or an empty dictionary if the file couldn't be loaded.</p>
+dict</p>
 <h4 id="update_logs"><code>update_logs</code><a class="headerlink" href="#update_logs" title="Permanent link">&para;</a></h4>
 <p>Updates the JSON log file with the provided update function.
 The update function will be provided with the current JSON data as a dictionary.
 The function should modify the dictionary in-place as needed.
 <strong>Parameters:</strong>
-update_func (Callable[[dict], None]): The function to call to update the JSON data.</p>
+['self: Any', 'update_func: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="append_entry"><code>append_entry</code><a class="headerlink" href="#append_entry" title="Permanent link">&para;</a></h4>
 <p>Appends a new log entry to the JSON log file.
 <strong>Parameters:</strong>
-date_str (str): The date of the log entry in the format specified by <code>timestamp_format</code>.
-main_category (str): The main category of the log entry.
-subcategory (str): The subcategory of the log entry.
-entry (str): The content of the log entry.</p>
+['self: Any', 'date_str: str', 'main_category: str', 'subcategory: str', 'entry: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="updater"><code>updater</code><a class="headerlink" href="#updater" title="Permanent link">&para;</a></h4>
 <p>Updates the JSON data to append a new log entry.
 <strong>Parameters:</strong>
-data (dict): The current JSON data.</p>
+['data: dict']
+<strong>Returns:</strong>
+None</p>
 <h4 id="get_unsummarized_batch"><code>get_unsummarized_batch</code><a class="headerlink" href="#get_unsummarized_batch" title="Permanent link">&para;</a></h4>
 <p>Retrieves a batch of unsummarized log entries for the given main category and subcategory.
 <strong>Parameters:</strong>
-main_category (str): The main category of the log entries.
-subcategory (str): The subcategory of the log entries.
-summarized_total (int): The total number of log entries that have already been summarized.
-batch_size (int): The number of unsummarized log entries to retrieve in the batch.
+['self: Any', 'main_category: str', 'subcategory: str', 'summarized_total: int', 'batch_size: int']
 <strong>Returns:</strong>
-list: A list of log entries, each represented as a dictionary with 'timestamp' and 'content' keys.</p>
+list</p>
 <h4 id="update_correction_summaries"><code>update_correction_summaries</code><a class="headerlink" href="#update_correction_summaries" title="Permanent link">&para;</a></h4>
 <p>Updates the correction summaries JSON file with new data.
 <strong>Parameters:</strong>
-main_category (str): The main category of the log entries.
-subcategory (str): The subcategory of the log entries.
-new_data (dict): The new data to append to the correction summaries.
-The dictionary should contain the following keys:
-- "batch": The batch label.
-- "original_summary": The original summary.
-- "corrected_summary": The corrected summary.
-- "correction_timestamp": The timestamp of the correction.
-- "start": The start timestamp of the batch.
-- "end": The end timestamp of the batch.</p>
+['self: Any', 'main_category: str', 'subcategory: str', 'new_data: dict']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptscoremarkdown_logger"><code>scripts.core.markdown_logger</code><a class="headerlink" href="#scriptscoremarkdown_logger" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1677,15 +1688,25 @@ The dictionary should contain the following keys:
 This class manages the logging of entries into Markdown format,
 creating new files or updating existing ones as necessary.
 Attributes:
-export_dir (Path): The directory where Markdown files will be saved.</p>
+export_dir (Path): The directory where Markdown files will be saved.
+<strong>Parameters:</strong>
+['self: Any', 'export_dir: Path']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_4">🛠️ Functions<a class="headerlink" href="#functions_4" title="Permanent link">&para;</a></h3>
 <h4 id="__init___3"><code>__init__</code><a class="headerlink" href="#__init___3" title="Permanent link">&para;</a></h4>
 <p>Initializes a MarkdownLogger to write entries to Markdown files in the specified directory.
 <strong>Parameters:</strong>
-export_dir: Directory where Markdown files will be stored.</p>
+['self: Any', 'export_dir: Path']
+<strong>Returns:</strong>
+None</p>
 <h4 id="log_1"><code>log</code><a class="headerlink" href="#log_1" title="Permanent link">&para;</a></h4>
 <p>Logs an entry under a specific date and category in a Markdown file.
-Creates or updates a Markdown file named after the main category, adding the entry under the specified date header and subcategory. Returns True if the operation succeeds, or False if an error occurs.</p>
+Creates or updates a Markdown file named after the main category, adding the entry under the specified date header and subcategory. Returns True if the operation succeeds, or False if an error occurs.
+<strong>Parameters:</strong>
+['self: Any', 'date_str: str', 'main_category: str', 'subcategory: str', 'entry: str']
+<strong>Returns:</strong>
+bool</p>
 <h2 id="scriptscoresummary_engine"><code>scripts.core.summary_engine</code><a class="headerlink" href="#scriptscoresummary_engine" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1743,7 +1764,11 @@ tracker (SummaryTracker): The summary tracker instance.
 timestamp_format (str): The format for timestamps.
 content_key (str): The key for content in log entries.
 timestamp_key (str): The key for timestamps in log entries.
-batch_size (int): The number of entries to process in a batch.</p>
+batch_size (int): The number of entries to process in a batch.
+<strong>Parameters:</strong>
+['self: Any', 'summarizer: AISummarizer', 'log_manager: LogManager', 'summary_tracker: SummaryTracker', 'timestamp_format: str', 'content_key: str', 'timestamp_key: str', 'batch_size: int']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_5">🛠️ Functions<a class="headerlink" href="#functions_5" title="Permanent link">&para;</a></h3>
 <h4 id="__init___4"><code>__init__</code><a class="headerlink" href="#__init___4" title="Permanent link">&para;</a></h4>
 <p>Initialize the SummaryEngine.
@@ -1754,21 +1779,29 @@ summary_tracker (SummaryTracker): The summary tracker instance.
 timestamp_format (str): The format for timestamps.
 content_key (str): The key for content in log entries.
 timestamp_key (str): The key for timestamps in log entries.
-batch_size (int): The number of entries to process in a batch.</p>
+batch_size (int): The number of entries to process in a batch.
+<strong>Parameters:</strong>
+['self: Any', 'summarizer: AISummarizer', 'log_manager: LogManager', 'summary_tracker: SummaryTracker', 'timestamp_format: str', 'content_key: str', 'timestamp_key: str', 'batch_size: int']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_get_summary"><code>_get_summary</code><a class="headerlink" href="#_get_summary" title="Permanent link">&para;</a></h4>
 <p>Generate a summary from a batch of log entries.
 Parameters:
 batch_entries (List[Dict[str, Any]]): The batch of log entries.
 subcategory (str): The subcategory for the summary.
+<strong>Parameters:</strong>
+['self: Any', 'batch_entries: List[Dict[str, Any]]', 'subcategory: str']
 <strong>Returns:</strong>
-Optional[str]: The generated summary, or None if summarization fails.</p>
+Optional[str]</p>
 <h4 id="summarize_1"><code>summarize</code><a class="headerlink" href="#summarize_1" title="Permanent link">&para;</a></h4>
 <p>Summarize log entries for a given main category and subcategory.
 Parameters:
 main_category (str): The main category for the summary.
 subcategory (str): The subcategory for the summary.
+<strong>Parameters:</strong>
+['self: Any', 'main_category: str', 'subcategory: str']
 <strong>Returns:</strong>
-bool: True if summarization is successful, False otherwise.</p>
+bool</p>
 <h2 id="scriptscoresummary_tracker"><code>scripts.core.summary_tracker</code><a class="headerlink" href="#scriptscoresummary_tracker" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1853,48 +1886,66 @@ paths (ZephyrusPaths): The paths configuration for the summary tracker.
 tracker_path (Path): The path to the summary tracker file.
 tracker (Dict[str, Dict[str, Any]]): The loaded tracker data.
 summary_indexer (Optional[SummaryIndexer]): The indexer for summaries.
-raw_indexer (Optional[RawLogIndexer]): The indexer for raw logs.</p>
+raw_indexer (Optional[RawLogIndexer]): The indexer for raw logs.
+<strong>Parameters:</strong>
+['self: Any', 'paths: ZephyrusPaths']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_6">🛠️ Functions<a class="headerlink" href="#functions_6" title="Permanent link">&para;</a></h3>
 <h4 id="__init___5"><code>__init__</code><a class="headerlink" href="#__init___5" title="Permanent link">&para;</a></h4>
 <p>Initializes the SummaryTracker with the given paths.
 <strong>Parameters:</strong>
-paths (ZephyrusPaths): The paths configuration for the summary tracker.</p>
+['self: Any', 'paths: ZephyrusPaths']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_safe_load_tracker"><code>_safe_load_tracker</code><a class="headerlink" href="#_safe_load_tracker" title="Permanent link">&para;</a></h4>
 <p>Safely loads the tracker data from the tracker file.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-Dict[str, Dict[str, Any]]: The loaded tracker data, or an empty dictionary if loading fails.</p>
+Dict[str, Dict[str, Any]]</p>
 <h4 id="_safe_init_summary_indexer"><code>_safe_init_summary_indexer</code><a class="headerlink" href="#_safe_init_summary_indexer" title="Permanent link">&para;</a></h4>
 <p>Safely initializes the SummaryIndexer.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-Optional[SummaryIndexer]: The initialized SummaryIndexer, or None if initialization fails.</p>
+Optional[SummaryIndexer]</p>
 <h4 id="_safe_init_raw_indexer"><code>_safe_init_raw_indexer</code><a class="headerlink" href="#_safe_init_raw_indexer" title="Permanent link">&para;</a></h4>
 <p>Safely initializes the RawLogIndexer.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-Optional[RawLogIndexer]: The initialized RawLogIndexer, or None if initialization fails.</p>
+Optional[RawLogIndexer]</p>
 <h4 id="get_summarized_count"><code>get_summarized_count</code><a class="headerlink" href="#get_summarized_count" title="Permanent link">&para;</a></h4>
 <p>Retrieves the summarized count for the given main category and subcategory.
 <strong>Parameters:</strong>
-main_category (str): The main category.
-subcategory (str): The subcategory.
+['self: Any', 'main_category: str', 'subcategory: str']
 <strong>Returns:</strong>
-int: The summarized count.</p>
+int</p>
 <h4 id="update"><code>update</code><a class="headerlink" href="#update" title="Permanent link">&para;</a></h4>
 <p>Updates the tracker with the given summarized and new entries counts.
 <strong>Parameters:</strong>
-main_category (str): The main category.
-subcategory (str): The subcategory.
-summarized (int, optional): The summarized count. Defaults to 0.
-new_entries (int, optional): The new entries count. Defaults to 0.</p>
+['self: Any', 'main_category: str', 'subcategory: str', 'summarized: int', 'new_entries: int']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_save"><code>_save</code><a class="headerlink" href="#_save" title="Permanent link">&para;</a></h4>
-<p>Saves the tracker data to the tracker file.</p>
+<p>Saves the tracker data to the tracker file.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="rebuild"><code>rebuild</code><a class="headerlink" href="#rebuild" title="Permanent link">&para;</a></h4>
-<p>Rebuilds the tracker by clearing the current data and re-counting the logged and summarized entries.</p>
+<p>Rebuilds the tracker by clearing the current data and re-counting the logged and summarized entries.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="validate"><code>validate</code><a class="headerlink" href="#validate" title="Permanent link">&para;</a></h4>
 <p>Validates the tracker by comparing the summarized counts with the actual counts in the correction summaries.
 <strong>Parameters:</strong>
-verbose (bool, optional): If True, logs every subcategory status. Otherwise, only logs mismatches. Defaults to False.
+['self: Any', 'verbose: bool']
 <strong>Returns:</strong>
-bool: True if the tracker is valid (no mismatches), False otherwise.</p>
+bool</p>
 <h4 id="get_coverage_data"><code>get_coverage_data</code><a class="headerlink" href="#get_coverage_data" title="Permanent link">&para;</a></h4>
 <p>Returns a structured list of coverage data for all tracked (main, sub) categories.
 Each entry includes:
@@ -1902,7 +1953,11 @@ Each entry includes:
 - subcategory
 - logged_total
 - estimated_summarized_entries
-- coverage_percent (0–100)</p>
+- coverage_percent (0–100)
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+list[dict]</p>
 
 
 

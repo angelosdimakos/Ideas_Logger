@@ -779,10 +779,13 @@
 <h4 id="generate_split_coverage_docs"><code>generate_split_coverage_docs</code><a class="headerlink" href="#generate_split_coverage_docs" title="Permanent link">&para;</a></h4>
 <p>Generate split coverage documentation files.
 <strong>Parameters:</strong>
-coverage_data: The parsed coverage JSON data
-output_dir: Directory where markdown files will be written</p>
+['coverage_data: dict', 'output_dir: Path']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="main"><code>main</code><a class="headerlink" href="#main" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Returns:</strong>
+Any</p>
 <h2 id="scriptsdoc_generationdoc_renderers"><code>scripts.doc_generation.doc_renderers</code><a class="headerlink" href="#scriptsdoc_generationdoc_renderers" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -821,22 +824,42 @@ output_dir: Directory where markdown files will be written</p>
 </table>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="render_folder_coverage"><code>render_folder_coverage</code><a class="headerlink" href="#render_folder_coverage" title="Permanent link">&para;</a></h4>
-<p>Renders the markdown content for a single folder's coverage.</p>
+<p>Renders the markdown content for a single folder's coverage.
+<strong>Parameters:</strong>
+['folder: str', 'entries: list']
+<strong>Returns:</strong>
+str</p>
 <h4 id="render_coverage_index"><code>render_coverage_index</code><a class="headerlink" href="#render_coverage_index" title="Permanent link">&para;</a></h4>
-<p>Renders the index file for coverage reports.</p>
+<p>Renders the index file for coverage reports.
+<strong>Parameters:</strong>
+['folders: List[str]', 'totals: Dict[str, Any]']
+<strong>Returns:</strong>
+List[str]</p>
 <h4 id="render_folder_report"><code>render_folder_report</code><a class="headerlink" href="#render_folder_report" title="Permanent link">&para;</a></h4>
-<p>Renders the markdown content for a single folder's code quality.</p>
+<p>Renders the markdown content for a single folder's code quality.
+<strong>Parameters:</strong>
+['folder: str', 'section: dict', 'verbose: bool']
+<strong>Returns:</strong>
+str</p>
 <h4 id="render_quality_index"><code>render_quality_index</code><a class="headerlink" href="#render_quality_index" title="Permanent link">&para;</a></h4>
-<p>Renders the index file for code quality reports.</p>
+<p>Renders the index file for code quality reports.
+<strong>Parameters:</strong>
+['folders: List[str]']
+<strong>Returns:</strong>
+List[str]</p>
 <h4 id="render_module_docs"><code>render_module_docs</code><a class="headerlink" href="#render_module_docs" title="Permanent link">&para;</a></h4>
 <p>Renders the markdown content for a single module's docstrings.
-Unified format: header + summary table.</p>
+Unified format: header + summary table.
+<strong>Parameters:</strong>
+['file_path: str', 'docstrings: Dict[str, Any]']
+<strong>Returns:</strong>
+str</p>
 <h4 id="render_docstring_index"><code>render_docstring_index</code><a class="headerlink" href="#render_docstring_index" title="Permanent link">&para;</a></h4>
 <p>Renders the index file for docstring documentation.
 <strong>Parameters:</strong>
-sections: List of (section_name, [(short_name, module_path)])
+['sections: List[Tuple[str, List[Tuple[str, str]]]]']
 <strong>Returns:</strong>
-List[str]: Markdown lines for index.md</p>
+List[str]</p>
 <h2 id="scriptsdoc_generationdocstring_doc_generation"><code>scripts.doc_generation.docstring_doc_generation</code><a class="headerlink" href="#scriptsdoc_generationdocstring_doc_generation" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -884,9 +907,15 @@ List[str]: Markdown lines for index.md</p>
 <h3 id="functions_2">🛠️ Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
 <h4 id="generate_split_docstring_docs"><code>generate_split_docstring_docs</code><a class="headerlink" href="#generate_split_docstring_docs" title="Permanent link">&para;</a></h4>
 <p>Generate folder-grouped Markdown documentation from docstring data.
-Each top-level folder becomes a single .md file.</p>
+Each top-level folder becomes a single .md file.
+<strong>Parameters:</strong>
+['docstring_data: Dict[str, Dict[str, Any]]', 'output_dir: Path']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="main_1"><code>main</code><a class="headerlink" href="#main_1" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Returns:</strong>
+Any</p>
 <h2 id="scriptsdoc_generationquality_doc_generation"><code>scripts.doc_generation.quality_doc_generation</code><a class="headerlink" href="#scriptsdoc_generationquality_doc_generation" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -943,11 +972,13 @@ Each top-level folder becomes a single .md file.</p>
 <h4 id="generate_split_reports"><code>generate_split_reports</code><a class="headerlink" href="#generate_split_reports" title="Permanent link">&para;</a></h4>
 <p>Generate split code quality documentation files.
 <strong>Parameters:</strong>
-report_data: The parsed quality report JSON data
-output_dir: Directory where markdown files will be written
-verbose: Whether to include detailed MyPy error blocks</p>
+['report_data: dict', 'output_dir: Path', 'verbose: bool']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="main_2"><code>main</code><a class="headerlink" href="#main_2" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Returns:</strong>
+Any</p>
 
 
 

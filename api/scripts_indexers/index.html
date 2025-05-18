@@ -954,7 +954,11 @@
 </table>
 <h3 id="classes">📦 Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
 <h4 id="baseindexer"><code>BaseIndexer</code><a class="headerlink" href="#baseindexer" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any', 'paths: ZephyrusPaths', 'index_name: str']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="__init__"><code>__init__</code><a class="headerlink" href="#__init__" title="Permanent link">&para;</a></h4>
 <p>Initializes the BaseIndexer object.
@@ -966,43 +970,45 @@ and raw log metadata file.  In all other cases, a ValueError is raised.
 Also, loads the SentenceTransformer model specified by the "embedding_model"
 configuration key, or defaults to "all-MiniLM-L6-v2" if the key is missing.
 <strong>Parameters:</strong>
-paths (ZephyrusPaths): The paths configuration for the indexer.
-index_name (str): The name of the index to create, either "summary" or "raw".
-Raises:
-ValueError: If <code>index_name</code> is not "summary" or "raw".</p>
+['self: Any', 'paths: ZephyrusPaths', 'index_name: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_load_model"><code>_load_model</code><a class="headerlink" href="#_load_model" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="load_index"><code>load_index</code><a class="headerlink" href="#load_index" title="Permanent link">&para;</a></h4>
 <p>Loads the FAISS index and associated metadata from their respective files.
 This method reads the index from the file specified by <code>self.index_path</code> and loads
 the metadata from the file specified by <code>self.metadata_path</code>. If either file does not
 exist, a FileNotFoundError is raised.
 Raises:
-FileNotFoundError: If the index file or metadata file is not found.</p>
+FileNotFoundError: If the index file or metadata file is not found.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="search"><code>search</code><a class="headerlink" href="#search" title="Permanent link">&para;</a></h4>
 <p>Searches the FAISS index for the given query and returns the top-k most relevant results.
 <strong>Parameters:</strong>
-query (str): The search query.
-top_k (int, optional): The number of top results to return. Defaults to 5.
+['self: Any', 'query: str', 'top_k: int']
 <strong>Returns:</strong>
-List[Dict[str, Any]]: A list of dictionaries containing the search results. Each dictionary includes the
-following keys:
-- "date"
-- "main_category"
-- "subcategory"
-- "timestamp"
-- "similarity" (the similarity score, computed as 1.0 / (1.0 + distance))</p>
+List[Dict[str, Any]]</p>
 <h4 id="build_index"><code>build_index</code><a class="headerlink" href="#build_index" title="Permanent link">&para;</a></h4>
 <p>Builds a FAISS index from provided texts and metadata.
 <strong>Parameters:</strong>
-texts (List[str]): A list of texts to encode and index.
-meta (List[Dict[str, Any]]): Metadata per text entry.
-fail_on_empty (bool): Raise ValueError if input is empty (useful for tests).
+['self: Any', 'texts: List[str]', 'meta: List[Dict[str, Any]]', 'fail_on_empty: bool']
 <strong>Returns:</strong>
-bool: True if successful, False otherwise.</p>
+bool</p>
 <h4 id="save_index"><code>save_index</code><a class="headerlink" href="#save_index" title="Permanent link">&para;</a></h4>
 <p>Saves the FAISS index to a file, and the associated metadata.
-This method must be called after <code>build_index</code> or <code>load_index</code> has been called.</p>
+This method must be called after <code>build_index</code> or <code>load_index</code> has been called.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsindexersraw_log_indexer"><code>scripts.indexers.raw_log_indexer</code><a class="headerlink" href="#scriptsindexersraw_log_indexer" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1060,65 +1066,57 @@ This method must be called after <code>build_index</code> or <code>load_index</c
 <p>Builds a FAISS index from raw entries in zephyrus_log.json.
 Used for full-text vector search across all logged ideas (not just summaries).
 Attributes:
-log_path (str): The path to the JSON log file.</p>
+log_path (str): The path to the JSON log file.
+<strong>Parameters:</strong>
+['self: Any', 'paths: ZephyrusPaths', 'autoload: bool']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="__init___1"><code>__init__</code><a class="headerlink" href="#__init___1" title="Permanent link">&para;</a></h4>
 <p>Initializes the RawLogIndexer with the specified paths and optionally loads the index.
 <strong>Parameters:</strong>
-paths (ZephyrusPaths): The paths configuration for the indexer.
-autoload (bool): Whether to automatically load the index on initialization.
-Defaults to True.
-Raises:
-FileNotFoundError: If the index files are not found during autoload.</p>
+['self: Any', 'paths: ZephyrusPaths', 'autoload: bool']
+<strong>Returns:</strong>
+None</p>
 <h4 id="load_entries"><code>load_entries</code><a class="headerlink" href="#load_entries" title="Permanent link">&para;</a></h4>
 <p>Loads raw entries from the zephyrus_log.json file.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-Tuple[List[str], List[Dict[str, Any]]]: A tuple containing a list of entry contents
-and a list of metadata dictionaries.
-Raises:
-FileNotFoundError: If the log file does not exist.
-json.JSONDecodeError: If the JSON file is malformed.</p>
+Tuple[List[str], List[Dict[str, Any]]]</p>
 <h4 id="_process_categories"><code>_process_categories</code><a class="headerlink" href="#_process_categories" title="Permanent link">&para;</a></h4>
 <p>Processes categories for a given date, updating the texts and metadata.
 <strong>Parameters:</strong>
-date (str): The date of the entries being processed.
-categories (Dict[str, Any]): A dictionary of main categories.
-texts (List[str]): The list to append entry contents to.
-meta (List[Dict[str, Any]]): The list to append entry metadata to.
+['self: Any', 'date: str', 'categories: Dict[str, Any]', 'texts: List[str]', 'meta: List[Dict[str, Any]]']
 <strong>Returns:</strong>
-Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists.</p>
+Tuple[List[str], List[Dict[str, Any]]]</p>
 <h4 id="_process_subcategories"><code>_process_subcategories</code><a class="headerlink" href="#_process_subcategories" title="Permanent link">&para;</a></h4>
 <p>Processes subcategories within a main category for a given date.
 <strong>Parameters:</strong>
-date (str): The date of the entries being processed.
-main_cat (str): The main category of the entries.
-subcats (Dict[str, Any]): A dictionary of subcategories.
-texts (List[str]): The list to append entry contents to.
-meta (List[Dict[str, Any]]): The list to append entry metadata to.
+['self: Any', 'date: str', 'main_cat: str', 'subcats: Dict[str, Any]', 'texts: List[str]', 'meta: List[Dict[str, Any]]']
 <strong>Returns:</strong>
-Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists.</p>
+Tuple[List[str], List[Dict[str, Any]]]</p>
 <h4 id="_process_entries"><code>_process_entries</code><a class="headerlink" href="#_process_entries" title="Permanent link">&para;</a></h4>
 <p>Processes a list of entries for a given date, main category, and subcategory.
 <strong>Parameters:</strong>
-date (str): The date of the entries being processed.
-main_cat (str): The main category of the entries.
-subcat (str): The subcategory of the entries.
-entries (List[Any]): A list of entries to process.
-texts (List[str]): The list to append entry contents to.
-meta (List[Dict[str, Any]]): The list to append entry metadata to.
+['self: Any', 'date: str', 'main_cat: str', 'subcat: str', 'entries: List[Any]', 'texts: List[str]', 'meta: List[Dict[str, Any]]']
 <strong>Returns:</strong>
-Tuple[List[str], List[Dict[str, Any]]]: Updated texts and metadata lists.</p>
+Tuple[List[str], List[Dict[str, Any]]]</p>
 <h4 id="build_index_from_logs"><code>build_index_from_logs</code><a class="headerlink" href="#build_index_from_logs" title="Permanent link">&para;</a></h4>
 <p>Loads entries from file and rebuilds FAISS index.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-bool: Whether the index was successfully rebuilt.
-Raises:
-Exception: If an error occurs while building the index.</p>
+bool</p>
 <h4 id="rebuild"><code>rebuild</code><a class="headerlink" href="#rebuild" title="Permanent link">&para;</a></h4>
 <p>Rebuilds the raw log index from scratch.
 This method loads entries from the log file, rebuilds the FAISS index, and saves the new index.
 Raises:
-Exception: If an error occurs while rebuilding the index.</p>
+Exception: If an error occurs while rebuilding the index.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsindexerssummary_indexer"><code>scripts.indexers.summary_indexer</code><a class="headerlink" href="#scriptsindexerssummary_indexer" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1175,39 +1173,76 @@ Exception: If an error occurs while rebuilding the index.</p>
 <h4 id="summaryindexer"><code>SummaryIndexer</code><a class="headerlink" href="#summaryindexer" title="Permanent link">&para;</a></h4>
 <p>Builds a FAISS index from summarized entries in correction_summaries.json.
 Core features include loading and parsing summarized entries, extracting summary texts,
-and managing the FAISS index for semantic search.</p>
+and managing the FAISS index for semantic search.
+<strong>Parameters:</strong>
+['self: Any', 'paths: ZephyrusPaths', 'autoload: bool']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_2">🛠️ Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
 <h4 id="__init___2"><code>__init__</code><a class="headerlink" href="#__init___2" title="Permanent link">&para;</a></h4>
 <p>Initializes a SummaryIndexer object.
 <strong>Parameters:</strong>
-paths (ZephyrusPaths): An instance containing the necessary file paths.
-autoload (bool, optional): Flag indicating whether to load the index automatically. Defaults to True.</p>
+['self: Any', 'paths: ZephyrusPaths', 'autoload: bool']
+<strong>Returns:</strong>
+None</p>
 <h4 id="load_entries_1"><code>load_entries</code><a class="headerlink" href="#load_entries_1" title="Permanent link">&para;</a></h4>
 <p>Loads summarized entries from the correction_summaries.json file.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-Tuple[List[str], List[Dict[str, Any]]]: Summarized entry texts and metadata.</p>
+Tuple[List[str], List[Dict[str, Any]]]</p>
 <h4 id="_process_categories_1"><code>_process_categories</code><a class="headerlink" href="#_process_categories_1" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any', 'date: str', 'categories: Dict[str, Any]', 'texts: List[str]', 'meta: List[Dict[str, Any]]']
+<strong>Returns:</strong>
+Tuple[List[str], List[Dict[str, Any]]]</p>
 <h4 id="_process_subcategories_1"><code>_process_subcategories</code><a class="headerlink" href="#_process_subcategories_1" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any', 'date: str', 'main_cat: str', 'subcats: Dict[str, Any]', 'texts: List[str]', 'meta: List[Dict[str, Any]]']
+<strong>Returns:</strong>
+Tuple[List[str], List[Dict[str, Any]]]</p>
 <h4 id="_process_batches"><code>_process_batches</code><a class="headerlink" href="#_process_batches" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any', 'date: str', 'main_cat: str', 'subcat: str', 'batches: List[Any]', 'texts: List[str]', 'meta: List[Dict[str, Any]]']
+<strong>Returns:</strong>
+Tuple[List[str], List[Dict[str, Any]]]</p>
 <h4 id="load_index_1"><code>load_index</code><a class="headerlink" href="#load_index_1" title="Permanent link">&para;</a></h4>
 <p>Load the FAISS index and associated metadata from their respective files.
 Raises:
-FileNotFoundError: If the index file or metadata file is not found.</p>
+FileNotFoundError: If the index file or metadata file is not found.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="save_index_1"><code>save_index</code><a class="headerlink" href="#save_index_1" title="Permanent link">&para;</a></h4>
 <p>Save the FAISS index and associated metadata to their respective files.
-This method delegates to the BaseIndexer implementation.</p>
+This method delegates to the BaseIndexer implementation.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="rebuild_index"><code>rebuild_index</code><a class="headerlink" href="#rebuild_index" title="Permanent link">&para;</a></h4>
 <p>Rebuild the FAISS index from the summarized entries.
-This method invokes building index from logs and saving it.</p>
+This method invokes building index from logs and saving it.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="build_index_from_logs_1"><code>build_index_from_logs</code><a class="headerlink" href="#build_index_from_logs_1" title="Permanent link">&para;</a></h4>
 <p>Loads entries from file and rebuilds FAISS index.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-bool: Whether the index was successfully rebuilt.</p>
+bool</p>
 <h4 id="rebuild_1"><code>rebuild</code><a class="headerlink" href="#rebuild_1" title="Permanent link">&para;</a></h4>
-<p>Rebuild the summary index from scratch.</p>
+<p>Rebuild the summary index from scratch.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 
 
 

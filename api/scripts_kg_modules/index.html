@@ -1031,17 +1031,16 @@
 Attributes:
 None
 Methods:
-analyze_density: Analyzes the density and complexity of a given graph.</p>
+analyze_density: Analyzes the density and complexity of a given graph.
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="analyze_density"><code>analyze_density</code><a class="headerlink" href="#analyze_density" title="Permanent link">&para;</a></h4>
 <p>Analyze the density and complexity of a given graph.
 <strong>Parameters:</strong>
-graph (nx.Graph): The graph to analyze.
-name (str): An optional name for the graph.
+['graph: nx.Graph', 'name: str']
 <strong>Returns:</strong>
-Dict[str, Any]: A dictionary containing various metrics of the graph's complexity.
-Raises:
-None</p>
+Dict[str, Any]</p>
 <h2 id="scriptskgmodulesdata_extractors"><code>scripts.kg.modules.data_extractors</code><a class="headerlink" href="#scriptskgmodulesdata_extractors" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1068,30 +1067,32 @@ None</p>
 </table>
 <h3 id="classes_1">📦 Classes<a class="headerlink" href="#classes_1" title="Permanent link">&para;</a></h3>
 <h4 id="datarelationextractor"><code>DataRelationExtractor</code><a class="headerlink" href="#datarelationextractor" title="Permanent link">&para;</a></h4>
-<p>Extracts data relations from module docstrings.</p>
+<p>Extracts data relations from module docstrings.
+<strong>Returns:</strong>
+None</p>
 <h4 id="functionextractor"><code>FunctionExtractor</code><a class="headerlink" href="#functionextractor" title="Permanent link">&para;</a></h4>
-<p>Extracts function parameters and return values from docstrings.</p>
+<p>Extracts function parameters and return values from docstrings.
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="extract_data_relations"><code>extract_data_relations</code><a class="headerlink" href="#extract_data_relations" title="Permanent link">&para;</a></h4>
 <p>Extract data relations from module docstrings using pattern matching.
 <strong>Parameters:</strong>
-graph: The directed graph to which data relations will be added.
-module_node: The module node identifier.
-description: The module description from which to extract relations.</p>
+['cls: Any', 'graph: nx.DiGraph', 'module_node: NodeID', 'description: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_add_data_node"><code>_add_data_node</code><a class="headerlink" href="#_add_data_node" title="Permanent link">&para;</a></h4>
 <p>Add a data node and its relation to the graph.
 <strong>Parameters:</strong>
-graph: The directed graph to which the node will be added.
-module_node: The module node identifier.
-data_node: The data node identifier.
-relation: The type of relation to the data node.
-confidence: The confidence level of the relation.</p>
+['graph: nx.DiGraph', 'module_node: NodeID', 'data_node: NodeID', 'relation: str', 'confidence: float']
+<strong>Returns:</strong>
+None</p>
 <h4 id="extract_parameters_and_returns"><code>extract_parameters_and_returns</code><a class="headerlink" href="#extract_parameters_and_returns" title="Permanent link">&para;</a></h4>
 <p>Extract parameters and return values from a function entry.
 <strong>Parameters:</strong>
-fn_entry: A dictionary containing function metadata.
+['fn_entry: Dict[str, Any]']
 <strong>Returns:</strong>
-A tuple containing lists of parameters and return values.</p>
+Tuple[List[str], List[str]]</p>
 <h2 id="scriptskgmodulesgraph_builder"><code>scripts.kg.modules.graph_builder</code><a class="headerlink" href="#scriptskgmodulesgraph_builder" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1118,47 +1119,60 @@ A tuple containing lists of parameters and return values.</p>
 </table>
 <h3 id="classes_2">📦 Classes<a class="headerlink" href="#classes_2" title="Permanent link">&para;</a></h3>
 <h4 id="knowledgegraphbuilder"><code>KnowledgeGraphBuilder</code><a class="headerlink" href="#knowledgegraphbuilder" title="Permanent link">&para;</a></h4>
-<p>Builds knowledge graphs from docmap data.</p>
+<p>Builds knowledge graphs from docmap data.
+<strong>Parameters:</strong>
+['self: Any', 'docmap: DocMap']
+<strong>Returns:</strong>
+None</p>
 <h4 id="codebaseanalyzer"><code>CodebaseAnalyzer</code><a class="headerlink" href="#codebaseanalyzer" title="Permanent link">&para;</a></h4>
-<p>Main class for analyzing and visualizing codebase knowledge graphs.</p>
+<p>Main class for analyzing and visualizing codebase knowledge graphs.
+<strong>Parameters:</strong>
+['self: Any', 'json_path: str', 'focus_prefix: str']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_2">🛠️ Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
 <h4 id="__init__"><code>__init__</code><a class="headerlink" href="#__init__" title="Permanent link">&para;</a></h4>
 <p>Initialize with normalized docmap data.
 <strong>Parameters:</strong>
-docmap: A dictionary mapping module paths to their data attributes.</p>
+['self: Any', 'docmap: DocMap']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="build_knowledge_graph"><code>build_knowledge_graph</code><a class="headerlink" href="#build_knowledge_graph" title="Permanent link">&para;</a></h4>
 <p>Constructs a knowledge graph from the docmap data, optionally filtering by prefix.
 <strong>Parameters:</strong>
-focus_prefix: Optional prefix to filter modules.
+['self: Any', 'focus_prefix: Optional[str]']
 <strong>Returns:</strong>
-A directed graph representing the relationships between modules and their data.</p>
+nx.DiGraph</p>
 <h4 id="_build_graph"><code>_build_graph</code><a class="headerlink" href="#_build_graph" title="Permanent link">&para;</a></h4>
 <p>Build the knowledge graph from the filtered docmap.
 <strong>Parameters:</strong>
-docmap: A filtered dictionary mapping module paths to their data attributes.
+['self: Any', 'docmap: DocMap']
 <strong>Returns:</strong>
-A directed graph representing the relationships.</p>
+nx.DiGraph</p>
 <h4 id="__init___1"><code>__init__</code><a class="headerlink" href="#__init___1" title="Permanent link">&para;</a></h4>
 <p>Initialize the analyzer with JSON data.
 <strong>Parameters:</strong>
-json_path: Path to the docstring summary JSON file
-focus_prefix: Prefix to filter modules</p>
+['self: Any', 'json_path: str', 'focus_prefix: str']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="analyze"><code>analyze</code><a class="headerlink" href="#analyze" title="Permanent link">&para;</a></h4>
 <p>Analyze the codebase and build knowledge graph.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-Tuple containing the graph and complexity report</p>
+Tuple[nx.DiGraph, Dict[str, Any]]</p>
 <h4 id="visualize"><code>visualize</code><a class="headerlink" href="#visualize" title="Permanent link">&para;</a></h4>
 <p>Visualize the knowledge graph with complexity indicators.
 <strong>Parameters:</strong>
-graph: The knowledge graph
-density_report: Complexity metrics report</p>
+['self: Any', 'graph: nx.DiGraph', 'density_report: Dict[str, Any]']
+<strong>Returns:</strong>
+None</p>
 <h4 id="export_graph"><code>export_graph</code><a class="headerlink" href="#export_graph" title="Permanent link">&para;</a></h4>
 <p>Export the graph to a file.
 <strong>Parameters:</strong>
-graph: The knowledge graph
-format_type: Export format ('graphml' or 'gexf')
+['self: Any', 'graph: nx.DiGraph', 'format_type: str']
 <strong>Returns:</strong>
-Filename of the exported graph</p>
+str</p>
 <h2 id="scriptskgmodulesutils"><code>scripts.kg.modules.utils</code><a class="headerlink" href="#scriptskgmodulesutils" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1185,28 +1199,28 @@ Filename of the exported graph</p>
 </table>
 <h3 id="classes_3">📦 Classes<a class="headerlink" href="#classes_3" title="Permanent link">&para;</a></h3>
 <h4 id="docmapnormalizer"><code>DocMapNormalizer</code><a class="headerlink" href="#docmapnormalizer" title="Permanent link">&para;</a></h4>
-<p>Handles normalization of module path keys in docmap dictionaries.</p>
+<p>Handles normalization of module path keys in docmap dictionaries.
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_3">🛠️ Functions<a class="headerlink" href="#functions_3" title="Permanent link">&para;</a></h3>
 <h4 id="load_json_file"><code>load_json_file</code><a class="headerlink" href="#load_json_file" title="Permanent link">&para;</a></h4>
 <p>Load and parse a JSON file.
 <strong>Parameters:</strong>
-file_path: Path to the JSON file.
+['file_path: str']
 <strong>Returns:</strong>
-The parsed JSON content or empty dict on error.</p>
+DocMap</p>
 <h4 id="safe_get"><code>safe_get</code><a class="headerlink" href="#safe_get" title="Permanent link">&para;</a></h4>
 <p>Safely get a value from a dictionary.
 <strong>Parameters:</strong>
-data: Dictionary to get value from.
-key: Key to lookup.
-default: Default value if key not found.
+['data: Dict[str, T]', 'key: str', 'default: Optional[T]']
 <strong>Returns:</strong>
-The value from the dictionary or default.</p>
+Optional[T]</p>
 <h4 id="normalize_keys"><code>normalize_keys</code><a class="headerlink" href="#normalize_keys" title="Permanent link">&para;</a></h4>
 <p>Normalize all keys to use forward slashes for consistency.
 <strong>Parameters:</strong>
-docmap: A dictionary mapping module paths to their respective data.
+['docmap: DocMap']
 <strong>Returns:</strong>
-A new dictionary with normalized keys.</p>
+DocMap</p>
 <h2 id="scriptskgmodulesvisualization"><code>scripts.kg.modules.visualization</code><a class="headerlink" href="#scriptskgmodulesvisualization" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1233,53 +1247,61 @@ A new dictionary with normalized keys.</p>
 </table>
 <h3 id="classes_4">📦 Classes<a class="headerlink" href="#classes_4" title="Permanent link">&para;</a></h3>
 <h4 id="graphvisualizer"><code>GraphVisualizer</code><a class="headerlink" href="#graphvisualizer" title="Permanent link">&para;</a></h4>
-<p>Handles visualization of knowledge graphs with complexity information.</p>
+<p>Handles visualization of knowledge graphs with complexity information.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_4">🛠️ Functions<a class="headerlink" href="#functions_4" title="Permanent link">&para;</a></h3>
 <h4 id="__init___2"><code>__init__</code><a class="headerlink" href="#__init___2" title="Permanent link">&para;</a></h4>
-<p>Initialize the visualizer.</p>
+<p>Initialize the visualizer.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="visualize_graph"><code>visualize_graph</code><a class="headerlink" href="#visualize_graph" title="Permanent link">&para;</a></h4>
 <p>Visualize the graph with complexity scores.
 <strong>Parameters:</strong>
-graph: The graph to visualize.
-complexity_scores: A dictionary of complexity scores for nodes.
-title: The title of the visualization.</p>
+['self: Any', 'graph: nx.DiGraph', 'complexity_scores: ComplexityScores', 'title: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_position_nodes_in_layers"><code>_position_nodes_in_layers</code><a class="headerlink" href="#_position_nodes_in_layers" title="Permanent link">&para;</a></h4>
 <p>Position nodes in horizontal layers by type.
 <strong>Parameters:</strong>
-layers: Dictionary of node types and their nodes.
+['self: Any', 'layers: Dict[str, list]']
 <strong>Returns:</strong>
-Dictionary of node positions.</p>
+Dict[NodeID, tuple]</p>
 <h4 id="_handle_remaining_nodes"><code>_handle_remaining_nodes</code><a class="headerlink" href="#_handle_remaining_nodes" title="Permanent link">&para;</a></h4>
 <p>Add positions for any nodes that weren't positioned in the initial layout.
 This modifies the pos dictionary in-place.
 <strong>Parameters:</strong>
-pos: Dictionary of node positions to update.</p>
+['self: Any', 'pos: Dict[NodeID, tuple]']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_draw_module_rectangles"><code>_draw_module_rectangles</code><a class="headerlink" href="#_draw_module_rectangles" title="Permanent link">&para;</a></h4>
 <p>Draw colored rectangles around modules based on complexity.
 <strong>Parameters:</strong>
-ax: Matplotlib axes to draw on.
-modules: Dictionary of module nodes.
-pos: Dictionary of node positions.
-complexity_scores: Dictionary of complexity scores.</p>
+['self: Any', 'ax: plt.Axes', 'modules: Dict[NodeID, list]', 'pos: Dict[NodeID, tuple]', 'complexity_scores: ComplexityScores']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_get_node_colors"><code>_get_node_colors</code><a class="headerlink" href="#_get_node_colors" title="Permanent link">&para;</a></h4>
 <p>Get node colors based on node type and module complexity.
 <strong>Parameters:</strong>
-graph: The knowledge graph.
-complexity_scores: Dictionary of complexity scores.
+['self: Any', 'graph: nx.DiGraph', 'complexity_scores: ComplexityScores']
 <strong>Returns:</strong>
-List of colors for each node.</p>
+list</p>
 <h4 id="_get_complexity_color"><code>_get_complexity_color</code><a class="headerlink" href="#_get_complexity_color" title="Permanent link">&para;</a></h4>
 <p>Get the color representation based on the complexity score.
 <strong>Parameters:</strong>
-score: The complexity score.
+['score: float']
 <strong>Returns:</strong>
-The color corresponding to the complexity score.</p>
+str</p>
 <h4 id="_shorten_label"><code>_shorten_label</code><a class="headerlink" href="#_shorten_label" title="Permanent link">&para;</a></h4>
 <p>Shorten a label for display purposes.
 <strong>Parameters:</strong>
-name: The label to shorten.
+['name: str']
 <strong>Returns:</strong>
-The shortened label.</p>
+str</p>
 
 
 

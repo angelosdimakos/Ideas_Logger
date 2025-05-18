@@ -540,6 +540,51 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#_format_args" class="md-nav__link">
+    <span class="md-ellipsis">
+      _format_args
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arg_str" class="md-nav__link">
+    <span class="md-ellipsis">
+      arg_str
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_get_return_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      _get_return_type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_process_function" class="md-nav__link">
+    <span class="md-ellipsis">
+      _process_function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_process_class" class="md-nav__link">
+    <span class="md-ellipsis">
+      _process_class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#extract_docstrings" class="md-nav__link">
     <span class="md-ellipsis">
       extract_docstrings
@@ -549,9 +594,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#visit_node" class="md-nav__link">
+  <a href="#visit" class="md-nav__link">
     <span class="md-ellipsis">
-      visit_node
+      visit
     </span>
   </a>
   
@@ -773,49 +818,103 @@
 </table>
 <h3 id="classes">📦 Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
 <h4 id="docstringanalyzer"><code>DocstringAnalyzer</code><a class="headerlink" href="#docstringanalyzer" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any', 'exclude_dirs: List[str]']
+<strong>Returns:</strong>
+None</p>
 <h4 id="docstringauditcli"><code>DocstringAuditCLI</code><a class="headerlink" href="#docstringauditcli" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="split_docstring_sections"><code>split_docstring_sections</code><a class="headerlink" href="#split_docstring_sections" title="Permanent link">&para;</a></h4>
 <p>Split a docstring into its sections: description, args, and returns.
 <strong>Parameters:</strong>
-docstring (Optional[str]): The docstring to split.
+['docstring: Optional[str]']
 <strong>Returns:</strong>
-Dict[str, Optional[str]]: A dictionary containing the sections: description, args, and returns.</p>
+Dict[str, Optional[str]]</p>
 <h4 id="__init__"><code>__init__</code><a class="headerlink" href="#__init__" title="Permanent link">&para;</a></h4>
-<p>Initialize the DocstringAnalyzer with directories to exclude.
+<p><em>No description available.</em>
 <strong>Parameters:</strong>
-exclude_dirs (List[str]): A list of directories to exclude from analysis.</p>
+['self: Any', 'exclude_dirs: List[str]']
+<strong>Returns:</strong>
+None</p>
 <h4 id="should_exclude"><code>should_exclude</code><a class="headerlink" href="#should_exclude" title="Permanent link">&para;</a></h4>
-<p>Determine if a given path should be excluded from analysis.
+<p><em>No description available.</em>
 <strong>Parameters:</strong>
-path (Path): The path to check.
+['self: Any', 'path: Path']
 <strong>Returns:</strong>
-bool: True if the path should be excluded, False otherwise.</p>
+bool</p>
+<h4 id="_format_args"><code>_format_args</code><a class="headerlink" href="#_format_args" title="Permanent link">&para;</a></h4>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any', 'args_node: ast.arguments']
+<strong>Returns:</strong>
+List[str]</p>
+<h4 id="arg_str"><code>arg_str</code><a class="headerlink" href="#arg_str" title="Permanent link">&para;</a></h4>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['arg: Any']
+<strong>Returns:</strong>
+Any</p>
+<h4 id="_get_return_type"><code>_get_return_type</code><a class="headerlink" href="#_get_return_type" title="Permanent link">&para;</a></h4>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any', 'func_node: ast.FunctionDef']
+<strong>Returns:</strong>
+str</p>
+<h4 id="_process_function"><code>_process_function</code><a class="headerlink" href="#_process_function" title="Permanent link">&para;</a></h4>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any', 'node: ast.FunctionDef']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
+<h4 id="_process_class"><code>_process_class</code><a class="headerlink" href="#_process_class" title="Permanent link">&para;</a></h4>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any', 'node: ast.ClassDef']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h4 id="extract_docstrings"><code>extract_docstrings</code><a class="headerlink" href="#extract_docstrings" title="Permanent link">&para;</a></h4>
-<p>Extract docstrings from a Python file, recursively.
+<p>Extract docstrings, args, and return types from a Python file using AST.
+Always returns a consistent structure even on parse failure.
 <strong>Parameters:</strong>
-file_path (Path): The path to the Python file to analyze.
+['self: Any', 'file_path: Path']
 <strong>Returns:</strong>
-Dict[str, Any]: A dictionary containing docstring information.</p>
-<h4 id="visit_node"><code>visit_node</code><a class="headerlink" href="#visit_node" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+Dict[str, Any]</p>
+<h4 id="visit"><code>visit</code><a class="headerlink" href="#visit" title="Permanent link">&para;</a></h4>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['node: Any']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="analyze_directory"><code>analyze_directory</code><a class="headerlink" href="#analyze_directory" title="Permanent link">&para;</a></h4>
-<p>Analyze all Python files in the given directory and its subdirectories.
+<p><em>No description available.</em>
 <strong>Parameters:</strong>
-root (Path): The path to the directory to analyze.
+['self: Any', 'root: Path']
 <strong>Returns:</strong>
-Dict[str, Dict[str, Any]]: A dictionary with normalized file paths as keys and
-dictionaries with docstring information as values.</p>
+Dict[str, Dict[str, Any]]</p>
 <h4 id="__init___1"><code>__init__</code><a class="headerlink" href="#__init___1" title="Permanent link">&para;</a></h4>
-<p>Initialize the command-line interface for the docstring audit.</p>
+<p>Initialize the command-line interface for the docstring audit.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="parse_args"><code>parse_args</code><a class="headerlink" href="#parse_args" title="Permanent link">&para;</a></h4>
 <p>Parse command-line arguments.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-argparse.Namespace: The parsed command-line arguments.</p>
+argparse.Namespace</p>
 <h4 id="run"><code>run</code><a class="headerlink" href="#run" title="Permanent link">&para;</a></h4>
-<p>Run the docstring audit.</p>
+<p>Run the docstring audit.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsrefactorparsersjson_coverage_parser"><code>scripts.refactor.parsers.json_coverage_parser</code><a class="headerlink" href="#scriptsrefactorparsersjson_coverage_parser" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -842,19 +941,43 @@ argparse.Namespace: The parsed command-line arguments.</p>
 </table>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="_load_files"><code>_load_files</code><a class="headerlink" href="#_load_files" title="Permanent link">&para;</a></h4>
-<p>Return the <code>files</code> section with all keys normalised to POSIX paths.</p>
+<p>Return the <code>files</code> section with all keys normalised to POSIX paths.
+<strong>Parameters:</strong>
+['json_path: str']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h4 id="_best_suffix_match"><code>_best_suffix_match</code><a class="headerlink" href="#_best_suffix_match" title="Permanent link">&para;</a></h4>
 <p>Find the file-entry whose tail components best match <em>requested</em>.
-Returns the matching coverage dict or <strong>None</strong> if nothing plausible found.</p>
+Returns the matching coverage dict or <strong>None</strong> if nothing plausible found.
+<strong>Parameters:</strong>
+['files: Dict[str, Any]', 'requested: str']
+<strong>Returns:</strong>
+Optional[Dict[str, Any]]</p>
 <h4 id="_fully_uncovered"><code>_fully_uncovered</code><a class="headerlink" href="#_fully_uncovered" title="Permanent link">&para;</a></h4>
-<p>Return a coverage dict that marks every method as 0 % covered.</p>
+<p>Return a coverage dict that marks every method as 0 % covered.
+<strong>Parameters:</strong>
+['method_ranges: Dict[str, Tuple[int, int]]']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h4 id="_coverage_from_summary"><code>_coverage_from_summary</code><a class="headerlink" href="#_coverage_from_summary" title="Permanent link">&para;</a></h4>
-<p>Extract coverage %, hits and missing lines list from a summary block.</p>
+<p>Extract coverage %, hits and missing lines list from a summary block.
+<strong>Parameters:</strong>
+['summary: Dict[str, Any]', 'total: int']
+<strong>Returns:</strong>
+Tuple[float, int, List[int]]</p>
 <h4 id="_coverage_from_executed"><code>_coverage_from_executed</code><a class="headerlink" href="#_coverage_from_executed" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['executed: List[int]', 'rng: Tuple[int, int]']
+<strong>Returns:</strong>
+Tuple[float, int, List[int]]</p>
 <h4 id="parse_json_coverage"><code>parse_json_coverage</code><a class="headerlink" href="#parse_json_coverage" title="Permanent link">&para;</a></h4>
 <p>Return per-method coverage data for <em>filepath</em> based on a <code>coverage.py</code>
-JSON (v5) report previously converted with <code>coverage json</code>.</p>
+JSON (v5) report previously converted with <code>coverage json</code>.
+<strong>Parameters:</strong>
+['json_path: str', 'method_ranges: Dict[str, Tuple[int, int]]', 'filepath: str']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 
 
 

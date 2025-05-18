@@ -1030,28 +1030,38 @@
 <p>AISummarizer provides methods to generate summaries for single or multiple text entries
 using a configurable LLM model and subcategory-specific prompts. It supports fallback
 to the Ollama chat API if primary summarization fails and loads configuration settings
-at initialization.</p>
+at initialization.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="__init__"><code>__init__</code><a class="headerlink" href="#__init__" title="Permanent link">&para;</a></h4>
-<p>Initializes the AISummarizer with configuration settings, LLM model selection, and subcategory-specific prompts.</p>
+<p>Initializes the AISummarizer with configuration settings, LLM model selection, and subcategory-specific prompts.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_fallback_summary"><code>_fallback_summary</code><a class="headerlink" href="#_fallback_summary" title="Permanent link">&para;</a></h4>
 <p>Attempts to generate a summary using the Ollama chat API as a fallback.
-Sends the provided prompt to the chat model and returns the generated summary, or an error message if the fallback fails.</p>
+Sends the provided prompt to the chat model and returns the generated summary, or an error message if the fallback fails.
+<strong>Parameters:</strong>
+['self: Any', 'full_prompt: str']
+<strong>Returns:</strong>
+str</p>
 <h4 id="summarize_entry"><code>summarize_entry</code><a class="headerlink" href="#summarize_entry" title="Permanent link">&para;</a></h4>
 <p>Generates a summary for a single text entry using the configured LLM model and an optional subcategory-specific prompt.
 <strong>Parameters:</strong>
-entry_text: The text to be summarized.
-subcategory: Optional subcategory to select a specialized prompt.
+['self: Any', 'entry_text: str', 'subcategory: Optional[str]']
 <strong>Returns:</strong>
-The generated summary, or a fallback message if summarization fails.</p>
+str</p>
 <h4 id="summarize_entries_bulk"><code>summarize_entries_bulk</code><a class="headerlink" href="#summarize_entries_bulk" title="Permanent link">&para;</a></h4>
 <p>Generates a summary for multiple text entries using the configured LLM model and subcategory-specific prompts.
 If the input list is empty, returns a warning message. Falls back to an alternative summarization method if the primary LLM call fails or returns an invalid response.
 <strong>Parameters:</strong>
-entries: List of text entries to summarize.
-subcategory: Optional subcategory to select a specific summarization prompt.
+['self: Any', 'entries: List[str]', 'subcategory: Optional[str]']
 <strong>Returns:</strong>
-The generated summary as a string, or a fallback message if summarization is unsuccessful.</p>
+str</p>
 <h2 id="scriptsaillm_optimization"><code>scripts.ai.llm_optimization</code><a class="headerlink" href="#scriptsaillm_optimization" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1119,55 +1129,73 @@ The generated summary as a string, or a fallback message if summarization is uns
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="_mean"><code>_mean</code><a class="headerlink" href="#_mean" title="Permanent link">&para;</a></h4>
 <p>Calculates the mean of a list of floats.
-Returns 0.0 if the list is empty.</p>
+Returns 0.0 if the list is empty.
+<strong>Parameters:</strong>
+['values: List[float]']
+<strong>Returns:</strong>
+float</p>
 <h4 id="_categorise_issues"><code>_categorise_issues</code><a class="headerlink" href="#_categorise_issues" title="Permanent link">&para;</a></h4>
 <p>Returns a summary of how many files fall into each major code quality issue category.
-The summary includes counts of files with more than 5 type errors, average complexity greater than 7, and average coverage below 60%.</p>
+The summary includes counts of files with more than 5 type errors, average complexity greater than 7, and average coverage below 60%.
+<strong>Parameters:</strong>
+['offenders: List[Dict]']
+<strong>Returns:</strong>
+str</p>
 <h4 id="summarize_file_data_for_llm"><code>summarize_file_data_for_llm</code><a class="headerlink" href="#summarize_file_data_for_llm" title="Permanent link">&para;</a></h4>
 <p>Generates a summary dictionary of code quality metrics for a single file.
-Extracts and computes average complexity, coverage percentage, MyPy error count, and docstring completeness from nested file data. Returns a dictionary with legacy-compatible keys, including the file name, full path, rounded metrics, docstring ratio, and a list of up to three top issues.</p>
+Extracts and computes average complexity, coverage percentage, MyPy error count, and docstring completeness from nested file data. Returns a dictionary with legacy-compatible keys, including the file name, full path, rounded metrics, docstring ratio, and a list of up to three top issues.
+<strong>Parameters:</strong>
+['file_data: dict', 'file_path: str']
+<strong>Returns:</strong>
+dict[str, Any]</p>
 <h4 id="extract_top_issues"><code>extract_top_issues</code><a class="headerlink" href="#extract_top_issues" title="Permanent link">&para;</a></h4>
 <p>Extracts up to a specified number of top code quality issues from file data.
 The function prioritizes the first MyPy error, the first function with high complexity (complexity &gt; 10), and the first function with low coverage (coverage &lt; 50%), returning formatted issue descriptions.
 <strong>Parameters:</strong>
-file_data: Dictionary containing code quality metrics for a file.
-max_issues: Maximum number of issues to extract.
+['file_data: dict', 'max_issues: int']
 <strong>Returns:</strong>
-A list of formatted strings describing the top issues found in the file.</p>
+List[str]</p>
 <h4 id="build_refactor_prompt"><code>build_refactor_prompt</code><a class="headerlink" href="#build_refactor_prompt" title="Permanent link">&para;</a></h4>
 <p>Builds an LLM prompt requesting strategic refactoring suggestions for a list of offender files.
 The prompt summarizes up to <code>limit</code> files with significant code quality issues, applies a persona and template from the configuration, and includes both a summary and detailed offender information. The resulting prompt instructs the LLM to focus on identifying refactoring patterns rather than file-specific advice.
 <strong>Parameters:</strong>
-offenders: List of tuples containing file details and metrics for files needing refactoring.
-config: Configuration object providing persona and prompt template.
-verbose: If True, includes detailed information for each file; otherwise, provides a concise summary.
-limit: Maximum number of offender files to include in the prompt.
+['offenders: List[Tuple[str, float, list, int, float, float]]', 'config: Any', 'verbose: bool', 'limit: int']
 <strong>Returns:</strong>
-A formatted prompt string for use with an LLM.</p>
+str</p>
 <h4 id="build_strategic_recommendations_prompt"><code>build_strategic_recommendations_prompt</code><a class="headerlink" href="#build_strategic_recommendations_prompt" title="Permanent link">&para;</a></h4>
 <p>Constructs a detailed prompt for an LLM to generate strategic, actionable recommendations for improving code quality and test coverage based on severity data and summary metrics.
 The prompt summarizes the distribution of key issues (high complexity, low coverage, type errors), highlights problematic modules with multiple severe files, and lists the top offenders. It instructs the LLM to provide specific, non-generic recommendations tied directly to the identified files and modules, prioritizing complexity, coverage, type errors, and documentation.
 <strong>Parameters:</strong>
-severity_data: List of dictionaries containing per-file severity metrics and scores.
-summary_metrics: Overall codebase metrics, either as a formatted string or a dictionary.
-limit: Maximum number of top offender files to include in the summary (default: 30).
+['severity_data: List[Dict[str, Any]]', 'summary_metrics: Union[Dict[str, Any], str]', 'limit: int']
 <strong>Returns:</strong>
-A formatted prompt string for use with an LLM, emphasizing targeted, codebase-specific recommendations.</p>
+str</p>
 <h4 id="compute_severity"><code>compute_severity</code><a class="headerlink" href="#compute_severity" title="Permanent link">&para;</a></h4>
 <p>Calculates a weighted severity score and summary metrics for a single module.
-The severity score combines counts of MyPy errors, pydocstyle lint issues, average function complexity, and lack of test coverage using fixed weights. Returns a dictionary with the file name, full path, error and issue counts, average complexity, average coverage percentage, and the computed severity score.</p>
+The severity score combines counts of MyPy errors, pydocstyle lint issues, average function complexity, and lack of test coverage using fixed weights. Returns a dictionary with the file name, full path, error and issue counts, average complexity, average coverage percentage, and the computed severity score.
+<strong>Parameters:</strong>
+['file_path: str', 'content: Dict[str, Any]']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h4 id="_summarise_offenders"><code>_summarise_offenders</code><a class="headerlink" href="#_summarise_offenders" title="Permanent link">&para;</a></h4>
 <p>Aggregates a list of offender files into a summary of key code quality issues.
-Counts and lists up to five example files for each of the following categories: high complexity (complexity &gt; 8), low coverage (coverage &lt; 50%), and many type errors (more than 5 type errors). Returns a formatted multiline string summarizing the counts and sample file names per category.</p>
+Counts and lists up to five example files for each of the following categories: high complexity (complexity &gt; 8), low coverage (coverage &lt; 50%), and many type errors (more than 5 type errors). Returns a formatted multiline string summarizing the counts and sample file names per category.
+<strong>Parameters:</strong>
+['offenders: List[Tuple[str, float, list, int, float, float]]']
+<strong>Returns:</strong>
+str</p>
 <h4 id="_fmt"><code>_fmt</code><a class="headerlink" href="#_fmt" title="Permanent link">&para;</a></h4>
 <p>Formats a list of strings as a comma-separated string, truncating with '...' if more than five items.
 <strong>Parameters:</strong>
-lst: List of strings to format.
+['lst: List[str]']
 <strong>Returns:</strong>
-A string of up to five comma-separated items from the list, followed by '...' if the list contains more than five items.</p>
+str</p>
 <h4 id="_format_offender_block"><code>_format_offender_block</code><a class="headerlink" href="#_format_offender_block" title="Permanent link">&para;</a></h4>
 <p>Formats offender file details into a summary block for inclusion in LLM prompts.
-If verbose is True, returns a detailed multiline summary for each file including severity score, error counts, complexity, coverage, and sample errors. Otherwise, returns a concise single-line summary per file.</p>
+If verbose is True, returns a detailed multiline summary for each file including severity score, error counts, complexity, coverage, and sample errors. Otherwise, returns a concise single-line summary per file.
+<strong>Parameters:</strong>
+['offenders: List[Tuple[str, float, list, int, float, float]]', 'verbose: bool']
+<strong>Returns:</strong>
+str</p>
 <h2 id="scriptsaillm_refactor_advisor"><code>scripts.ai.llm_refactor_advisor</code><a class="headerlink" href="#scriptsaillm_refactor_advisor" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1200,27 +1228,23 @@ If verbose is True, returns a detailed multiline summary for each file including
 <h4 id="load_audit"><code>load_audit</code><a class="headerlink" href="#load_audit" title="Permanent link">&para;</a></h4>
 <p>Loads and returns audit data from a JSON file at the given path.
 <strong>Parameters:</strong>
-path: Path to the JSON audit report file.
+['path: str']
 <strong>Returns:</strong>
-Parsed audit data as a dictionary.</p>
+dict</p>
 <h4 id="extract_top_offenders"><code>extract_top_offenders</code><a class="headerlink" href="#extract_top_offenders" title="Permanent link">&para;</a></h4>
 <p>Identifies and ranks the top offending files in an audit report based on code quality metrics.
 Processes the report data to compute a composite score for each file using MyPy errors, linting issues, average code complexity, and average test coverage. Applies special weighting for "app/views.py" to prioritize its score. Returns a list of the top N files sorted by descending score, with each entry containing the file path, score, error and lint counts, average complexity, and average coverage.
 <strong>Parameters:</strong>
-report_data: Audit report data mapping file paths to their metrics.
-top_n: Number of top offenders to return.
+['report_data: dict', 'top_n: int']
 <strong>Returns:</strong>
-A list of tuples for the top offenders, each containing file path, score, error count, lint issue count, average complexity, and average coverage.</p>
+list</p>
 <h4 id="build_refactor_prompt_1"><code>build_refactor_prompt</code><a class="headerlink" href="#build_refactor_prompt_1" title="Permanent link">&para;</a></h4>
 <p>Constructs a prompt for an AI assistant summarizing top risky files for refactoring.
 Generates a ranked list of offender files with their associated metrics and formats it into a prompt using a template and persona from the configuration. Optionally limits the number of offenders included and adds detailed file paths if verbose is True.
 <strong>Parameters:</strong>
-offenders: List of tuples containing file path, score, MyPy errors, lint issues, code complexity, and coverage.
-subcategory: Prompt template subcategory to use.
-verbose: If True, includes full file paths in the prompt.
-limit: Maximum number of offenders to include; includes all if None.
+['offenders: list', 'config: Any', 'subcategory: str', 'verbose: bool', 'limit: int']
 <strong>Returns:</strong>
-The formatted prompt string for the AI assistant.</p>
+str</p>
 <h2 id="scriptsaillm_router"><code>scripts.ai.llm_router</code><a class="headerlink" href="#scriptsaillm_router" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1252,15 +1276,18 @@ The formatted prompt string for the AI assistant.</p>
 <h3 id="functions_3">🛠️ Functions<a class="headerlink" href="#functions_3" title="Permanent link">&para;</a></h3>
 <h4 id="get_prompt_template"><code>get_prompt_template</code><a class="headerlink" href="#get_prompt_template" title="Permanent link">&para;</a></h4>
 <p>Retrieves the prompt template for a specified subcategory from the configuration.
-If the subcategory is not found, returns the default prompt template.</p>
+If the subcategory is not found, returns the default prompt template.
+<strong>Parameters:</strong>
+['subcategory: str', 'config: Any']
+<strong>Returns:</strong>
+str</p>
 <h4 id="apply_persona"><code>apply_persona</code><a class="headerlink" href="#apply_persona" title="Permanent link">&para;</a></h4>
 <p>Appends persona-specific instructions to a prompt to tailor the AI's response style.
 If the persona is "reviewer", "mentor", or "planner", a corresponding instruction is added to the prompt. If the persona is "default" or unrecognized, the prompt is returned unchanged.
 <strong>Parameters:</strong>
-prompt: The original prompt string.
-persona: The persona to apply ("default", "reviewer", "mentor", or "planner").
+['prompt: str', 'persona: str']
 <strong>Returns:</strong>
-The prompt string with persona-specific instructions appended if applicable.</p>
+str</p>
 <h2 id="scriptsaimodule_docstring_summarizer"><code>scripts.ai.module_docstring_summarizer</code><a class="headerlink" href="#scriptsaimodule_docstring_summarizer" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1294,13 +1321,16 @@ The prompt string with persona-specific instructions appended if applicable.</p>
 <p>Generates a concise summary of a Python module's functionality based on its docstrings.
 Formats the provided docstring entries into a structured prompt, applies persona adjustments, and uses the given AI summarizer to produce a human-readable summary. Returns a fixed message if no docstrings are available.
 <strong>Parameters:</strong>
-file_path: Path to the module file.
-doc_entries: List of docstring entries, each representing a function or class.
+['file_path: str', 'doc_entries: list', 'summarizer: AISummarizer', 'config: ConfigManager']
 <strong>Returns:</strong>
-A summary string describing the module's functionality, or a message if no docstrings are found.</p>
+str</p>
 <h4 id="run"><code>run</code><a class="headerlink" href="#run" title="Permanent link">&para;</a></h4>
 <p>Executes the module docstring summarization workflow for a given JSON audit report.
-Processes each file in the report, optionally filtering by file path substring, and generates a summary of its documented functions using an AI summarizer. Outputs the results either to a Markdown file or to standard output.</p>
+Processes each file in the report, optionally filtering by file path substring, and generates a summary of its documented functions using an AI summarizer. Outputs the results either to a Markdown file or to standard output.
+<strong>Parameters:</strong>
+['input_path: str', 'output_path: str | None', 'path_filter: str | None']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsaimodule_idea_generator"><code>scripts.ai.module_idea_generator</code><a class="headerlink" href="#scriptsaimodule_idea_generator" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1330,33 +1360,34 @@ Processes each file in the report, optionally filtering by file path substring, 
 <p>Generates new module or package suggestions and corresponding Python prototype code based on an architecture report.
 Reads a JSON report of documented functions, filters them by an optional path substring, and summarizes their docstrings. Uses an AI summarizer to propose new modules/packages with justifications and then generates Python code stubs for the suggested modules, adhering to strict naming conventions.
 <strong>Parameters:</strong>
-artifact_path: Path to the JSON architecture report.
-subcategory: Optional subcategory for prompt context.
-path_filter: Optional substring to filter file paths.
+['artifact_path: str', 'config: ConfigManager', 'subcategory: str', 'path_filter: str | None']
 <strong>Returns:</strong>
-A tuple containing the textual module suggestions and the generated Python prototype code.</p>
+tuple[str, str]</p>
 <h4 id="generate_test_stubs"><code>generate_test_stubs</code><a class="headerlink" href="#generate_test_stubs" title="Permanent link">&para;</a></h4>
 <p>Generates pytest unit test stubs for the provided module prototype code.
 <strong>Parameters:</strong>
-prototype_code: The Python module prototype code for which to generate tests.
+['prototype_code: str', 'config: ConfigManager']
 <strong>Returns:</strong>
-A string containing pytest test stubs formatted with appropriate filenames and code blocks.</p>
+str</p>
 <h4 id="extract_filenames_from_code"><code>extract_filenames_from_code</code><a class="headerlink" href="#extract_filenames_from_code" title="Permanent link">&para;</a></h4>
 <p>Extracts Python filenames from code by searching for '# Filename: <filename.py>' comments.
 <strong>Parameters:</strong>
-code: The code string to search for filename comments.
+['code: str']
 <strong>Returns:</strong>
-A list of extracted Python filenames.</p>
+list[str]</p>
 <h4 id="export_prototypes_to_files"><code>export_prototypes_to_files</code><a class="headerlink" href="#export_prototypes_to_files" title="Permanent link">&para;</a></h4>
 <p>Writes generated code or test stubs to files based on embedded '# Filename' comments.
-Scans code blocks for filename annotations, adjusts names for test files if needed, adds required imports, and writes each code block to the appropriate file within the specified output directory.</p>
+Scans code blocks for filename annotations, adjusts names for test files if needed, adds required imports, and writes each code block to the appropriate file within the specified output directory.
+<strong>Parameters:</strong>
+['prototype_code: str', 'output_dir: str', 'suggestions: str', 'is_test: bool']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="validate_test_coverage"><code>validate_test_coverage</code><a class="headerlink" href="#validate_test_coverage" title="Permanent link">&para;</a></h4>
 <p>Checks that all public functions and methods in the given module directory have corresponding pytest tests in the specified test directory.
 <strong>Parameters:</strong>
-module_dir: Path to the directory containing module source files.
-test_dir: Path to the directory containing pytest test files.
+['module_dir: str', 'test_dir: str']
 <strong>Returns:</strong>
-A list of fully qualified names for public functions and methods that lack corresponding tests.</p>
+list[str]</p>
 
 
 

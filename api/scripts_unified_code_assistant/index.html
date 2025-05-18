@@ -835,7 +835,11 @@
 </table>
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="analyze_report"><code>analyze_report</code><a class="headerlink" href="#analyze_report" title="Permanent link">&para;</a></h4>
-<p>Analyze the report data to extract top offenders, severity data, and metrics.</p>
+<p>Analyze the report data to extract top offenders, severity data, and metrics.
+<strong>Parameters:</strong>
+['report_data: Dict[str, Any]', 'top_n: int', 'path_filter: Optional[str]']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h2 id="scriptsunified_code_assistantassistant_cli"><code>scripts.unified_code_assistant.assistant_cli</code><a class="headerlink" href="#scriptsunified_code_assistantassistant_cli" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -862,9 +866,15 @@
 </table>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="chat_mode"><code>chat_mode</code><a class="headerlink" href="#chat_mode" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['report_path: str', 'config: ConfigManager', 'top_n: int', 'path_filter: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="main"><code>main</code><a class="headerlink" href="#main" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsunified_code_assistantassistant_utils"><code>scripts.unified_code_assistant.assistant_utils</code><a class="headerlink" href="#scriptsunified_code_assistantassistant_utils" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -891,23 +901,51 @@
 </table>
 <h3 id="functions_2">🛠️ Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
 <h4 id="load_report"><code>load_report</code><a class="headerlink" href="#load_report" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['path: str']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h4 id="extract_code_snippets"><code>extract_code_snippets</code><a class="headerlink" href="#extract_code_snippets" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['file_path: str', 'issue_locations: List[Dict[str, Any]]', 'context_lines: int']
+<strong>Returns:</strong>
+Dict[str, str]</p>
 <h4 id="_format_snippet"><code>_format_snippet</code><a class="headerlink" href="#_format_snippet" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['lines: List[str]', 'line_num: int', 'context_lines: int']
+<strong>Returns:</strong>
+str</p>
 <h4 id="get_issue_locations"><code>get_issue_locations</code><a class="headerlink" href="#get_issue_locations" title="Permanent link">&para;</a></h4>
 <p>Extract and categorize issues for a given file path from the report data.
 Returns a dict with keys:
 - 'mypy_errors': List of mypy issue dicts
 - 'lint_issues': List of lint issue dicts
-- 'complexity_issues': List of complexity issue dicts</p>
+- 'complexity_issues': List of complexity issue dicts
+<strong>Parameters:</strong>
+['file_path: str', 'report_data: Dict[str, Any]']
+<strong>Returns:</strong>
+Dict[str, List[Dict[str, Any]]]</p>
 <h4 id="_extract_mypy_issues"><code>_extract_mypy_issues</code><a class="headerlink" href="#_extract_mypy_issues" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['file_data: Dict[str, Any]']
+<strong>Returns:</strong>
+List[Dict[str, Any]]</p>
 <h4 id="_extract_lint_issues"><code>_extract_lint_issues</code><a class="headerlink" href="#_extract_lint_issues" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['file_data: Dict[str, Any]']
+<strong>Returns:</strong>
+List[Dict[str, Any]]</p>
 <h4 id="_extract_complexity_issues"><code>_extract_complexity_issues</code><a class="headerlink" href="#_extract_complexity_issues" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['file_data: Dict[str, Any]']
+<strong>Returns:</strong>
+List[Dict[str, Any]]</p>
 <h2 id="scriptsunified_code_assistantmodule_summarizer"><code>scripts.unified_code_assistant.module_summarizer</code><a class="headerlink" href="#scriptsunified_code_assistantmodule_summarizer" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -936,12 +974,9 @@ Returns a dict with keys:
 <h4 id="summarize_modules"><code>summarize_modules</code><a class="headerlink" href="#summarize_modules" title="Permanent link">&para;</a></h4>
 <p>Generate summaries of module functionality based on docstrings.
 <strong>Parameters:</strong>
-report_data (Dict): Parsed code analysis report.
-summarizer (AISummarizer): Summarization engine.
-config: Configuration object.
-path_filter (Optional[str]): Optional substring to filter files.
+['report_data: Dict', 'summarizer: AISummarizer', 'config: Any', 'path_filter: Optional[str]']
 <strong>Returns:</strong>
-Dict[str, str]: Mapping of file paths to summaries.</p>
+Dict[str, str]</p>
 <h2 id="scriptsunified_code_assistantprompt_builder"><code>scripts.unified_code_assistant.prompt_builder</code><a class="headerlink" href="#scriptsunified_code_assistantprompt_builder" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -968,9 +1003,17 @@ Dict[str, str]: Mapping of file paths to summaries.</p>
 </table>
 <h3 id="functions_4">🛠️ Functions<a class="headerlink" href="#functions_4" title="Permanent link">&para;</a></h3>
 <h4 id="build_contextual_prompt"><code>build_contextual_prompt</code><a class="headerlink" href="#build_contextual_prompt" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['query: str', 'top_offenders: List[Tuple[str, any, List[any], int, int, float]]', 'summary_metrics: Dict[str, any]', 'persona: str']
+<strong>Returns:</strong>
+str</p>
 <h4 id="build_enhanced_contextual_prompt"><code>build_enhanced_contextual_prompt</code><a class="headerlink" href="#build_enhanced_contextual_prompt" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['query: str', 'top_offenders: List[Tuple[str, any, List[any], int, int, float]]', 'summary_metrics: Dict[str, any]', 'module_summaries: Dict[str, str]', 'file_issues: Dict[str, Dict[str, List[any]]]', 'file_recommendations: Dict[str, str]', 'persona: str']
+<strong>Returns:</strong>
+str</p>
 <h2 id="scriptsunified_code_assistantstrategy"><code>scripts.unified_code_assistant.strategy</code><a class="headerlink" href="#scriptsunified_code_assistantstrategy" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -999,13 +1042,9 @@ Dict[str, str]: Mapping of file paths to summaries.</p>
 <h4 id="generate_strategy"><code>generate_strategy</code><a class="headerlink" href="#generate_strategy" title="Permanent link">&para;</a></h4>
 <p>Generate strategic recommendations using severity and metric data.
 <strong>Parameters:</strong>
-severity_data (List[Dict]): Computed severity info per file.
-summary_metrics (Dict): High-level code quality metrics.
-limit (int): Max number of files to include.
-persona (str): AI assistant persona.
-summarizer (AISummarizer): Summarization engine.
+['severity_data: List[Dict]', 'summary_metrics: Dict', 'limit: int', 'persona: str', 'summarizer: AISummarizer']
 <strong>Returns:</strong>
-str: Strategic AI recommendations</p>
+str</p>
 
 
 

@@ -710,21 +710,30 @@
 <p>BasePanel provides common functionality for all UI panels.
 Inherits from ttk.Frame to leverage consistent styling.
 Attributes:
-controller (Optional[object]): The controller for handling panel actions.</p>
+controller (Optional[object]): The controller for handling panel actions.
+<strong>Parameters:</strong>
+['self: Any', 'parent: tk.Widget', 'controller: Optional[object]', '<strong>kwargs']
+</strong>Returns:**
+None</p>
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="__init__"><code>__init__</code><a class="headerlink" href="#__init__" title="Permanent link">&para;</a></h4>
 <p>Initializes the BasePanel with the specified parent and controller.
 <strong>Parameters:</strong>
-parent (tk.Widget): The parent widget for this panel.
-controller (Optional[object]): The controller for handling panel actions. Defaults to None.</p>
+['self: Any', 'parent: tk.Widget', 'controller: Optional[object]', '<strong>kwargs']
+</strong>Returns:**
+None</p>
 <h4 id="initialize_ui"><code>initialize_ui</code><a class="headerlink" href="#initialize_ui" title="Permanent link">&para;</a></h4>
 <p>Set up UI components for the panel.
 Override this method in subclasses to build specific panel content.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h4 id="refresh"><code>refresh</code><a class="headerlink" href="#refresh" title="Permanent link">&para;</a></h4>
 <p>Refresh the panel content.
 Override this method in subclasses if needed.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h2 id="scriptsguibasebase_tab"><code>scripts.gui.base.base_tab</code><a class="headerlink" href="#scriptsguibasebase_tab" title="Permanent link">&para;</a></h2>
@@ -772,21 +781,30 @@ None</p>
 <p>BaseTab provides a common structure for major tabs in the application.
 Inherits from ttk.Frame for consistent styling.
 Attributes:
-controller (Optional[object]): The controller for handling tab actions.</p>
+controller (Optional[object]): The controller for handling tab actions.
+<strong>Parameters:</strong>
+['self: Any', 'parent: tk.Widget', 'controller: Optional[object]', '<strong>kwargs']
+</strong>Returns:**
+None</p>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="__init___1"><code>__init__</code><a class="headerlink" href="#__init___1" title="Permanent link">&para;</a></h4>
 <p>Initializes the BaseTab with the specified parent and controller.
 <strong>Parameters:</strong>
-parent (tk.Widget): The parent widget for this tab.
-controller (Optional[object]): The controller for handling tab actions. Defaults to None.</p>
+['self: Any', 'parent: tk.Widget', 'controller: Optional[object]', '<strong>kwargs']
+</strong>Returns:**
+None</p>
 <h4 id="setup_tab"><code>setup_tab</code><a class="headerlink" href="#setup_tab" title="Permanent link">&para;</a></h4>
 <p>Set up the tab contents.
 Override this method in subclasses to build tab-specific components.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h4 id="on_show"><code>on_show</code><a class="headerlink" href="#on_show" title="Permanent link">&para;</a></h4>
 <p>Called when the tab becomes active.
 Override to update or refresh content when the tab is shown.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 

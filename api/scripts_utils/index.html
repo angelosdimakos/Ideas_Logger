@@ -824,7 +824,11 @@
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="load_json_any"><code>load_json_any</code><a class="headerlink" href="#load_json_any" title="Permanent link">&para;</a></h4>
 <p>Load .json or compressed .json.{gz,bz2,xz} transparently.
-Returns {} on missing file for caller-side resilience.</p>
+Returns {} on missing file for caller-side resilience.
+<strong>Parameters:</strong>
+['path: str | os.PathLike']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h2 id="scriptsutilsfile_utils"><code>scripts.utils.file_utils</code><a class="headerlink" href="#scriptsutilsfile_utils" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -851,30 +855,60 @@ Returns {} on missing file for caller-side resilience.</p>
 </table>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="sanitize_filename"><code>sanitize_filename</code><a class="headerlink" href="#sanitize_filename" title="Permanent link">&para;</a></h4>
-<p>Return <em>name</em> stripped of illegal chars and truncated to 100 chars.</p>
+<p>Return <em>name</em> stripped of illegal chars and truncated to 100 chars.
+<strong>Parameters:</strong>
+['name: str']
+<strong>Returns:</strong>
+str</p>
 <h4 id="get_timestamp"><code>get_timestamp</code><a class="headerlink" href="#get_timestamp" title="Permanent link">&para;</a></h4>
-<p>Current time as <code>YYYY‑MM‑DD_HH‑MM‑SS</code>.</p>
+<p>Current time as <code>YYYY‑MM‑DD_HH‑MM‑SS</code>.
+<strong>Returns:</strong>
+str</p>
 <h4 id="_to_path"><code>_to_path</code><a class="headerlink" href="#_to_path" title="Permanent link">&para;</a></h4>
-<p>Internal: coerce <em>p</em> to <code>Path</code> exactly once.</p>
+<p>Internal: coerce <em>p</em> to <code>Path</code> exactly once.
+<strong>Parameters:</strong>
+['p: Union[str, Path]']
+<strong>Returns:</strong>
+Path</p>
 <h4 id="safe_path"><code>safe_path</code><a class="headerlink" href="#safe_path" title="Permanent link">&para;</a></h4>
-<p>Ensure <code>path.parent</code> exists; return <code>Path</code>.</p>
+<p>Ensure <code>path.parent</code> exists; return <code>Path</code>.
+<strong>Parameters:</strong>
+['path: Union[str, Path]']
+<strong>Returns:</strong>
+Path</p>
 <h4 id="write_json"><code>write_json</code><a class="headerlink" href="#write_json" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['path: Union[str, Path]', 'data: dict']
+<strong>Returns:</strong>
+None</p>
 <h4 id="read_json"><code>read_json</code><a class="headerlink" href="#read_json" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['path: Union[str, Path]']
+<strong>Returns:</strong>
+dict</p>
 <h4 id="safe_read_json"><code>safe_read_json</code><a class="headerlink" href="#safe_read_json" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['filepath: Union[str, Path]']
+<strong>Returns:</strong>
+dict</p>
 <h4 id="make_backup"><code>make_backup</code><a class="headerlink" href="#make_backup" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['file_path: Union[str, Path]']
+<strong>Returns:</strong>
+str | None</p>
 <h4 id="zip_python_files"><code>zip_python_files</code><a class="headerlink" href="#zip_python_files" title="Permanent link">&para;</a></h4>
 <p>Zip all <code>.py</code> files under <em>root_dir</em> (recursively), excluding any directory whose
 name appears in <em>exclude_dirs</em> (case‑sensitive match against each path part).
 If <em>exclude_dirs</em> is <code>None</code> we default to::{.python}
 {".venv", "<strong>pycache</strong>", ".git", "node_modules"}
 <strong>Parameters:</strong>
-output_path: Destination <code>.zip</code> path (created/overwritten).
-root_dir:    Directory to start searching; <code>'.'</code> by default.
-exclude_dirs: Folder names to skip entirely.</p>
+['output_path: Union[str, Path]', 'root_dir: Union[str, Path]', 'exclude_dirs: Optional[Iterable[str]]']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsutilsgit_utils"><code>scripts.utils.git_utils</code><a class="headerlink" href="#scriptsutilsgit_utils" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -921,19 +955,21 @@ exclude_dirs: Folder names to skip entirely.</p>
 Runs 'git diff --name-only' to identify changed files and filters for those ending with '.py'.
 Handles compatibility with different Python versions and returns an empty list if the Git command fails.
 <strong>Parameters:</strong>
-base (str): The Git base branch or commit to compare against. Defaults to 'origin/main'.
+['base: str']
 <strong>Returns:</strong>
-List[str]: A list of changed Python file paths.</p>
+List[str]</p>
 <h4 id="interactive_commit_flow"><code>interactive_commit_flow</code><a class="headerlink" href="#interactive_commit_flow" title="Permanent link">&para;</a></h4>
 <p>Guides the user through an interactive Git commit and push process.
 Prompts the user to either push changes to the default branch or create and push to a new branch, handling all Git commands interactively.
 <strong>Parameters:</strong>
-default_branch (str): The branch to push to by default. Defaults to "main".
+['default_branch: str']
 <strong>Returns:</strong>
 None</p>
 <h4 id="get_current_branch"><code>get_current_branch</code><a class="headerlink" href="#get_current_branch" title="Permanent link">&para;</a></h4>
 <p>Returns the name of the current Git branch as a string.
-Executes a Git command to determine the active branch in the local repository.</p>
+Executes a Git command to determine the active branch in the local repository.
+<strong>Returns:</strong>
+str</p>
 <h2 id="scriptsutilslink_summaries_to_raw_logs"><code>scripts.utils.link_summaries_to_raw_logs</code><a class="headerlink" href="#scriptsutilslink_summaries_to_raw_logs" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -979,11 +1015,9 @@ Executes a Git command to determine the active branch in the local repository.</
 <p>Flatten raw log entries for a given main category and subcategory across all dates,
 sorted chronologically.
 <strong>Parameters:</strong>
-raw_logs (dict): Raw logs as loaded from zephyrus_log.json.
-main_cat (str): The main category.
-subcat (str): The subcategory.
+['raw_logs: dict', 'main_cat: str', 'subcat: str']
 <strong>Returns:</strong>
-list: A list of entries (each is a dict) for the given category/subcategory in chronological order.</p>
+list</p>
 <h4 id="inject_entries_into_summaries"><code>inject_entries_into_summaries</code><a class="headerlink" href="#inject_entries_into_summaries" title="Permanent link">&para;</a></h4>
 <p>Injects corresponding raw log entries into each batch of correction summaries based on batch labels.
 Loads configuration to determine file paths, reads raw logs and correction summaries, and for each batch in the summaries,
@@ -1025,7 +1059,9 @@ None</p>
 <h3 id="functions_4">🛠️ Functions<a class="headerlink" href="#functions_4" title="Permanent link">&para;</a></h3>
 <h4 id="main"><code>main</code><a class="headerlink" href="#main" title="Permanent link">&para;</a></h4>
 <p>Parses command-line arguments to zip all .py files in a project, excluding specified directories.
-Calls the internal utility to create the zip archive and logs the output path.</p>
+Calls the internal utility to create the zip archive and logs the output path.
+<strong>Returns:</strong>
+Any</p>
 
 
 

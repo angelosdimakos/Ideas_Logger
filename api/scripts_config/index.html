@@ -807,37 +807,43 @@
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="setup_logging"><code>setup_logging</code><a class="headerlink" href="#setup_logging" title="Permanent link">&para;</a></h4>
 <p>Configures centralized logging for the application.
-Sets the logging level to INFO, applies a standard log message format, and directs output to the console.</p>
+Sets the logging level to INFO, applies a standard log message format, and directs output to the console.
+<strong>Returns:</strong>
+None</p>
 <h4 id="load_config"><code>load_config</code><a class="headerlink" href="#load_config" title="Permanent link">&para;</a></h4>
 <p>Loads a JSON configuration file from the specified path, returning its contents as a dictionary.
 If the file does not exist, cannot be read, or contains invalid JSON, returns an empty dictionary. Adjusts the logger level to DEBUG if "test_mode" is enabled in the configuration; otherwise, sets it to INFO.
 <strong>Parameters:</strong>
-config_path: Path to the configuration file. Defaults to CONFIG_FILE_PATH.
+['config_path: Path']
 <strong>Returns:</strong>
-A dictionary containing the configuration, or an empty dictionary if loading fails.</p>
+Dict[str, Any]</p>
 <h4 id="get_config_value"><code>get_config_value</code><a class="headerlink" href="#get_config_value" title="Permanent link">&para;</a></h4>
 <p>Retrieves a value from the configuration dictionary by key, returning a default if missing.
-Logs a warning if the key is not present in the configuration.</p>
+Logs a warning if the key is not present in the configuration.
+<strong>Parameters:</strong>
+['config: Dict[str, Any]', 'key: str', 'default: Any']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="get_absolute_path"><code>get_absolute_path</code><a class="headerlink" href="#get_absolute_path" title="Permanent link">&para;</a></h4>
 <p>Resolves an absolute path by joining the project base directory with a relative path.
 <strong>Parameters:</strong>
-relative_path: The path relative to the project root.
+['relative_path: str']
 <strong>Returns:</strong>
-The absolute Path object corresponding to the given relative path.
-Raises:
-TypeError, ValueError, or OSError if the path cannot be constructed.</p>
+Path</p>
 <h4 id="is_test_mode"><code>is_test_mode</code><a class="headerlink" href="#is_test_mode" title="Permanent link">&para;</a></h4>
 <p>Determines whether test mode is enabled in the configuration.
 If no configuration is provided, loads the default configuration.
+<strong>Parameters:</strong>
+['config: Optional[Dict[str, Any]]']
 <strong>Returns:</strong>
-True if "test_mode" is set to True in the configuration; otherwise, False.</p>
+bool</p>
 <h4 id="get_effective_config"><code>get_effective_config</code><a class="headerlink" href="#get_effective_config" title="Permanent link">&para;</a></h4>
 <p>Loads the configuration and overrides paths with test-safe equivalents if test mode is enabled.
 If 'test_mode' is set in the configuration, certain directory and file paths are replaced with test-specific values to prevent interference with production data.
 <strong>Parameters:</strong>
-config_path: Path to the configuration file. Defaults to CONFIG_FILE_PATH.
+['config_path: Path']
 <strong>Returns:</strong>
-The effective configuration dictionary, with test-safe paths if test mode is active.</p>
+Dict[str, Any]</p>
 <h2 id="scriptsconfigconfig_manager"><code>scripts.config.config_manager</code><a class="headerlink" href="#scriptsconfigconfig_manager" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -895,42 +901,55 @@ The effective configuration dictionary, with test-safe paths if test mode is act
 <p>Configuration model for application settings.
 Defines all configurable parameters for the application, including UI,
 logging, LLM and embedding model settings, file paths, test mode,
-and plugin management. Ignores any extra fields not explicitly defined.</p>
+and plugin management. Ignores any extra fields not explicitly defined.
+<strong>Returns:</strong>
+None</p>
 <h4 id="config"><code>Config</code><a class="headerlink" href="#config" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Returns:</strong>
+None</p>
 <h4 id="configmanager"><code>ConfigManager</code><a class="headerlink" href="#configmanager" title="Permanent link">&para;</a></h4>
 <p>Manages application configuration loading, caching, and validation.
 Provides methods to load configuration from a JSON file using the AppConfig model,
 retrieve configuration values, reset the cached config, and validate critical config paths.
-Handles missing or invalid config files by returning default settings and logs relevant events.</p>
+Handles missing or invalid config files by returning default settings and logs relevant events.
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="_default_config"><code>_default_config</code><a class="headerlink" href="#_default_config" title="Permanent link">&para;</a></h4>
-<p>Return a fresh copy of the pre-instantiated default config.</p>
+<p>Return a fresh copy of the pre-instantiated default config.
+<strong>Parameters:</strong>
+['cls: Any']
+<strong>Returns:</strong>
+AppConfig</p>
 <h4 id="load_config_1"><code>load_config</code><a class="headerlink" href="#load_config_1" title="Permanent link">&para;</a></h4>
 <p>Loads the application configuration from a JSON file, with optional cache refresh.
 If the config file is missing or invalid, returns a default AppConfig instance.
 Caches the loaded config and reloads if the file changes or force_reload is True.
 Logs relevant events and raises on validation errors.
 <strong>Parameters:</strong>
-config_path (str): Path to the configuration JSON file.
-force_reload (bool): If True, forces reloading the config from disk.
+['cls: Any', 'config_path: str', 'force_reload: bool']
 <strong>Returns:</strong>
-AppConfig: The loaded or default application configuration.</p>
+AppConfig</p>
 <h4 id="get_value"><code>get_value</code><a class="headerlink" href="#get_value" title="Permanent link">&para;</a></h4>
 <p>Retrieve a configuration value by key from the loaded AppConfig.
 <strong>Parameters:</strong>
-key (str): The configuration attribute to retrieve.
-default (Any, optional): Value to return if the key is not found. Defaults to None.
-force_reload (bool, optional): If True, reloads the config from disk. Defaults to False.
+['cls: Any', 'key: str', 'default: Any', 'force_reload: bool']
 <strong>Returns:</strong>
-Any: The value of the requested configuration key, or the default if not found.</p>
+Any</p>
 <h4 id="reset"><code>reset</code><a class="headerlink" href="#reset" title="Permanent link">&para;</a></h4>
-<p>Reset the cached configuration and timestamp.</p>
+<p>Reset the cached configuration and timestamp.
+<strong>Parameters:</strong>
+['cls: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="validate_config_paths"><code>validate_config_paths</code><a class="headerlink" href="#validate_config_paths" title="Permanent link">&para;</a></h4>
 <p>Validate that critical config paths have existing parent directories.
 Logs a warning for each missing directory. Returns True if all required directories exist, otherwise False.
+<strong>Parameters:</strong>
+['cls: Any']
 <strong>Returns:</strong>
-bool: True if all critical directories exist, False otherwise.</p>
+bool</p>
 <h2 id="scriptsconfigconstants"><code>scripts.config.constants</code><a class="headerlink" href="#scriptsconfigconstants" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1042,7 +1061,11 @@ bool: True if all critical directories exist, False otherwise.</p>
 <h3 id="functions_2">🛠️ Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
 <h4 id="setup_logging_1"><code>setup_logging</code><a class="headerlink" href="#setup_logging_1" title="Permanent link">&para;</a></h4>
 <p>Configures the root logger with a specified log level and standardized console output.
-Initializes application-wide logging by setting the root logger's level, clearing any existing handlers, and adding a console handler with a consistent log message format. If an invalid log level is provided, defaults to INFO.</p>
+Initializes application-wide logging by setting the root logger's level, clearing any existing handlers, and adding a console handler with a consistent log message format. If an invalid log level is provided, defaults to INFO.
+<strong>Parameters:</strong>
+['log_level: Any']
+<strong>Returns:</strong>
+Any</p>
 
 
 

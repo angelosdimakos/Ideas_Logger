@@ -715,10 +715,18 @@
 </table>
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="_get_or_add"><code>_get_or_add</code><a class="headerlink" href="#_get_or_add" title="Permanent link">&para;</a></h4>
-<p>Return ID for <em>triple</em>; create a new one if unseen.</p>
+<p>Return ID for <em>triple</em>; create a new one if unseen.
+<strong>Parameters:</strong>
+['triple: DocTriple', 'cache: Dict[DocTriple, int]', 'table: List[List[Any]]']
+<strong>Returns:</strong>
+int</p>
 <h4 id="_calc_percent"><code>_calc_percent</code><a class="headerlink" href="#_calc_percent" title="Permanent link">&para;</a></h4>
 <p>Return overall file-coverage percentage if the <em>complexity</em> section
-provides enough data, otherwise None.</p>
+provides enough data, otherwise None.
+<strong>Parameters:</strong>
+['cov_blob: dict[str, Any]']
+<strong>Returns:</strong>
+float | None</p>
 <h4 id="compress_obj"><code>compress_obj</code><a class="headerlink" href="#compress_obj" title="Permanent link">&para;</a></h4>
 <p>Return a <em>compact</em> structure with docstrings hoisted into a lookup table.
 Parameters</p>
@@ -727,17 +735,39 @@ Parameters</p>
 The full‑fidelity merged_report dict loaded from JSON.
 retain_keys
 If True, keep verbose dict keys inside each docstring record instead of
-positional arrays.  (Adds ~2 kB gzipped – handy for debugging.)</p>
+positional arrays.  (Adds ~2 kB gzipped – handy for debugging.)
+<strong>Parameters:</strong>
+['original: Dict[str, Any]', 'retain_keys: bool']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h4 id="decompress_obj"><code>decompress_obj</code><a class="headerlink" href="#decompress_obj" title="Permanent link">&para;</a></h4>
-<p>Rebuild the full merged_report structure from the compact <em>blob</em>.</p>
+<p>Rebuild the full merged_report structure from the compact <em>blob</em>.
+<strong>Parameters:</strong>
+['blob: Dict[str, Any]']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h4 id="_expand"><code>_expand</code><a class="headerlink" href="#_expand" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['doc_id: int | None']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h4 id="_load_json"><code>_load_json</code><a class="headerlink" href="#_load_json" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['path: Path']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h4 id="_dump_json"><code>_dump_json</code><a class="headerlink" href="#_dump_json" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['obj: Dict[str, Any]', 'path: Path', 'pretty: bool', 'gzip_level: int | None']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_cli"><code>_cli</code><a class="headerlink" href="#_cli" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsrefactorcompressorstrictness_report_squeezer"><code>scripts.refactor.compressor.strictness_report_squeezer</code><a class="headerlink" href="#scriptsrefactorcompressorstrictness_report_squeezer" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -764,17 +794,39 @@ positional arrays.  (Adds ~2 kB gzipped – handy for debugging.)</p>
 </table>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="compress_obj_1"><code>compress_obj</code><a class="headerlink" href="#compress_obj_1" title="Permanent link">&para;</a></h4>
-<p>Compress a strictness report into a minimal 'modules' mapping.</p>
+<p>Compress a strictness report into a minimal 'modules' mapping.
+<strong>Parameters:</strong>
+['original: Dict[str, Any]']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h4 id="decompress_obj_1"><code>decompress_obj</code><a class="headerlink" href="#decompress_obj_1" title="Permanent link">&para;</a></h4>
-<p>Rebuild the full strictness report structure from the compact blob.</p>
+<p>Rebuild the full strictness report structure from the compact blob.
+<strong>Parameters:</strong>
+['blob: Dict[str, Any]']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h4 id="semantic_equal"><code>semantic_equal</code><a class="headerlink" href="#semantic_equal" title="Permanent link">&para;</a></h4>
-<p>Compare two reports semantically, allowing for rounding discrepancies.</p>
+<p>Compare two reports semantically, allowing for rounding discrepancies.
+<strong>Parameters:</strong>
+['a: Dict[str, Any]', 'b: Dict[str, Any]']
+<strong>Returns:</strong>
+bool</p>
 <h4 id="_load_json_1"><code>_load_json</code><a class="headerlink" href="#_load_json_1" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['path: Path']
+<strong>Returns:</strong>
+Dict[str, Any]</p>
 <h4 id="_dump_json_1"><code>_dump_json</code><a class="headerlink" href="#_dump_json_1" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['obj: Dict[str, Any]', 'path: Path', 'pretty: bool']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_cli_1"><code>_cli</code><a class="headerlink" href="#_cli_1" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Returns:</strong>
+None</p>
 
 
 

@@ -759,68 +759,75 @@
 <h4 id="complexityvisitor"><code>ComplexityVisitor</code><a class="headerlink" href="#complexityvisitor" title="Permanent link">&para;</a></h4>
 <p>Visits each top-level function or method definition and computes
 its cyclomatic complexity based on decision point nodes.
-Nested functions are entirely skipped; nested classes are recursed into.</p>
+Nested functions are entirely skipped; nested classes are recursed into.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="__init__"><code>__init__</code><a class="headerlink" href="#__init__" title="Permanent link">&para;</a></h4>
 <p>Initializes the ComplexityVisitor with an empty dictionary for function scores
 and sets the current class name to an empty string.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h4 id="visit_classdef"><code>visit_ClassDef</code><a class="headerlink" href="#visit_classdef" title="Permanent link">&para;</a></h4>
 <p>Visits a class definition node and computes the complexity of its methods.
 <strong>Parameters:</strong>
-node (ast.ClassDef): The class definition node to visit.
+['self: Any', 'node: ast.ClassDef']
 <strong>Returns:</strong>
 None</p>
 <h4 id="visit_functiondef"><code>visit_FunctionDef</code><a class="headerlink" href="#visit_functiondef" title="Permanent link">&para;</a></h4>
 <p>Visits a function definition node and calculates its complexity.
 <strong>Parameters:</strong>
-node (ast.FunctionDef): The function definition node to visit.
+['self: Any', 'node: ast.FunctionDef']
 <strong>Returns:</strong>
 None</p>
 <h4 id="visit_asyncfunctiondef"><code>visit_AsyncFunctionDef</code><a class="headerlink" href="#visit_asyncfunctiondef" title="Permanent link">&para;</a></h4>
 <p>Visits an asynchronous function definition node and calculates its complexity.
 <strong>Parameters:</strong>
-node (ast.AsyncFunctionDef): The asynchronous function definition node to visit.
+['self: Any', 'node: ast.AsyncFunctionDef']
 <strong>Returns:</strong>
 None</p>
 <h4 id="_compute_and_record"><code>_compute_and_record</code><a class="headerlink" href="#_compute_and_record" title="Permanent link">&para;</a></h4>
 <p>Calculate complexity for a function/method node and record it.
 <strong>Parameters:</strong>
-node (ast.AST): The function or method node to analyze.
+['self: Any', 'node: ast.AST']
 <strong>Returns:</strong>
 None</p>
 <h4 id="count_nodes"><code>count_nodes</code><a class="headerlink" href="#count_nodes" title="Permanent link">&para;</a></h4>
 <p>Recursively counts the number of decision nodes in the given AST node.
 <strong>Parameters:</strong>
-n (ast.AST): The AST node to count decision nodes in.
+['n: ast.AST']
 <strong>Returns:</strong>
-int: The number of decision nodes in the given AST node.</p>
+int</p>
 <h4 id="get_scores"><code>get_scores</code><a class="headerlink" href="#get_scores" title="Permanent link">&para;</a></h4>
 <p>Return the computed complexity scores.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-Dict[str, int]: A dictionary mapping function/method names to their complexity scores.</p>
+Dict[str, int]</p>
 <h4 id="calculate_function_complexity_map"><code>calculate_function_complexity_map</code><a class="headerlink" href="#calculate_function_complexity_map" title="Permanent link">&para;</a></h4>
 <p>Parses the given Python file and returns a mapping from function/method
 full names to their cyclomatic complexity scores.
 <strong>Parameters:</strong>
-file_path (str): Path to the Python source file.
+['file_path: str']
 <strong>Returns:</strong>
-Dict[str, int]: A mapping of function/method names to their complexity scores.
-On parse errors, prints a warning and returns an empty dict.</p>
+Dict[str, int]</p>
 <h4 id="calculate_module_complexity"><code>calculate_module_complexity</code><a class="headerlink" href="#calculate_module_complexity" title="Permanent link">&para;</a></h4>
 <p>Sum all function/method complexities in the module and add 1 overhead.
 <strong>Parameters:</strong>
-module_path (str): Path to the Python module.
+['module_path: str']
 <strong>Returns:</strong>
-int: The total complexity score for the module, or -1 on error.</p>
+int</p>
 <h4 id="calculate_cyclomatic_complexity_for_module"><code>calculate_cyclomatic_complexity_for_module</code><a class="headerlink" href="#calculate_cyclomatic_complexity_for_module" title="Permanent link">&para;</a></h4>
 <p>Deprecated alias for calculate_module_complexity.
 Issues a DeprecationWarning and delegates to calculate_module_complexity.
 <strong>Parameters:</strong>
-module_path (str): Path to the Python module.
+['module_path: str']
 <strong>Returns:</strong>
-int: The total complexity score for the module, or -1 on error.</p>
+int</p>
 <h2 id="scriptsrefactorcomplexitycomplexity_summary"><code>scripts.refactor.complexity.complexity_summary</code><a class="headerlink" href="#scriptsrefactorcomplexitycomplexity_summary" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -879,16 +886,17 @@ int: The total complexity score for the module, or -1 on error.</p>
 Parameters:
 file_path (str): Path to the audit JSON file. Defaults to "refactor_audit.json".
 max_complexity (int): Maximum allowed complexity before issuing warnings. Defaults to 10.
-Exits the process with an error message if the file is missing, empty, or contains invalid JSON.</p>
+Exits the process with an error message if the file is missing, empty, or contains invalid JSON.
+<strong>Parameters:</strong>
+['file_path: str', 'max_complexity: int']
+<strong>Returns:</strong>
+None</p>
 <h4 id="run_analysis"><code>run_analysis</code><a class="headerlink" href="#run_analysis" title="Permanent link">&para;</a></h4>
 <p>Analyzes method complexity across files and prints a summary report.
 <strong>Parameters:</strong>
-data (Dict[str, Any]): Mapping of file names to complexity information.
-max_complexity (Union[int, float]): Threshold for complexity warnings.
-use_emoji (bool, optional): If True, prints summary with emojis; otherwise, uses plain text.
-Prints:
-A summary of methods and files analyzed, and lists methods exceeding the complexity threshold.
-Exits the process with an error code if warnings are found and use_emoji is False.</p>
+['data: Dict[str, Any]', 'max_complexity: Union[int, float]', 'use_emoji: bool']
+<strong>Returns:</strong>
+None</p>
 
 
 

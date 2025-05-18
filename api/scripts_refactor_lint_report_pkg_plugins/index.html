@@ -832,16 +832,22 @@
 <p>Plugin for the Black code formatter.
 Attributes:
 name (str): The name of the plugin.
-default_report (Path): The default report file path.</p>
+default_report (Path): The default report file path.
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="run"><code>run</code><a class="headerlink" href="#run" title="Permanent link">&para;</a></h4>
 <p>Run Black in check mode on the scripts directory.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-int: The exit code from the Black command.</p>
+int</p>
 <h4 id="parse"><code>parse</code><a class="headerlink" href="#parse" title="Permanent link">&para;</a></h4>
 <p>Parse the output report from Black and update the destination dictionary.
 <strong>Parameters:</strong>
-dst (Dict[str, Dict[str, Any]]): Destination dictionary to update with formatting needs.</p>
+['self: Any', 'dst: Dict[str, Dict[str, Any]]']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsrefactorlint_report_pkgpluginsflake8"><code>scripts.refactor.lint_report_pkg.plugins.flake8</code><a class="headerlink" href="#scriptsrefactorlint_report_pkgpluginsflake8" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -868,12 +874,22 @@ dst (Dict[str, Dict[str, Any]]): Destination dictionary to update with formattin
 </table>
 <h3 id="classes_1">📦 Classes<a class="headerlink" href="#classes_1" title="Permanent link">&para;</a></h3>
 <h4 id="flake8plugin"><code>Flake8Plugin</code><a class="headerlink" href="#flake8plugin" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="run_1"><code>run</code><a class="headerlink" href="#run_1" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+int</p>
 <h4 id="parse_1"><code>parse</code><a class="headerlink" href="#parse_1" title="Permanent link">&para;</a></h4>
-<p><em>No description available.</em></p>
+<p><em>No description available.</em>
+<strong>Parameters:</strong>
+['self: Any', 'dst: Dict[str, Dict[str, Any]]']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsrefactorlint_report_pkgpluginsmypy"><code>scripts.refactor.lint_report_pkg.plugins.mypy</code><a class="headerlink" href="#scriptsrefactorlint_report_pkgpluginsmypy" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -915,16 +931,22 @@ dst (Dict[str, Dict[str, Any]]): Destination dictionary to update with formattin
 <p>Plugin for the MyPy type checker.
 Attributes:
 name (str): The name of the plugin.
-default_report (Path): The default report file path.</p>
+default_report (Path): The default report file path.
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_2">🛠️ Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
 <h4 id="run_2"><code>run</code><a class="headerlink" href="#run_2" title="Permanent link">&para;</a></h4>
 <p>Run MyPy in strict mode on the scripts directory.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-int: The exit code from the MyPy command.</p>
+int</p>
 <h4 id="parse_2"><code>parse</code><a class="headerlink" href="#parse_2" title="Permanent link">&para;</a></h4>
 <p>Parse the output report from MyPy and update the destination dictionary.
 <strong>Parameters:</strong>
-dst (Dict[str, Dict[str, Any]]): Destination dictionary to update with type checking errors.</p>
+['self: Any', 'dst: Dict[str, Dict[str, Any]]']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsrefactorlint_report_pkgpluginspydocstyle"><code>scripts.refactor.lint_report_pkg.plugins.pydocstyle</code><a class="headerlink" href="#scriptsrefactorlint_report_pkgpluginspydocstyle" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -966,16 +988,22 @@ dst (Dict[str, Dict[str, Any]]): Destination dictionary to update with type chec
 <p>Plugin for the pydocstyle tool.
 Attributes:
 name (str): The name of the plugin.
-default_report (Path): The default report file path.</p>
+default_report (Path): The default report file path.
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_3">🛠️ Functions<a class="headerlink" href="#functions_3" title="Permanent link">&para;</a></h3>
 <h4 id="run_3"><code>run</code><a class="headerlink" href="#run_3" title="Permanent link">&para;</a></h4>
 <p>Execute the pydocstyle tool on the scripts directory.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-int: The exit code from the pydocstyle command.</p>
+int</p>
 <h4 id="parse_3"><code>parse</code><a class="headerlink" href="#parse_3" title="Permanent link">&para;</a></h4>
 <p>Parse pydocstyle output and inject docstring issues grouped by symbol with full detail.
 <strong>Parameters:</strong>
-dst (Dict[str, Dict[str, Any]]): Destination dictionary to update with docstring issues.</p>
+['self: Any', 'dst: Dict[str, Dict[str, Any]]']
+<strong>Returns:</strong>
+None</p>
 
 
 

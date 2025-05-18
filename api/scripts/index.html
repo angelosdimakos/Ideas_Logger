@@ -717,25 +717,27 @@
 <h4 id="get_current_branch"><code>get_current_branch</code><a class="headerlink" href="#get_current_branch" title="Permanent link">&para;</a></h4>
 <p>Returns the name of the current Git branch.
 <strong>Returns:</strong>
-str: The current branch name.</p>
+str</p>
 <h4 id="get_modified_files"><code>get_modified_files</code><a class="headerlink" href="#get_modified_files" title="Permanent link">&para;</a></h4>
 <p>Returns a list of files modified (but not yet committed) in the current Git working directory.
 <strong>Returns:</strong>
-list[str]: List of modified file paths.</p>
+list[str]</p>
 <h4 id="is_valid_branch_name"><code>is_valid_branch_name</code><a class="headerlink" href="#is_valid_branch_name" title="Permanent link">&para;</a></h4>
 <p>Checks if the provided branch name is valid according to Git naming conventions.
 <strong>Parameters:</strong>
-name (str): The branch name to validate.
+['name: str']
 <strong>Returns:</strong>
-bool: True if the branch name is valid, False otherwise.</p>
+bool</p>
 <h4 id="generate_suggested_branch_name"><code>generate_suggested_branch_name</code><a class="headerlink" href="#generate_suggested_branch_name" title="Permanent link">&para;</a></h4>
 <p>Generates a suggested branch name based on modified files and the current date.
 <strong>Returns:</strong>
-str: A suggested branch name in the format 'fix/<keywords>-<date>'.</p>
+str</p>
 <h4 id="switch_to_new_branch"><code>switch_to_new_branch</code><a class="headerlink" href="#switch_to_new_branch" title="Permanent link">&para;</a></h4>
 <p>Prompts the user to create and switch to a new Git branch.
 Suggests a branch name based on modified files and validates user input.
-Exits the script if the branch name is invalid or if Git fails to create or push the branch.</p>
+Exits the script if the branch name is invalid or if Git fails to create or push the branch.
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsmain"><code>scripts.main</code><a class="headerlink" href="#scriptsmain" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -800,11 +802,9 @@ Exits the script if the branch name is invalid or if Git fails to create or push
 <h4 id="bootstrap"><code>bootstrap</code><a class="headerlink" href="#bootstrap" title="Permanent link">&para;</a></h4>
 <p>Bootstraps the Zephyrus Logger application.
 <strong>Parameters:</strong>
-start_gui (bool, optional): Whether to launch the GUI. Defaults to True.
+['start_gui: bool']
 <strong>Returns:</strong>
-Tuple[GUIController, ZephyrusLoggerGUI | None]: The controller and GUI instance (None if headless).
-Raises:
-Exception: Propagates any fatal errors encountered during initialization.</p>
+tuple[GUIController, ZephyrusLoggerGUI | None]</p>
 <h2 id="scriptspaths"><code>scripts.paths</code><a class="headerlink" href="#scriptspaths" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -833,23 +833,23 @@ Exception: Propagates any fatal errors encountered during initialization.</p>
 <h4 id="zephyruspaths"><code>ZephyrusPaths</code><a class="headerlink" href="#zephyruspaths" title="Permanent link">&para;</a></h4>
 <p>Dataclass for managing and resolving all Zephyrus project file and directory paths.
 Provides methods to construct absolute paths for logs, exports, configuration, and vector store files,
-with support for test mode path overrides based on the loaded configuration.</p>
+with support for test mode path overrides based on the loaded configuration.
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_2">🛠️ Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
 <h4 id="_resolve_path"><code>_resolve_path</code><a class="headerlink" href="#_resolve_path" title="Permanent link">&para;</a></h4>
 <p>Resolve an absolute Path for a given config key, falling back to the provided default if the key is missing.
 <strong>Parameters:</strong>
-config (dict): The configuration dictionary.
-key (str): The configuration key to look up.
-default (Any): The default value to use if the key is not present.
+['config: Any', 'key: Any', 'default: Any']
 <strong>Returns:</strong>
-Path: The resolved absolute path.</p>
+Path</p>
 <h4 id="from_config"><code>from_config</code><a class="headerlink" href="#from_config" title="Permanent link">&para;</a></h4>
 <p>Constructs a ZephyrusPaths instance by resolving all required file and directory paths from the loaded configuration.
 Automatically applies test mode path overrides if enabled.
 <strong>Parameters:</strong>
-script_dir (Path): The directory containing the current script.
+['script_dir: Path']
 <strong>Returns:</strong>
-ZephyrusPaths: An instance with all paths resolved according to the configuration.</p>
+'ZephyrusPaths'</p>
 
 
 

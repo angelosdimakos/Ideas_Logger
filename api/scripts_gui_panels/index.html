@@ -900,27 +900,40 @@
 Attributes:
 frame (Optional[ttk.Frame]): The frame containing the action buttons.
 summarize_button (Optional[ttk.Button]): The button for summarizing logs.
-rebuild_button (Optional[ttk.Button]): The button for rebuilding the tracker.</p>
+rebuild_button (Optional[ttk.Button]): The button for rebuilding the tracker.
+<strong>Parameters:</strong>
+['self: Any', 'parent: tk.Widget', 'controller: Optional[object]', '<strong>kwargs']
+</strong>Returns:**
+None</p>
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="__init__"><code>__init__</code><a class="headerlink" href="#__init__" title="Permanent link">&para;</a></h4>
 <p>Initializes the ActionPanel with the specified parent and controller.
 <strong>Parameters:</strong>
-parent (tk.Widget): The parent widget for this panel.
-controller (Optional[object]): The controller for handling actions. Defaults to None.</p>
+['self: Any', 'parent: tk.Widget', 'controller: Optional[object]', '<strong>kwargs']
+</strong>Returns:**
+None</p>
 <h4 id="initialize_ui"><code>initialize_ui</code><a class="headerlink" href="#initialize_ui" title="Permanent link">&para;</a></h4>
 <p>Creates and packs the action buttons into the panel.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h4 id="on_summarize"><code>on_summarize</code><a class="headerlink" href="#on_summarize" title="Permanent link">&para;</a></h4>
 <p>Trigger the controller's summarize function if available.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h4 id="on_rebuild"><code>on_rebuild</code><a class="headerlink" href="#on_rebuild" title="Permanent link">&para;</a></h4>
 <p>Trigger the controller's rebuild_tracker function if available.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h4 id="refresh"><code>refresh</code><a class="headerlink" href="#refresh" title="Permanent link">&para;</a></h4>
 <p>Action panel may not need refreshing, but this hook is here if needed.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h2 id="scriptsguipanelscoverage_panel"><code>scripts.gui.panels.coverage_panel</code><a class="headerlink" href="#scriptsguipanelscoverage_panel" title="Permanent link">&para;</a></h2>
@@ -968,19 +981,28 @@ None</p>
 <p>CoveragePanel displays coverage metrics in a tree view.
 Attributes:
 frame (Optional[ttk.LabelFrame]): The frame containing the coverage metrics.
-tree (Optional[ttk.Treeview]): The tree view for displaying coverage data.</p>
+tree (Optional[ttk.Treeview]): The tree view for displaying coverage data.
+<strong>Parameters:</strong>
+['self: Any', 'parent: tk.Widget', 'controller: Optional[object]', '<strong>kwargs']
+</strong>Returns:**
+None</p>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="__init___1"><code>__init__</code><a class="headerlink" href="#__init___1" title="Permanent link">&para;</a></h4>
 <p>Initializes the CoveragePanel with the specified parent and controller.
 <strong>Parameters:</strong>
-parent (tk.Widget): The parent widget for this panel.
-controller (Optional[object]): The controller for handling coverage data. Defaults to None.</p>
+['self: Any', 'parent: tk.Widget', 'controller: Optional[object]', '<strong>kwargs']
+</strong>Returns:**
+None</p>
 <h4 id="initialize_ui_1"><code>initialize_ui</code><a class="headerlink" href="#initialize_ui_1" title="Permanent link">&para;</a></h4>
 <p>Creates and packs the user interface components for the coverage panel.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h4 id="refresh_1"><code>refresh</code><a class="headerlink" href="#refresh_1" title="Permanent link">&para;</a></h4>
 <p>Refreshes the coverage data displayed in the tree view.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h2 id="scriptsguipanelsentry_panel"><code>scripts.gui.panels.entry_panel</code><a class="headerlink" href="#scriptsguipanelsentry_panel" title="Permanent link">&para;</a></h2>
@@ -1029,24 +1051,35 @@ None</p>
 Attributes:
 frame (Optional[ttk.LabelFrame]): The frame containing the entry interface.
 entry_text (Optional[tk.Text]): The text widget for entering log content.
-submit_button (Optional[ttk.Button]): The button for submitting the log entry.</p>
+submit_button (Optional[ttk.Button]): The button for submitting the log entry.
+<strong>Parameters:</strong>
+['self: Any', 'parent: tk.Widget', 'controller: Optional[object]', '<strong>kwargs']
+</strong>Returns:**
+None</p>
 <h3 id="functions_2">🛠️ Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
 <h4 id="__init___2"><code>__init__</code><a class="headerlink" href="#__init___2" title="Permanent link">&para;</a></h4>
 <p>Initializes the EntryPanel with the specified parent and controller.
 <strong>Parameters:</strong>
-parent (tk.Widget): The parent widget for this panel.
-controller (Optional[object]): The controller for handling log submissions. Defaults to None.</p>
+['self: Any', 'parent: tk.Widget', 'controller: Optional[object]', '<strong>kwargs']
+</strong>Returns:**
+None</p>
 <h4 id="initialize_ui_2"><code>initialize_ui</code><a class="headerlink" href="#initialize_ui_2" title="Permanent link">&para;</a></h4>
 <p>Creates and packs the user interface components for the entry panel.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h4 id="on_submit"><code>on_submit</code><a class="headerlink" href="#on_submit" title="Permanent link">&para;</a></h4>
 <p>Handles the submission of a new log entry.
 Retrieves text from the text widget and submits it to the controller if available.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h4 id="refresh_2"><code>refresh</code><a class="headerlink" href="#refresh_2" title="Permanent link">&para;</a></h4>
 <p>Clears the text area when refreshing, if needed.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h2 id="scriptsguipanelslog_panel"><code>scripts.gui.panels.log_panel</code><a class="headerlink" href="#scriptsguipanelslog_panel" title="Permanent link">&para;</a></h2>
@@ -1094,19 +1127,28 @@ None</p>
 <p>LogPanel manages the display area for logs.
 Attributes:
 frame (ttk.LabelFrame): The frame containing the log display.
-log_display (scrolledtext.ScrolledText): The text area for displaying log entries.</p>
+log_display (scrolledtext.ScrolledText): The text area for displaying log entries.
+<strong>Parameters:</strong>
+['self: Any', 'parent: tk.Widget', 'controller: Optional[object]', '<strong>kwargs']
+</strong>Returns:**
+None</p>
 <h3 id="functions_3">🛠️ Functions<a class="headerlink" href="#functions_3" title="Permanent link">&para;</a></h3>
 <h4 id="__init___3"><code>__init__</code><a class="headerlink" href="#__init___3" title="Permanent link">&para;</a></h4>
 <p>Initializes the LogPanel with the specified parent and controller.
 <strong>Parameters:</strong>
-parent (tk.Widget): The parent widget for this panel.
-controller (Optional[object]): The controller for handling log data. Defaults to None.</p>
+['self: Any', 'parent: tk.Widget', 'controller: Optional[object]', '<strong>kwargs']
+</strong>Returns:**
+None</p>
 <h4 id="initialize_ui_3"><code>initialize_ui</code><a class="headerlink" href="#initialize_ui_3" title="Permanent link">&para;</a></h4>
 <p>Creates and packs the user interface components for the log panel.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h4 id="refresh_3"><code>refresh</code><a class="headerlink" href="#refresh_3" title="Permanent link">&para;</a></h4>
 <p>Refreshes the log display area by fetching logs from the controller.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 

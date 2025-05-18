@@ -776,11 +776,9 @@
 <p>Generates a Markdown report with expandable drilldowns for the top N files with the most severe code quality issues.
 For each top offender file, includes sections for MyPy errors, Pydocstyle issues, functions with high complexity or low coverage, and function docstring summaries if available.
 <strong>Parameters:</strong>
-severity_df: DataFrame listing files with associated severity metrics.
-report_data: Dictionary containing detailed report data keyed by file paths.
-top_n: Number of top offenders to include in the report (default is 3).
+['severity_df: Any', 'report_data: dict', 'top_n: int']
 <strong>Returns:</strong>
-A Markdown-formatted string containing detailed, collapsible analysis sections for each top offender file.</p>
+str</p>
 <h2 id="scriptsci_analyzermetrics_summary"><code>scripts.ci_analyzer.metrics_summary</code><a class="headerlink" href="#scriptsci_analyzermetrics_summary" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -812,7 +810,11 @@ A Markdown-formatted string containing detailed, collapsible analysis sections f
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="generate_metrics_summary"><code>generate_metrics_summary</code><a class="headerlink" href="#generate_metrics_summary" title="Permanent link">&para;</a></h4>
 <p>Generates a Markdown summary of key code quality metrics from report data.
-Aggregates counts of total methods audited, methods missing tests, high-complexity methods (complexity ≥ 10), methods missing docstrings, and linter issues from a nested report data dictionary. Returns a Markdown-formatted string summarizing these metrics.</p>
+Aggregates counts of total methods audited, methods missing tests, high-complexity methods (complexity ≥ 10), methods missing docstrings, and linter issues from a nested report data dictionary. Returns a Markdown-formatted string summarizing these metrics.
+<strong>Parameters:</strong>
+['report_data: dict']
+<strong>Returns:</strong>
+str</p>
 <h2 id="scriptsci_analyzerseverity_audit"><code>scripts.ci_analyzer.severity_audit</code><a class="headerlink" href="#scriptsci_analyzerseverity_audit" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -844,21 +846,30 @@ Aggregates counts of total methods audited, methods missing tests, high-complexi
 <h3 id="functions_2">🛠️ Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
 <h4 id="format_priority"><code>format_priority</code><a class="headerlink" href="#format_priority" title="Permanent link">&para;</a></h4>
 <p>Returns a formatted priority label based on the given severity score.
-A high priority ("🔥 High") is assigned for scores above 30, medium ("⚠️ Medium") for scores above 15, and low ("✅ Low") otherwise.</p>
+A high priority ("🔥 High") is assigned for scores above 30, medium ("⚠️ Medium") for scores above 15, and low ("✅ Low") otherwise.
+<strong>Parameters:</strong>
+['score: float']
+<strong>Returns:</strong>
+str</p>
 <h4 id="generate_header_block"><code>generate_header_block</code><a class="headerlink" href="#generate_header_block" title="Permanent link">&para;</a></h4>
 <p>Generates a Markdown header block summarizing key metrics from the CI code quality audit.
 Calculates totals and percentages for files analyzed, files with issues, top risk file, methods audited, missing tests, missing docstrings, and linter issues. Includes visual indicators for documentation, testing, and linting coverage.
 <strong>Parameters:</strong>
-severity_df: DataFrame with severity metrics for each file.
-report_data: Dictionary containing detailed audit data per file.
+['severity_df: Any', 'report_data: Dict[str, Dict]']
 <strong>Returns:</strong>
-A Markdown-formatted string representing the report's header block.</p>
+str</p>
 <h4 id="generate_severity_table"><code>generate_severity_table</code><a class="headerlink" href="#generate_severity_table" title="Permanent link">&para;</a></h4>
 <p>Generates a Markdown table ranking the top 10 files by severity for the CI audit report.
-If the severity DataFrame is empty, returns a placeholder row indicating no files found. Each row displays file name, Mypy errors, lint issues, average complexity with risk emoji, average coverage with a visual bar, severity score, and formatted priority level.</p>
+If the severity DataFrame is empty, returns a placeholder row indicating no files found. Each row displays file name, Mypy errors, lint issues, average complexity with risk emoji, average coverage with a visual bar, severity score, and formatted priority level.
+<strong>Parameters:</strong>
+['severity_df: Any']
+<strong>Returns:</strong>
+str</p>
 <h4 id="main"><code>main</code><a class="headerlink" href="#main" title="Permanent link">&para;</a></h4>
 <p>Generates a CI code quality audit report in Markdown format.
-Parses command-line arguments for input and output paths, loads audit data, computes severity metrics, and writes a formatted Markdown report summarizing code quality findings.</p>
+Parses command-line arguments for input and output paths, loads audit data, computes severity metrics, and writes a formatted Markdown report summarizing code quality findings.
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsci_analyzerseverity_index"><code>scripts.ci_analyzer.severity_index</code><a class="headerlink" href="#scriptsci_analyzerseverity_index" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -890,14 +901,18 @@ Parses command-line arguments for input and output paths, loads audit data, comp
 <h3 id="functions_3">🛠️ Functions<a class="headerlink" href="#functions_3" title="Permanent link">&para;</a></h3>
 <h4 id="compute_severity"><code>compute_severity</code><a class="headerlink" href="#compute_severity" title="Permanent link">&para;</a></h4>
 <p>Calculates a severity score for a file using its coverage and linting report data.
-The severity score is a weighted sum of MyPy errors, Pydocstyle lint issues, average function complexity, and coverage deficit. Returns a dictionary summarizing these metrics and the computed severity score.</p>
+The severity score is a weighted sum of MyPy errors, Pydocstyle lint issues, average function complexity, and coverage deficit. Returns a dictionary summarizing these metrics and the computed severity score.
+<strong>Parameters:</strong>
+['file_path: str', 'content: dict']
+<strong>Returns:</strong>
+dict</p>
 <h4 id="compute_severity_index"><code>compute_severity_index</code><a class="headerlink" href="#compute_severity_index" title="Permanent link">&para;</a></h4>
 <p>Aggregates severity scores for multiple files into a sorted DataFrame.
 Processes report data for each file, computes severity metrics, and returns a DataFrame sorted by severity score in descending order. If no data is provided, returns an empty DataFrame with predefined columns.
 <strong>Parameters:</strong>
-report_data: Mapping of file paths to their coverage and linting report data.
+['report_data: dict']
 <strong>Returns:</strong>
-A pandas DataFrame containing severity metrics for each file, sorted by severity score.</p>
+pd.DataFrame</p>
 <h2 id="scriptsci_analyzervisuals"><code>scripts.ci_analyzer.visuals</code><a class="headerlink" href="#scriptsci_analyzervisuals" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -929,14 +944,17 @@ A pandas DataFrame containing severity metrics for each file, sorted by severity
 <h3 id="functions_4">🛠️ Functions<a class="headerlink" href="#functions_4" title="Permanent link">&para;</a></h3>
 <h4 id="risk_emoji"><code>risk_emoji</code><a class="headerlink" href="#risk_emoji" title="Permanent link">&para;</a></h4>
 <p>Returns an emoji indicating risk level based on the given severity score.
-A green emoji ("🟢") represents low risk for scores 90 and above, yellow ("🟡") indicates moderate risk for scores between 70 and 89, and red ("🔴") signifies high risk for scores below 70.</p>
+A green emoji ("🟢") represents low risk for scores 90 and above, yellow ("🟡") indicates moderate risk for scores between 70 and 89, and red ("🔴") signifies high risk for scores below 70.
+<strong>Parameters:</strong>
+['score: float']
+<strong>Returns:</strong>
+str</p>
 <h4 id="render_bar"><code>render_bar</code><a class="headerlink" href="#render_bar" title="Permanent link">&para;</a></h4>
 <p>Generates a horizontal bar visualizing a score as filled and unfilled segments.
 <strong>Parameters:</strong>
-score: The value to represent, expected in the range 0 to 100.
-width: Total number of segments in the bar (default is 20).
+['score: float', 'width: int']
 <strong>Returns:</strong>
-A string with filled ("▓") and unfilled ("░") segments proportional to the score.</p>
+str</p>
 
 
 

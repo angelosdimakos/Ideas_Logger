@@ -1325,50 +1325,102 @@ controller (GUIController): The controller for managing the application's logic.
 logger (logging.Logger): Logger for tracking GUI events and actions.
 config (dict): Configuration settings loaded from the config file.
 category_structure (dict): Structure of categories for the GUI.
-root (tk.Tk): The main window of the GUI application.</p>
+root (tk.Tk): The main window of the GUI application.
+<strong>Parameters:</strong>
+['self: Any', 'controller: GUIController']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions">🛠️ Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
 <h4 id="__init__"><code>__init__</code><a class="headerlink" href="#__init__" title="Permanent link">&para;</a></h4>
 <p>Initialize the ZephyrusLoggerGUI.
 <strong>Parameters:</strong>
-controller (GUIController): The controller for managing the application's logic.</p>
+['self: Any', 'controller: GUIController']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_setup_gui_logging"><code>_setup_gui_logging</code><a class="headerlink" href="#_setup_gui_logging" title="Permanent link">&para;</a></h4>
 <p>Set up the logging for the GUI.
-This method configures the logging handler to display logs in the GUI.</p>
+This method configures the logging handler to display logs in the GUI.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_build_widgets"><code>_build_widgets</code><a class="headerlink" href="#_build_widgets" title="Permanent link">&para;</a></h4>
 <p>Build the GUI widgets and layout.
-This method creates and arranges the GUI components, such as frames and buttons.</p>
+This method creates and arranges the GUI components, such as frames and buttons.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_update_coverage_display"><code>_update_coverage_display</code><a class="headerlink" href="#_update_coverage_display" title="Permanent link">&para;</a></h4>
 <p>Update the coverage display.
-This method retrieves the coverage data from the controller and updates the coverage display.</p>
+This method retrieves the coverage data from the controller and updates the coverage display.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_populate_category_dropdown"><code>_populate_category_dropdown</code><a class="headerlink" href="#_populate_category_dropdown" title="Permanent link">&para;</a></h4>
 <p>Populate the category dropdown menu.
-This method retrieves the categories from the controller and populates the dropdown menu.</p>
+This method retrieves the categories from the controller and populates the dropdown menu.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_update_main_category"><code>_update_main_category</code><a class="headerlink" href="#_update_main_category" title="Permanent link">&para;</a></h4>
 <p>Update the main category.
 This method updates the main category and subcategory dropdown menus.
 <strong>Parameters:</strong>
-new_main (str): The new main category.</p>
+['self: Any', 'new_main: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_log_entry"><code>_log_entry</code><a class="headerlink" href="#_log_entry" title="Permanent link">&para;</a></h4>
 <p>Log a new entry.
-This method logs a new entry based on the user's input.</p>
+This method logs a new entry based on the user's input.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_manual_summarize"><code>_manual_summarize</code><a class="headerlink" href="#_manual_summarize" title="Permanent link">&para;</a></h4>
 <p>Manually summarize the logs.
-This method generates a summary of the logs based on the user's input.</p>
+This method generates a summary of the logs based on the user's input.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_search_summary"><code>_search_summary</code><a class="headerlink" href="#_search_summary" title="Permanent link">&para;</a></h4>
 <p>Search for summaries.
-This method searches for summaries based on the user's input.</p>
+This method searches for summaries based on the user's input.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_search_raw"><code>_search_raw</code><a class="headerlink" href="#_search_raw" title="Permanent link">&para;</a></h4>
 <p>Search for raw logs.
-This method searches for raw logs based on the user's input.</p>
+This method searches for raw logs based on the user's input.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_rebuild_tracker"><code>_rebuild_tracker</code><a class="headerlink" href="#_rebuild_tracker" title="Permanent link">&para;</a></h4>
 <p>Rebuild the tracker.
-This method rebuilds the tracker based on the user's input.</p>
+This method rebuilds the tracker based on the user's input.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="_show_coverage"><code>_show_coverage</code><a class="headerlink" href="#_show_coverage" title="Permanent link">&para;</a></h4>
 <p>Show the coverage.
-This method displays the coverage data.</p>
+This method displays the coverage data.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h4 id="run"><code>run</code><a class="headerlink" href="#run" title="Permanent link">&para;</a></h4>
 <p>Run the GUI application.
-This method starts the GUI event loop.</p>
+This method starts the GUI event loop.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsguigui_controller"><code>scripts.gui.gui_controller</code><a class="headerlink" href="#scriptsguigui_controller" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1425,45 +1477,66 @@ This method starts the GUI event loop.</p>
 <h4 id="guicontroller"><code>GUIController</code><a class="headerlink" href="#guicontroller" title="Permanent link">&para;</a></h4>
 <p>GUIController manages the interaction between the GUI and the logging core.
 Attributes:
-core (ZephyrusLoggerCore): The instance of the ZephyrusLoggerCore used for logging.</p>
+core (ZephyrusLoggerCore): The instance of the ZephyrusLoggerCore used for logging.
+<strong>Parameters:</strong>
+['self: Any', 'logger_core: Optional[ZephyrusLoggerCore]', 'script_dir: Optional[str]']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_1">🛠️ Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h3>
 <h4 id="__init___1"><code>__init__</code><a class="headerlink" href="#__init___1" title="Permanent link">&para;</a></h4>
 <p>Initializes the GUIController with the given logger core or initializes a new one.
 <strong>Parameters:</strong>
-logger_core (Optional[ZephyrusLoggerCore]): The logger core instance. If None, a new instance will be created.
-script_dir (Optional[str]): The directory of the script. Defaults to the current working directory.</p>
+['self: Any', 'logger_core: Optional[ZephyrusLoggerCore]', 'script_dir: Optional[str]']
+<strong>Returns:</strong>
+None</p>
 <h4 id="log_entry"><code>log_entry</code><a class="headerlink" href="#log_entry" title="Permanent link">&para;</a></h4>
 <p>Logs an entry with the specified main category, subcategory, and text.
 <strong>Parameters:</strong>
-main (str): The main category of the log entry.
-sub (str): The subcategory of the log entry.
-text (str): The text content of the log entry.
+['self: Any', 'main: str', 'sub: str', 'text: str']
 <strong>Returns:</strong>
-Any: The result of the logging operation.</p>
+Any</p>
 <h4 id="force_summarize_all"><code>force_summarize_all</code><a class="headerlink" href="#force_summarize_all" title="Permanent link">&para;</a></h4>
 <p>Forces the summarization of all logs.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
-Any: The result of the summarization operation.</p>
+Any</p>
 <h4 id="search_summaries"><code>search_summaries</code><a class="headerlink" href="#search_summaries" title="Permanent link">&para;</a></h4>
 <p>Searches for summaries matching the given query.
 <strong>Parameters:</strong>
-query (str): The search query.
+['self: Any', 'query: str']
 <strong>Returns:</strong>
-Any: The result of the search operation.</p>
+Any</p>
 <h4 id="search_raw_logs"><code>search_raw_logs</code><a class="headerlink" href="#search_raw_logs" title="Permanent link">&para;</a></h4>
 <p>Searches for raw logs matching the given query.
 <strong>Parameters:</strong>
-query (str): The search query.
+['self: Any', 'query: str']
 <strong>Returns:</strong>
-Any: The result of the search operation.</p>
+Any</p>
 <h4 id="rebuild_tracker"><code>rebuild_tracker</code><a class="headerlink" href="#rebuild_tracker" title="Permanent link">&para;</a></h4>
-<p>Rebuilds the summary tracker and returns True if successful, False otherwise.</p>
+<p>Rebuilds the summary tracker and returns True if successful, False otherwise.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+bool</p>
 <h4 id="get_tracker_status"><code>get_tracker_status</code><a class="headerlink" href="#get_tracker_status" title="Permanent link">&para;</a></h4>
-<p>Returns a user-friendly status string of the summary tracker.</p>
+<p>Returns a user-friendly status string of the summary tracker.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+str</p>
 <h4 id="get_coverage_data"><code>get_coverage_data</code><a class="headerlink" href="#get_coverage_data" title="Permanent link">&para;</a></h4>
-<p>Retrieves coverage data from the tracker for the UI heatmap.</p>
+<p>Retrieves coverage data from the tracker for the UI heatmap.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+Any</p>
 <h4 id="get_logs"><code>get_logs</code><a class="headerlink" href="#get_logs" title="Permanent link">&para;</a></h4>
-<p>Retrieves the contents of the plain text log file as a string.</p>
+<p>Retrieves the contents of the plain text log file as a string.
+<strong>Parameters:</strong>
+['self: Any']
+<strong>Returns:</strong>
+str</p>
 <h2 id="scriptsguigui_helpers"><code>scripts.gui.gui_helpers</code><a class="headerlink" href="#scriptsguigui_helpers" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1527,125 +1600,129 @@ Any: The result of the search operation.</p>
 <h3 id="functions_2">🛠️ Functions<a class="headerlink" href="#functions_2" title="Permanent link">&para;</a></h3>
 <h4 id="validate_log_input"><code>validate_log_input</code><a class="headerlink" href="#validate_log_input" title="Permanent link">&para;</a></h4>
 <p>Returns False if the input is empty, None, or just whitespace.
-Logs a warning if invalid.</p>
+Logs a warning if invalid.
+<strong>Parameters:</strong>
+['content: str']
+<strong>Returns:</strong>
+bool</p>
 <h4 id="get_current_date"><code>get_current_date</code><a class="headerlink" href="#get_current_date" title="Permanent link">&para;</a></h4>
 <p>Returns the current date as a string in 'YYYY-MM-DD' format.
 :return: Current date as a string.
-:rtype: str</p>
+:rtype: str
+<strong>Returns:</strong>
+str</p>
 <h4 id="get_current_timestamp"><code>get_current_timestamp</code><a class="headerlink" href="#get_current_timestamp" title="Permanent link">&para;</a></h4>
-<p>Returns the current date and time as a formatted string (YYYY-MM-DD HH:MM:SS).</p>
+<p>Returns the current date and time as a formatted string (YYYY-MM-DD HH:MM:SS).
+<strong>Returns:</strong>
+str</p>
 <h4 id="clear_text_input"><code>clear_text_input</code><a class="headerlink" href="#clear_text_input" title="Permanent link">&para;</a></h4>
 <p>Clears all text from the given Tkinter text entry widget.
 <strong>Parameters:</strong>
-entry_widget: The Tkinter text widget to be cleared.</p>
+['entry_widget: tk.Text']
+<strong>Returns:</strong>
+None</p>
 <h4 id="update_status_label"><code>update_status_label</code><a class="headerlink" href="#update_status_label" title="Permanent link">&para;</a></h4>
 <p>Update the text and foreground color of a Tkinter label widget.
 <strong>Parameters:</strong>
-label (tk.Label): The label widget to update.
-message (str): The text to display on the label.
-color (str, optional): The text color. Defaults to "blue".</p>
+['label: tk.Label', 'message: str', 'color: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="get_selected_option"><code>get_selected_option</code><a class="headerlink" href="#get_selected_option" title="Permanent link">&para;</a></h4>
 <p>Returns the currently selected option from a Tkinter menu variable, or a default value if none is selected.
 <strong>Parameters:</strong>
-menu_var: A Tkinter variable associated with a menu widget.
-default (str, optional): The value to return if no option is selected. Defaults to "General".
+['menu_var: tk.Variable', 'default: str']
 <strong>Returns:</strong>
-str: The selected option or the default value.</p>
+str</p>
 <h4 id="append_log_entry"><code>append_log_entry</code><a class="headerlink" href="#append_log_entry" title="Permanent link">&para;</a></h4>
 <p>Appends a log entry with a timestamp and content to the specified log file, organizing entries by date, category, and subcategory.
 <strong>Parameters:</strong>
-log_file (str): Path to the JSON log file.
-date (str): Date key for the log entry (YYYY-MM-DD).
-category (str): Category under which to store the entry.
-subcategory (str): Subcategory under the category.
-entry_text (str): The content of the log entry.</p>
+['log_file: str', 'date: str', 'category: str', 'subcategory: str', 'entry_text: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="get_category_options"><code>get_category_options</code><a class="headerlink" href="#get_category_options" title="Permanent link">&para;</a></h4>
 <p>Retrieves a list of category names from a JSON file at the given path.
 <strong>Parameters:</strong>
-categories_json_path (str): Path to the JSON file containing categories.
+['categories_json_path: str']
 <strong>Returns:</strong>
-list: List of category names, or an empty list if reading fails.</p>
+list</p>
 <h4 id="create_status_label"><code>create_status_label</code><a class="headerlink" href="#create_status_label" title="Permanent link">&para;</a></h4>
 <p>Create and pack a status label widget in the given root window.
 <strong>Parameters:</strong>
-root: The parent Tkinter widget.
-status_var: A Tkinter StringVar to display as the label's text.
+['root: tk.Tk', 'status_var: tk.StringVar']
 <strong>Returns:</strong>
-The created Label widget.</p>
+tk.Label</p>
 <h4 id="create_log_frame"><code>create_log_frame</code><a class="headerlink" href="#create_log_frame" title="Permanent link">&para;</a></h4>
 <p>Creates and returns a disabled scrolled text widget within a frame for logging purposes in a Tkinter GUI.
 <strong>Parameters:</strong>
-root: The parent Tkinter widget.
+['root: tk.Tk']
 <strong>Returns:</strong>
-tuple: (log_text, log_frame) where log_text is the ScrolledText widget and log_frame is the containing Frame.</p>
+tuple</p>
 <h4 id="log_message"><code>log_message</code><a class="headerlink" href="#log_message" title="Permanent link">&para;</a></h4>
 <p>Appends a timestamped message to the provided Tkinter text widget for logging purposes.
 <strong>Parameters:</strong>
-log_text_widget (tkinter.Text): The text widget where the log message will be displayed.
-message (str): The message to log.</p>
+['log_text_widget: tk.Text', 'message: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="create_dropdown_menu"><code>create_dropdown_menu</code><a class="headerlink" href="#create_dropdown_menu" title="Permanent link">&para;</a></h4>
 <p>Creates a labeled dropdown menu (OptionMenu) in the given Tkinter frame.
 <strong>Parameters:</strong>
-frame: The parent Tkinter frame to place the dropdown menu in.
-label_text: The text to display as the label next to the dropdown.
-variable: A Tkinter variable to store the selected option.
-options: A list of options to display in the dropdown menu.
+['frame: tk.Frame', 'label_text: str', 'variable: tk.Variable', 'options: list']
 <strong>Returns:</strong>
-The created Tkinter OptionMenu widget.</p>
+tk.OptionMenu</p>
 <h4 id="create_button"><code>create_button</code><a class="headerlink" href="#create_button" title="Permanent link">&para;</a></h4>
 <p>Creates and returns a Tkinter Button widget with customizable text, command, size, and colors.
 <strong>Parameters:</strong>
-frame: The parent widget where the button will be placed.
-text (str): The label displayed on the button.
-command (callable): The function to be called when the button is clicked.
-width (int, optional): The width of the button. Defaults to 15.
-height (int, optional): The height of the button. Defaults to 2.
-bg (str, optional): The background color of the button. Defaults to "#4CAF50".
-fg (str, optional): The text color of the button. Defaults to "white".
+['frame: tk.Widget', 'text: str', 'command: callable', 'width: int', 'height: int', 'bg: str', 'fg: str']
 <strong>Returns:</strong>
-tk.Button: The configured Button widget.</p>
+tk.Button</p>
 <h4 id="show_messagebox"><code>show_messagebox</code><a class="headerlink" href="#show_messagebox" title="Permanent link">&para;</a></h4>
 <p>Displays a message box with the specified icon, title, and message using tkinter.
 <strong>Parameters:</strong>
-icon (str): Type of message box to display ('info', 'warning', or 'error').
-title (str): The title of the message box window.
-message (str): The message to display in the message box.</p>
+['icon: str', 'title: str', 'message: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="create_text_entry"><code>create_text_entry</code><a class="headerlink" href="#create_text_entry" title="Permanent link">&para;</a></h4>
 <p>Creates a text entry widget for user input.
 <strong>Parameters:</strong>
-root (tk.Tk or tk.Frame): The parent widget.
-height (int): Number of lines tall.
-width (int): Number of characters wide.
+['root: tk.Widget', 'height: int', 'width: int']
 <strong>Returns:</strong>
-tk.Text: A configured Text widget.</p>
+tk.Text</p>
 <h4 id="format_summary_results"><code>format_summary_results</code><a class="headerlink" href="#format_summary_results" title="Permanent link">&para;</a></h4>
 <p>Formats a list of result items into a readable summary string.
 Each result can be a dict with 'score' and 'text' keys, a tuple/list with score and text,
 or any other type, which will be converted to string with a default score of 0.0.
 Handles exceptions gracefully and includes error information in the output.
 <strong>Parameters:</strong>
-results (list): List of result items to format.
+['results: list']
 <strong>Returns:</strong>
-str: Formatted summary string with scores and texts.</p>
+str</p>
 <h4 id="format_raw_results"><code>format_raw_results</code><a class="headerlink" href="#format_raw_results" title="Permanent link">&para;</a></h4>
 <p>Formats a list of raw result items into a readable string.
 Each result is processed based on its type (dict, list/tuple, or other),
 and formatted with a '[RAW LOG MATCH]' prefix. Handles exceptions by
 including error details in the output.
 <strong>Parameters:</strong>
-results (list): List of raw result items to format.
+['results: list']
 <strong>Returns:</strong>
-str: Formatted string representation of all results.</p>
+str</p>
 <h4 id="display_message"><code>display_message</code><a class="headerlink" href="#display_message" title="Permanent link">&para;</a></h4>
-<p>Displays an informational message box.</p>
+<p>Displays an informational message box.
+<strong>Parameters:</strong>
+['title: str', 'message: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="display_error"><code>display_error</code><a class="headerlink" href="#display_error" title="Permanent link">&para;</a></h4>
-<p>Displays an error message box.</p>
+<p>Displays an error message box.
+<strong>Parameters:</strong>
+['title: str', 'message: str']
+<strong>Returns:</strong>
+None</p>
 <h4 id="format_coverage_data"><code>format_coverage_data</code><a class="headerlink" href="#format_coverage_data" title="Permanent link">&para;</a></h4>
 <p>Formats the structured coverage data into a readable string grouped by main category.
 <strong>Parameters:</strong>
-data (list[dict]): List of coverage data entries.
+['data: list[dict]']
 <strong>Returns:</strong>
-str: A nicely formatted string for displaying coverage stats.</p>
+str</p>
 <h2 id="scriptsguigui_logging"><code>scripts.gui.gui_logging</code><a class="headerlink" href="#scriptsguigui_logging" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1676,17 +1753,33 @@ str: A nicely formatted string for displaying coverage stats.</p>
 </table>
 <h3 id="classes_2">📦 Classes<a class="headerlink" href="#classes_2" title="Permanent link">&para;</a></h3>
 <h4 id="guiloghandler"><code>GUILogHandler</code><a class="headerlink" href="#guiloghandler" title="Permanent link">&para;</a></h4>
-<p>A logging handler that appends log messages to a Tkinter Text widget.</p>
+<p>A logging handler that appends log messages to a Tkinter Text widget.
+<strong>Parameters:</strong>
+['self: Any', 'text_widget: tk.Text']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_3">🛠️ Functions<a class="headerlink" href="#functions_3" title="Permanent link">&para;</a></h3>
 <h4 id="__init___2"><code>__init__</code><a class="headerlink" href="#__init___2" title="Permanent link">&para;</a></h4>
-<p>:param text_widget: The Text widget where log messages should be appended.</p>
+<p>:param text_widget: The Text widget where log messages should be appended.
+<strong>Parameters:</strong>
+['self: Any', 'text_widget: tk.Text']
+<strong>Returns:</strong>
+None</p>
 <h4 id="emit"><code>emit</code><a class="headerlink" href="#emit" title="Permanent link">&para;</a></h4>
 <p>Emits a log message to the associated Text widget.
-:param record: logging.LogRecord</p>
+:param record: logging.LogRecord
+<strong>Parameters:</strong>
+['self: Any', 'record: logging.LogRecord']
+<strong>Returns:</strong>
+None</p>
 <h4 id="append_message"><code>append_message</code><a class="headerlink" href="#append_message" title="Permanent link">&para;</a></h4>
 <p>Appends a log message to the associated Text widget.
 This method is designed to be called from the main thread,
-and will block until the message is appended.</p>
+and will block until the message is appended.
+<strong>Parameters:</strong>
+['self: Any', 'msg: str']
+<strong>Returns:</strong>
+None</p>
 <h2 id="scriptsguistyle_manager"><code>scripts.gui.style_manager</code><a class="headerlink" href="#scriptsguistyle_manager" title="Permanent link">&para;</a></h2>
 <p><strong>🧠 Docstring Summary</strong></p>
 <table>
@@ -1741,21 +1834,28 @@ and will block until the message is appended.</p>
 This class can be extended to handle dynamic theme changes.
 Attributes:
 root (Tk): The root Tkinter window.
-style (ttk.Style): The ttk style manager instance.</p>
+style (ttk.Style): The ttk style manager instance.
+<strong>Parameters:</strong>
+['self: Any', 'root: Tk.Tk']
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_4">🛠️ Functions<a class="headerlink" href="#functions_4" title="Permanent link">&para;</a></h3>
 <h4 id="__init___3"><code>__init__</code><a class="headerlink" href="#__init___3" title="Permanent link">&para;</a></h4>
 <p>Initializes the StyleManager with the specified root window.
 <strong>Parameters:</strong>
-root (Tk): The root Tkinter window.</p>
+['self: Any', 'root: Tk.Tk']
+<strong>Returns:</strong>
+None</p>
 <h4 id="initialize_styles"><code>initialize_styles</code><a class="headerlink" href="#initialize_styles" title="Permanent link">&para;</a></h4>
 <p>Defines default colors and fonts and configures ttk styles.
+<strong>Parameters:</strong>
+['self: Any']
 <strong>Returns:</strong>
 None</p>
 <h4 id="update_style"><code>update_style</code><a class="headerlink" href="#update_style" title="Permanent link">&para;</a></h4>
 <p>Update a specific style with new options.
 <strong>Parameters:</strong>
-style_name (str): The name of the style to update (e.g., 'TButton').
-options (Dict[str, Any]): A dictionary of style options (e.g., {'background': 'red'}).
+['self: Any', 'style_name: str', 'options: Dict[str, Any]']
 <strong>Returns:</strong>
 None</p>
 <h2 id="scriptsguiwidget_factory"><code>scripts.gui.widget_factory</code><a class="headerlink" href="#scriptsguiwidget_factory" title="Permanent link">&para;</a></h2>
@@ -1801,50 +1901,40 @@ None</p>
 <h3 id="classes_4">📦 Classes<a class="headerlink" href="#classes_4" title="Permanent link">&para;</a></h3>
 <h4 id="widgetfactory"><code>WidgetFactory</code><a class="headerlink" href="#widgetfactory" title="Permanent link">&para;</a></h4>
 <p>Factory for creating common widgets with standardized styling.
-This class provides static methods to create buttons, labels, entries, frames, and notebooks with consistent styles.</p>
+This class provides static methods to create buttons, labels, entries, frames, and notebooks with consistent styles.
+<strong>Returns:</strong>
+None</p>
 <h3 id="functions_5">🛠️ Functions<a class="headerlink" href="#functions_5" title="Permanent link">&para;</a></h3>
 <h4 id="create_button_1"><code>create_button</code><a class="headerlink" href="#create_button_1" title="Permanent link">&para;</a></h4>
 <p>Create and return a styled ttk Button.
 <strong>Parameters:</strong>
-parent (tk.Widget): The parent widget.
-text (str): The text to display on the button.
-command (callable): The function to call when the button is clicked.
-style (str): The style to apply to the button. Defaults to 'TButton'.
-<strong>options: Additional options to configure the button.
+['parent: tk.Widget', 'text: str', 'command: callable', 'style: str', '<strong>options']
 </strong>Returns:**
-ttk.Button: The created button widget.</p>
+ttk.Button</p>
 <h4 id="create_label"><code>create_label</code><a class="headerlink" href="#create_label" title="Permanent link">&para;</a></h4>
 <p>Create and return a styled ttk Label.
 <strong>Parameters:</strong>
-parent (tk.Widget): The parent widget.
-text (str): The text to display on the label.
-style (str): The style to apply to the label. Defaults to 'TLabel'.
-<strong>options: Additional options to configure the label.
+['parent: tk.Widget', 'text: str', 'style: str', '<strong>options']
 </strong>Returns:**
-ttk.Label: The created label widget.</p>
+ttk.Label</p>
 <h4 id="create_entry"><code>create_entry</code><a class="headerlink" href="#create_entry" title="Permanent link">&para;</a></h4>
 <p>Create and return a ttk Entry widget.
 <strong>Parameters:</strong>
-parent (tk.Widget): The parent widget.
-textvariable (Any): The variable to associate with the entry. Defaults to None.
-<strong>options: Additional options to configure the entry.
+['parent: tk.Widget', 'textvariable: Any', '<strong>options']
 </strong>Returns:**
-ttk.Entry: The created entry widget.</p>
+ttk.Entry</p>
 <h4 id="create_frame"><code>create_frame</code><a class="headerlink" href="#create_frame" title="Permanent link">&para;</a></h4>
 <p>Create and return a ttk Frame widget.
 <strong>Parameters:</strong>
-parent (tk.Widget): The parent widget.
-style (str): The style to apply to the frame. Defaults to 'TFrame'.
-<strong>options: Additional options to configure the frame.
+['parent: tk.Widget', 'style: str', '<strong>options']
 </strong>Returns:**
-ttk.Frame: The created frame widget.</p>
+ttk.Frame</p>
 <h4 id="create_notebook"><code>create_notebook</code><a class="headerlink" href="#create_notebook" title="Permanent link">&para;</a></h4>
 <p>Create and return a ttk Notebook widget.
 <strong>Parameters:</strong>
-parent (tk.Widget): The parent widget.
-<strong>options: Additional options to configure the notebook.
+['parent: tk.Widget', '<strong>options']
 </strong>Returns:**
-ttk.Notebook: The created notebook widget.</p>
+ttk.Notebook</p>
 
 
 
