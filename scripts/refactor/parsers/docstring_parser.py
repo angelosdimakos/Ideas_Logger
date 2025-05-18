@@ -88,13 +88,15 @@ class DocstringAnalyzer:
 
     def extract_docstrings(self, file_path: Path) -> Dict[str, Any]:
         """
-        Extract docstrings from a Python file, recursively.
-
+        Extracts and organizes docstrings from a Python file, including module, class, and function docstrings.
+        
+        Recursively parses the given Python file to collect docstrings from the module, all classes, and all functions. Each docstring is split into description, args, and returns sections if present.
+        
         Args:
-            file_path (Path): The path to the Python file to analyze.
-
+            file_path: Path to the Python file to analyze.
+        
         Returns:
-            Dict[str, Any]: A dictionary containing docstring information.
+            A dictionary with keys "module_doc", "classes", and "functions", each containing extracted docstring information.
         """
         try:
             source = file_path.read_text(encoding="utf-8")
@@ -145,14 +147,9 @@ class DocstringAnalyzer:
 
     def analyze_directory(self, root: Path) -> Dict[str, Dict[str, Any]]:
         """
-        Analyze all Python files in the given directory and its subdirectories.
-
-        Args:
-            root (Path): The path to the directory to analyze.
-
-        Returns:
-            Dict[str, Dict[str, Any]]: A dictionary with normalized file paths as keys and
-            dictionaries with docstring information as values.
+        Recursively analyzes Python files in a directory, extracting docstring information.
+        
+        Scans all `.py` files under the specified root directory, skipping excluded directories and files starting with `test_`. Returns a dictionary mapping normalized file paths to their extracted docstring details.
         """
         results = {}
         for file in root.rglob("*.py"):
@@ -173,7 +170,7 @@ class DocstringAnalyzer:
 class DocstringAuditCLI:
     def __init__(self) -> None:
         """
-        Initialize the command-line interface for the docstring audit.
+        Initializes the DocstringAuditCLI with parsed command-line arguments and a docstring analyzer.
         """
         self.args = self.parse_args()
         self.analyzer = DocstringAnalyzer(self.args.exclude)
@@ -202,7 +199,9 @@ class DocstringAuditCLI:
 
     def run(self) -> None:
         """
-        Run the docstring audit.
+        Executes the docstring audit based on command-line arguments.
+        
+        Resolves the target directory, analyzes Python files for docstring completeness, and outputs results in JSON format if specified. Prints a placeholder for Markdown output if requested. Exits with status 1 if the check flag is set and any missing docstrings are detected.
         """
         root = Path(self.args.path).resolve()
         results = self.analyzer.analyze_directory(root)

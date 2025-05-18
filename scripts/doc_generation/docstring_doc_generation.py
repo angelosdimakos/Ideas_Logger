@@ -31,8 +31,9 @@ from scripts.doc_generation.doc_renderers import render_module_docs, render_docs
 
 def generate_split_docstring_docs(docstring_data: Dict[str, Dict[str, Any]], output_dir: Path):
     """
-    Generate folder-grouped Markdown documentation from docstring data.
-    Each top-level folder becomes a single .md file.
+    Generates Markdown documentation files grouped by top-level folder from Python docstring data.
+    
+    Each folder (excluding those starting with "tests" or "artifacts") is documented in a single Markdown file, with an index file created for navigation. Output is structured for MkDocs compatibility.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
     grouped = defaultdict(list)
@@ -79,6 +80,12 @@ def generate_split_docstring_docs(docstring_data: Dict[str, Dict[str, Any]], out
 
 
 def main():
+    """
+    Parses command-line arguments and generates Markdown documentation from a docstring JSON file.
+    
+    This function expects the path to a JSON file containing docstring data and an output directory.
+    It validates input, loads the docstring data, and invokes the documentation generation process.
+    """
     parser = argparse.ArgumentParser(description="Generate docstring documentation files.")
     parser.add_argument("--docstrings", required=True, help="Path to docstring_summary.json file")
     parser.add_argument("--output", required=True, help="Output folder for markdown documentation")

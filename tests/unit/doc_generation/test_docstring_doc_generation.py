@@ -3,6 +3,14 @@ from scripts.doc_generation.docstring_doc_generation import generate_split_docst
 
 def test_generate_docstring_docs_nested(tmp_path):
     # 🧪 Mock input: a mix of valid and ignored modules
+    """
+    Tests that generate_split_docstring_docs correctly generates documentation files for nested modules, excludes test directories, and creates an index linking to the generated docs.
+    
+    Verifies that:
+    - Documentation for top-level and nested modules is split into separate files.
+    - Test directories are ignored in the output.
+    - The index file contains links to all generated documentation files.
+    """
     mock_docstrings = {
         "core/foo.py": {
             "module_doc": {"description": "Top-level doc."},

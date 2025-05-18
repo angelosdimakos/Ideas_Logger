@@ -28,12 +28,14 @@ from scripts.doc_generation.doc_renderers import render_folder_report, render_qu
 
 def generate_split_reports(report_data: dict, output_dir: Path, verbose: bool = False):
     """
-    Generate split code quality documentation files.
-
+    Generates Markdown code quality reports for each top-level folder from a combined JSON report.
+    
+    Groups documentation and linting issues by folder, excluding folders starting with "tests" or "artifacts". For each folder, creates a Markdown file summarizing missing documentation and categorized linting issues, and writes an index file listing all folders.
+    
     Args:
-        report_data: The parsed quality report JSON data
-        output_dir: Directory where markdown files will be written
-        verbose: Whether to include detailed MyPy error blocks
+        report_data: Parsed JSON data containing code quality information.
+        output_dir: Directory where the Markdown report files will be created.
+        verbose: If True, includes detailed MyPy error blocks in the reports.
     """
     grouped = defaultdict(lambda: {
         "docs": [],
@@ -112,6 +114,11 @@ def generate_split_reports(report_data: dict, output_dir: Path, verbose: bool = 
 
 
 def main():
+    """
+    Parses command-line arguments and generates split Markdown code quality reports.
+    
+    This function handles argument parsing, validates the input report file, loads the JSON report data, and invokes the report generation process. Exits with an error message if the report file is missing or the JSON is invalid.
+    """
     parser = argparse.ArgumentParser(description="Split quality report by folder into multiple markdown files.")
     parser.add_argument("--report", required=True, help="Path to combined JSON report")
     parser.add_argument("--output-dir", required=True, help="Directory to write markdown files")

@@ -25,11 +25,9 @@ from scripts.doc_generation.doc_renderers import render_folder_coverage, render_
 
 def generate_split_coverage_docs(coverage_data: dict, output_dir: Path):
     """
-    Generate split coverage documentation files.
-
-    Args:
-        coverage_data: The parsed coverage JSON data
-        output_dir: Directory where markdown files will be written
+    Generates Markdown coverage reports for each source folder and an index file.
+    
+    Groups coverage data by folder (excluding those starting with "tests" or "artifacts"), writes a Markdown report for each folder, and creates an index file summarizing coverage and linking to each folder report.
     """
     grouped = defaultdict(list)
     IGNORED_PREFIXES = ("tests", "artifacts")
@@ -63,6 +61,13 @@ def generate_split_coverage_docs(coverage_data: dict, output_dir: Path):
 
 
 def main():
+    """
+    Parses command-line arguments and generates folder-based Markdown coverage reports.
+    
+    Expects paths to a coverage JSON file and an output directory as arguments. Validates
+    inputs, loads coverage data, and invokes documentation generation. Exits with an error
+    message if the coverage file is missing or invalid.
+    """
     parser = argparse.ArgumentParser(description="Generate folder-based coverage documentation.")
     parser.add_argument("--coverage", required=True, help="Path to coverage.json file")
     parser.add_argument("--output", required=True, help="Output folder for markdown reports")

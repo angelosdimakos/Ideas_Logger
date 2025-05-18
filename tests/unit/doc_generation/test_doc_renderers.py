@@ -22,6 +22,9 @@ def test_render_coverage_index_output():
     assert "- [core/](./core.md)" in lines
 
 def test_render_folder_report_verbose():
+    """
+    Tests that the verbose folder report rendering includes documentation, linting, and MyPy error sections with correct content.
+    """
     data = {
         "totals": {"critical": 1, "high": 2, "medium": 3, "low": 4},
         "docs": [{"file": "file1.py", "module": 1, "classes": 2, "functions": 3}],
@@ -37,11 +40,21 @@ def test_render_folder_report_verbose():
     assert "error 1" in out
 
 def test_render_quality_index_links():
+    """
+    Tests that the quality index renderer outputs markdown links for each folder.
+    
+    Asserts that the rendered index includes correctly formatted links to the quality reports for the specified folders.
+    """
     index = dr.render_quality_index(["core", "scripts"])
     assert "- [core/](./core.md)" in index
     assert "- [scripts/](./scripts.md)" in index
 
 def test_render_module_docs_all_sections():
+    """
+    Tests that `render_module_docs` generates module documentation with all sections.
+    
+    Verifies that the rendered output includes module headers, class and function sections, parameter and return type details, and descriptions for each documented object.
+    """
     docstrings = {
         "module_doc": {"description": "Top-level module."},
         "classes": [
@@ -81,6 +94,9 @@ def test_render_module_docs_all_sections():
     assert "bool" in rendered
 
 def test_render_docstring_index_output():
+    """
+    Tests that the docstring index renderer outputs correct markdown links for modules and their documented objects.
+    """
     index = dr.render_docstring_index([("core", [("foo", "core.foo"), ("bar", "core.bar")])])
     assert any("[core/](core.md)" in line for line in index)
     assert "- [core/](core.md)" in index

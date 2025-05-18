@@ -13,7 +13,18 @@ from typing import Dict, Any, List, Tuple, Optional
 
 
 def render_folder_coverage(folder: str, entries: list) -> str:
-    """Renders the markdown content for a single folder's coverage."""
+    """
+    Generates a markdown report summarizing test coverage for a folder.
+    
+    The report includes the overall line coverage percentage for the folder and a table listing each file's line and branch coverage. Files with no branch coverage data display "N/A" for branch coverage.
+    
+    Args:
+        folder: The folder name or path being reported.
+        entries: A list of (file_path, file_data) tuples, where file_data contains coverage summaries.
+    
+    Returns:
+        A markdown-formatted string representing the folder's coverage report.
+    """
     md = [f"# Test Coverage Report for `{folder}/`\n"]
 
     total_lines = sum(e[1]['summary'].get('num_statements', 0) for e in entries)
@@ -42,7 +53,11 @@ def render_folder_coverage(folder: str, entries: list) -> str:
 
 
 def render_coverage_index(folders: List[str], totals: Dict[str, Any]) -> List[str]:
-    """Renders the index file for coverage reports."""
+    """
+    Generates markdown lines for a test coverage index report.
+    
+    Creates a summary table displaying overall coverage metrics and lists links to individual folder coverage reports. Returns the assembled markdown lines as a list of strings.
+    """
     pct = f"{totals.get('percent_covered', 0):.2f}%"
     covered_lines = totals.get("covered_lines", 0)
     total_lines = totals.get("num_statements", 0)
@@ -68,7 +83,19 @@ def render_coverage_index(folders: List[str], totals: Dict[str, Any]) -> List[st
 
 
 def render_folder_report(folder: str, section: dict, verbose: bool = False) -> str:
-    """Renders the markdown content for a single folder's code quality."""
+    """
+    Generates a markdown report summarizing code quality issues for a folder.
+    
+    The report includes total issue counts by severity, tables for missing documentation and linting issues, and optionally detailed MyPy error listings when verbose mode is enabled.
+    
+    Args:
+        folder: The folder name for which the report is generated.
+        section: A dictionary containing code quality data, including totals, documentation, linting, and MyPy errors.
+        verbose: If True, includes detailed MyPy error dumps in the report.
+    
+    Returns:
+        A markdown-formatted string representing the code quality report for the folder.
+    """
     md = [f"# Code Quality Report for `{folder}/`\n"]
 
     totals = section["totals"]
@@ -111,7 +138,14 @@ def render_folder_report(folder: str, section: dict, verbose: bool = False) -> s
 
 
 def render_quality_index(folders: List[str]) -> List[str]:
-    """Renders the index file for code quality reports."""
+    """
+    Generates markdown lines for an index of code quality reports.
+    
+    Each folder is listed with a link to its corresponding report, with folder names sanitized for filenames.
+    
+    Returns:
+        A list of markdown lines representing the index.
+    """
     index_lines = ["# Code Quality Report Index\n"]
 
     for folder in sorted(folders):
@@ -123,8 +157,16 @@ def render_quality_index(folders: List[str]) -> List[str]:
 
 def render_module_docs(file_path: str, docstrings: Dict[str, Any]) -> str:
     """
-    Renders the markdown content for a single module's docstrings.
-    Unified format: header + summary table.
+    Generates a markdown report summarizing the docstrings for a Python module.
+    
+    The report includes the module's description, arguments, and return values in a summary table, followed by detailed sections for each class and function with their respective descriptions, parameters, and return information. Missing descriptions are replaced with placeholder text.
+    
+    Args:
+        file_path: Path to the Python module file.
+        docstrings: Parsed docstring information for the module, including module, classes, and functions.
+    
+    Returns:
+        A markdown-formatted string documenting the module's docstrings.
     """
     module_name = file_path.replace(".py", "").replace("/", ".")
     doc = docstrings.get("module_doc", {})
@@ -187,13 +229,15 @@ def render_module_docs(file_path: str, docstrings: Dict[str, Any]) -> str:
 
 def render_docstring_index(sections: List[Tuple[str, List[Tuple[str, str]]]]) -> List[str]:
     """
-    Renders the index file for docstring documentation.
-
+    Generates markdown lines for a docstring report index.
+    
+    Each section is listed with a link to its corresponding markdown file, using display names with slashes instead of underscores.
+    
     Args:
-        sections: List of (section_name, [(short_name, module_path)])
-
+        sections: A list of tuples, each containing a section name and a list of module entries.
+    
     Returns:
-        List[str]: Markdown lines for index.md
+        A list of markdown-formatted lines for the docstring index.
     """
     index_lines = ["# Docstring Report Index\n"]
 
