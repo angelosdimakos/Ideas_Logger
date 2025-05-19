@@ -129,8 +129,7 @@ jobs:
           path: |
             .coverage
             coverage.json
-            coverage.xml
-            htmlcov/
+
 
       - name: ☁️ Upload to Codecov
         uses: codecov/codecov-action@v5
