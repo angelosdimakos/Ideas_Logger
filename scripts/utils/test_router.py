@@ -232,14 +232,6 @@ def _run_regular_tests(test_modules: List[str], output_json: str = "coverage.jso
     """
     Run regular (non-GUI) tests with pytest and coverage.
     Defaults to serial execution for reliable coverage collection.
-
-    Args:
-        test_modules (List[str]): List of test modules to run
-        output_json (str): Path for the coverage JSON output
-        parallel (bool): Whether to run tests in parallel (set to False for CI)
-
-    Returns:
-        bool: True if tests pass, False otherwise
     """
     if not test_modules:
         print("No regular test modules to run")
@@ -248,6 +240,9 @@ def _run_regular_tests(test_modules: List[str], output_json: str = "coverage.jso
     print(f"Running {len(test_modules)} regular test modules with coverage:")
     for module in test_modules:
         print(f"  - {module}")
+
+    # Convert module paths to file paths for pytest (including .py extension)
+    test_file_paths = [module.replace(".", "/") + ".py" for module in test_modules]
 
     # Only use parallel execution if explicitly requested
     parallel_arg = ["-n", "auto"] if parallel else []
@@ -260,7 +255,7 @@ def _run_regular_tests(test_modules: List[str], output_json: str = "coverage.jso
               "--cov-config=.coveragerc",
               f"--cov-report=term",
               f"--cov-report=json:{output_json}"
-          ] + test_modules
+          ] + test_file_paths  # Use file paths with .py extension
 
     try:
         result = subprocess.run(cmd, check=False)
@@ -274,7 +269,7 @@ def _run_gui_tests(
         test_modules: List[str],
         output_json: str = "coverage.json",
         run_xvfb: bool = True,
-        parallel: bool = False  # Default to serial execution
+        parallel: bool = False
 ) -> bool:
     """
     Run GUI tests with pytest and coverage, using xvfb if on Linux.
@@ -287,6 +282,9 @@ def _run_gui_tests(
     print(f"Running {len(test_modules)} GUI test modules with coverage:")
     for module in test_modules:
         print(f"  - {module}")
+
+    # Convert module paths to file paths for pytest
+    test_file_paths = [module.replace(".", "/") + ".py" for module in test_modules]
 
     # Determine if we need xvfb (Linux)
     cmd_prefix = ["xvfb-run", "-a"] if run_xvfb and sys.platform.startswith("linux") else []
@@ -303,7 +301,7 @@ def _run_gui_tests(
         f"--cov-report=term",
         f"--cov-report=append",  # Append to existing coverage from regular tests
         f"--cov-report=json:{output_json}"
-    ] + test_modules
+    ] + test_file_paths  # Use file paths instead of module paths
 
     try:
         result = subprocess.run(cmd, check=False)
@@ -328,7 +326,7 @@ def update_github_workflow_test_job(
 
     # Generate CI configuration
     if isinstance(test_mapping, dict) and test_mapping.get("all", False):
-        # Run all tests with default CI configuration but WITHOUT parallel execution
+        # Run all tests with default CI configuration
         return {
             "run_all": True,
             "test_command": "xvfb-run -a pytest -c pytest.ini " +
@@ -343,20 +341,26 @@ def update_github_workflow_test_job(
     commands = []
 
     if has_regular:
-        regular_modules_str = " ".join(test_mapping.get("regular", []))
+        # Convert module paths to file paths for pytest
+        regular_file_paths = [module.replace(".", "/") + ".py" for module in test_mapping.get("regular", [])]
+        regular_files_str = " ".join(regular_file_paths)
+
         commands.append(
-            f"pytest -c pytest.ini " +  # No parallel execution
+            f"pytest -c pytest.ini " +
             f"--cov=scripts --cov-config=.coveragerc " +
-            f"--cov-report=term --cov-report=html --cov-report=json {regular_modules_str}"
+            f"--cov-report=term --cov-report=html --cov-report=json {regular_files_str}"
         )
 
     if has_gui:
-        gui_modules_str = " ".join(test_mapping.get("gui", []))
+        # Convert module paths to file paths for pytest
+        gui_file_paths = [module.replace(".", "/") + ".py" for module in test_mapping.get("gui", [])]
+        gui_files_str = " ".join(gui_file_paths)
+
         # For GUI tests, append to existing coverage
         commands.append(
-            f"xvfb-run -a pytest -c pytest.ini " +  # No parallel execution
+            f"xvfb-run -a pytest -c pytest.ini " +
             f"--cov=scripts --cov-config=.coveragerc " +
-            f"--cov-report=term --cov-report=append --cov-report=json {gui_modules_str}"
+            f"--cov-report=term --cov-report=append --cov-report=json {gui_files_str}"
         )
 
     if not commands:

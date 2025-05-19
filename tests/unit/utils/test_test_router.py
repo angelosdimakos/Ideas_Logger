@@ -58,11 +58,7 @@ class TestTestRouter:
 
         return tmp_path
 
-    # tests/unit/utils/test_test_router.py
 
-    # tests/unit/utils/test_test_router.py
-
-    # tests/unit/utils/test_test_router.py
 
     def test_map_files_to_tests_source_files(self, mock_project_structure):
         """Test mapping source files to test modules."""
@@ -156,26 +152,36 @@ class TestTestRouter:
         assert "-c" in cmd
         assert "pytest.ini" in cmd
 
-    @patch('scripts.utils.test_router.get_added_modified_py_files')
     @patch('scripts.utils.test_router.map_files_to_tests')
-    @patch('scripts.utils.test_router._run_regular_tests')
-    @patch('scripts.utils.test_router._run_gui_tests')
-    def test_run_targeted_tests_specific(self, mock_gui, mock_regular, mock_map, mock_get_files):
-        """Test running specific tests based on mapping."""
-        mock_get_files.return_value = ["file1.py", "file2.py"]
+    @patch('scripts.utils.test_router.get_added_modified_py_files')
+    def test_update_github_workflow_specific(self, mock_get_files, mock_map):
+        """Test generating GitHub workflow for specific tests."""
+        # Mock the file detection
+        mock_get_files.return_value = ['file1.py', 'file2.py']
+
+        # Mock the mapping function to return specific test modules
         mock_map.return_value = {
             "regular": ["tests.module1.test_file1"],
             "gui": ["tests.ui.test_widget"]
         }
-        mock_regular.return_value = True
-        mock_gui.return_value = True
 
-        # Should run only mapped tests
-        result = run_targeted_tests()
+        # Call the function and check the results
+        config = update_github_workflow_test_job()
 
-        assert result is True
-        mock_regular.assert_called_once_with(["tests.module1.test_file1"], "coverage.json", True)
-        mock_gui.assert_called_once_with(["tests.ui.test_widget"], "coverage.json", True, True)
+        # Check that the right configuration is returned
+        assert config["run_all"] is False
+        assert "test_commands" in config
+
+        # Print debug info to help diagnose the issue
+        print(f"Test commands: {config['test_commands']}")
+
+        # Verify both regular and GUI tests are included
+        assert len(config["test_commands"]) == 2
+        assert "tests/module1/test_file1.py" in config["test_commands"][0]
+        assert "tests/ui/test_widget.py" in config["test_commands"][1]
+        assert "xvfb-run" in config["test_commands"][1]  # GUI tests should use xvfb
+        assert config["has_regular"] is True
+        assert config["has_gui"] is True
 
     @patch('scripts.utils.test_router.get_added_modified_py_files')
     @patch('scripts.utils.test_router.map_files_to_tests')
