@@ -153,19 +153,19 @@ jobs:
           else
             BASE_REF="${{ github.event.before }}"
           fi
-          echo "base_ref=$BASE_REF" >> $GITHUB_OUTPUT
+
           echo "Comparing changes between $BASE_REF and ${{ github.sha }}"
-  
-          # Use a proper Python script without indentation issues
+
           CHANGED_FILES=$(python3 -c "import sys; sys.path.insert(0, '.'); from scripts.utils.git_utils import get_added_modified_py_files; files = get_added_modified_py_files('$BASE_REF', '${{ github.sha }}'); print(' '.join(files))")
-  
-          # Save outputs correctly
+
           echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
-          if [ -z "$CHANGED_FILES" ]; then
+          echo "base_ref=$BASE_REF" >> $GITHUB_OUTPUT
+          if [ -z \"$CHANGED_FILES\" ]; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
           fi
+      
 
       - name: 📋 Generate Targeted Docstring Summary
         if: ${{ steps.optimize-docstring.outputs.has_changes == 'true' }}
