@@ -94,6 +94,12 @@ jobs:
             --cov-report=term --cov-report=html --cov-report=json
           echo "✅ Coverage reports generated (.coverage, HTML, JSON)"
 
+      - name: 🧹 Strip Empty Coverage Entries
+        run: |
+          echo "⚔️ Trimming zero-coverage files from coverage.json..."
+          python scripts/ci/prune_coverage.py coverage.json cleaned_coverage.json
+          mv cleaned_coverage.json coverage.json
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -104,11 +110,7 @@ jobs:
             coverage.xml
             htmlcov/
 
-      - name: 🧹 Strip Empty Coverage Entries
-        run: |
-          echo "⚔️ Trimming zero-coverage files from coverage.json..."
-          python scripts/ci/prune_coverage.py coverage.json cleaned_coverage.json
-          mv cleaned_coverage.json coverage.json
+      
           
 
 
