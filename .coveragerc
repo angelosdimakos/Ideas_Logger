@@ -3,6 +3,8 @@ branch = True
 source =
     scripts
     tests
+parallel = true
+concurrency = multiprocessing
 
 omit =
     */__init__.py

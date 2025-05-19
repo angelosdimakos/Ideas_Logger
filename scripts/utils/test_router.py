@@ -229,17 +229,7 @@ def run_targeted_tests(
 
 
 def _run_regular_tests(test_modules: List[str], output_json: str = "coverage.json", parallel: bool = True) -> bool:
-    """
-    Run regular (non-GUI) tests with pytest and coverage.
-
-    Args:
-        test_modules (List[str]): List of test modules to run
-        output_json (str): Path for the coverage JSON output
-        parallel (bool): Whether to run tests in parallel
-
-    Returns:
-        bool: True if tests pass, False otherwise
-    """
+    """Run regular (non-GUI) tests with pytest and coverage."""
     if not test_modules:
         print("No regular test modules to run")
         return True
@@ -248,24 +238,29 @@ def _run_regular_tests(test_modules: List[str], output_json: str = "coverage.jso
     for module in test_modules:
         print(f"  - {module}")
 
-    # For parallel execution, we need to add special flags for coverage collection
-    parallel_arg = []
+    # Use different command construction based on parallel or serial execution
     if parallel:
-        # Instead of -n auto, use xdist with --dist=loadscope to better handle coverage
-        parallel_arg = ["-n", "auto", "--dist=loadscope"]
-
-    cmd = [
-              "pytest",
-              *parallel_arg,
-              "-c", "pytest.ini",
-              # Important: Add these flags for proper coverage with xdist
-              "--cov-append",
-              "--no-cov-on-fail",
-              f"--cov=scripts",
-              "--cov-config=.coveragerc",
-              f"--cov-report=term",
-              f"--cov-report=json:{output_json}"
-          ] + test_modules
+        # Important xdist-compatible flags
+        cmd = [
+                  "pytest",
+                  "-n", "auto",
+                  "--dist=loadfile",  # Changed from loadscope for better coverage collection
+                  "-c", "pytest.ini",
+                  "--cov=scripts",
+                  "--cov-config=.coveragerc",
+                  "--cov-report=term",
+                  "--cov-report=json:" + output_json,
+              ] + test_modules
+    else:
+        # Simpler command for serial execution
+        cmd = [
+                  "pytest",
+                  "-c", "pytest.ini",
+                  "--cov=scripts",
+                  "--cov-config=.coveragerc",
+                  "--cov-report=term",
+                  "--cov-report=json:" + output_json,
+              ] + test_modules
 
     try:
         result = subprocess.run(cmd, check=False)
@@ -281,9 +276,7 @@ def _run_gui_tests(
         run_xvfb: bool = True,
         parallel: bool = True
 ) -> bool:
-    """
-    Run GUI tests with pytest and coverage, using xvfb if on Linux.
-    """
+    """Run GUI tests with pytest and coverage, using xvfb if on Linux."""
     if not test_modules:
         print("No GUI test modules to run")
         return True
@@ -295,28 +288,35 @@ def _run_gui_tests(
     # Determine if we need xvfb (Linux) and parallel execution
     cmd_prefix = ["xvfb-run", "-a"] if run_xvfb and sys.platform.startswith("linux") else []
 
-    # For parallel execution, we need to add special flags for coverage collection
-    parallel_arg = []
+    # Use different commands based on parallel or serial execution
     if parallel:
-        # Instead of -n auto, use xdist with --dist=loadscope to better handle coverage
-        parallel_arg = ["-n", "auto", "--dist=loadscope"]
+        cmd = cmd_prefix + [
+            "pytest",
+            "-n", "auto",
+            "--dist=loadfile",  # Better for coverage
+            "-c", "pytest.ini",
+            "--cov=scripts",
+            "--cov-config=.coveragerc",
+            "--cov-report=term",
+            "--cov-report=json:" + output_json,
+        ] + test_modules
+    else:
+        cmd = cmd_prefix + [
+            "pytest",
+            "-c", "pytest.ini",
+            "--cov=scripts",
+            "--cov-config=.coveragerc",
+            "--cov-report=term",
+            "--cov-report=json:" + output_json,
+        ] + test_modules
 
-    cmd = cmd_prefix + [
-        "pytest",
-        *parallel_arg,
-        "-c", "pytest.ini",
-        # Important: Add these flags for proper coverage with xdist
-        "--cov-append",
-        "--no-cov-on-fail",
-        f"--cov=scripts",
-        "--cov-config=.coveragerc",
-        f"--cov-report=term",
-        f"--cov-report=append",  # Append to existing coverage from regular tests
-        f"--cov-report=json:{output_json}"
-    ] + test_modules
+    # Execute tests with environment for xvfb
+    env = os.environ.copy()
+    if run_xvfb and sys.platform.startswith("linux"):
+        env["DISPLAY"] = ":99"
 
     try:
-        result = subprocess.run(cmd, check=False)
+        result = subprocess.run(cmd, check=False, env=env)
         return result.returncode == 0
     except Exception as e:
         print(f"Error running GUI tests: {e}")
@@ -366,8 +366,8 @@ def update_github_workflow_test_job(
         # Run all tests with default CI configuration
         return {
             "run_all": True,
-            "test_command": "xvfb-run -a pytest -n auto --dist=loadscope -c pytest.ini " +
-                            "--cov=scripts --cov-config=.coveragerc --cov-append --no-cov-on-fail " +
+            "test_command": "xvfb-run -a pytest -n auto --dist=loadfile -c pytest.ini " +
+                            "--cov=scripts --cov-config=.coveragerc " +
                             "--cov-report=term --cov-report=html --cov-report=json"
         }
 
