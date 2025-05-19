@@ -72,20 +72,17 @@ def generate_github_output(from_ref, to_ref, output_file=None):
     codecov_flag = f"{flag_base}-{from_ref[:7]}-{to_ref[:7]}"
     codecov_flag = codecov_flag.replace("/", "-").replace("_", "-").lower()
 
-    # Generate include patterns for coverage files
-    # For .coveragerc, we need to use **/path/to/file.py format to match correctly
+    # Generate include patterns for coverage files - as a SINGLE LINE
     if changed_files:
-        # Format paths correctly for coverage.py pattern matching
+        # Format paths as a single-line comma-separated list
         include_patterns = []
         for file in changed_files:
             # Ensure the path is relative to the root
             file = file.lstrip('./')
-            # Add both direct and wildcard patterns for better matching
             include_patterns.append(f"*{file}")
-            include_patterns.append(f"**/{file}")
 
-        # Join with newlines for .coveragerc format
-        include_pattern = "\n    ".join(include_patterns)
+        # Join with commas for a single line output
+        include_pattern = ",".join(include_patterns)
     else:
         include_pattern = "*"
 
@@ -108,6 +105,9 @@ def generate_github_output(from_ref, to_ref, output_file=None):
     else:
         test_commands = config.get("test_commands", [])
 
+    # Create a comma-separated list of changed files for other steps
+    changed_files_str = ",".join(changed_files) if changed_files else ""
+
     # Create output variables
     output_vars = {
         "run_all": str(config["run_all"]).lower(),
@@ -117,6 +117,7 @@ def generate_github_output(from_ref, to_ref, output_file=None):
         "command_count": str(len(test_commands)),
         "codecov_flag": codecov_flag,
         "coverage_include": include_pattern,
+        "changed_files": changed_files_str,
         "has_changed_files": str(bool(changed_files)).lower()
     }
 

@@ -71,8 +71,7 @@ jobs:
           cat > .dynamic-coveragerc << EOF
           [run]
           source = scripts
-          include = 
-              ${{ steps.optimize-tests.outputs.coverage_include }}
+          include = ${{ steps.optimize-tests.outputs.coverage_include }}
 
           [report]
           exclude_lines =
@@ -125,9 +124,34 @@ jobs:
         if: ${{ steps.optimize-tests.outputs.has_changed_files == 'true' }}
         run: |
           echo "⚔️ Filtering coverage.json to only include changed files..."
-          # Pass the list of changed files to the script via environment variable
-          export CHANGED_FILES="${{ steps.optimize-tests.outputs.changed_files }}"
-          python scripts/ci/prune_coverage.py coverage.json filtered_coverage.json --only-changed
+          echo "Changed files: ${{ steps.optimize-tests.outputs.changed_files }}"
+
+          python -c "
+          import json
+          import sys
+
+          # Load coverage data
+          with open('coverage.json', 'r') as f:
+              data = json.load(f)
+
+          # Get list of changed files
+          changed_files = '${{ steps.optimize-tests.outputs.changed_files }}'.split(',')
+          print(f'Filtering coverage.json to only include {len(changed_files)} changed files')
+
+          # Filter files
+          if 'files' in data:
+              data['files'] = {
+                  k: v for k, v in data['files'].items()
+                  if any(k.endswith(file) for file in changed_files)
+              }
+
+          # Write filtered data back
+          with open('filtered_coverage.json', 'w') as f:
+              json.dump(data, f, indent=2)
+
+          print(f'Filtered coverage.json created with {len(data.get(\"files\", {}))} entries')
+          "
+
           mv filtered_coverage.json coverage.json
 
       - name: 🧹 Strip Empty Coverage Entries
