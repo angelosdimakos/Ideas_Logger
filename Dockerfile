@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl gpg \
     tk tcl \
+    jq\
     libx11-6 libxext6 libxrender1 libxtst6 \
     xvfb xauth \
     ca-certificates && \

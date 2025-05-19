@@ -68,19 +68,21 @@ jobs:
         if: ${{ steps.optimize-tests.outputs.run_all == 'false' }}
         run: |
           echo "🧪 Running targeted tests based on changes..."
-          # Dynamically run each test command from the output
-          COMMANDS='${{ steps.optimize-tests.outputs.test_commands }}'
+          # Save commands to a temporary file to avoid shell escaping issues
+          echo '${{ steps.optimize-tests.outputs.test_commands }}' > commands.json
           COUNT=${{ steps.optimize-tests.outputs.command_count }}
-          
+
           echo "Executing $COUNT test commands"
-          
-          # Parse and execute each command
+
+          # Parse and execute each command using a more robust approach
           for i in $(seq 0 $(($COUNT-1))); do
-            COMMAND=$(echo $COMMANDS | jq -r ".[$i]")
+            # Extract command safely using jq
+            COMMAND=$(jq -r ".[$i]" commands.json)
             echo "⚙️ Running test command $(($i+1)) of $COUNT..."
+            # Execute the command
             eval "$COMMAND"
           done
-          
+
           echo "✅ Targeted tests complete"
 
       - name: ✅ Run All Tests (Full)
