@@ -54,13 +54,13 @@ jobs:
         id: optimize-tests
         run: |
           # For pull requests
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE_REF="${{ github.event.pull_request.base.sha }}"
           else
             # For push events, compare with parent commit
             BASE_REF="${{ github.event.before }}"
           fi
-          
+
           echo "Comparing changes between $BASE_REF and ${{ github.sha }}"
           python scripts/ci/optimize_test_job.py --from-ref "$BASE_REF" --to-ref "${{ github.sha }}" --github-output $GITHUB_OUTPUT
 

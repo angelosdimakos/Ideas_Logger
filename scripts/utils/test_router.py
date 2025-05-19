@@ -43,12 +43,18 @@ def map_files_to_tests(changed_files: List[str], project_root: str = ".") -> Dic
         (r"app/ui/(.+)\.py$", "tests/ui/test_{1}.py", "gui"),
         (r"app/core/(.+)\.py$", "tests/core/test_{1}.py", "regular"),
         (r"lib/(\w+)\.py$", "tests/lib/test_{1}.py", "regular"),
-        # Add patterns for integration tests
-        (r"(.+)/models/(.+)\.py$", "{1}/tests/test_models_{2}.py", "regular"),
+
         # Add rules for visualization modules
         (r"scripts/kg/modules/visualization\.py$", "tests/unit/kg/modules/test_visualization.py", "gui"),
         # Other KG module patterns
         (r"scripts/kg/modules/(.+)\.py$", "tests/unit/kg/modules/test_{1}.py", "regular"),
+
+        # Add rules for utility files
+        (r"scripts/utils/(.+)\.py$", "tests/unit/utils/test_{1}.py", "regular"),
+
+        # Add rules for test files themselves
+        (r"tests/(.+)/test_(.+)\.py$", "tests/{1}/test_{2}.py", "regular"),
+        (r"tests/unit/kg/modules/test_(.+)\.py$", "tests/unit/kg/modules/test_{1}.py", "gui"),
     ]
 
     # If these files change, run all tests (e.g., config files, test fixtures)
@@ -280,21 +286,54 @@ def update_github_workflow_test_job(
         from_ref: str = "HEAD~1",
         to_ref: str = "HEAD"
 ) -> Dict:
-    """
-    Analyzes changed files and generates CI configuration for targeted test execution.
-    This function is designed to integrate with the Ideas_Logger CI workflow.
-
-    Args:
-        from_ref (str): Git reference to compare from (e.g., commit SHA, branch)
-        to_ref (str): Git reference to compare to
-
-    Returns:
-        Dict: Configuration settings for CI, including test modules and flags
-    """
+    """Analyzes changed files and generates CI configuration for targeted test execution."""
     # Get changed files
     changed_files = get_added_modified_py_files(from_ref, to_ref)
 
-    # Map to test modules
+    # Check if any test files themselves were modified
+    test_files = [file for file in changed_files if file.startswith("tests/") and "test_" in file]
+    if test_files:
+        print(f"Test files were changed: {test_files}")
+        # If test files were modified, run those tests directly
+        test_modules = []
+        gui_test_modules = []
+
+        for test_file in test_files:
+            # Convert path to module format
+            test_module = test_file.replace("/", ".").replace("\\", ".").replace(".py", "")
+
+            # Check if it's a GUI test
+            if "kg/modules" in test_file or "gui" in test_file:
+                gui_test_modules.append(test_module)
+            else:
+                test_modules.append(test_module)
+
+        commands = []
+        if test_modules:
+            module_args = " ".join(test_modules)
+            commands.append(
+                f"pytest -n auto -c pytest.ini "
+                f"--cov=scripts --cov-config=.coveragerc "
+                f"--cov-report=term --cov-report=html --cov-report=json {module_args}"
+            )
+
+        if gui_test_modules:
+            module_args = " ".join(gui_test_modules)
+            cov_report = "--cov-report=append" if test_modules else "--cov-report=html --cov-report=json"
+            commands.append(
+                f"xvfb-run -a pytest -n auto -c pytest.ini "
+                f"--cov=scripts --cov-config=.coveragerc "
+                f"--cov-report=term {cov_report} {module_args}"
+            )
+
+        return {
+            "run_all": False,
+            "test_commands": commands,
+            "has_regular": bool(test_modules),
+            "has_gui": bool(gui_test_modules)
+        }
+
+    # Map files to tests (original code continues here)
     test_mapping = map_files_to_tests(changed_files)
 
     # Generate CI configuration

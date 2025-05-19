@@ -16,7 +16,7 @@ from pathlib import Path
 
 # Import the test router
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from scripts.utils.test_router import update_github_workflow_test_job
+from scripts.utils.test_router import update_github_workflow_test_job, get_added_modified_py_files
 
 
 def create_optimized_workflow(from_ref, to_ref):
@@ -58,16 +58,25 @@ def create_optimized_workflow(from_ref, to_ref):
 
 
 def generate_github_output(from_ref, to_ref, output_file=None):
-    """
-    Generate GitHub Actions output variables from the optimization results.
+    """Generate GitHub Actions output variables from the optimization results."""
+    # Get changed files for better logging
+    changed_files = get_added_modified_py_files(from_ref, to_ref)
+    print(f"Changed Python files detected: {changed_files}")
 
-    Args:
-        from_ref (str): Git reference to compare from
-        to_ref (str): Git reference to compare to
-        output_file (str, optional): Path to output file for GitHub environment
-    """
     # Get CI configuration based on changed files
     config = update_github_workflow_test_job(from_ref, to_ref)
+
+    # More detailed logging
+    if config["run_all"]:
+        print("Running ALL tests due to core file changes or configuration")
+    else:
+        test_commands = config.get("test_commands", [])
+        if not test_commands:
+            print("⚠️ No tests mapped to changed files")
+        else:
+            print(f"Running {len(test_commands)} test command(s):")
+            for cmd in test_commands:
+                print(f"  - {cmd}")
 
     # Format commands for GitHub
     if config["run_all"]:
