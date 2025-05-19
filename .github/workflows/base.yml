@@ -134,45 +134,44 @@ jobs:
           name: refactor-audit
           path: refactor_audit.json
 
-  docstring:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    container:
-      image: ghcr.io/angelosdimakos/ideas_logger:latest
+  jobs:
+    analyze-docstrings:
+      runs-on: ubuntu-latest
+      outputs:
+        has_changes: ${{ steps.optimize-docstring.outputs.has_changes }}
+        changed_files: ${{ steps.optimize-docstring.outputs.changed_files }} # Make changed_files available for other jobs if needed
 
-    steps:
-      - name: 🧾 Checkout Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Needed for full git diff comparison
+      steps:
+        - name: ⬇️ Checkout code
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0  # Needed to compare with previous commit
 
-      - name: 🔍 Detect Changes for Docstring Analysis
-        id: optimize-docstring
-        run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            BASE_REF="${{ github.event.pull_request.base.sha }}"
-          else
-            BASE_REF="${{ github.event.before }}"
-          fi
+        - name: 🔍 Detect Changes
+          id: optimize-docstring
+          run: |
+            if [ "${{ github.event_name }}" == "pull_request" ]; then
+              BASE_REF="${{ github.event.pull_request.base.sha }}"
+            else
+              BASE_REF="${{ github.event.before }}"
+            fi
 
-          echo "Comparing changes between $BASE_REF and ${{ github.sha }}"
+            echo "Comparing changes between $BASE_REF and ${{ github.sha }}"
 
-          CHANGED_FILES=$(python -c "
-        import sys
-        sys.path.insert(0, '.')
-        from scripts.utils.git_utils import get_added_modified_py_files
-        files = get_added_modified_py_files('$BASE_REF', '${{ github.sha }}')
-        print(' '.join(files))
-        ")
-      
-                echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
-        
-        if [ -z \"$CHANGED_FILES\" ]; then
-        echo "has_changes=false" >> $GITHUB_OUTPUT
-        else
-        echo "has_changes=true" >> $GITHUB_OUTPUT
-        fi
+            CHANGED_FILES=$(python -c "
+              import sys
+              sys.path.insert(0, '.')
+              from scripts.utils.git_utils import get_added_modified_py_files
+              files = get_added_modified_py_files('$BASE_REF', '${{ github.sha }}')
+              print(' '.join(files))
+            ")
 
+            echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+            if [ -z "$CHANGED_FILES" ]; then
+              echo "has_changes=false" >> $GITHUB_OUTPUT
+            else
+              echo "has_changes=true" >> $GITHUB_OUTPUT
+            fi
         - name: 📋 Generate Targeted Docstring Summary
           if: ${{ steps.optimize-docstring.outputs.has_changes == 'true' }}
           run: |
@@ -191,7 +190,6 @@ jobs:
           with:
             name: docstring-summary
             path: docstring_summary.json
-
 
   strictness-analysis:
     needs: [ test ]
