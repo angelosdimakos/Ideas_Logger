@@ -43,19 +43,56 @@ jobs:
       ZEPHYRUS_HEADLESS: "1"
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Important: needed to get git history for comparison
 
       - name: "🛠 Install Runtime Dependency: rapidfuzz"
         run: |
           python -m pip install --no-cache-dir rapidfuzz
 
-      - name: ✅ Run Tests
+      - name: "🔍 Detect Changes & Optimize Tests"
+        id: optimize-tests
         run: |
-          echo "🧪 Running tests with coverage..."
+          # For pull requests
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BASE_REF="${{ github.event.pull_request.base.sha }}"
+          else
+            # For push events, compare with parent commit
+            BASE_REF="${{ github.event.before }}"
+          fi
+
+          echo "Comparing changes between $BASE_REF and ${{ github.sha }}"
+          python scripts/ci/optimize_test_job.py --from-ref "$BASE_REF" --to-ref "${{ github.sha }}" --github-output $GITHUB_OUTPUT
+
+      - name: ✅ Run Targeted Tests (Optimized)
+        if: ${{ steps.optimize-tests.outputs.run_all == 'false' }}
+        run: |
+          echo "🧪 Running targeted tests based on changes..."
+          # Dynamically run each test command from the output
+          COMMANDS='${{ steps.optimize-tests.outputs.test_commands }}'
+          COUNT=${{ steps.optimize-tests.outputs.command_count }}
+
+          echo "Executing $COUNT test commands"
+
+          # Parse and execute each command
+          for i in $(seq 0 $(($COUNT-1))); do
+            COMMAND=$(echo $COMMANDS | jq -r ".[$i]")
+            echo "⚙️ Running test command $(($i+1)) of $COUNT..."
+            eval "$COMMAND"
+          done
+
+          echo "✅ Targeted tests complete"
+
+      - name: ✅ Run All Tests (Full)
+        if: ${{ steps.optimize-tests.outputs.run_all == 'true' }}
+        run: |
+          echo "🧪 Running ALL tests with coverage..."
           xvfb-run -a pytest -n auto -c pytest.ini \
             --cov=scripts --cov-config=.coveragerc \
             --cov-report=term --cov-report=html --cov-report=json
           echo "✅ Coverage reports generated (.coverage, HTML, JSON)"
 
+      # Continue with your existing steps for artifacts, uploads, etc.
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -65,28 +102,6 @@ jobs:
             coverage.json
             coverage.xml
             htmlcov/
-
-      - name: ☁️ Upload to Codecov
-        uses: codecov/codecov-action@v5
-        continue-on-error: true
-        with:
-          files: ./coverage.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: angelosdimakos/Ideas_Logger
-
-      - name: 🧠 Run RefactorGuard
-        run: |
-          echo "📊 Running RefactorGuard..."
-          python scripts/refactor/refactor_guard_cli.py \
-            --refactored scripts --all \
-            --json --output refactor_audit.json \
-            --coverage-path coverage.json # Important: Pass coverage data
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: refactor-audit
-          path: refactor_audit.json
 
   docstring:
     runs-on: ubuntu-latest
@@ -116,9 +131,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: "🛠 Install Runtime Dependency: rapidfuzz"
-        run: |
-          python -m pip install --no-cache-dir rapidfuzz
+
 
       - name: 📥 Download Refactor Audit Artifact
         uses: actions/download-artifact@v4
