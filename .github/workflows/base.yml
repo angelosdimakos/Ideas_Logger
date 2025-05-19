@@ -60,9 +60,31 @@ jobs:
             # For push events, compare with parent commit
             BASE_REF="${{ github.event.before }}"
           fi
-
+          
           echo "Comparing changes between $BASE_REF and ${{ github.sha }}"
           python scripts/ci/optimize_test_job.py --from-ref "$BASE_REF" --to-ref "${{ github.sha }}" --github-output $GITHUB_OUTPUT
+
+      - name: 🧹 Generate Dynamic Coverage Configuration
+        if: ${{ steps.optimize-tests.outputs.has_changed_files == 'true' }}
+        run: |
+          echo "⚙️ Creating dynamic .coveragerc for changed files..."
+          cat > .dynamic-coveragerc << EOF
+          [run]
+          source = scripts
+          include = ${{ steps.optimize-tests.outputs.coverage_include }}
+          
+          [report]
+          exclude_lines =
+              pragma: no cover
+              def __repr__
+              raise NotImplementedError
+              if __name__ == .__main__.:
+              pass
+          EOF
+          
+          # Use this coveragerc for subsequent commands if we have changed files
+          cp .dynamic-coveragerc .coveragerc
+          echo "✅ Dynamic coverage configuration created"
 
       - name: ✅ Run Targeted Tests (Optimized)
         if: ${{ steps.optimize-tests.outputs.run_all == 'false' }}
@@ -71,9 +93,9 @@ jobs:
           # Save commands to a temporary file to avoid shell escaping issues
           echo '${{ steps.optimize-tests.outputs.test_commands }}' > commands.json
           COUNT=${{ steps.optimize-tests.outputs.command_count }}
-
+          
           echo "Executing $COUNT test commands"
-
+          
           # Parse and execute each command using a more robust approach
           for i in $(seq 0 $(($COUNT-1))); do
             # Extract command safely using jq
@@ -82,7 +104,7 @@ jobs:
             # Execute the command
             eval "$COMMAND"
           done
-
+          
           echo "✅ Targeted tests complete"
 
       - name: ✅ Run All Tests (Full)
@@ -110,10 +132,6 @@ jobs:
             coverage.xml
             htmlcov/
 
-      
-          
-
-
       - name: ☁️ Upload to Codecov
         uses: codecov/codecov-action@v5
         continue-on-error: true
@@ -121,6 +139,9 @@ jobs:
           files: ./coverage.json
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: angelosdimakos/Ideas_Logger
+          flags: ${{ steps.optimize-tests.outputs.codecov_flag || 'default' }}  # Dynamic flag based on changes
+          override_branch: ${{ github.ref_name }}
+          fail_ci_if_error: false
 
       - name: 🧠 Run RefactorGuard
         run: |

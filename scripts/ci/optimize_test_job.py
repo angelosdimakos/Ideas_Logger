@@ -66,6 +66,16 @@ def generate_github_output(from_ref, to_ref, output_file=None):
     # Get CI configuration based on changed files
     config = update_github_workflow_test_job(from_ref, to_ref)
 
+    # Generate a codecov flag name based on the changed files
+    # This will be used to mark this coverage run in Codecov
+    flag_base = "targeted" if changed_files else "full"
+    codecov_flag = f"{flag_base}-{from_ref[:7]}-{to_ref[:7]}"
+    codecov_flag = codecov_flag.replace("/", "-").replace("_", "-").lower()
+
+    # Generate a comma-separated list of files to include in coverage
+    # (the .coveragerc format is "file1.py,file2.py,...")
+    include_pattern = ",".join([f"*{file}" for file in changed_files]) if changed_files else "*"
+
     # More detailed logging
     if config["run_all"]:
         print("Running ALL tests due to core file changes or configuration")
@@ -91,7 +101,10 @@ def generate_github_output(from_ref, to_ref, output_file=None):
         "test_commands": json.dumps(test_commands),
         "has_regular": str(config.get("has_regular", False)).lower(),
         "has_gui": str(config.get("has_gui", False)).lower(),
-        "command_count": str(len(test_commands))
+        "command_count": str(len(test_commands)),
+        "codecov_flag": codecov_flag,
+        "coverage_include": include_pattern,
+        "has_changed_files": str(bool(changed_files)).lower()
     }
 
     # Write to GitHub environment file
@@ -104,7 +117,6 @@ def generate_github_output(from_ref, to_ref, output_file=None):
     print("GitHub Actions outputs:")
     for key, value in output_vars.items():
         print(f"  {key}: {value}")
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Optimize GitHub Actions test job")
