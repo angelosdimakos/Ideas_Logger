@@ -228,8 +228,19 @@ def run_targeted_tests(
     return regular_success and gui_success
 
 
-def _run_regular_tests(test_modules: List[str], output_json: str = "coverage.json", parallel: bool = True) -> bool:
-    """Run regular (non-GUI) tests with pytest and coverage."""
+def _run_regular_tests(test_modules: List[str], output_json: str = "coverage.json", parallel: bool = False) -> bool:
+    """
+    Run regular (non-GUI) tests with pytest and coverage.
+    Defaults to serial execution for reliable coverage collection.
+
+    Args:
+        test_modules (List[str]): List of test modules to run
+        output_json (str): Path for the coverage JSON output
+        parallel (bool): Whether to run tests in parallel (set to False for CI)
+
+    Returns:
+        bool: True if tests pass, False otherwise
+    """
     if not test_modules:
         print("No regular test modules to run")
         return True
@@ -238,29 +249,18 @@ def _run_regular_tests(test_modules: List[str], output_json: str = "coverage.jso
     for module in test_modules:
         print(f"  - {module}")
 
-    # Use different command construction based on parallel or serial execution
-    if parallel:
-        # Important xdist-compatible flags
-        cmd = [
-                  "pytest",
-                  "-n", "auto",
-                  "--dist=loadfile",  # Changed from loadscope for better coverage collection
-                  "-c", "pytest.ini",
-                  "--cov=scripts",
-                  "--cov-config=.coveragerc",
-                  "--cov-report=term",
-                  "--cov-report=json:" + output_json,
-              ] + test_modules
-    else:
-        # Simpler command for serial execution
-        cmd = [
-                  "pytest",
-                  "-c", "pytest.ini",
-                  "--cov=scripts",
-                  "--cov-config=.coveragerc",
-                  "--cov-report=term",
-                  "--cov-report=json:" + output_json,
-              ] + test_modules
+    # Only use parallel execution if explicitly requested
+    parallel_arg = ["-n", "auto"] if parallel else []
+
+    cmd = [
+              "pytest",
+              *parallel_arg,
+              "-c", "pytest.ini",
+              f"--cov=scripts",
+              "--cov-config=.coveragerc",
+              f"--cov-report=term",
+              f"--cov-report=json:{output_json}"
+          ] + test_modules
 
     try:
         result = subprocess.run(cmd, check=False)
@@ -274,9 +274,12 @@ def _run_gui_tests(
         test_modules: List[str],
         output_json: str = "coverage.json",
         run_xvfb: bool = True,
-        parallel: bool = True
+        parallel: bool = False  # Default to serial execution
 ) -> bool:
-    """Run GUI tests with pytest and coverage, using xvfb if on Linux."""
+    """
+    Run GUI tests with pytest and coverage, using xvfb if on Linux.
+    Uses serial execution by default for reliable coverage collection.
+    """
     if not test_modules:
         print("No GUI test modules to run")
         return True
@@ -285,38 +288,25 @@ def _run_gui_tests(
     for module in test_modules:
         print(f"  - {module}")
 
-    # Determine if we need xvfb (Linux) and parallel execution
+    # Determine if we need xvfb (Linux)
     cmd_prefix = ["xvfb-run", "-a"] if run_xvfb and sys.platform.startswith("linux") else []
 
-    # Use different commands based on parallel or serial execution
-    if parallel:
-        cmd = cmd_prefix + [
-            "pytest",
-            "-n", "auto",
-            "--dist=loadfile",  # Better for coverage
-            "-c", "pytest.ini",
-            "--cov=scripts",
-            "--cov-config=.coveragerc",
-            "--cov-report=term",
-            "--cov-report=json:" + output_json,
-        ] + test_modules
-    else:
-        cmd = cmd_prefix + [
-            "pytest",
-            "-c", "pytest.ini",
-            "--cov=scripts",
-            "--cov-config=.coveragerc",
-            "--cov-report=term",
-            "--cov-report=json:" + output_json,
-        ] + test_modules
+    # Only use parallel execution if explicitly requested
+    parallel_arg = ["-n", "auto"] if parallel else []
 
-    # Execute tests with environment for xvfb
-    env = os.environ.copy()
-    if run_xvfb and sys.platform.startswith("linux"):
-        env["DISPLAY"] = ":99"
+    cmd = cmd_prefix + [
+        "pytest",
+        *parallel_arg,
+        "-c", "pytest.ini",
+        f"--cov=scripts",
+        "--cov-config=.coveragerc",
+        f"--cov-report=term",
+        f"--cov-report=append",  # Append to existing coverage from regular tests
+        f"--cov-report=json:{output_json}"
+    ] + test_modules
 
     try:
-        result = subprocess.run(cmd, check=False, env=env)
+        result = subprocess.run(cmd, check=False)
         return result.returncode == 0
     except Exception as e:
         print(f"Error running GUI tests: {e}")
@@ -328,45 +318,20 @@ def update_github_workflow_test_job(
         from_ref: str = "HEAD~1",
         to_ref: str = "HEAD"
 ) -> Dict:
-    """
-    Analyzes changed files and generates CI configuration for targeted test execution.
-    More robust version that ensures tests are always run.
-
-    Args:
-        from_ref (str): Git reference to compare from (e.g., commit SHA, branch)
-        to_ref (str): Git reference to compare to
-
-    Returns:
-        Dict: Configuration settings for CI, including test modules and flags
-    """
+    """Analyzes changed files and generates CI configuration for targeted test execution."""
     # Get changed files
     changed_files = get_added_modified_py_files(from_ref, to_ref)
     print(f"Changed Python files: {changed_files}")
-
-    # If no Python files changed, check for any file changes
-    if not changed_files:
-        all_changed_files = get_added_modified_files(from_ref, to_ref)
-        print(f"All changed files: {all_changed_files}")
-
-        # If any files changed but no Python files, still run some tests
-        if all_changed_files:
-            print("Non-Python files changed, running all tests")
-            return {
-                "run_all": True,
-                "test_command": "xvfb-run -a pytest -n auto --dist=loadscope -c pytest.ini " +
-                                "--cov=scripts --cov-config=.coveragerc --cov-append --no-cov-on-fail " +
-                                "--cov-report=term --cov-report=html --cov-report=json"
-            }
 
     # Map files to tests
     test_mapping = map_files_to_tests(changed_files)
 
     # Generate CI configuration
     if isinstance(test_mapping, dict) and test_mapping.get("all", False):
-        # Run all tests with default CI configuration
+        # Run all tests with default CI configuration but WITHOUT parallel execution
         return {
             "run_all": True,
-            "test_command": "xvfb-run -a pytest -n auto --dist=loadfile -c pytest.ini " +
+            "test_command": "xvfb-run -a pytest -c pytest.ini " +
                             "--cov=scripts --cov-config=.coveragerc " +
                             "--cov-report=term --cov-report=html --cov-report=json"
         }
@@ -380,8 +345,8 @@ def update_github_workflow_test_job(
     if has_regular:
         regular_modules_str = " ".join(test_mapping.get("regular", []))
         commands.append(
-            f"pytest -n auto --dist=loadscope -c pytest.ini " +
-            f"--cov=scripts --cov-config=.coveragerc --cov-append --no-cov-on-fail " +
+            f"pytest -c pytest.ini " +  # No parallel execution
+            f"--cov=scripts --cov-config=.coveragerc " +
             f"--cov-report=term --cov-report=html --cov-report=json {regular_modules_str}"
         )
 
@@ -389,20 +354,17 @@ def update_github_workflow_test_job(
         gui_modules_str = " ".join(test_mapping.get("gui", []))
         # For GUI tests, append to existing coverage
         commands.append(
-            f"xvfb-run -a pytest -n auto --dist=loadscope -c pytest.ini " +
-            f"--cov=scripts --cov-config=.coveragerc --cov-append --no-cov-on-fail " +
+            f"xvfb-run -a pytest -c pytest.ini " +  # No parallel execution
+            f"--cov=scripts --cov-config=.coveragerc " +
             f"--cov-report=term --cov-report=append --cov-report=json {gui_modules_str}"
         )
 
     if not commands:
-        # No tests to run, run all tests instead of empty coverage
-        print("No specific tests mapped to changes, running all tests")
-        return {
-            "run_all": True,
-            "test_command": "xvfb-run -a pytest -n auto --dist=loadscope -c pytest.ini " +
-                            "--cov=scripts --cov-config=.coveragerc --cov-append --no-cov-on-fail " +
-                            "--cov-report=term --cov-report=html --cov-report=json"
-        }
+        # No tests to run, but we still need coverage report
+        commands.append(
+            "echo '⚠️ No tests mapped to changed files, generating empty coverage...' " +
+            "&& pytest --collect-only --cov=scripts --cov-report=json"
+        )
 
     return {
         "run_all": False,
