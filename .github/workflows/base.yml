@@ -104,11 +104,19 @@ jobs:
             coverage.xml
             htmlcov/
 
+      - name: 🧹 Strip Empty Coverage Entries
+        run: |
+          echo "⚔️ Trimming zero-coverage files from coverage.json..."
+          python scripts/ci/prune_coverage.py coverage.json cleaned_coverage.json
+          mv cleaned_coverage.json coverage.json
+          
+
+
       - name: ☁️ Upload to Codecov
         uses: codecov/codecov-action@v5
         continue-on-error: true
         with:
-          files: ./coverage.xml
+          files: ./coverage.json
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: angelosdimakos/Ideas_Logger
 
@@ -131,19 +139,59 @@ jobs:
     timeout-minutes: 5
     container:
       image: ghcr.io/angelosdimakos/ideas_logger:latest
+
     steps:
-      - uses: actions/checkout@v3
-
-      - name: 📋 Generate Docstring Summary
-        run: |
-          echo "📚 Generating docstring summary..."
-          python scripts/refactor/parsers/docstring_parser.py --json 
-
-      - uses: actions/upload-artifact@v4
-        if: always()
+      - name: 🧾 Checkout Code
+        uses: actions/checkout@v3
         with:
-          name: docstring-summary
-          path: docstring_summary.json
+          fetch-depth: 0  # Needed for full git diff comparison
+
+      - name: 🔍 Detect Changes for Docstring Analysis
+        id: optimize-docstring
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BASE_REF="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE_REF="${{ github.event.before }}"
+          fi
+
+          echo "Comparing changes between $BASE_REF and ${{ github.sha }}"
+
+          CHANGED_FILES=$(python -c "
+        import sys
+        sys.path.insert(0, '.')
+        from scripts.utils.git_utils import get_added_modified_py_files
+        files = get_added_modified_py_files('$BASE_REF', '${{ github.sha }}')
+        print(' '.join(files))
+        ")
+      
+                echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+        
+        if [ -z \"$CHANGED_FILES\" ]; then
+        echo "has_changes=false" >> $GITHUB_OUTPUT
+        else
+        echo "has_changes=true" >> $GITHUB_OUTPUT
+        fi
+
+        - name: 📋 Generate Targeted Docstring Summary
+          if: ${{ steps.optimize-docstring.outputs.has_changes == 'true' }}
+          run: |
+            echo "📚 Generating docstring summary for changed files..."
+            python scripts/refactor/parsers/docstring_parser.py --changed-only --json
+
+        - name: 📋 Generate Full Docstring Summary
+          if: ${{ steps.optimize-docstring.outputs.has_changes == 'false' }}
+          run: |
+            echo "📚 Generating complete docstring summary..."
+            python scripts/refactor/parsers/docstring_parser.py --json
+
+        - name: ☁️ Upload Docstring Summary
+          if: always()
+          uses: actions/upload-artifact@v4
+          with:
+            name: docstring-summary
+            path: docstring_summary.json
+
 
   strictness-analysis:
     needs: [ test ]

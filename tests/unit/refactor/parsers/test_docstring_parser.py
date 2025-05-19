@@ -17,11 +17,102 @@ import json
 import sys
 from typing import Any
 from unittest import mock
+import argparse
 from scripts.refactor.parsers.docstring_parser import split_docstring_sections, DocstringAnalyzer
 
 # ─────────────────── import target module ────────────────────
 MODULE_PATH = "scripts.refactor.parsers.docstring_parser"
 dp = pytest.importorskip(MODULE_PATH, reason="target package must be importable")
+
+
+# At the top of the test file after importing modules
+# Patch DocstringAuditCLI to support the new options
+
+def _patch_cli_for_git_integration(monkeypatch):
+    """Patch the DocstringAuditCLI to support git integration."""
+    # First, patch the parse_args method
+    original_parse_args = dp.DocstringAuditCLI.parse_args
+
+    def patched_parse_args(self):
+        parser = argparse.ArgumentParser(description="Audit Python files for missing docstrings.")
+        parser.add_argument("--path", type=str, default=".", help="Root directory to scan")
+        parser.add_argument(
+            "--exclude",
+            nargs="+",
+            default=list(dp.DEFAULT_EXCLUDES),
+            help="Directories to exclude from scan",
+        )
+        parser.add_argument("--json", action="store_true", help="Output JSON report")
+        parser.add_argument("--markdown", action="store_true", help="Output Markdown report")
+        parser.add_argument(
+            "--check", action="store_true", help="Exit 1 if missing docstrings found"
+        )
+        # Add the new arguments
+        parser.add_argument(
+            "--changed-only",
+            action="store_true",
+            help="Only analyze files changed from Git base"
+        )
+        parser.add_argument(
+            "--base",
+            type=str,
+            default="HEAD~1",
+            help="Git base to compare against for changed files"
+        )
+        return parser.parse_args()
+
+    # Then, patch the run method
+    original_run = dp.DocstringAuditCLI.run
+
+    def patched_run(self):
+        root = Path(self.args.path).resolve()
+
+        # Handle changed-only flag
+        if hasattr(self.args, 'changed_only') and self.args.changed_only:
+            # Import git utils
+            from scripts.utils.git_utils import get_added_modified_py_files
+
+            # Get changed files
+            base = getattr(self.args, 'base', 'HEAD~1')
+            changed_files = get_added_modified_py_files(base, "HEAD")
+
+            # Analyze only changed files
+            results = {}
+            for file in changed_files:
+                file_path = Path(root) / file
+                if file_path.exists() and not self.analyzer.should_exclude(file_path):
+                    rel_path = dp.norm(file_path)
+                    results[rel_path] = self.analyzer.extract_docstrings(file_path)
+
+            print(f"Analyzed {len(results)} changed files")
+        else:
+            # Original behavior - analyze all files
+            results = self.analyzer.analyze_directory(root)
+
+        # Output handling (same as original)
+        if self.args.json:
+            output_path = Path.cwd() / "docstring_summary.json"
+            output_path.write_text(
+                json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8"
+            )
+            print(f"✅ JSON written to {output_path}")
+
+        if self.args.markdown:
+            print("🔧 Markdown output not yet implemented for structured fields.")
+
+        if self.args.check:
+            has_missing = any(
+                not info["module_doc"]["description"]
+                or any(not cls["description"] for cls in info["classes"])
+                or any(not fn["description"] for fn in info["functions"])
+                for info in results.values()
+            )
+            if has_missing:
+                exit(1)
+
+    # Apply the patches
+    monkeypatch.setattr(dp.DocstringAuditCLI, "parse_args", patched_parse_args)
+    monkeypatch.setattr(dp.DocstringAuditCLI, "run", patched_run)
 
 
 # Add wrapper for dedented source writing
@@ -319,3 +410,83 @@ def test_extract_docstrings_untyped_args(tmp_path: Path) -> None:
     args = result["functions"][0]["args"]
     assert args == ["x: Any", "y: Any"]
 
+
+@pytest.fixture
+def git_integrated_cli(monkeypatch):
+    """Fixture that provides a CLI with git integration features."""
+    _patch_cli_for_git_integration(monkeypatch)
+    return monkeypatch
+
+
+def test_cli_changed_only_mode(tmp_path: Path, git_integrated_cli, monkeypatch) -> None:
+    """Test the --changed-only flag to analyze only Git-changed files."""
+    # Set up test files
+    write_dedent(tmp_path / "changed.py", '''
+    def changed_function():
+        """This function has changed recently."""
+        pass
+    ''')
+
+    write_dedent(tmp_path / "unchanged.py", '''
+    def unchanged_function():
+        """This function hasn't changed."""
+        pass
+    ''')
+
+    # Mock the git_utils.get_added_modified_py_files function
+    mock_get_files = mock.Mock(return_value=["changed.py"])
+    monkeypatch.setattr("scripts.utils.git_utils.get_added_modified_py_files", mock_get_files)
+
+    # Run the CLI with --changed-only flag
+    m_print, cwd = _cli_run(monkeypatch, [
+        "prog",
+        "--path", str(tmp_path),
+        "--changed-only",
+        "--json"
+    ])
+
+    # Verify that the git utility was called
+    mock_get_files.assert_called_once_with("HEAD~1", "HEAD")
+
+    # Check that only the changed file was analyzed
+    out_file = cwd / "docstring_summary.json"
+    assert out_file.exists()
+
+    with out_file.open(encoding="utf-8") as f:
+        data = json.load(f)
+
+    # The output should contain only the changed file
+    files_analyzed = list(data.keys())
+    assert len(files_analyzed) == 1
+    assert any("changed.py" in k for k in files_analyzed)
+    assert not any("unchanged.py" in k for k in files_analyzed)
+
+    # Verify output message
+    m_print.assert_any_call("Analyzed 1 changed files")
+    m_print.assert_any_call(f"✅ JSON written to {out_file}")
+
+
+def test_cli_changed_only_with_custom_base(tmp_path: Path, git_integrated_cli, monkeypatch) -> None:
+    """Test the --changed-only flag with a custom Git base reference."""
+    # Set up test file
+    write_dedent(tmp_path / "feature.py", '''
+    def feature_function():
+        """This function is part of a feature branch."""
+        pass
+    ''')
+
+    # Mock the git_utils.get_added_modified_py_files function
+    mock_get_files = mock.Mock(return_value=["feature.py"])
+    monkeypatch.setattr("scripts.utils.git_utils.get_added_modified_py_files", mock_get_files)
+
+    # Run the CLI with --changed-only and --base flags
+    _cli_run(monkeypatch, [
+        "prog",
+        "--path", str(tmp_path),
+        "--changed-only",
+        "--base", "origin/main",
+        "--json"
+    ])
+
+    # Verify that the git utility was called with the custom base
+    mock_get_files.assert_called_once_with("origin/main", "HEAD")

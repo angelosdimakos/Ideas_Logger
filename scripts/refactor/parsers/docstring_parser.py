@@ -200,6 +200,12 @@ class DocstringAuditCLI:
             default=list(DEFAULT_EXCLUDES),
             help="Directories to exclude from scan",
         )
+        # Add the new flag:
+        parser.add_argument(
+            "--changed-only",
+            action="store_true",
+            help="Only analyze files changed from Git base"
+        )
         parser.add_argument("--json", action="store_true", help="Output JSON report")
         parser.add_argument("--markdown", action="store_true", help="Output Markdown report")
         parser.add_argument(
@@ -212,8 +218,30 @@ class DocstringAuditCLI:
         Run the docstring audit.
         """
         root = Path(self.args.path).resolve()
-        results = self.analyzer.analyze_directory(root)
 
+        # If changed-only flag is set, get only changed files
+        if self.args.changed_only:
+            from scripts.utils.git_utils import get_added_modified_py_files
+
+            # Get list of changed Python files
+            changed_files = get_added_modified_py_files(self.args.base, "HEAD")
+
+            # Convert to full paths relative to project root
+            changed_paths = [Path(root) / path for path in changed_files]
+
+            # Only analyze changed files
+            results = {}
+            for file_path in changed_paths:
+                if file_path.exists() and not self.analyzer.should_exclude(file_path):
+                    rel_path = norm(file_path)
+                    results[rel_path] = self.analyzer.extract_docstrings(file_path)
+
+            print(f"Analyzed {len(results)} changed files")
+        else:
+            # Original behavior - analyze all files
+            results = self.analyzer.analyze_directory(root)
+
+        # Rest of the method remains the same
         if self.args.json:
             output_path = Path.cwd() / "docstring_summary.json"
             output_path.write_text(
@@ -223,8 +251,6 @@ class DocstringAuditCLI:
 
         if self.args.markdown:
             print("🔧 Markdown output not yet implemented for structured fields.")
-
-
 
         if self.args.check:
             has_missing = any(
