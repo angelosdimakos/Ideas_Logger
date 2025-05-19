@@ -13,7 +13,7 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
 }
 
 # Workflow and paths
-$workflowName = "Run Tests `& CI Audit (Dockerized)"
+$workflowName = "Run Tests & CI Audit with Documentation"
 $artifactsDir = ".\artifacts"
 
 # Get current date/time for versioning
