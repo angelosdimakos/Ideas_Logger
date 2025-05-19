@@ -45,6 +45,10 @@ def map_files_to_tests(changed_files: List[str], project_root: str = ".") -> Dic
         (r"lib/(\w+)\.py$", "tests/lib/test_{1}.py", "regular"),
         # Add patterns for integration tests
         (r"(.+)/models/(.+)\.py$", "{1}/tests/test_models_{2}.py", "regular"),
+        # Add rules for visualization modules
+        (r"scripts/kg/modules/visualization\.py$", "tests/unit/kg/modules/test_visualization.py", "gui"),
+        # Other KG module patterns
+        (r"scripts/kg/modules/(.+)\.py$", "tests/unit/kg/modules/test_{1}.py", "regular"),
     ]
 
     # If these files change, run all tests (e.g., config files, test fixtures)
