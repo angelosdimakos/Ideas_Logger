@@ -72,9 +72,22 @@ def generate_github_output(from_ref, to_ref, output_file=None):
     codecov_flag = f"{flag_base}-{from_ref[:7]}-{to_ref[:7]}"
     codecov_flag = codecov_flag.replace("/", "-").replace("_", "-").lower()
 
-    # Generate a comma-separated list of files to include in coverage
-    # (the .coveragerc format is "file1.py,file2.py,...")
-    include_pattern = ",".join([f"*{file}" for file in changed_files]) if changed_files else "*"
+    # Generate include patterns for coverage files
+    # For .coveragerc, we need to use **/path/to/file.py format to match correctly
+    if changed_files:
+        # Format paths correctly for coverage.py pattern matching
+        include_patterns = []
+        for file in changed_files:
+            # Ensure the path is relative to the root
+            file = file.lstrip('./')
+            # Add both direct and wildcard patterns for better matching
+            include_patterns.append(f"*{file}")
+            include_patterns.append(f"**/{file}")
+
+        # Join with newlines for .coveragerc format
+        include_pattern = "\n    ".join(include_patterns)
+    else:
+        include_pattern = "*"
 
     # More detailed logging
     if config["run_all"]:

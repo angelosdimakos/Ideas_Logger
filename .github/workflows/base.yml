@@ -71,8 +71,9 @@ jobs:
           cat > .dynamic-coveragerc << EOF
           [run]
           source = scripts
-          include = ${{ steps.optimize-tests.outputs.coverage_include }}
-          
+          include = 
+              ${{ steps.optimize-tests.outputs.coverage_include }}
+
           [report]
           exclude_lines =
               pragma: no cover
@@ -81,7 +82,11 @@ jobs:
               if __name__ == .__main__.:
               pass
           EOF
-          
+
+          # Print the coveragerc for debugging
+          echo "Generated .coveragerc content:"
+          cat .dynamic-coveragerc
+
           # Use this coveragerc for subsequent commands if we have changed files
           cp .dynamic-coveragerc .coveragerc
           echo "✅ Dynamic coverage configuration created"
@@ -115,6 +120,15 @@ jobs:
             --cov=scripts --cov-config=.coveragerc \
             --cov-report=term --cov-report=html --cov-report=json
           echo "✅ Coverage reports generated (.coverage, HTML, JSON)"
+
+      - name: 🧹 Filter Coverage to Changed Files
+        if: ${{ steps.optimize-tests.outputs.has_changed_files == 'true' }}
+        run: |
+          echo "⚔️ Filtering coverage.json to only include changed files..."
+          # Pass the list of changed files to the script via environment variable
+          export CHANGED_FILES="${{ steps.optimize-tests.outputs.changed_files }}"
+          python scripts/ci/prune_coverage.py coverage.json filtered_coverage.json --only-changed
+          mv filtered_coverage.json coverage.json
 
       - name: 🧹 Strip Empty Coverage Entries
         run: |
