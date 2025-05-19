@@ -134,58 +134,57 @@ jobs:
           name: refactor-audit
           path: refactor_audit.json
 
-  docstring:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    container:
-      image: ghcr.io/angelosdimakos/ideas_logger:latest
-    steps:
-      - name: 🧾 Checkout Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # Needed for full git diff comparison
+docstring:
+  runs-on: ubuntu-latest
+  timeout-minutes: 5
+  container:
+    image: ghcr.io/angelosdimakos/ideas_logger:latest
+  steps:
+    - name: 🧾 Checkout Code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Needed for full git diff comparison
 
-      - name: 🔍 Detect Changes for Docstring Analysis
-        id: optimize-docstring
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            BASE_REF="${{ github.event.pull_request.base.sha }}"
-          else
-            BASE_REF="${{ github.event.before }}"
-          fi
-          echo "Comparing changes between $BASE_REF and ${{ github.sha }}"
+    - name: 🔍 Detect Changes for Docstring Analysis
+      id: optimize-docstring
+      run: |
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          BASE_REF="${{ github.event.pull_request.base.sha }}"
+        else
+          BASE_REF="${{ github.event.before }}"
+        fi
+        echo "base_ref=$BASE_REF" >> $GITHUB_OUTPUT
+        echo "Comparing changes between $BASE_REF and ${{ github.sha }}"
 
-          # Use a proper Python script without indentation issues
-          CHANGED_FILES=$(python3 -c "import sys; sys.path.insert(0, '.'); from scripts.utils.git_utils import get_added_modified_py_files; files = get_added_modified_py_files('$BASE_REF', '${{ github.sha }}'); print(' '.join(files))")
+        # Use a proper Python script without indentation issues
+        CHANGED_FILES=$(python3 -c "import sys; sys.path.insert(0, '.'); from scripts.utils.git_utils import get_added_modified_py_files; files = get_added_modified_py_files('$BASE_REF', '${{ github.sha }}'); print(' '.join(files))")
 
-          # Save outputs correctly
-          echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
-          if [ -z "$CHANGED_FILES" ]; then
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-          else
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-          fi
+        # Save outputs correctly
+        echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+        if [ -z "$CHANGED_FILES" ]; then
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+        else
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+        fi
 
-      - name: 📋 Generate Targeted Docstring Summary
-        if: ${{ steps.optimize-docstring.outputs.has_changes == 'true' }}
-        run: |
-          echo "📚 Generating docstring summary for changed files..."
-          python scripts/refactor/parsers/docstring_parser.py --changed-only --json
+    - name: 📋 Generate Targeted Docstring Summary
+      if: ${{ steps.optimize-docstring.outputs.has_changes == 'true' }}
+      run: |
+        echo "📚 Generating docstring summary for changed files..."
+        python scripts/refactor/parsers/docstring_parser.py --changed-only --base "${{ steps.optimize-docstring.outputs.base_ref }}" --json
 
-      - name: 📋 Generate Full Docstring Summary
-        if: ${{ steps.optimize-docstring.outputs.has_changes == 'false' }}
-        run: |
-          echo "📚 Generating complete docstring summary..."
-          python scripts/refactor/parsers/docstring_parser.py --json
+    - name: 📋 Generate Full Docstring Summary
+      if: ${{ steps.optimize-docstring.outputs.has_changes == 'false' }}
+      run: |
+        echo "📚 Generating complete docstring summary..."
+        python scripts/refactor/parsers/docstring_parser.py --json
 
-      - name: ☁️ Upload Docstring Summary
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: docstring-summary
-          path: docstring_summary.json
-
-
+    - name: ☁️ Upload Docstring Summary
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: docstring-summary
+        path: docstring_summary.json
 
   strictness-analysis:
     needs: [ test ]

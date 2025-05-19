@@ -200,17 +200,11 @@ class DocstringAuditCLI:
             default=list(DEFAULT_EXCLUDES),
             help="Directories to exclude from scan",
         )
-        # Add the new flags:
+        # Add the new flag:
         parser.add_argument(
             "--changed-only",
             action="store_true",
             help="Only analyze files changed from Git base"
-        )
-        parser.add_argument(
-            "--base",
-            type=str,
-            default="HEAD~1",
-            help="Git base to compare against for changed files"
         )
         parser.add_argument("--json", action="store_true", help="Output JSON report")
         parser.add_argument("--markdown", action="store_true", help="Output Markdown report")
